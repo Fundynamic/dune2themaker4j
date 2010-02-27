@@ -1,0 +1,164 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.fundynamic.games.dune2themaker</groupId>
+  <artifactId>dune2themaker</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>dune2themaker</name>
+  <url>http://www.fundynamic.com</url>
+
+	<properties>
+		<java.library.path>resources\dll</java.library.path>
+	</properties>  
+  <!-- create executable jar file -->
+  
+  <build>
+  
+  	<plugins>
+  	
+		<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source>
+               <target>1.5</target>
+            </configuration>
+         </plugin>
+         
+         <plugin>
+	        <artifactId>maven-assembly-plugin</artifactId>
+	        <configuration>
+	          <descriptorRefs>
+	            <descriptorRef>jar-with-dependencies</descriptorRef>
+	          </descriptorRefs>
+	          <archive>
+            	<manifest>
+              		<mainClass>com.fundynamic.games.Dune2themaker</mainClass>
+            	</manifest>
+          	  </archive>
+	        </configuration>
+	        <executions>
+          		<execution>
+		            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+		            <phase>package</phase> <!-- append to the packaging phase. -->
+		            <goals>
+		              <goal>single</goal> <!-- goals == mojos -->
+		            </goals>
+		          </execution>
+        		</executions>
+		</plugin>        
+  	</plugins>
+  	
+  	<resources>
+  		<!--  native libraries -->
+  		<resource>
+  			<directory>src\main\resources\dll</directory>
+  			<includes>
+  				<include>**/*.dll</include>
+  			</includes>
+  		</resource>
+  		
+  		<!--  other -->
+  		<resource>
+  			<directory>src\main\resources\images</directory>
+  			<includes>
+  				<include>**/*.*</include>
+  			</includes>
+  		</resource>
+  	</resources>
+  	
+  </build>
+  
+  
+  <dependencies>
+    <dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.7</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!--  
+    	slick and its dependencies, installed using the install.bat
+    	http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
+     -->
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>hiero</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>ibxm</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>jinput</artifactId>
+      <version>1</version>
+    </dependency>
+        <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>jnlp</artifactId>
+      <version>1</version>
+    </dependency>
+        <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>jogg-0.0.7</artifactId>
+      <version>1</version>
+    </dependency>
+        <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>jorbis-0.0.15</artifactId>
+      <version>1</version>
+    </dependency>
+        <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>lwjgl</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>natives-linux</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>natives-mac</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>natives-win32</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>packulike</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>pedigree</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>scalar</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>slick-util</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.cokeandcode</groupId>
+      <artifactId>slick</artifactId>
+      <version>1</version>
+    </dependency>
+    
+  </dependencies>
+  
+</project>
