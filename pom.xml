@@ -34,7 +34,7 @@
 	          </descriptorRefs>
 	          <archive>
             	<manifest>
-              		<mainClass>com.fundynamic.games.Dune2themaker</mainClass>
+              		<mainClass>com.fundynamic.dune2themaker.Dune2themaker</mainClass>
             	</manifest>
           	  </archive>
 	        </configuration>
