@@ -13,6 +13,7 @@ package com.fundynamic.dune2themaker.game.entities;
 public abstract class Entity {
 
 	private int hitpoints;
+	private int x, y;
 	
 	public Entity(int hitpoints) {
 		if (hitpoints < 1) {
@@ -20,6 +21,8 @@ public abstract class Entity {
 		}
 		this.hitpoints = hitpoints;
 	}
+	
+	abstract public void think(); // every entity has its right to think (done in the update phase)
 	
 	public void setHitPoints(int hitpoints) {
 		this.hitpoints = hitpoints;
@@ -36,4 +39,22 @@ public abstract class Entity {
 		}
 		return false;
 	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+	
+	
 }

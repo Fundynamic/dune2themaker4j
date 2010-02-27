@@ -1,9 +1,10 @@
-package com.fundynamic.dune2themaker;
+package com.fundynamic.dune2themaker.game;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
 
+import com.fundynamic.dune2themaker.Dune2themaker;
 import com.fundynamic.dune2themaker.game.pieces.Piece;
 
 public class TiledBoard {

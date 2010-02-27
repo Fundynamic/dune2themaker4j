@@ -10,7 +10,7 @@ package com.fundynamic.dune2themaker.system.repositories;
  */
 public interface Repository<T> {
 
-	public T getItem(RepositoryKey key);
+	public T getItem(String key);
 	
-	public void addItem(RepositoryKey key, T item);
+	public void addItem(String key, T item);
 }

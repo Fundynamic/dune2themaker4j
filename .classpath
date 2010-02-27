@@ -1,0 +1,33 @@
+<classpath>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/resources/dll" including="**/*.dll" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/main/resources/images" including="**/*.*" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="var" path="M2_REPO/javax/jms/jms/1.1/jms-1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4/mail-1.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.2/cglib-nodep-2.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/easymock/easymock/2.5.2/easymock-2.5.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/easymock/easymockclassextension/2.5.2/easymockclassextension-2.5.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/hiero/1/hiero-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/ibxm/1/ibxm-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/jinput/1/jinput-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jmx/jmxri/1.2.1/jmxri-1.2.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jdmk/jmxtools/1.2.1/jmxtools-1.2.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/jnlp/1/jnlp-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/jogg-0.0.7/1/jogg-0.0.7-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/jorbis-0.0.15/1/jorbis-0.0.15-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/4.7/junit-4.7.jar"/>
+  <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.15/log4j-1.2.15.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/lwjgl/1/lwjgl-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/natives-linux/1/natives-linux-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/natives-mac/1/natives-mac-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/natives-win32/1/natives-win32-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.2/objenesis-1.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/packulike/1/packulike-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/pedigree/1/pedigree-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/scalar/1/scalar-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/slick/1/slick-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/cokeandcode/slick-util/1/slick-util-1.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+</classpath>

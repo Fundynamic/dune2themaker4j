@@ -11,13 +11,18 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import com.fundynamic.dune2themaker.game.Game;
 import com.fundynamic.dune2themaker.game.pieces.Piece;
 import com.fundynamic.dune2themaker.game.pieces.RedPiece;
 import com.fundynamic.dune2themaker.game.pieces.YellowPiece;
+import com.fundynamic.dune2themaker.system.control.Mouse;
+import com.fundynamic.dune2themaker.system.drawers.ImageDrawer;
 import com.fundynamic.dune2themaker.system.repositories.ImageContainer;
+import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
 
 /**
- * Simple stack game
+ * 
+ * Dune 2 The Maker lives in Java
  * 
  * @author S. Hendriks
  *
@@ -27,7 +32,7 @@ public class Dune2themaker extends BasicGame {
 	public final static int SCREEN_WIDTH	= 800;
 	public final static int SCREEN_HEIGHT 	= 600;
 
-	List<Piece> pieces;
+	private Game game;
 	
 	public Dune2themaker(String title) {
 		super(title);
@@ -41,7 +46,7 @@ public class Dune2themaker extends BasicGame {
 		    AppGameContainer container = 
 		    			new AppGameContainer(new Dune2themaker("Dune II - The Maker")); 
 		    container.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-		    container.setVSync(true);
+		    container.setVSync(false);
 		    container.start();
 		} catch (SlickException e) { 
 		    e.printStackTrace(); 
@@ -53,50 +58,21 @@ public class Dune2themaker extends BasicGame {
 	 */
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
-		// add images
-		ImageContainer.getInstance().addImage("MS_Normal.png", false);
-		ImageContainer.getInstance().addImage("background.bmp", false);
-		ImageContainer.getInstance().addImage("piece_yellow.bmp", false);
-		ImageContainer.getInstance().addImage("piece_red.bmp", false);
-
-		// initialize grid
-		TiledBoard grid = TiledBoard.getInstance();
-		grid.setWidth(8);
-		
-		// add pieces
-		pieces = new ArrayList<Piece>();
-		pieces.add(new YellowPiece(0, 0));
-		pieces.add(new RedPiece(1, 0));
-		pieces.add(new YellowPiece(2, 0));
-		pieces.add(new YellowPiece(3, 0));
+		try {
+			game = new Game(gameContainer);
+			game.init();
+		} catch (Exception e) {
+			throw new SlickException("Exception occured while initializing game.", e);
+		}
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, int arg1) throws SlickException {
-		Input input = gameContainer.getInput();
-		
-		// quit when ESC is pressed.
-		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			gameContainer.exit();
-		}
-		
+		this.game.update();
 	}
 
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-
-		Input input = gameContainer.getInput();
-	
-		Image image = ImageContainer.getInstance().getImage("background.bmp");
-		graphics.drawImage(image, 0, 0);
-		
-		
-		TiledBoard grid = TiledBoard.getInstance();
-		grid.draw(graphics);
-		
-		for (Piece piece : pieces) {
-			grid.draw(piece, graphics);
-		}
-		
+		this.game.render(graphics);
 	}
 
 }
