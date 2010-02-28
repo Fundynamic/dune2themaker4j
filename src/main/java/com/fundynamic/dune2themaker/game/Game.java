@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 
 import com.fundynamic.dune2themaker.game.gamestates.DefaultKeyboardInteractionState;
 import com.fundynamic.dune2themaker.game.gamestates.DummyGameState;
+import com.fundynamic.dune2themaker.game.gamestates.DummyTwoGameState;
 import com.fundynamic.dune2themaker.game.gamestates.manager.GameStateManager;
 import com.fundynamic.dune2themaker.system.control.Keyboard;
 import com.fundynamic.dune2themaker.system.control.Mouse;
@@ -42,6 +43,7 @@ public class Game {
 
 		gameStateManager.addGameState(new DefaultKeyboardInteractionState(this));
 		gameStateManager.addGameState(new DummyGameState(this));
+		gameStateManager.addGameState(new DummyTwoGameState(this));
 		gameStateManager.init();
 	}
 

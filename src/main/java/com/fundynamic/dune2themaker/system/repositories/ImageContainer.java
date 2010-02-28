@@ -9,6 +9,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 
+// becomes obselete soon:
+// - move the spritesheet compatability to the repository interface
 public class ImageContainer {
 
 	private Color colorKey = new Color(255, 0, 255);

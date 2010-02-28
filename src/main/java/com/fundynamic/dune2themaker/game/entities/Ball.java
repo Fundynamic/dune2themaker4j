@@ -9,6 +9,8 @@ public class Ball extends Entity implements Bouncable {
 	private int velocityY = 1;
 	private int width = 32;
 	private int height = 32;
+	private int maxVelocityX = 1;
+	private int maxVelocityY = 1;
 	
 	public Ball(int hitpoints) {
 		super(hitpoints);
@@ -50,30 +52,46 @@ public class Ball extends Entity implements Bouncable {
 
 	@Override
 	public void think() {
-		adjustVelocityWhenHittingBoundaries();
-	}
-
-	public void adjustVelocityWhenHittingBoundaries() {
 		// update coordinates
 		setX(getX() + getVelocityX());
 		setY(getY() + getVelocityY());
 		
+		adjustVelocityWhenHittingBoundaries();
+	}
+
+	public void adjustVelocityWhenHittingBoundaries() {
 		// respond to boundaries at screen
 		if ((getX() + getWidth()) >= Dune2themaker.SCREEN_WIDTH) {
-			setVelocityX(-1);
+			setVelocityX(maxVelocityX * -1);
 		}
 		
 		if ((getY() + getHeight()) >= Dune2themaker.SCREEN_HEIGHT) {
-			setVelocityY(-1);
+			setVelocityY(maxVelocityY * -1);
 		}
 		
 		if (getX() <= 0) {
-			setVelocityX(1);
+			setVelocityX(maxVelocityX);
 		}
 
 		if (getY() <= 0) {
-			setVelocityY(1);
+			setVelocityY(maxVelocityY);
 		}
+	}
+
+	public void setMaxVelocityY(int maxVelocityY) {
+		this.maxVelocityY = maxVelocityY;
+	}
+
+	public int getMaxVelocityY() {
+		return maxVelocityY;
+	}
+
+	public void setMaxVelocityX(int maxVelocityX) {
+		this.maxVelocityX = maxVelocityX;
+	}
+
+	public int getMaxVelocityX() {
+		return maxVelocityX;
 	}
 
 }

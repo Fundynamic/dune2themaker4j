@@ -12,6 +12,15 @@ public class ImageRepository implements Repository<Image>{
 	private HashMap<String, Image> images = new HashMap<String, Image>();
 	
 	public void addItem(String key, Image item) {
+		if (key == null) {
+			throw new IllegalArgumentException("Key may not be null.");
+		}
+		if (item == null) {
+			throw new IllegalArgumentException("Item for key [" + key + "] may not be null.");
+		}
+		if (getItem(key) != null) {
+			throw new IllegalArgumentException("Key ["+ key + "] already exists in imageRepository");
+		}
 		images.put(key, item);
 	}
 	
@@ -42,6 +51,12 @@ public class ImageRepository implements Repository<Image>{
 	
 	public Image getItem(String key) {
 		return images.get(key);
+	}
+
+	public void removeItem(String key) {
+		Image image = getItem(key);
+		if (image == null) throw new IllegalArgumentException("No item found for key [" + key + "]");
+		images.remove(key);
 	}
 
 }

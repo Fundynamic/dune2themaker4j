@@ -12,5 +12,22 @@ public interface Repository<T> {
 
 	public T getItem(String key);
 	
+	/**
+	 * Add item with given key in repository. Key must be unique. When an item
+	 * already exists under that name; this method should throw an IllegalArgumentException
+	 * 
+	 * @param key
+	 * @param item
+	 * @throws IllegalArgumentException when item is null or key already exists
+	 */
 	public void addItem(String key, T item);
+	
+	/**
+	 * Remove item from repository.
+	 * Throws IllegalArgumentException when key does not exist in repository.
+	 * 
+	 * @param key
+	 * @throws IllegalArgumentException when key does not exists
+	 */
+	public void removeItem(String key);
 }
