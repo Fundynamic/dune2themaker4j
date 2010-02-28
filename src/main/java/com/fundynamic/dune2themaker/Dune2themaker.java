@@ -1,24 +1,12 @@
 package com.fundynamic.dune2themaker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import com.fundynamic.dune2themaker.game.Game;
-import com.fundynamic.dune2themaker.game.pieces.Piece;
-import com.fundynamic.dune2themaker.game.pieces.RedPiece;
-import com.fundynamic.dune2themaker.game.pieces.YellowPiece;
-import com.fundynamic.dune2themaker.system.control.Mouse;
-import com.fundynamic.dune2themaker.system.drawers.ImageDrawer;
-import com.fundynamic.dune2themaker.system.repositories.ImageContainer;
-import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
 
 /**
  * 

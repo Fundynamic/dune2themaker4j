@@ -3,7 +3,6 @@ package com.fundynamic.dune2themaker.system.drawers;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-import com.fundynamic.dune2themaker.game.Game;
 import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
 
 public class ImageDrawer {
