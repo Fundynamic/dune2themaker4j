@@ -34,7 +34,7 @@ public class Dune2themaker extends BasicGame {
 		    AppGameContainer container = 
 		    			new AppGameContainer(new Dune2themaker("Dune II - The Maker")); 
 		    container.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-		    container.setVSync(true);
+		    container.setVSync(false);
 		    container.start();
 		} catch (SlickException e) { 
 		    e.printStackTrace(); 
