@@ -26,9 +26,6 @@ public class Dune2themaker extends BasicGame {
 		super(title);
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		try { 
 		    AppGameContainer container = 
@@ -41,9 +38,6 @@ public class Dune2themaker extends BasicGame {
 		}
 	}
 
-	/**
-	 * Load files here, and everything else to set up.
-	 */
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {

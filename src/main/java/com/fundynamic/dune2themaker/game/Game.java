@@ -11,21 +11,14 @@ import com.fundynamic.dune2themaker.system.control.Keyboard;
 import com.fundynamic.dune2themaker.system.control.Mouse;
 import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
 
-/**
- * Root game class
- * 
- * @author Stefan
- *
- */
 public class Game {
 
-	private final GameContainer gameContainer; // the Slick Game Container it wraps
+	private final GameContainer gameContainer;
 	
-	// this game has ...
 	private final ImageRepository imageRepository;
+	private final GameStateManager gameStateManager;
 	private final Mouse mouse;
 	private final Keyboard keyboard;
-	private final GameStateManager gameStateManager;
 
 	public Game(GameContainer gameContainer) {
 		super();
@@ -38,10 +31,14 @@ public class Game {
 	
 	
 	public void init() throws Exception {
-		getImageRepository().addItem("mouse_normal", "MS_Normal.png");
-		this.gameContainer.setMouseCursor(getImageRepository().getItem("mouse_normal"), 0, 0);
+		imageRepository.addItem("mouse_normal", "MS_Normal.png");
+		this.gameContainer.setMouseCursor(imageRepository.getItem("mouse_normal"), 0, 0);
 
-		gameStateManager.addGameState(new DefaultKeyboardInteractionState(this));
+		DefaultKeyboardInteractionState defaultKeyboardInteractionState = new DefaultKeyboardInteractionState(this);
+		defaultKeyboardInteractionState.setGameContainer(gameContainer);
+		defaultKeyboardInteractionState.setKeyboard(keyboard);
+		
+		gameStateManager.addGameState(defaultKeyboardInteractionState);
 		gameStateManager.addGameState(new DummyGameState(this));
 		gameStateManager.addGameState(new DummyTwoGameState(this));
 		gameStateManager.init();

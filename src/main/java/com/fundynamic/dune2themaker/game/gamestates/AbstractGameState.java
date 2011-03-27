@@ -13,9 +13,6 @@ public abstract class AbstractGameState implements GameState {
 		this.isFinished = false;
 	}
 	
-	/**
-	 * Set this when the state has finished executing.
-	 */
 	public void setFinished() {
 		this.isFinished = true;
 	}

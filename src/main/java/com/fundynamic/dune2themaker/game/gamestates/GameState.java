@@ -4,13 +4,12 @@ import org.newdawn.slick.Graphics;
 
 public interface GameState {
 
-	// initialize game state
-	public void init();
+	void init();
 	
-	// run update method when game is in update state
-	public void update();
+	void update();
 	
-	// run this render method when game is in render state
-	public void render(Graphics graphics);
+	void render(Graphics graphics);
+	
+	boolean isFinished();
 	
 }

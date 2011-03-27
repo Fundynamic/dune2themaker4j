@@ -1,27 +1,39 @@
 package com.fundynamic.dune2themaker.game.gamestates;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
 import com.fundynamic.dune2themaker.game.Game;
+import com.fundynamic.dune2themaker.system.control.Keyboard;
 
 public class DefaultKeyboardInteractionState extends AbstractGameState {
 
+	private Keyboard keyboard;
+	private GameContainer gameContainer;
+	
 	public DefaultKeyboardInteractionState(Game game) {
-		super(game);
+		super(game);		
 	}
 
 	public void init() {
 	}
 
 	public void update() {
-		if (game.getKeyboard().isEscPressed()) {
-			game.getGameContainer().exit();
+		if (keyboard.isEscPressed()) {
+			gameContainer.exit();
 		}
 	}
 
 	public void render(Graphics graphics) {
-		// TODO Auto-generated method stub
 		
+	}
+
+	public void setKeyboard(Keyboard keyboard) {
+		this.keyboard = keyboard;
+	}
+
+	public void setGameContainer(GameContainer gameContainer) {
+		this.gameContainer = gameContainer;
 	}
 
 }

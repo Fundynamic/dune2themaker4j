@@ -8,36 +8,27 @@ import org.newdawn.slick.Graphics;
 import com.fundynamic.dune2themaker.game.gamestates.AbstractGameState;
 import com.fundynamic.dune2themaker.game.gamestates.GameState;
 
-/**
- * Composite pattern. The gameStateManager is a gamestate itself.
- * It is able to run other gamestates. GameStates added to the list
- * of the gamestate manager will enable them to be ran.
- * 
- * @author Stefan
- *
- */
 public class GameStateManager implements GameState {
 
-	private final List<AbstractGameState> states;
+	private final List<GameState> states;
 	
 	public GameStateManager() {
-		this.states = new LinkedList<AbstractGameState>();
+		this.states = new LinkedList<GameState>();
 	}
 	
 	public void init() {
-		for (AbstractGameState gameState : states) {
+		for (GameState gameState : states) {
 			gameState.init();
 		}
 	}
 
 	public void update() {
-		for (AbstractGameState gameState : states) {
+		for (GameState gameState : states) {
 			if (gameState.isFinished()) continue;
 			gameState.update();
 		}
 	}
 	
-	// remove given game state 
 	public void removeGameState(AbstractGameState gameState) {
 		int indexToRemove = findIndexOfReference(gameState);
 		if (indexToRemove > -1) {
@@ -47,23 +38,32 @@ public class GameStateManager implements GameState {
 		}
 	}
 	
-	public void addGameState(AbstractGameState gameState) {
+	public void addGameState(GameState gameState) {
 		states.add(gameState);
 	}
 	
-	private int findIndexOfReference(AbstractGameState ref) {
+	private int findIndexOfReference(GameState ref) {
 		int index = 0;
 		for (index = 0; index < states.size(); index++) {
-			AbstractGameState gameState = states.get(index);
+			GameState gameState = states.get(index);
 			if (gameState == ref) return index;
 		}
 		return -1;
 	}
 
 	public void render(Graphics graphics) {
-		for (AbstractGameState gameState : states) {
+		for (GameState gameState : states) {
 			if (gameState.isFinished()) continue;
 			gameState.render(graphics);
 		}
+	}
+
+	public boolean isFinished() {
+		for (GameState gameState : states) {
+			if (!gameState.isFinished()) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
