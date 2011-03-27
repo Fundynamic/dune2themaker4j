@@ -7,16 +7,11 @@ public class Random {
 		return result;
 	}
 	
-	/**
-	 * 50/50 percent chance it will return first, or second.
-	 * 
-	 * @param first
-	 * @param second
-	 * @return
-	 */
 	public static int getFiftyFifty(int first, int second) {
-		int chance = (int)(Math.random() * 10);
-		if (chance < 5) return first;
+		int chance = (int)(Math.random() * 2);
+		if (chance < 1) {
+			return first;
+		}
 		return second;
 	}
 }

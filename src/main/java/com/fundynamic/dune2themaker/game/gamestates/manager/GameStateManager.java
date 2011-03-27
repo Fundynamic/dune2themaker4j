@@ -1,5 +1,6 @@
 package com.fundynamic.dune2themaker.game.gamestates.manager;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class GameStateManager implements GameState {
 			if (gameState.isFinished()) continue;
 			gameState.update();
 		}
+		cleanupFinishedStates();
 	}
 	
 	public void removeGameState(AbstractGameState gameState) {
@@ -55,6 +57,19 @@ public class GameStateManager implements GameState {
 		for (GameState gameState : states) {
 			if (gameState.isFinished()) continue;
 			gameState.render(graphics);
+		}
+	}
+	
+	protected void cleanupFinishedStates() {
+		List<GameState> finishedStates = new ArrayList<GameState>();
+		for (GameState gameState : states) {
+			if (gameState.isFinished()) {
+				finishedStates.add(gameState);
+			}
+		}
+		
+		for (GameState gameState : finishedStates) {
+			states.remove(gameState);
 		}
 	}
 

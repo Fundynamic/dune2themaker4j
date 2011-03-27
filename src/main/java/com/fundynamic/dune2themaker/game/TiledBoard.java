@@ -35,12 +35,6 @@ public class TiledBoard {
 		this.height = height;
 	}
 	
-	/**
-	 * Draw image on grid (x, y is grid location)
-	 * @param image
-	 * @param x
-	 * @param y
-	 */
 	public void draw(Image image, Graphics graphics, int x, int y) {
 		int drawX = getDrawX(x);
 		int drawY = getDrawY(y);

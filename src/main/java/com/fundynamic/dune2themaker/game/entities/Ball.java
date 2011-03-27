@@ -93,5 +93,4 @@ public class Ball extends Entity implements Bouncable {
 	public int getMaxVelocityX() {
 		return maxVelocityX;
 	}
-
 }

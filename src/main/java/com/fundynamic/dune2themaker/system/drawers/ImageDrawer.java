@@ -4,14 +4,15 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
+import com.fundynamic.dune2themaker.util.Validate;
 
 public class ImageDrawer {
 	private final Graphics canvas; // the canvas we draw on
 	private final ImageRepository imageRepository;
 	
 	public ImageDrawer(Graphics canvas, ImageRepository imageRepository) {
-		if (canvas == null) throw new IllegalArgumentException("canvas may not be null");
-		if (imageRepository == null) throw new IllegalArgumentException("imageRepository may not be null");
+		Validate.notNull(canvas, "canvas may not be null");
+		Validate.notNull(imageRepository, "imageRepository may not be null");
 		this.canvas = canvas;
 		this.imageRepository = imageRepository;
 	}
