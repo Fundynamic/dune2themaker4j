@@ -1,6 +1,7 @@
-package com.fundynamic.dune2themaker.game.entities;
+package com.fundynamic.dune2themaker.domain.balls;
 
 import com.fundynamic.dune2themaker.Dune2themaker;
+import com.fundynamic.dune2themaker.domain.Entity;
 import com.fundynamic.dune2themaker.game.entities.behaviors.Bouncable;
 
 public class Ball extends Entity implements Bouncable {

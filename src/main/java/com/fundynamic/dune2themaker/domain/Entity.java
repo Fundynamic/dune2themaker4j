@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.game.entities;
+package com.fundynamic.dune2themaker.domain;
 
 /**
  * An entity can be anything in the game that lives. It could be a bullet, a rocket,

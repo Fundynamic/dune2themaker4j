@@ -8,8 +8,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import com.fundynamic.dune2themaker.Dune2themaker;
+import com.fundynamic.dune2themaker.domain.balls.Ball;
 import com.fundynamic.dune2themaker.game.Game;
-import com.fundynamic.dune2themaker.game.entities.Ball;
 import com.fundynamic.dune2themaker.system.drawers.ImageDrawer;
 import com.fundynamic.dune2themaker.util.Random;
 
