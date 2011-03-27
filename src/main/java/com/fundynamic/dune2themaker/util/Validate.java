@@ -9,7 +9,7 @@ public class Validate {
 	}
 
 	public static void notNull(Object object) {
-		notNull("Argument may not be null");
+		notNull(object, "Argument may not be null");
 	}
 
 }

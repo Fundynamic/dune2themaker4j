@@ -35,11 +35,6 @@ public class D2tmGame implements Game {
 		imageRepository.addItem("terrain", "sheet_terrain.png");
 		gameContainer.setMouseCursor(imageRepository.getItem("mouse_normal"), 0, 0);
 
-		DefaultKeyboardInteractionState defaultKeyboardInteractionState = new DefaultKeyboardInteractionState(this);
-		defaultKeyboardInteractionState.setGameContainer(gameContainer);
-		defaultKeyboardInteractionState.setKeyboard(keyboard);
-		
-		gameStateManager.addGameState(defaultKeyboardInteractionState);
 		gameStateManager.init();
 	}
 
