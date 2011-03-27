@@ -26,7 +26,7 @@ public class GameStateStub implements GameState {
 	public void update() {
 	}
 
-	public void render(Graphics graphics) {
+	public void render() {
 	}
 
 	public boolean isFinished() {

@@ -24,7 +24,7 @@ public class DefaultKeyboardInteractionState extends AbstractGameState {
 		}
 	}
 
-	public void render(Graphics graphics) {
+	public void render() {
 		
 	}
 

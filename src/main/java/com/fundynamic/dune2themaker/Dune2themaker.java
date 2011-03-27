@@ -7,6 +7,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import com.fundynamic.dune2themaker.game.Game;
+import com.fundynamic.dune2themaker.game.builder.GameBuilder;
+import com.fundynamic.dune2themaker.game.builder.GameBuilderImpl;
+import com.fundynamic.dune2themaker.game.gamestates.manager.GameStateManager;
+import com.fundynamic.dune2themaker.system.control.Keyboard;
+import com.fundynamic.dune2themaker.system.control.Mouse;
+import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
 
 /**
  * 
@@ -41,7 +47,8 @@ public class Dune2themaker extends BasicGame {
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
-			game = new Game(gameContainer);
+			GameBuilder gameBuilder = new GameBuilderImpl(gameContainer);
+			game = gameBuilder.buildGame();
 			game.init();
 		} catch (Exception e) {
 			throw new SlickException("Exception occured while initializing game.", e);
@@ -50,11 +57,11 @@ public class Dune2themaker extends BasicGame {
 
 	@Override
 	public void update(GameContainer gameContainer, int arg1) throws SlickException {
-		this.game.update();
+		game.update();
 	}
 
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-		this.game.render(graphics);
+		game.render();
 	}
 
 }

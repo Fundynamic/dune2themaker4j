@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.domain.tile;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;

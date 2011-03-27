@@ -1,6 +1,5 @@
 package com.fundynamic.dune2themaker.game.gamestates;
 
-import org.newdawn.slick.Graphics;
 
 public interface GameState {
 
@@ -8,7 +7,7 @@ public interface GameState {
 	
 	void update();
 	
-	void render(Graphics graphics);
+	void render();
 	
 	boolean isFinished();
 	

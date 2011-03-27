@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.newdawn.slick.Graphics;
-
 import com.fundynamic.dune2themaker.game.gamestates.AbstractGameState;
 import com.fundynamic.dune2themaker.game.gamestates.GameState;
 
@@ -53,10 +51,10 @@ public class GameStateManager implements GameState {
 		return -1;
 	}
 
-	public void render(Graphics graphics) {
+	public void render() {
 		for (GameState gameState : states) {
 			if (gameState.isFinished()) continue;
-			gameState.render(graphics);
+			gameState.render();
 		}
 	}
 	
