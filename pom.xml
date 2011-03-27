@@ -52,7 +52,7 @@
 		</plugins>
 
 		<resources>
-			<!--  native libraries -->
+			<!-- native libraries -->
 			<resource>
 				<directory>src\main\resources\dll</directory>
 				<includes>
@@ -60,7 +60,7 @@
 				</includes>
 			</resource>
 
-			<!--  other -->
+			<!-- other -->
 			<resource>
 				<directory>src\main\resources\images</directory>
 				<includes>
@@ -74,7 +74,7 @@
 
 	<dependencies>
 
-		<!--  unit testing -->
+		<!-- unit testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -82,27 +82,15 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--  easymock class extension makes it easier to unit test behavior -->
 		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymockclassextension</artifactId>
-			<version>2.5.2</version>
-			<scope>test</scope>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.5</version>
 		</dependency>
 
-		<!--  log4j for loggin purposes -->
-		<!-- 
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-		</dependency>
-		 -->
-		 
-		<!--
-			slick and its dependencies, installed using the install.bat
-			http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
-		-->
+		<!-- log4j for loggin purposes -->
+		
+		<!-- slick and its dependencies, installed using the install.bat http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html -->
 		<dependency>
 			<groupId>com.cokeandcode</groupId>
 			<artifactId>hiero</artifactId>
