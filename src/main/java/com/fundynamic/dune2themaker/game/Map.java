@@ -18,4 +18,8 @@ public class Map {
 	public void draw(Graphics graphics, Vector2D vector) {
 		graphics.drawImage(image, vector.getX(), vector.getY());
 	}
+
+	public Image getImage() {
+		return image;
+	}
 }

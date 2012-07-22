@@ -1,6 +1,7 @@
 package com.fundynamic.dune2themaker.infrastructure.control;
 
 import org.newdawn.slick.Input;
+import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
 public class Mouse {
 
@@ -41,5 +42,9 @@ public class Mouse {
 				+ "] " + " )";
 
 		return retValue;
+	}
+
+	public Vector2D getVector2D() {
+		return new Vector2D(getXCoordinate(), getYCoordinate());
 	}
 }
