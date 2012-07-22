@@ -4,9 +4,8 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import com.fundynamic.dune2themaker.game.Game;
+import com.fundynamic.dune2themaker.dune.PlayingState;
 
 /**
  * 
@@ -15,21 +14,21 @@ import com.fundynamic.dune2themaker.game.Game;
  * @author S. Hendriks
  *
  */
-public class Dune2themaker extends BasicGame {
+public class main extends BasicGame {
 
 	public final static int SCREEN_WIDTH	= 800;
 	public final static int SCREEN_HEIGHT 	= 600;
 
-	private Game game;
+	private PlayingState playingState;
 	
-	public Dune2themaker(String title) {
+	public main(String title) {
 		super(title);
 	}
 
 	public static void main(String[] args) {
 		try { 
 		    AppGameContainer container = 
-		    			new AppGameContainer(new Dune2themaker("Dune II - The Maker")); 
+		    			new AppGameContainer(new main("Dune II - The Maker"));
 		    container.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
 		    container.setVSync(false);
 		    container.start();
@@ -41,7 +40,7 @@ public class Dune2themaker extends BasicGame {
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
-			game = new Game(gameContainer);
+			playingState = new PlayingState(gameContainer);
 		} catch (Exception e) {
 			throw new SlickException("Exception occured while initializing game.", e);
 		}
@@ -49,11 +48,11 @@ public class Dune2themaker extends BasicGame {
 
 	@Override
 	public void update(GameContainer gameContainer, int arg1) throws SlickException {
-		game.update();
+		playingState.update();
 	}
 
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-		game.render();
+		playingState.render();
 	}
 
 }

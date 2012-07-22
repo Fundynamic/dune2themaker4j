@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.util;
+package com.fundynamic.dune2themaker.infrastructure.util;
 
 public class Random {
 

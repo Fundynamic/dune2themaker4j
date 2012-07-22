@@ -4,7 +4,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import com.fundynamic.dune2themaker.infrastructure.repositories.ImageRepository;
-import com.fundynamic.dune2themaker.util.Validate;
+import com.fundynamic.dune2themaker.infrastructure.util.Validate;
 
 public class ImageDrawer {
 	private final Graphics canvas; // the canvas we draw on

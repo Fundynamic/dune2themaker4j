@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.dune;
 
 
 import org.newdawn.slick.GameContainer;
@@ -8,7 +8,7 @@ import com.fundynamic.dune2themaker.infrastructure.control.Keyboard;
 import com.fundynamic.dune2themaker.infrastructure.control.Mouse;
 import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
-public class Game {
+public class PlayingState {
 
 	private Map map;
 	private Graphics graphics;
@@ -21,7 +21,7 @@ public class Game {
 	private Vector2D viewPortViewingPosition;
 	private Viewport viewport;
 
-	public Game(GameContainer gameContainer) throws SlickException {
+	public PlayingState(GameContainer gameContainer) throws SlickException {
 		this.map = new Map();
 		this.graphics = gameContainer.getGraphics();
 		this.gameContainer = gameContainer;
