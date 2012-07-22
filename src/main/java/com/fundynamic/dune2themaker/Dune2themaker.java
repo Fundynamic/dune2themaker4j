@@ -4,6 +4,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import com.fundynamic.dune2themaker.game.Game;
 
@@ -29,7 +30,7 @@ public class Dune2themaker extends BasicGame {
 		try { 
 		    AppGameContainer container = 
 		    			new AppGameContainer(new Dune2themaker("Dune II - The Maker")); 
-		    container.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, true);
+		    container.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
 		    container.setVSync(false);
 		    container.start();
 		} catch (SlickException e) { 
@@ -40,7 +41,7 @@ public class Dune2themaker extends BasicGame {
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
-			game = new Game();
+			game = new Game(gameContainer);
 		} catch (Exception e) {
 			throw new SlickException("Exception occured while initializing game.", e);
 		}

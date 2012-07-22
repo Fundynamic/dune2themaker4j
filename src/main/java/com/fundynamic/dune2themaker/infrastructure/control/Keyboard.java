@@ -14,4 +14,7 @@ public class Keyboard {
 		return this.input.isKeyPressed(Input.KEY_ESCAPE);
 	}
 
+	public boolean isKeyUpPressed() {
+		return this.input.isKeyPressed(Input.KEY_UP);
+	}
 }
