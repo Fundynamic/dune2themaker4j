@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.system.repositories;
+package com.fundynamic.dune2themaker.infrastructure.repositories;
 
 import org.junit.Test;
 import org.newdawn.slick.Image;

@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.system.repositories;
+package com.fundynamic.dune2themaker.infrastructure.repositories;
 
 /**
  * A repository represents a 'bucket' of 'things'. We can access these 'things' (ie,

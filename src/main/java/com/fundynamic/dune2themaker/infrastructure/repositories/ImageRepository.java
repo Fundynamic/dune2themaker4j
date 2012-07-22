@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.system.repositories;
+package com.fundynamic.dune2themaker.infrastructure.repositories;
 
 import java.util.HashMap;
 

@@ -1,13 +1,11 @@
-package com.fundynamic.dune2themaker.system.drawers;
+package com.fundynamic.dune2themaker.infrastructure.drawers;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-
-import com.fundynamic.dune2themaker.stubs.slick.ImageStub;
-import com.fundynamic.dune2themaker.system.repositories.ImageRepository;
+import com.fundynamic.dune2themaker.infrastructure.repositories.ImageRepository;
 
 public class ImageDrawerTest {
 
@@ -23,7 +21,7 @@ public class ImageDrawerTest {
 	
 	@Test
 	public void mustDrawWithProperDrawMethodFromCanvas() throws SlickException {
-		Image image = new ImageStub();
+		Image image = Mockito.mock(Image.class);
 		Graphics graphics = Mockito.mock(Graphics.class);
 		ImageDrawer drawer = new ImageDrawer(graphics, new ImageRepository());
 		

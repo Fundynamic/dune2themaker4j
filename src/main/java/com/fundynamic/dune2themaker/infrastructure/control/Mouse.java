@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.system.control;
+package com.fundynamic.dune2themaker.infrastructure.control;
 
 import org.newdawn.slick.Input;
 

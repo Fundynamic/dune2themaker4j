@@ -1,13 +1,12 @@
 package com.fundynamic.dune2themaker.game;
 
-import org.newdawn.slick.SlickException;
 
-public interface Game {
+public class Game {
+	public void update() {
 
-	void init() throws Exception;
+	}
 
-	void update() throws SlickException;
+	public void render() {
 
-	void render() throws SlickException;
-
+	}
 }
