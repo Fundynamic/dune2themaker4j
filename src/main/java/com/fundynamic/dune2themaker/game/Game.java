@@ -47,7 +47,6 @@ public class Game {
 
 	public void render() throws SlickException {
 		viewport.draw(graphics, viewPortDrawingPosition, viewPortViewingPosition);
-//		map.draw(this.graphics, viewPortDrawingPosition);
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.fundynamic.dune2themaker.game;
 
-import java.util.Vector;
-
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

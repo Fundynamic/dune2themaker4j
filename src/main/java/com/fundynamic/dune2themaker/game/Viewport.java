@@ -3,7 +3,6 @@ package com.fundynamic.dune2themaker.game;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.ImageData;
 import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
 public class Viewport {
@@ -13,7 +12,6 @@ public class Viewport {
 	private final int width, height;
 
 	private Image image;
-
 
 	public Viewport(int width, int height, Map map) throws SlickException {
 		this.map = map;
