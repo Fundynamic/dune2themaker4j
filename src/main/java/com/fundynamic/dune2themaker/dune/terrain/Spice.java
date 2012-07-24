@@ -1,8 +1,27 @@
 package com.fundynamic.dune2themaker.dune.terrain;
 
-public class Spice implements Terrain {
+import com.fundynamic.dune2themaker.dune.Cell;
+
+public class Spice implements Terrain, Harvestable {
+
+	private Cell cell;
+
+	private int spice;
+
+	public Spice(Cell cell, int spice) {
+		this.cell = cell;
+		this.spice = spice;
+	}
 
 	public int getRowOnSpriteSheet() {
 		return 3;
 	}
+
+	public void harvest(int spice) {
+		this.spice -= spice;
+		if (this.spice <= 0) {
+			cell.changeTerrain(new Sand());
+		}
+	}
+
 }

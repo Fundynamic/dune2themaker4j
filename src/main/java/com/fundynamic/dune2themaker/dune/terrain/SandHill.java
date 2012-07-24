@@ -5,4 +5,5 @@ public class SandHill implements Terrain {
 	public int getRowOnSpriteSheet() {
 		return 2;
 	}
+
 }

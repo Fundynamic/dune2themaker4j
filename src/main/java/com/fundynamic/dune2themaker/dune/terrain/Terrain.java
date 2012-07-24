@@ -4,5 +4,7 @@ public interface Terrain {
 
 	int getRowOnSpriteSheet();
 
+	// events??
+
 }
 

@@ -2,7 +2,6 @@ package com.fundynamic.dune2themaker.infrastructure.drawers;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-
 import com.fundynamic.dune2themaker.infrastructure.repositories.ImageRepository;
 import com.fundynamic.dune2themaker.infrastructure.util.Validate;
 

@@ -1,18 +1,6 @@
 package com.fundynamic.dune2themaker.infrastructure;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.EmptyImageData;
-import org.newdawn.slick.opengl.ImageData;
-import org.newdawn.slick.opengl.InternalTextureLoader;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.renderer.Renderer;
-import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * PixelData is a utility class for efficiently handling per-pixel operations.
