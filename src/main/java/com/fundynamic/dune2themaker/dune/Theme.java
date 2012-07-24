@@ -20,7 +20,8 @@ public class Theme {
 	}
 
 	public Image getTileImage(Terrain terrain, TerrainTypeVariant cornerType) throws SlickException {
-		return this.spriteSheet.getSprite(0, terrain.getRowOnSpriteSheet());
+		final int rowOnSpriteSheet = terrain.getRowOnSpriteSheet();
+		return this.spriteSheet.getSprite(0, rowOnSpriteSheet);
 	}
 
 }

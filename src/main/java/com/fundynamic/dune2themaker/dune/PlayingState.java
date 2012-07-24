@@ -22,7 +22,7 @@ public class PlayingState {
 	private Vector2D viewPortViewingPosition;
 	private Viewport viewport;
 
-	private boolean isInitialized;
+	private boolean initialized;
 
 	public PlayingState(GameContainer gameContainer) throws SlickException {
 		this.graphics = gameContainer.getGraphics();
@@ -34,16 +34,16 @@ public class PlayingState {
 		// on map load...
 		Theme theme = new Theme(new Image("sheet_terrain.png"));
 		this.map = new Map(64, 64, theme);
-		this.viewport = new Viewport(300, 300, map);
+		this.viewport = new Viewport(600, 600, map);
 
 		viewPortDrawingPosition = new Vector2D(100, 100);
 		viewPortViewingPosition = new Vector2D(0, 0);
 	}
 
 	public void init() throws SlickException {
-		if (!isInitialized) {
+		if (!initialized) {
 			this.map.init();
-			isInitialized = true;
+			initialized = true;
 		}
 	}
 
