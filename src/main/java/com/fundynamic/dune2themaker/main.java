@@ -32,6 +32,7 @@ public class main extends BasicGame {
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
 			playingState = new PlayingState(gameContainer);
+			// calling init here does not work with images
 		} catch (Exception e) {
 			throw new SlickException("Exception occurred while initializing game.", e);
 		}
@@ -39,11 +40,12 @@ public class main extends BasicGame {
 
 	@Override
 	public void update(GameContainer gameContainer, int arg1) throws SlickException {
-		playingState.init();
+		// calling init here does not work with images
 		playingState.update();
 	}
 
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
+		playingState.init();
 		playingState.render();
 	}
 
