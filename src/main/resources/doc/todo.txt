@@ -1,0 +1,10 @@
+TODO:
+[ ] Terrain facing (smoothing) --> TDD style
+[ ] Write tests for current code
+[ ] Very simple map saving / loading
+[ ] Structures
+[ ] Units
+[ ] Particle engine (explosions)
+[ ] Super weapons
+[ ] Projectiles (missiles, bullets, etc)
+[ ] Generate map using seed (reverse engineer C code)
