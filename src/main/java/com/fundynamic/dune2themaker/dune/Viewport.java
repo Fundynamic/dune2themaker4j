@@ -1,5 +1,6 @@
 package com.fundynamic.dune2themaker.dune;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -11,20 +12,39 @@ public class Viewport {
 
 	private final int width, height;
 
-	private Image image;
+	private Image buffer;
 
 	public Viewport(int width, int height, Map map) throws SlickException {
 		this.map = map;
 		this.height = height;
 		this.width = width;
-		this.image = new Image(width, height);
+		this.buffer = new Image(width, height);
 	}
 
 	public void draw(Graphics graphics, Vector2D drawingVector, Vector2D viewingVector) throws SlickException {
-		Image subImage = map.getImage().getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
-		this.image.getGraphics().drawImage(subImage, 0, 0);
-		graphics.drawImage(image, drawingVector.getX(), drawingVector.getY());
+		final Graphics bufferGraphics = this.buffer.getGraphics();
+		bufferGraphics.clear();
+
+		drawViewableMapOnBuffer(viewingVector, bufferGraphics);
+		// determine what items are visible & draw them on image
+
+		// add more layers
+
+
+		bufferGraphics.setColor(Color.white);
+		bufferGraphics.drawRect(0, 0, (this.buffer.getWidth() - 1), (this.buffer.getHeight() - 1));
+
+		// draw all on the big canvas
+		drawBufferToGraphics(graphics, drawingVector);
 	}
 
+	private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
+		graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
+	}
 
+	private void drawViewableMapOnBuffer(Vector2D viewingVector, Graphics imageGraphics) throws SlickException {
+		final Image mapImage = map.getMapImage();
+		Image subImage = mapImage.getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
+		imageGraphics.drawImage(subImage, 0, 0);
+	}
 }

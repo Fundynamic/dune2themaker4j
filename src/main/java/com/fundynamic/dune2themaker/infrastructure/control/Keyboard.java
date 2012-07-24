@@ -11,10 +11,23 @@ public class Keyboard {
 	}
 
 	public boolean isEscPressed() {
-		return this.input.isKeyPressed(Input.KEY_ESCAPE);
+		// can also use isKeyDown!!!
+		return this.input.isKeyDown(Input.KEY_ESCAPE);
 	}
 
 	public boolean isKeyUpPressed() {
-		return this.input.isKeyPressed(Input.KEY_UP);
+		return this.input.isKeyDown(Input.KEY_UP);
+	}
+
+	public boolean isKeyDownPressed() {
+		return this.input.isKeyDown(Input.KEY_DOWN);
+	}
+
+	public boolean isKeyLeftPressed() {
+		return this.input.isKeyDown(Input.KEY_LEFT);
+	}
+
+	public boolean isKeyRightPressed() {
+		return this.input.isKeyDown(Input.KEY_RIGHT);
 	}
 }

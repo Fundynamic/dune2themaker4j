@@ -20,4 +20,16 @@ public class Vector2D {
 	public Vector2D moveUp() {
 		return new Vector2D(x, y - 1);
 	}
+
+	public Vector2D moveDown() {
+		return new Vector2D(x, y + 1);
+	}
+
+	public Vector2D moveLeft() {
+		return new Vector2D(x - 1, y);
+	}
+
+	public Vector2D moveRight() {
+		return new Vector2D(x + 1, y);
+	}
 }
