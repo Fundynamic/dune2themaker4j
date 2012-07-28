@@ -22,7 +22,7 @@ public class Map {
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
 				if (x == 0 || y == 0 || x == (width - 1) || y == (height - 1)) {
-					terrain[x][y] = Cell.create(1);
+					terrain[x][y] = Cell.create(Cell.TERRAIN_ROCK);
 				} else {
 					final int terrainType = (int)(Math.random() * 7);
 					terrain[x][y] = Cell.create(terrainType);
