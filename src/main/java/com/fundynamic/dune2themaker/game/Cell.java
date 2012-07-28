@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.dune;
+package com.fundynamic.dune2themaker.game;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -12,6 +12,14 @@ import com.fundynamic.dune2themaker.dune.terrain.SpiceHill;
 import com.fundynamic.dune2themaker.dune.terrain.Terrain;
 
 public class Cell {
+
+	public static final int TERRAIN_ROCK = 0;
+	public static final int TERRAIN_SAND = 1;
+	public static final int TERRAIN_SANDHILL = 2;
+	public static final int TERRAIN_SPICE = 3;
+	public static final int TERRAIN_MOUNTAIN = 4;
+	public static final int TERRAIN_SPICEHILL = 5;
+	public static final int CONCRETE = 6;
 
 	private Terrain terrain;
 
@@ -30,19 +38,19 @@ public class Cell {
 
 	private static Terrain createTerrain(int terrainType, Cell cell) {
 		switch (terrainType) {
-			case 0:
+			case TERRAIN_SAND:
 				return new Sand();
-			case 1:
+			case TERRAIN_ROCK :
 				return new Rock();
-			case 2:
+			case TERRAIN_SANDHILL:
 				return new SandHill();
-			case 3:
+			case TERRAIN_SPICE:
 				return new Spice(cell, 100);
-			case 4:
+			case TERRAIN_MOUNTAIN:
 				return new Mountain();
-			case 5:
+			case TERRAIN_SPICEHILL:
 				return new SpiceHill(cell, 100);
-			case 6:
+			case CONCRETE:
 				return new Concrete();
 			default:
 				throw new IndexOutOfBoundsException("Invalid value for terrainType: " + terrainType);

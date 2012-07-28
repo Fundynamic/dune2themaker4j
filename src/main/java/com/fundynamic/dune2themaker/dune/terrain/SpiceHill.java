@@ -1,6 +1,7 @@
 package com.fundynamic.dune2themaker.dune.terrain;
 
-import com.fundynamic.dune2themaker.dune.Cell;
+import com.fundynamic.dune2themaker.game.Cell;
+import com.fundynamic.dune2themaker.game.terrain.Harvestable;
 
 public class SpiceHill implements Terrain, Harvestable {
 

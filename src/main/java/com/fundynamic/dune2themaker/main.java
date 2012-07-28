@@ -5,7 +5,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Bootstrap;
-import com.fundynamic.dune2themaker.dune.PlayingState;
+import com.fundynamic.dune2themaker.game.PlayingState;
 
 /**
  * Dune 2 The Maker lives in Java

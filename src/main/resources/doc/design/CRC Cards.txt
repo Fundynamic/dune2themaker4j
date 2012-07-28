@@ -24,10 +24,15 @@ Camera
 	responsible for: Determines which part of the map is viewed by the player
 	collaborates with: Map
 
+
+
+
 UI:
 ===
 
 Viewport
 	responsible for: Drawing what the camera sees
 	collaborates with: Camera
+
+
 

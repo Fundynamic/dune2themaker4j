@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.dune;
+package com.fundynamic.dune2themaker.game;
 
 
 import org.newdawn.slick.GameContainer;

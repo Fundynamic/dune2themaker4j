@@ -1,0 +1,23 @@
+Smoothing terrain / Facing terrain types
+========================================
+
+Each cell has a 'facing'. Facing is determined by looking at adjacent cells.
+
+Sometimes the facing cannot be determined due incompatible types of terrains.
+Ie, because there is no transition from spice hill to rocks.
+
+Smoothing is a process done once on startup, and on manipulations on map.
+
+INPUT:
+Cell to determine facing
+Adjacent terrain types, (up, down, left, right, up-left, up-right, down-left, down-right)
+
+OUTPUT:
+The facing (an enum)
+
+
+RESPONSIBILITIES: <<-- ??????????????????
+Class: Cell
+Using:
+	field of type TerrainTypeFacing
+
