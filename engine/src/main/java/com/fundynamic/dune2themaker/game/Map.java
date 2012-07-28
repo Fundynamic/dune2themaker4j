@@ -6,14 +6,14 @@ import org.newdawn.slick.SlickException;
 
 public class Map {
 
+	private TerrainFactory terrainFactory;
 	private Image mapImage;
-	private final Theme theme;
 	private boolean initialized;
 	private Cell[][] terrain;
 	private int height, width;
 
-	public Map(int width, int height, Theme theme) throws SlickException {
-		this.theme = theme;
+	public Map(TerrainFactory terrainFactory, int width, int height) throws SlickException {
+		this.terrainFactory = terrainFactory;
 		this.mapImage = new Image(width * Tile.WIDTH, height * Tile.HEIGHT);
 		this.height = height;
 		this.width = width;
@@ -22,10 +22,10 @@ public class Map {
 		for (int x = 0; x < this.width; x++) {
 			for (int y = 0; y < this.height; y++) {
 				if (x == 0 || y == 0 || x == (width - 1) || y == (height - 1)) {
-					terrain[x][y] = Cell.create(Cell.TERRAIN_ROCK);
+					terrain[x][y] = Cell.create(terrainFactory, 1);
 				} else {
 					final int terrainType = (int)(Math.random() * 7);
-					terrain[x][y] = Cell.create(terrainType);
+					terrain[x][y] = Cell.create(terrainFactory, terrainType);
 				}
 			}
 		}
@@ -41,7 +41,7 @@ public class Map {
 			for (int x = 0; x < this.width; x++) {
 				for (int y = 0; y < this.height; y++) {
 					Cell cell = terrain[x][y];
-					mapImageGraphics.drawImage(cell.getImage(this.theme), x * Tile.WIDTH, y * Tile.HEIGHT);
+					mapImageGraphics.drawImage(cell.getTileImage(), x * Tile.WIDTH, y * Tile.HEIGHT);
 				}
 			}
 			initialized=true;

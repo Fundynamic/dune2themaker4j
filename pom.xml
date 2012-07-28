@@ -175,6 +175,12 @@
 				<version>1.0-SNAPSHOT</version>
 			</dependency>		
 
+			<dependency>
+				<groupId>com.fundynamic.games.dune2themaker</groupId>
+				<artifactId>d2tm</artifactId>
+				<version>1.0-SNAPSHOT</version>
+			</dependency>	
+
 		</dependencies>
 		
 	</dependencyManagement>
@@ -182,6 +188,9 @@
 	<modules>
 		<module>engine</module>
 		<module>d2tm</module>
+
+		<!-- the all-in-one game -->
+		<module>game</module>
 	</modules>
 
 </project>

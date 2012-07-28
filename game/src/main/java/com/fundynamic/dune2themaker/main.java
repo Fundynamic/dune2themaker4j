@@ -3,9 +3,11 @@ package com.fundynamic.dune2themaker;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Bootstrap;
 import com.fundynamic.dune2themaker.game.PlayingState;
+import com.fundynamic.dune2themaker.game.TerrainFactory;
 
 /**
  * Dune 2 The Maker lives in Java
@@ -30,7 +32,9 @@ public class main extends BasicGame {
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
-			playingState = new PlayingState(gameContainer);
+			Theme theme = new Theme(new Image("sheet_terrain.png"));
+			TerrainFactory terrainFactory = new DuneTerrainFactory(theme);
+			playingState = new PlayingState(gameContainer, terrainFactory);
 			// calling init here does not work with images
 		} catch (Exception e) {
 			throw new SlickException("Exception occurred while initializing game.", e);

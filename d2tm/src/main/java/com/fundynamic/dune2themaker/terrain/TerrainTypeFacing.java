@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.dune.terrain;
+package com.fundynamic.dune2themaker.terrain;
 
 /**
  * This enum has types for all kind of facing for a specific TerrainType. (non-walls)

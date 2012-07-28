@@ -3,13 +3,16 @@ package com.fundynamic.dune2themaker.game;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import com.fundynamic.dune2themaker.infrastructure.control.Keyboard;
 import com.fundynamic.dune2themaker.infrastructure.control.Mouse;
 import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
+import sun.reflect.Reflection;
+
 public class PlayingState {
+
+	private final TerrainFactory terrainFactory;
 
 	private Map map;
 	private Graphics graphics;
@@ -24,7 +27,9 @@ public class PlayingState {
 
 	private boolean initialized;
 
-	public PlayingState(GameContainer gameContainer) throws SlickException {
+
+	public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
+		this.terrainFactory = terrainFactory;
 		this.graphics = gameContainer.getGraphics();
 		this.gameContainer = gameContainer;
 
@@ -32,8 +37,8 @@ public class PlayingState {
 		this.mouse = new Mouse(gameContainer.getInput());
 
 		// on map load...
-		Theme theme = new Theme(new Image("sheet_terrain.png"));
-		this.map = new Map(64, 64, theme);
+		//Theme theme = new Theme(new Image("sheet_terrain.png"));
+		this.map = new Map(terrainFactory, 64, 64);
 		this.viewport = new Viewport(600, 600, map);
 
 		viewPortDrawingPosition = new Vector2D(100, 100);

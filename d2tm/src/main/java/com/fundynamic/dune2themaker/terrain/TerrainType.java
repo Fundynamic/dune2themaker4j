@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.dune.terrain;
+package com.fundynamic.dune2themaker.terrain;
 
 public enum TerrainType {
 	SAND(0),

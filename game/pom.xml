@@ -1,0 +1,109 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.fundynamic.games.dune2themaker</groupId>
+		<artifactId>dune2themaker</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>game</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<properties>
+		<java.library.path>resources\dll</java.library.path>
+	</properties>
+
+
+	<dependencies>
+
+		<!-- unit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+
+		<!-- log4j for loggin purposes -->
+		
+		<!-- slick and its dependencies, installed using the install.bat http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html -->
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>hiero</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>ibxm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>jinput</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>jnlp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>jogg-0.0.7</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>jorbis-0.0.15</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>lwjgl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>natives-linux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>natives-mac</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>natives-win32</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>packulike</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>pedigree</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>scalar</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>slick-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.cokeandcode</groupId>
+			<artifactId>slick</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fundynamic.games.dune2themaker</groupId>
+			<artifactId>engine</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fundynamic.games.dune2themaker</groupId>
+			<artifactId>d2tm</artifactId>
+		</dependency>	
+
+	</dependencies>
+
+</project>
