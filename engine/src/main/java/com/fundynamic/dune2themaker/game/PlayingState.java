@@ -37,7 +37,6 @@ public class PlayingState {
 		this.mouse = new Mouse(gameContainer.getInput());
 
 		// on map load...
-		//Theme theme = new Theme(new Image("sheet_terrain.png"));
 		this.map = new Map(terrainFactory, 64, 64);
 		this.viewport = new Viewport(600, 600, map);
 
