@@ -6,11 +6,14 @@ import org.newdawn.slick.SlickException;
 
 public class Map {
 
-	private TerrainFactory terrainFactory;
-	private Image mapImage;
+	private final TerrainFactory terrainFactory;
+	private final Image mapImage;
+	private final int height, width;
+
 	private boolean initialized;
+
 	private Cell[][] terrain;
-	private int height, width;
+
 
 	public Map(TerrainFactory terrainFactory, int width, int height) throws SlickException {
 		this.terrainFactory = terrainFactory;
