@@ -13,10 +13,6 @@ public class Rock implements Terrain, ConstructionGround {
 		this.theme = theme;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 1;
-	}
-
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);
 	}

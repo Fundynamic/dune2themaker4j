@@ -4,8 +4,6 @@ import org.newdawn.slick.Image;
 
 public interface Terrain {
 
-	int getRowOnSpriteSheet();
-
 	// events??
 
 	Image getTileImage();

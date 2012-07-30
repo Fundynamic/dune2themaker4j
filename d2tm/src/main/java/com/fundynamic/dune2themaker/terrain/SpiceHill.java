@@ -27,10 +27,6 @@ public class SpiceHill implements Terrain, Harvestable {
 		}
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 0;
-	}
-
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);
 	}

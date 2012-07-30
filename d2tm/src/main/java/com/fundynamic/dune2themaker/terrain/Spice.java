@@ -20,10 +20,6 @@ public class Spice implements Terrain, Harvestable {
 		this.spice = spice;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 3;
-	}
-
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);
 	}

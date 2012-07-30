@@ -14,10 +14,6 @@ public class Concrete implements Terrain, ConstructionGround, Destructable {
 		this.theme = theme;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 6;
-	}
-
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);
 	}

@@ -12,9 +12,6 @@ public class Mountain implements Terrain {
 		this.theme = theme;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 4;
-	}
 
 	public Image getTileImage() {
 		return theme.getTileImage(this, TerrainFacing.FULL);

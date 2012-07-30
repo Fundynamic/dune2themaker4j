@@ -12,9 +12,6 @@ public class Sand implements Terrain {
 		this.theme = theme;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 0;
-	}
 
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);

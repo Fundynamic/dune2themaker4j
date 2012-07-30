@@ -12,9 +12,6 @@ public class SandHill implements Terrain {
 		this.theme = theme;
 	}
 
-	public int getRowOnSpriteSheet() {
-		return 2;
-	}
 
 	public Image getTileImage() {
 		return theme.getTileImage(this, null);
