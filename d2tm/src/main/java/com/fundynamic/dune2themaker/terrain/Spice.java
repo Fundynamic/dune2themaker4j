@@ -14,21 +14,23 @@ public class Spice implements Terrain, Harvestable {
 	private Cell cell;
 
 	private int spice;
+	private final Image tileImage;
 
-	public Spice(Theme theme, Cell cell, int spice) {
+	public Spice(Theme theme, Cell cell, int spice, Image tileImage) {
 		this.theme = theme;
 		this.cell = cell;
 		this.spice = spice;
+		this.tileImage = tileImage;
 	}
 
 	public Image getTileImage() {
-		return theme.getTileImage(DuneTerrainFactory.TERRAIN_SPICE, null);
+		return tileImage;
 	}
 
 	public void harvest(int spice) {
 		this.spice -= spice;
 		if (this.spice <= 0) {
-			cell.changeTerrain(new Sand(theme));
+			cell.changeTerrain(new Sand(this.theme.getTileImage(DuneTerrainFactory.TERRAIN_SAND, null))); // <-- this is odd!?
 		}
 	}
 

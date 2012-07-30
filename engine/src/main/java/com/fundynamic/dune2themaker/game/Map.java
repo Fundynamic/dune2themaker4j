@@ -34,8 +34,6 @@ public class Map {
 		}
 	}
 
-
-
 	public void init() throws SlickException {
 		if (!initialized) {
 			// this does not work when we move the code in the constructor?
@@ -52,8 +50,10 @@ public class Map {
 	}
 
 	public Image getMapImage() throws SlickException {
-
-
 		return mapImage;
+	}
+
+	public Cell makeCell(int type, int x, int y) {
+		return null;
 	}
 }

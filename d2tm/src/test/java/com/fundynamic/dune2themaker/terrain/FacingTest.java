@@ -1,16 +1,21 @@
 package com.fundynamic.dune2themaker.terrain;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import com.fundynamic.dune2themaker.Theme;
+import com.fundynamic.dune2themaker.game.Cell;
+import com.fundynamic.dune2themaker.game.Map;
+import com.fundynamic.dune2themaker.game.TerrainFactory;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FacingTest {
@@ -18,28 +23,34 @@ public class FacingTest {
 	@Mock
 	private Theme theme;
 
-	@Test
-	public void shouldReturnFullFacingWhenTerrainTypeIsSurroundedBySameTerrainType() {
-		Terrain terrain = new TerrainImpl(theme);
+	private Terrain terrain;
 
-		// Act
-		terrain.getTileImage();
-
-		// Verify
-		Mockito.verify(theme).getTileImage(Mockito.anyInt(), eq(TerrainFacing.FULL));
+	@Before
+	public void setUp() throws Exception {
+		terrain = new TerrainImpl(theme);
 	}
 
-
 	@Test
-	public void shouldReturnFullFacingWhenTerrainTypeIsSurroundedBySameTerrainTypeVariant() {
-		Terrain terrain = new TerrainImpl(theme);
-		final Image imageToReturn = Mockito.mock(Image.class);
-		Mockito.when(theme.getTileImage(Mockito.anyInt(), eq(TerrainFacing.FULL))).thenReturn(imageToReturn);
-
+	public void getTileImageReturnsFullFacingWhenTerrainTypeIsSurroundedBySameTerrainType() {
+		// where to get neighbouring data!?
 		// Act & Assert
-		Assert.assertSame(imageToReturn, terrain.getTileImage());
+		Assert.assertSame(getExpectedImage(TerrainFacing.FULL), terrain.getTileImage());
 	}
 
+	@Test
+	public void getTileImageReturnsFullFacingWhenTerrainTypeIsSurroundedBySameTerrainTypeUsingMap() throws SlickException {
+		Map map = new Map(Mockito.mock(TerrainFactory.class), 3, 3);
+		int type = 0;
+		int x = 1;
+		int y = 1;
+		Cell cell = map.makeCell(type, x, y);
+	}
+
+	private Image getExpectedImage(TerrainFacing terrainFacing) {
+		final Image imageToReturn = Mockito.mock(Image.class);
+		Mockito.when(theme.getTileImage(anyInt(), eq(terrainFacing))).thenReturn(imageToReturn);
+		return imageToReturn;
+	}
 
 	private class TerrainImpl implements Terrain {
 		private final Theme theme;
@@ -48,12 +59,9 @@ public class FacingTest {
 			this.theme = theme;
 		}
 
-		public int getRowOnSpriteSheet() {
-			return 0;
-		}
-
 		public Image getTileImage() {
 			return theme.getTileImage(0, TerrainFacing.FULL);
 		}
 	}
+
 }

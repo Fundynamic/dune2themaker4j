@@ -5,7 +5,8 @@ import org.newdawn.slick.Image;
 public interface Terrain {
 
 	// events??
-
 	Image getTileImage();
+
+
 }
 

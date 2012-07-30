@@ -10,6 +10,7 @@ import com.fundynamic.dune2themaker.terrain.Sand;
 import com.fundynamic.dune2themaker.terrain.SandHill;
 import com.fundynamic.dune2themaker.terrain.Spice;
 import com.fundynamic.dune2themaker.terrain.SpiceHill;
+import com.fundynamic.dune2themaker.terrain.TerrainFacing;
 
 public class DuneTerrainFactory implements TerrainFactory {
 
@@ -30,19 +31,19 @@ public class DuneTerrainFactory implements TerrainFactory {
 	public Terrain create(int terrainType, Cell cell) {
 		switch (terrainType) {
 			case TERRAIN_SAND:
-				return new Sand(theme);
+				return new Sand(this.theme.getTileImage(TERRAIN_SAND, null));
 			case TERRAIN_ROCK:
-				return new Rock(theme);
+				return new Rock(this.theme.getTileImage(TERRAIN_ROCK, null));
 			case TERRAIN_SAND_HILL:
-				return new SandHill(theme);
+				return new SandHill(this.theme.getTileImage(TERRAIN_SAND_HILL, null));
 			case TERRAIN_SPICE:
-				return new Spice(theme, cell, 100);
+				return new Spice(theme, cell, 100, this.theme.getTileImage(TERRAIN_SPICE, null));
 			case TERRAIN_MOUNTAIN:
-				return new Mountain(theme);
+				return new Mountain(this.theme.getTileImage(TERRAIN_MOUNTAIN, TerrainFacing.FULL));
 			case TERRAIN_SPICE_HILL:
-				return new SpiceHill(theme, cell, 100);
+				return new SpiceHill(theme, cell, 100, this.theme.getTileImage(TERRAIN_SPICE_HILL, null));
 			case CONCRETE:
-				return new Concrete(theme);
+				return new Concrete(this.theme.getTileImage(CONCRETE, null));
 			default:
 				throw new IndexOutOfBoundsException("Invalid value for terrainType: " + terrainType);
 		}
