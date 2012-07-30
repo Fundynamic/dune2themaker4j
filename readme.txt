@@ -45,6 +45,7 @@ Default locale: nl_NL, platform encoding: Cp1252
 OS name: "windows vista" version: "6.1" arch: "x86" Family: "windows"
 
 
+TODO: - set up in IntelliJ
 
 =====================================
 Setting up D2TM to develop in Eclipse
@@ -62,4 +63,4 @@ Setting up D2TM to develop in Eclipse
 6. Select dune2themaker project
 7. Set up your run configuration of the class Dune2themaker (main class) to
    use native libraries. Add VM flags:
-   -Djava.library.path=src/main/resources/natives
+   -Djava.library.path=engine/src/main/resources/natives
