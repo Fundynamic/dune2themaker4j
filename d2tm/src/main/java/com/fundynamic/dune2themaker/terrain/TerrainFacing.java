@@ -15,7 +15,7 @@ package com.fundynamic.dune2themaker.terrain;
  *
  *
  */
-public enum TerrainTypeFacing {
+public enum TerrainFacing {
 	FULL,
 	TOP_RIGHT_BOTTOM, TOP_BOTTOM_LEFT, RIGHT_BOTTOM_LEFT, TOP_RIGHT_LEFT,
 	RIGHT_BOTTOM, TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT,

@@ -17,6 +17,6 @@ public class Mountain implements Terrain {
 	}
 
 	public Image getTileImage() {
-		return theme.getTileImage(this, TerrainTypeFacing.FULL);
+		return theme.getTileImage(this, TerrainFacing.FULL);
 	}
 }
