@@ -20,4 +20,8 @@ public class Cell {
 	public Image getTileImage() throws SlickException {
 		return terrain.getTileImage();
 	}
+
+	public Terrain getTerrain() {
+		return terrain;
+	}
 }

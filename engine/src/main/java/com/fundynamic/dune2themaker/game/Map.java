@@ -23,10 +23,6 @@ public class Map {
 		this.width = width;
 	}
 
-	private void determineFacingsOnMap() {
-
-	}
-
 	private void initializeEmptyMap(int width, int height) {
 		this.cells = new Cell[width + 2][height + 2];
 		for (int x = 0; x < this.width + 2; x++) {
@@ -37,8 +33,8 @@ public class Map {
 	}
 
 	private void putTerrainOnMap() {
-		for (int x = 1; x < this.width; x++) {
-			for (int y = 1; y < this.height; y++) {
+		for (int x = 1; x <= this.width; x++) {
+			for (int y = 1; y <= this.height; y++) {
 				final Cell cell = cells[x][y];
 				final Terrain terrain = terrainFactory.create((int)(Math.random() * 7), cell);
 				cell.changeTerrain(terrain);
@@ -46,17 +42,21 @@ public class Map {
 		}
 	}
 
+	private void setTerrainFacingsForCells() {
+
+	}
+
 	public void init() throws SlickException {
 		if (!initialized) {
 			initializeEmptyMap(width, height);
 			putTerrainOnMap();
-			determineFacingsOnMap();
+			setTerrainFacingsForCells();
 
 			// this does not work when we move the code in the constructor?
 			final Graphics mapImageGraphics = mapImage.getGraphics();
 			mapImageGraphics.clear();
-			for (int x = 0; x < this.width; x++) {
-				for (int y = 0; y < this.height; y++) {
+			for (int x = 1; x <= this.width; x++) {
+				for (int y = 1; y <= this.height; y++) {
 					Cell cell = cells[x][y];
 					mapImageGraphics.drawImage(cell.getTileImage(), x * Tile.WIDTH, y * Tile.HEIGHT);
 				}
@@ -69,4 +69,7 @@ public class Map {
 		return mapImage;
 	}
 
+	public Cell getCell(int x, int y) {
+		return cells[x][y];
+	}
 }
