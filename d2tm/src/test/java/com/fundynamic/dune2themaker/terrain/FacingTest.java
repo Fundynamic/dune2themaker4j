@@ -14,6 +14,7 @@ import com.fundynamic.dune2themaker.game.Cell;
 import com.fundynamic.dune2themaker.game.Map;
 import com.fundynamic.dune2themaker.game.TerrainFactory;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
+import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
 import static org.mockito.Matchers.*;
 
@@ -43,7 +44,7 @@ public class FacingTest {
 		int type = 0;
 		int x = 1;
 		int y = 1;
-		Cell cell = map.makeCell(type, x, y);
+//		Cell cell = map.makeCell(type, x, y);
 	}
 
 	private Image getExpectedImage(TerrainFacing terrainFacing) {

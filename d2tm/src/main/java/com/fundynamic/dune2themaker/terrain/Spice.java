@@ -31,6 +31,9 @@ public class Spice implements Terrain, Harvestable {
 		this.spice -= spice;
 		if (this.spice <= 0) {
 			cell.changeTerrain(new Sand(this.theme.getTileImage(DuneTerrainFactory.TERRAIN_SAND, null))); // <-- this is odd!?
+//			Spice terrain = (Spice)terrains.getType(Spice.class, this.facing);
+//			terrain.setAmount
+//			cell.changeTerrain(terrain);
 		}
 	}
 

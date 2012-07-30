@@ -12,7 +12,6 @@ public class Sand implements Terrain {
 		this.tileImage = tileImage;
 	}
 
-
 	public Image getTileImage() {
 		return tileImage;
 	}

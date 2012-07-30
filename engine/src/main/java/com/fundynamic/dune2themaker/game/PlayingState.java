@@ -67,6 +67,12 @@ public class PlayingState {
 			}
 		}
 
+		if (mouse.isRightMouseButtonPressed()) {
+			if (this.drawableViewPorts.size() > 0) {
+				this.drawableViewPorts.remove(this.drawableViewPorts.size()-1);
+			}
+		}
+
 		if (keyboard.isEscPressed()) {
 			this.gameContainer.exit();
 		}

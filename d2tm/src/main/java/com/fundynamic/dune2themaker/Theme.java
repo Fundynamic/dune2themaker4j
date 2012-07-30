@@ -3,7 +3,7 @@ package com.fundynamic.dune2themaker;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import com.fundynamic.dune2themaker.game.Tile;
-import com.fundynamic.dune2themaker.terrain.TerrainFacing;
+import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
 public class Theme {
 
