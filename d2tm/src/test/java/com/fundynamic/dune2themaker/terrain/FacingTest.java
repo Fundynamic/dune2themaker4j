@@ -26,8 +26,20 @@ public class FacingTest {
 		terrain.getTileImage();
 
 		// Verify
-		Mockito.verify(theme).getTileImage(Mockito.<Terrain>any(), eq(TerrainFacing.FULL));
+		Mockito.verify(theme).getTileImage(Mockito.anyInt(), eq(TerrainFacing.FULL));
 	}
+
+
+	@Test
+	public void shouldReturnFullFacingWhenTerrainTypeIsSurroundedBySameTerrainTypeVariant() {
+		Terrain terrain = new TerrainImpl(theme);
+		final Image imageToReturn = Mockito.mock(Image.class);
+		Mockito.when(theme.getTileImage(Mockito.anyInt(), eq(TerrainFacing.FULL))).thenReturn(imageToReturn);
+
+		// Act & Assert
+		Assert.assertSame(imageToReturn, terrain.getTileImage());
+	}
+
 
 	private class TerrainImpl implements Terrain {
 		private final Theme theme;
@@ -41,7 +53,7 @@ public class FacingTest {
 		}
 
 		public Image getTileImage() {
-			return theme.getTileImage(null, TerrainFacing.FULL);
+			return theme.getTileImage(0, TerrainFacing.FULL);
 		}
 	}
 }

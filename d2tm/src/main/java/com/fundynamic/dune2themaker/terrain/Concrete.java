@@ -1,6 +1,7 @@
 package com.fundynamic.dune2themaker.terrain;
 
 import org.newdawn.slick.Image;
+import com.fundynamic.dune2themaker.DuneTerrainFactory;
 import com.fundynamic.dune2themaker.Theme;
 import com.fundynamic.dune2themaker.game.terrain.ConstructionGround;
 import com.fundynamic.dune2themaker.game.terrain.Destructable;
@@ -15,7 +16,7 @@ public class Concrete implements Terrain, ConstructionGround, Destructable {
 	}
 
 	public Image getTileImage() {
-		return theme.getTileImage(this, null);
+		return theme.getTileImage(DuneTerrainFactory.CONCRETE, null);
 	}
 
 	public int getHealth() {

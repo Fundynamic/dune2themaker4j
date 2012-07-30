@@ -1,6 +1,7 @@
 package com.fundynamic.dune2themaker.terrain;
 
 import org.newdawn.slick.Image;
+import com.fundynamic.dune2themaker.DuneTerrainFactory;
 import com.fundynamic.dune2themaker.Theme;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 
@@ -14,7 +15,7 @@ public class SandHill implements Terrain {
 
 
 	public Image getTileImage() {
-		return theme.getTileImage(this, null);
+		return theme.getTileImage(DuneTerrainFactory.TERRAIN_SAND_HILL, null);
 	}
 
 }
