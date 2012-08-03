@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.newdawn.slick.SlickException;
-
 import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 
 import junit.framework.Assert;

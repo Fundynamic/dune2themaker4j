@@ -12,8 +12,6 @@ import com.fundynamic.dune2themaker.infrastructure.control.Mouse;
 import com.fundynamic.dune2themaker.infrastructure.math.Random;
 import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
-import sun.reflect.Reflection;
-
 public class PlayingState {
 
 	private final TerrainFactory terrainFactory;
@@ -69,7 +67,7 @@ public class PlayingState {
 
 		if (mouse.isRightMouseButtonPressed()) {
 			if (this.drawableViewPorts.size() > 0) {
-				this.drawableViewPorts.remove(this.drawableViewPorts.size()-1);
+				this.drawableViewPorts.remove(this.drawableViewPorts.size() - 1);
 			}
 		}
 

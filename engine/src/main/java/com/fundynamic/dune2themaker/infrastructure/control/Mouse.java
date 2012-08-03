@@ -35,11 +35,11 @@ public class Mouse {
 		String retValue = "";
 
 		retValue = "Mouse ( " + "isLeftMouseButtonPressed = ["
-				+ isLeftMouseButtonPressed() + "] "
-				+ "isRightMouseButtonPressed = [" + isRightMouseButtonPressed()
-				+ "] " + "isLeftMouseButtonPressed = [" + getXCoordinate()
-				+ "] " + "isLeftMouseButtonPressed = [" + getYCoordinate()
-				+ "] " + " )";
+				  + isLeftMouseButtonPressed() + "] "
+				  + "isRightMouseButtonPressed = [" + isRightMouseButtonPressed()
+				  + "] " + "isLeftMouseButtonPressed = [" + getXCoordinate()
+				  + "] " + "isLeftMouseButtonPressed = [" + getYCoordinate()
+				  + "] " + " )";
 
 		return retValue;
 	}

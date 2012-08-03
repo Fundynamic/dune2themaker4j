@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
  * It holds an array of color data based on the given width/height (in pixels)
  * and specified color format. The pixels can then be "applied" or uploaded
  * to an OpenGL texture.
- *
+ * <p/>
  * See the wiki for details and usage examples.
  *
  * @author davedes
@@ -23,26 +23,32 @@ public class PixelData {
 	 * @return a generated texture
 
 	public static Texture createTexture(int width, int height, ImageData.Format format, int filter) throws SlickException {
-		EmptyImageData data = new EmptyImageData(width, height);
-		ByteBuffer dataBuffer = data.getImageBufferData();
-		String ref = "pixelhandler:"+width+"x"+height+":"+format.toString();
-		try {
-			return InternalTextureLoader.get().createTexture(data, dataBuffer, ref,
-					  GL11.GL_TEXTURE_2D, filter, filter, false, format);
-		} catch (IOException e) {
-			throw new SlickException("Error generating texture", e);
-		}
+	EmptyImageData data = new EmptyImageData(width, height);
+	ByteBuffer dataBuffer = data.getImageBufferData();
+	String ref = "pixelhandler:"+width+"x"+height+":"+format.toString();
+	try {
+	return InternalTextureLoader.get().createTexture(data, dataBuffer, ref,
+	GL11.GL_TEXTURE_2D, filter, filter, false, format);
+	} catch (IOException e) {
+	throw new SlickException("Error generating texture", e);
+	}
 	}*/
 
-	/** The pixels held by this PixelData object. */
+	/**
+	 * The pixels held by this PixelData object.
+	 */
 	protected ByteBuffer pixels;
 
 	/** The format of the pixel data.
-	protected ImageData.Format format;*/
+	 protected ImageData.Format format;*/
 
-	/** The width of the data (in pixels). */
+	/**
+	 * The width of the data (in pixels).
+	 */
 	protected int width;
-	/** The height of the data (in pixels). */
+	/**
+	 * The height of the data (in pixels).
+	 */
 	protected int height;
 
 	/**
@@ -52,7 +58,7 @@ public class PixelData {
 	 * @param height the height in pixels of our data
 
 	public PixelData(int width, int height) {
-		this(width, height, ImageData.Format.RGBA);
+	this(width, height, ImageData.Format.RGBA);
 	}
 	 */
 
@@ -71,16 +77,17 @@ public class PixelData {
 	 * @param format the desired format to use during uploading
 
 	public PixelData(int width, int height, ImageData.Format format) {
-		this.format = format;
-		this.width = width;
-		this.height = height;
-		this.pixels = BufferUtils.createByteBuffer(width * height * format.getColorComponents());
+	this.format = format;
+	this.width = width;
+	this.height = height;
+	this.pixels = BufferUtils.createByteBuffer(width * height * format.getColorComponents());
 	}
 	 */
 
 	/**
 	 * Sets the pixel data to the given array, which should be less
 	 * than the size of length().
+	 *
 	 * @param pixelData the new pixel data
 	 * @return this object, for chaining
 	 */
@@ -93,6 +100,7 @@ public class PixelData {
 
 	/**
 	 * Clears the pixel array to 0x00 (i.e. transparent black for RGBA).
+	 *
 	 * @return this object, for chaining
 	 */
 	public PixelData clear() {
@@ -109,8 +117,8 @@ public class PixelData {
 	 */
 	public PixelData clear(int value) {
 		pixels.clear();
-		byte b = (byte)value;
-		for (int i=0; i<pixels.capacity(); i++)
+		byte b = (byte) value;
+		for (int i = 0; i < pixels.capacity(); i++)
 			pixels.put(b);
 		pixels.flip();
 		return this;
@@ -123,7 +131,7 @@ public class PixelData {
 	 * @param texture the texture to modify
 
 	public void apply(Texture texture) {
-		apply(texture, 0, 0);
+	apply(texture, 0, 0);
 	}
 	 */
 
@@ -136,67 +144,69 @@ public class PixelData {
 	 * @param y the y position to place the pixel data on the texture
 
 	public void apply(Texture texture, int x, int y) {
-		if (x+width > texture.getTextureWidth() || y+height > texture.getTextureHeight())
-			throw new IndexOutOfBoundsException("pixel data won't fit in given texture");
-		position(length());
-		pixels.flip();
-		int glFmt = format.getOGLType();
-		final SGL GL = Renderer.get();
-		texture.bind();
-		GL.glTexSubImage2D(SGL.GL_TEXTURE_2D, 0, x, y, width, height,
-				  glFmt, SGL.GL_UNSIGNED_BYTE, pixels);
+	if (x+width > texture.getTextureWidth() || y+height > texture.getTextureHeight())
+	throw new IndexOutOfBoundsException("pixel data won't fit in given texture");
+	position(length());
+	pixels.flip();
+	int glFmt = format.getOGLType();
+	final SGL GL = Renderer.get();
+	texture.bind();
+	GL.glTexSubImage2D(SGL.GL_TEXTURE_2D, 0, x, y, width, height,
+	glFmt, SGL.GL_UNSIGNED_BYTE, pixels);
 	}
 	 */
 
 	/**
 	 * Returns a color representation of the given pixel.
+	 *
 	 * @param x the x position of the pixel
 	 * @param y the y position of the pixel
 	 * @return a Color representing this pixel
-
-	public Color getPixel(int x, int y) {
-		position(x, y);
-		return getPixel();
-	}
+	 *         <p/>
+	 *         public Color getPixel(int x, int y) {
+	 *         position(x, y);
+	 *         return getPixel();
+	 *         }
 	 */
 
 	private int translate(byte b) {
-		return b<0 ? 256+b : b;
+		return b < 0 ? 256 + b : b;
 	}
 
 	/**
 	 * Relative <i>get</i> method which handles color components based on image formats.
 	 * Does not offset the buffer.
-	 *
+	 * <p/>
 	 * Color is converted like so based on the Format's color components:
 	 * - If getColorComponents returns 1 and hasAlpha is true: Color(0xFF, 0xFF, 0xFF, A)
 	 * - If getColorComponents returns 1 and hasAlpha is false: Color(L, L, L, 0xFF)
 	 * - If getColorComponents returns 2: Color(L, L, L, A)
 	 * - If getColorComponents returns 3: Color(R, G, B, 0xFF)
 	 * - If getColorComponents returns 4: Color(R, G, B, A)
-	 *
+	 * <p/>
 	 * See setPixel for details.
+	 *
 	 * @return a Color representation for this pixel
-
-	public Color getPixel() {
-		boolean hasAlpha = getFormat().hasAlpha();
-		int c1 = translate(pixels.get());
-		int bpp = format.getColorComponents();
-		if (bpp==1)
-			return hasAlpha ? new Color(0xFF, 0xFF, 0xFF, c1) : new Color(c1, c1, c1, 0xFF);
-		int c2 = translate(pixels.get());
-		if (bpp==2)
-			return new Color(c1, c1, c1, c2);
-		int c3 = translate(pixels.get());
-		if (bpp==3)
-			return new Color(c1, c2, c3, 0xFF);
-		int c4 = translate(pixels.get());
-		return new Color(c1, c2, c3, c4);
-	}
+	 *         <p/>
+	 *         public Color getPixel() {
+	 *         boolean hasAlpha = getFormat().hasAlpha();
+	 *         int c1 = translate(pixels.get());
+	 *         int bpp = format.getColorComponents();
+	 *         if (bpp==1)
+	 *         return hasAlpha ? new Color(0xFF, 0xFF, 0xFF, c1) : new Color(c1, c1, c1, 0xFF);
+	 *         int c2 = translate(pixels.get());
+	 *         if (bpp==2)
+	 *         return new Color(c1, c1, c1, c2);
+	 *         int c3 = translate(pixels.get());
+	 *         if (bpp==3)
+	 *         return new Color(c1, c2, c3, 0xFF);
+	 *         int c4 = translate(pixels.get());
+	 *         return new Color(c1, c2, c3, c4);
+	 *         }
 	 */
 
 	byte avg(int r, int g, int b) {
-		return (byte)((translate((byte)r)+translate((byte)g)+translate((byte)b))/3);
+		return (byte) ((translate((byte) r) + translate((byte) g) + translate((byte) b)) / 3);
 	}
 
 	/**
@@ -208,24 +218,25 @@ public class PixelData {
 	 * @return this object, for chaining
 
 	public PixelData putPixel(int r, int g, int b, int a) {
-		boolean hasAlpha = getFormat().hasAlpha();
-		int bpp = format.getColorComponents();
-		if (bpp==1) {
-			pixels.put((byte)(hasAlpha ? a : avg(r, g, b)));
-		} else if (bpp==2) {
-			pixels.put(avg(r, g, b)).put((byte)a);
-		} else {
-			pixels.put((byte)r).put((byte)g).put((byte)b);
-			if (bpp>=4)
-				pixels.put((byte)a);
-		}
-		return this;
+	boolean hasAlpha = getFormat().hasAlpha();
+	int bpp = format.getColorComponents();
+	if (bpp==1) {
+	pixels.put((byte)(hasAlpha ? a : avg(r, g, b)));
+	} else if (bpp==2) {
+	pixels.put(avg(r, g, b)).put((byte)a);
+	} else {
+	pixels.put((byte)r).put((byte)g).put((byte)b);
+	if (bpp>=4)
+	pixels.put((byte)a);
+	}
+	return this;
 	}
 
 	 */
 
 	/**
 	 * Puts a single byte in the buffer; i.e. a luminance value for GRAY format.
+	 *
 	 * @param b the byte to place
 	 * @return this object, for chaining
 	 */
@@ -256,8 +267,8 @@ public class PixelData {
 	 * @param a the alpha component
 
 	public void setPixel(int x, int y, int r, int g, int b, int a) {
-		position(x, y);
-		putPixel(r, g, b, a);
+	position(x, y);
+	putPixel(r, g, b, a);
 	}
 	 */
 
@@ -271,7 +282,7 @@ public class PixelData {
 	 * @param b the blue component
 
 	public void setPixel(int x, int y, int r, int g, int b) {
-		setPixel(x, y, r, g, b, 0xFF);
+	setPixel(x, y, r, g, b, 0xFF);
 	}
 	 */
 
@@ -285,7 +296,7 @@ public class PixelData {
 	 * @see setPixel(int x, int y, int r, int g, int b, int a)
 
 	public void setPixel(int x, int y, Color rgba) {
-		setPixel(x, y, rgba.getRed(), rgba.getGreen(), rgba.getBlue(), rgba.getAlpha());
+	setPixel(x, y, rgba.getRed(), rgba.getGreen(), rgba.getBlue(), rgba.getAlpha());
 	}
 	 */
 
@@ -296,7 +307,7 @@ public class PixelData {
 	 * @param rgba the RGBA components of the pixel
 
 	public PixelData putPixel(Color rgba) {
-		return putPixel(rgba.getRed(), rgba.getGreen(), rgba.getBlue(), rgba.getAlpha());
+	return putPixel(rgba.getRed(), rgba.getGreen(), rgba.getBlue(), rgba.getAlpha());
 	}
 	 */
 
@@ -305,18 +316,19 @@ public class PixelData {
 	 * @return a copy of this pixel data
 
 	public PixelData copy() {
-		PixelData d = new PixelData(getWidth(), getHeight(), getFormat());
-		int oldPos = pixels.position();
-		d.position(0);
-		d.pixels.put(pixels);
-		d.pixels.flip();
-		pixels.position(oldPos);
-		return d;
+	PixelData d = new PixelData(getWidth(), getHeight(), getFormat());
+	int oldPos = pixels.position();
+	d.position(0);
+	d.pixels.put(pixels);
+	d.pixels.flip();
+	pixels.position(oldPos);
+	return d;
 	}
 	 */
 
 	/**
 	 * The total capacity of this pixel buffer in bytes.
+	 *
 	 * @return total bytes contained by the backing array
 	 */
 	public int length() {
@@ -325,6 +337,7 @@ public class PixelData {
 
 	/**
 	 * Returns the width in pixels.
+	 *
 	 * @return the width of the pixel data region
 	 */
 	public int getWidth() {
@@ -333,6 +346,7 @@ public class PixelData {
 
 	/**
 	 * Returns the height in pixels.
+	 *
 	 * @param the height of the pixel data region
 	 */
 	public int getHeight() {
@@ -344,12 +358,13 @@ public class PixelData {
 	 * @return the image format
 
 	public ImageData.Format getFormat() {
-		return format;
+	return format;
 	}
 	 */
 
 	/**
 	 * Returns the backing byte buffer.
+	 *
 	 * @return the byte buffer
 	 */
 	public ByteBuffer buffer() {
@@ -358,6 +373,7 @@ public class PixelData {
 
 	/**
 	 * Sets the position of this buffer, used alongside relative getPixel and putPixel methods.
+	 *
 	 * @param pos the position; the index for the buffer
 	 */
 	public void position(int pos) {
@@ -370,11 +386,11 @@ public class PixelData {
 	 * @param y the y pixel to offset to
 
 	public void position(int x, int y) {
-		if ((x < 0) || (x >= width) || (y < 0) || (y >= height))
-			throw new IndexOutOfBoundsException("Specified location: "+x+","+y+" outside of region");
-		int bpp = format.getColorComponents();
-		int offset = ((x + (y * width)) * bpp);
-		position(offset);
+	if ((x < 0) || (x >= width) || (y < 0) || (y >= height))
+	throw new IndexOutOfBoundsException("Specified location: "+x+","+y+" outside of region");
+	int bpp = format.getColorComponents();
+	int offset = ((x + (y * width)) * bpp);
+	position(offset);
 	}
 	 */
 }

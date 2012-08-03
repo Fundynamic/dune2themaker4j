@@ -6,11 +6,11 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class ImageRepository implements Repository<Image>{
+public class ImageRepository implements Repository<Image> {
 
 	private Color colorKey = new Color(255, 0, 255);
 	private HashMap<String, Image> images = new HashMap<String, Image>();
-	
+
 	public void addItem(String key, Image item) {
 		if (key == null) {
 			throw new IllegalArgumentException("Key may not be null.");
@@ -19,11 +19,11 @@ public class ImageRepository implements Repository<Image>{
 			throw new IllegalArgumentException("Item for key [" + key + "] may not be null.");
 		}
 		if (getItem(key) != null) {
-			throw new IllegalArgumentException("Key ["+ key + "] already exists in imageRepository");
+			throw new IllegalArgumentException("Key [" + key + "] already exists in imageRepository");
 		}
 		images.put(key, item);
 	}
-	
+
 	public void addItem(String key, String filename) {
 		images.put(key, loadImage(filename, false));
 	}
@@ -31,7 +31,7 @@ public class ImageRepository implements Repository<Image>{
 
 	/**
 	 * Add image to cache.
-	 * 
+	 *
 	 * @param location
 	 */
 	protected Image loadImage(String location, boolean transparant) {
@@ -48,7 +48,7 @@ public class ImageRepository implements Repository<Image>{
 		}
 		return null;
 	}
-	
+
 	public Image getItem(String key) {
 		return images.get(key);
 	}
