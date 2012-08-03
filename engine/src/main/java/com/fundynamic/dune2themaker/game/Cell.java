@@ -11,8 +11,8 @@ public class Cell {
 	private Terrain terrain;
 	private TerrainFacing terrainFacing;
 
-	public Cell() {
-		terrain = new EmptyTerrain();
+	public Cell(Terrain terrain) {
+		this.terrain = terrain;
 	}
 
 	public void changeTerrain(Terrain terrain) {

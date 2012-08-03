@@ -2,6 +2,7 @@ package com.fundynamic.dune2themaker;
 
 import com.fundynamic.dune2themaker.game.Cell;
 import com.fundynamic.dune2themaker.game.TerrainFactory;
+import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 import com.fundynamic.dune2themaker.terrain.Concrete;
@@ -47,5 +48,9 @@ public class DuneTerrainFactory implements TerrainFactory {
 			default:
 				throw new IndexOutOfBoundsException("Invalid value for terrainType: " + terrainType);
 		}
+	}
+
+	public Terrain createEmptyTerrain() {
+		return new EmptyTerrain();
 	}
 }

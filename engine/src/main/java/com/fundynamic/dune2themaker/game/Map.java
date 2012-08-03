@@ -33,6 +33,9 @@ public class Map {
 	}
 
 	public Image getMapImage() throws SlickException {
+		if (this.mapImage == null) {
+			mapImage = new MapRenderer().render(this);
+		}
 		return mapImage;
 	}
 
@@ -42,7 +45,6 @@ public class Map {
 			initializeEmptyMap(width, height);
 			putTerrainOnMap();
 			setTerrainFacingsForCells();
-			mapImage = new MapRenderer().render(this);
 			initialized = true;
 		}
 	}
@@ -51,11 +53,12 @@ public class Map {
 		this.cells = new Cell[width + 2][height + 2];
 		for (int x = 0; x < this.width + 2; x++) {
 			for (int y = 0; y < this.height + 2; y++) {
-				cells[x][y] = new Cell();
+				cells[x][y] = new Cell(terrainFactory.createEmptyTerrain());
 			}
 		}
 	}
 
+	// @TODO: move this to a MapLoader / MapCreator / MapFactory / MapRepository
 	private void putTerrainOnMap() {
 		for (int x = 1; x <= this.width; x++) {
 			for (int y = 1; y <= this.height; y++) {
@@ -67,6 +70,10 @@ public class Map {
 	}
 
 	private void setTerrainFacingsForCells() {
+
+	}
+
+	public void smooth() {
 
 	}
 }

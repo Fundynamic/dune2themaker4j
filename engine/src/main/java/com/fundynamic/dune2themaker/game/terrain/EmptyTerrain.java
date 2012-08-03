@@ -26,4 +26,7 @@ public class EmptyTerrain implements Terrain {
 	public Image getTileImage() {
 		return image;
 	}
+
+	public void setFacing(TerrainFacing terrainFacing) {
+	}
 }

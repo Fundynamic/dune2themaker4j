@@ -7,6 +7,7 @@ public interface Terrain {
 	// events??
 	Image getTileImage();
 
+	void setFacing(TerrainFacing terrainFacing);
 
 }
 

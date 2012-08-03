@@ -63,6 +63,9 @@ public class FacingTest {
 		public Image getTileImage() {
 			return theme.getTileImage(0, TerrainFacing.FULL);
 		}
+
+		public void setFacing(TerrainFacing terrainFacing) {
+		}
 	}
 
 }
