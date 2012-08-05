@@ -23,10 +23,23 @@ public class EmptyTerrain implements Terrain {
 		}
 	}
 
+	private EmptyTerrain(Image image) {
+		this.image = image;
+	}
+
+	public static EmptyTerrain testInstance() {
+		return new EmptyTerrain(null);
+	}
+
 	public Image getTileImage() {
 		return image;
 	}
 
 	public void setFacing(TerrainFacing terrainFacing) {
+	}
+
+	public boolean isSame(Terrain terrain) {
+		if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
+		return true;
 	}
 }

@@ -53,6 +53,10 @@ public class FacingTest {
 
 		public void setFacing(TerrainFacing terrainFacing) {
 		}
+
+		public boolean isSame(Terrain terrain) {
+			return false;
+		}
 	}
 
 }

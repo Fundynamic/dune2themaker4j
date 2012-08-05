@@ -27,4 +27,7 @@ public class Cell {
 		return terrain;
 	}
 
+	public boolean isSameTerrain(Terrain terrain) {
+		return this.terrain.isSame(terrain);
+	}
 }

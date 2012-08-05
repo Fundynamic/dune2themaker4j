@@ -9,5 +9,6 @@ public interface Terrain {
 
 	void setFacing(TerrainFacing terrainFacing);
 
+	boolean isSame(Terrain terrain);
 }
 

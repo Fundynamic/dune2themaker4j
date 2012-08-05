@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import com.fundynamic.dune2themaker.game.TerrainFactory;
 import com.fundynamic.dune2themaker.game.map.Cell;
@@ -78,7 +79,8 @@ public class MapTest {
 	public void smoothCellWithBorderNeighboursAndRightNeighbourOfDifferentTerrainSetTerrainFacingToTopBottomLeft() throws Exception {
 		Map map = makeMap(2, 1);
 		Terrain rock = Mockito.mock(Terrain.class);
-		Terrain sand = Mockito.mock(Terrain.class);
+		Terrain sand = new TestingSandTerrain();
+
 		map.getCell(1, 1).changeTerrain(rock);
 		map.getCell(2, 1).changeTerrain(sand);
 
@@ -91,5 +93,33 @@ public class MapTest {
 		Map map = new Map(terrainFactory, width, height);
 		map.init();
 		return map;
+	}
+
+	private class TestingSandTerrain implements Terrain {
+
+		public Image getTileImage() {
+			return null;
+		}
+
+		public void setFacing(TerrainFacing terrainFacing) {
+		}
+
+		public boolean isSame(Terrain terrain) {
+			return false;
+		}
+	}
+
+	private class TestingRockTerrain implements Terrain {
+
+		public Image getTileImage() {
+			return null;
+		}
+
+		public void setFacing(TerrainFacing terrainFacing) {
+		}
+
+		public boolean isSame(Terrain terrain) {
+			return false;
+		}
 	}
 }

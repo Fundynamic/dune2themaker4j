@@ -15,9 +15,12 @@ public abstract class DuneTerrain implements Terrain {
 		this.tileImage = tileImage;
 	}
 
-
 	public Image getTileImage() {
 		return tileImage;
+	}
+
+	public boolean isSame(Terrain terrain) {
+		return this.getClass().equals(terrain.getClass());
 	}
 
 }
