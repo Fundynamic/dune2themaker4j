@@ -1,6 +1,6 @@
 package com.fundynamic.dune2themaker;
 
-import com.fundynamic.dune2themaker.game.Cell;
+import com.fundynamic.dune2themaker.game.map.Cell;
 import com.fundynamic.dune2themaker.game.TerrainFactory;
 import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;

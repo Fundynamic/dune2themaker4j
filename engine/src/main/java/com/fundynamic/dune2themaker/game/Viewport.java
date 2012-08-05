@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import com.fundynamic.dune2themaker.game.map.Map;
 import com.fundynamic.dune2themaker.infrastructure.math.Vector2D;
 
 public class Viewport {

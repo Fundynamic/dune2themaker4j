@@ -1,8 +1,7 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.game.map;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
@@ -12,6 +11,7 @@ public class Cell {
 	private TerrainFacing terrainFacing;
 
 	public Cell(Terrain terrain) {
+		if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
 		this.terrain = terrain;
 	}
 

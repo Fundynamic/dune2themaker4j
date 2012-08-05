@@ -7,6 +7,7 @@ import java.util.List;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import com.fundynamic.dune2themaker.game.map.Map;
 import com.fundynamic.dune2themaker.infrastructure.control.Keyboard;
 import com.fundynamic.dune2themaker.infrastructure.control.Mouse;
 import com.fundynamic.dune2themaker.infrastructure.math.Random;

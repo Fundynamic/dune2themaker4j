@@ -1,4 +1,4 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.game.map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +8,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+
+import com.fundynamic.dune2themaker.game.TestableImage;
+import com.fundynamic.dune2themaker.game.map.Cell;
+import com.fundynamic.dune2themaker.game.map.Map;
+import com.fundynamic.dune2themaker.game.map.MapRenderer;
 
 import junit.framework.Assert;
 

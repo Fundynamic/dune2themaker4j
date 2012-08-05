@@ -1,8 +1,10 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.game.map;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import com.fundynamic.dune2themaker.game.TerrainFactory;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
+import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
 public class Map {
 
@@ -43,7 +45,7 @@ public class Map {
 		if (!initialized) {
 			// this does not work when we move the code in the constructor?
 			initializeEmptyMap(width, height);
-			putTerrainOnMap();
+//			putTerrainOnMap();
 			setTerrainFacingsForCells();
 			initialized = true;
 		}
@@ -74,6 +76,23 @@ public class Map {
 	}
 
 	public void smooth() {
+		for (int x = 1; x <= this.width; x++) {
+			for (int y = 1; y <= this.height; y++) {
+				final Cell cell = cells[x][y];
+				final Terrain terrain = cell.getTerrain();
 
+				final Cell rightNeighbour = cells[x+1][y];
+				if (isTerrain(rightNeighbour, terrain)) {
+					terrain.setFacing(TerrainFacing.FULL);
+				} else {
+					terrain.setFacing(TerrainFacing.TOP_BOTTOM_LEFT);
+				}
+			}
+		}
+	}
+
+	private boolean isTerrain(Cell cell, Terrain terrain) {
+		final Terrain otherTerrain = cell.getTerrain();
+		return otherTerrain.getClass().equals(terrain.getClass());
 	}
 }

@@ -1,8 +1,11 @@
-package com.fundynamic.dune2themaker.game;
+package com.fundynamic.dune2themaker.game.map;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import com.fundynamic.dune2themaker.game.Tile;
+import com.fundynamic.dune2themaker.game.map.Cell;
+import com.fundynamic.dune2themaker.game.map.Map;
 
 public class MapRenderer {
 
