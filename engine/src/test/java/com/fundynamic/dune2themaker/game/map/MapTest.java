@@ -1,21 +1,18 @@
 package com.fundynamic.dune2themaker.game.map;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import com.fundynamic.dune2themaker.game.TerrainFactory;
-import com.fundynamic.dune2themaker.game.map.Cell;
-import com.fundynamic.dune2themaker.game.map.Map;
 import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
 import junit.framework.Assert;
+
+import static org.mockito.Matchers.*;
 
 public class MapTest {
 
@@ -55,7 +52,7 @@ public class MapTest {
 
 	@Test
 	public void constructorShouldSetEmptyTerrainAsCellTerrain() throws Exception {
-		Terrain expectedTerrain = Mockito.mock(Terrain.class);
+		Terrain expectedTerrain = makeTerrain();
 		Mockito.when(terrainFactory.createEmptyTerrain()).thenReturn(expectedTerrain);
 		Map map = makeMap(1, 1);
 
@@ -67,7 +64,7 @@ public class MapTest {
 	@Test
 	public void smoothCellWithBorderNeighboursSetTerrainFacingToFull() throws Exception {
 		Map map = makeMap(1, 1);
-		Terrain rock = Mockito.mock(Terrain.class);
+		Terrain rock = makeTerrain();
 		map.getCell(1, 1).changeTerrain(rock);
 
 		map.smooth();
@@ -78,8 +75,8 @@ public class MapTest {
 	@Test
 	public void smoothCellWithBorderNeighboursAndRightNeighbourOfDifferentTerrainSetTerrainFacingToTopBottomLeft() throws Exception {
 		Map map = makeMap(2, 1);
-		Terrain rock = Mockito.mock(Terrain.class);
-		Terrain sand = new TestingSandTerrain();
+		Terrain rock = makeTerrain();
+		Terrain sand = makeTerrain();
 
 		map.getCell(1, 1).changeTerrain(rock);
 		map.getCell(2, 1).changeTerrain(sand);
@@ -95,31 +92,9 @@ public class MapTest {
 		return map;
 	}
 
-	private class TestingSandTerrain implements Terrain {
-
-		public Image getTileImage() {
-			return null;
-		}
-
-		public void setFacing(TerrainFacing terrainFacing) {
-		}
-
-		public boolean isSame(Terrain terrain) {
-			return false;
-		}
-	}
-
-	private class TestingRockTerrain implements Terrain {
-
-		public Image getTileImage() {
-			return null;
-		}
-
-		public void setFacing(TerrainFacing terrainFacing) {
-		}
-
-		public boolean isSame(Terrain terrain) {
-			return false;
-		}
+	private Terrain makeTerrain() {
+		Terrain terrain = Mockito.mock(Terrain.class);
+		Mockito.when(terrain.isSame(emptyTerrain)).thenReturn(true);
+		return terrain;
 	}
 }

@@ -82,7 +82,7 @@ public class Map {
 				final Terrain terrain = cell.getTerrain();
 
 				final Cell rightNeighbour = cells[x+1][y];
-				if (isTerrain(rightNeighbour, terrain)) {
+				if (cell.isSameTerrain(rightNeighbour.getTerrain())) {
 					terrain.setFacing(TerrainFacing.FULL);
 				} else {
 					terrain.setFacing(TerrainFacing.TOP_BOTTOM_LEFT);
@@ -91,8 +91,4 @@ public class Map {
 		}
 	}
 
-	private boolean isTerrain(Cell cell, Terrain terrain) {
-		final Terrain otherTerrain = cell.getTerrain();
-		return otherTerrain.getClass().equals(terrain.getClass());
-	}
 }

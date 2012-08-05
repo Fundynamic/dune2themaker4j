@@ -1,6 +1,7 @@
 package com.fundynamic.dune2themaker.terrain;
 
 import org.newdawn.slick.Image;
+import com.fundynamic.dune2themaker.game.terrain.EmptyTerrain;
 import com.fundynamic.dune2themaker.game.terrain.Terrain;
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
@@ -20,6 +21,7 @@ public abstract class DuneTerrain implements Terrain {
 	}
 
 	public boolean isSame(Terrain terrain) {
+		if (terrain instanceof EmptyTerrain) return true;
 		return this.getClass().equals(terrain.getClass());
 	}
 
