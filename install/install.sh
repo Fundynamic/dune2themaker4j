@@ -1,5 +1,6 @@
-rem Installs the following jar files into your local maven
-rem repository.
+#!/bin/sh
+# Installs the following jar files into your local maven
+# repository.
 
 mvn install:install-file -Dfile=hiero.jar -DgroupId=com.cokeandcode -DartifactId=hiero -Dversion=1.1 -Dpackaging=jar
 
