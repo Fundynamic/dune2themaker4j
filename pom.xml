@@ -10,6 +10,7 @@
 
 	<properties>
 		<java.library.path>resources\dll</java.library.path>
+        <d2tm.slick.library.version>1.2</d2tm.slick.library.version>
 	</properties>
 	<!-- create executable jar file -->
 
@@ -95,77 +96,77 @@
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>hiero</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>ibxm</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>jinput</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>jnlp</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>jogg-0.0.7</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>jorbis-0.0.15</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>lwjgl</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>natives-linux</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>natives-mac</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>natives-win32</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>packulike</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>pedigree</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>scalar</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>slick-util</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.cokeandcode</groupId>
 				<artifactId>slick</artifactId>
-				<version>1.1</version>
+				<version>${d2tm.slick.library.version}</version>
 			</dependency>
 
 			<!-- D2TM -->

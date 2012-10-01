@@ -30,10 +30,6 @@
 		<!-- slick and its dependencies, installed using the install.bat http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html -->
 		<dependency>
 			<groupId>com.cokeandcode</groupId>
-			<artifactId>hiero</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.cokeandcode</groupId>
 			<artifactId>ibxm</artifactId>
 		</dependency>
 		<dependency>
@@ -67,22 +63,6 @@
 		<dependency>
 			<groupId>com.cokeandcode</groupId>
 			<artifactId>natives-win32</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.cokeandcode</groupId>
-			<artifactId>packulike</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.cokeandcode</groupId>
-			<artifactId>pedigree</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.cokeandcode</groupId>
-			<artifactId>scalar</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.cokeandcode</groupId>
-			<artifactId>slick-util</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cokeandcode</groupId>
