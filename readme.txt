@@ -66,5 +66,5 @@ Setting up D2TM to develop in Eclipse
    -Djava.library.path=engine/src/main/resources/natives
 
 =====================================
-Linux
+Linux - Ubuntu
 =====================================
