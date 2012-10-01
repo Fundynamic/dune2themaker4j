@@ -64,3 +64,7 @@ Setting up D2TM to develop in Eclipse
 7. Set up your run configuration of the class Dune2themaker (main class) to
    use native libraries. Add VM flags:
    -Djava.library.path=engine/src/main/resources/natives
+
+=====================================
+Linux
+=====================================
