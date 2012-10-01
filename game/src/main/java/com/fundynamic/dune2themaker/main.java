@@ -26,13 +26,13 @@ public class main extends BasicGame {
 	}
 
 	public static void main(String[] args) {
-		Bootstrap.runAsApplication(new main("Dune II - The Maker"), 800, 600, false);
+		Bootstrap.runAsApplication(new main("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, false);
 	}
 
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
 		try {
-			Theme theme = new Theme(new Image("sheet_terrain.png"));
+            Theme theme = new Theme(new Image("sheet_terrain.png"));
 			TerrainFactory terrainFactory = new DuneTerrainFactory(theme);
 			playingState = new PlayingState(gameContainer, terrainFactory);
 			// calling init here does not work with images

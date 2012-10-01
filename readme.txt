@@ -47,10 +47,24 @@ OS name: "windows vista" version: "6.1" arch: "x86" Family: "windows"
 
 TODO: - set up in IntelliJ
 
+===========================================
+Setting up D2TM to develop in IntelliJ IDEA
+===========================================
+1. First, go to the install directory and run install.bat / install.sh
+  - this should only be done once
+2. Open IntelliJ
+3. New Project from external model
+4. Choose maven
+5. Check - Search projects recursively
+6. Check - Automatically add maven projects.
+7. Set up your run configuration of the class "main" to
+   use native libraries. Add VM flags:
+   -Djava.library.path=engine/src/main/resources/natives
+
 =====================================
 Setting up D2TM to develop in Eclipse
 =====================================
-1. First, go to the install directory and run install.bat
+1. First, go to the install directory and run install.bat / install.sh
   - this should only be done once
 2. Get back to the project root directory (where POM.XML is located).
 3. Run
@@ -61,7 +75,7 @@ Setting up D2TM to develop in Eclipse
 4. Start eclipse
 5. Import project
 6. Select dune2themaker project
-7. Set up your run configuration of the class Dune2themaker (main class) to
+7. Set up your run configuration of the class "main" to
    use native libraries. Add VM flags:
    -Djava.library.path=engine/src/main/resources/natives
 
