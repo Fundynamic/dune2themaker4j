@@ -1,93 +1,109 @@
 package com.fundynamic.dune2themaker.game.map;
 
-import com.fundynamic.dune2themaker.game.terrain.Terrain;
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import static org.mockito.AdditionalMatchers.not;
 
 public class FacingDeterminerTest {
 
-    private final Terrain SAND = makeTerrain();
-    private final Terrain ROCK = makeTerrain();
-
     @Test
     public void returnsMiddleWhenNoSameTypeOfNeighbours() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, SAND, SAND, SAND);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.MIDDLE, facing);
     }
 
     @Test
     public void returnsTopWhenSameTypeAbove() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(ROCK, SAND, SAND, SAND);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setTopSame(true);
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.TOP, facing);
     }
 
     @Test
     public void returnsTopWhenSameTypeRight() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, ROCK, SAND, SAND);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setRightSame(true);
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.RIGHT, facing);
     }
 
     @Test
     public void returnsTopWhenSameTypeDown() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, SAND, ROCK, SAND);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setBottomSame(true);
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.BOTTOM, facing);
     }
 
     @Test
     public void returnsTopWhenSameTypeLeft() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, SAND, SAND, ROCK);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setLeftSame(true);
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.LEFT, facing);
     }
 
     @Test
     @Ignore
+    public void returnsTopWhenSameTypeAboveAndRight() throws Exception {
+        FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setTopSame(true);
+        determiner.setRightSame(true);
+        TerrainFacing facing = determiner.getFacing();
+        Assert.assertEquals(TerrainFacing.TOP_RIGHT, facing);
+    }
+
+    @Test
+    @Ignore
     public void returnsFullWhenAllSameTypeOfNeighbours() throws Exception {
-        FacingDeterminer facingDeterminer = new FacingDeterminer(ROCK, ROCK, ROCK, ROCK);
-        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        FacingDeterminer determiner = makeFacingDeterminer();
+        TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.FULL, facing);
     }
 
-    private Terrain makeTerrain() {
-        Terrain terrain = Mockito.mock(Terrain.class);
-        Mockito.when(terrain.isSame(terrain)).thenReturn(true);
-        return terrain;
+    private FacingDeterminer makeFacingDeterminer() {
+        return new FacingDeterminer();
     }
 
     private class FacingDeterminer {
 
-        private final Terrain up;
-        private final Terrain right;
-        private final Terrain down;
-        private final Terrain left;
+        private boolean isTopSame;
+        private boolean isRightSame;
+        private boolean isBottomSame;
+        private boolean isLeftSame;
 
-        public FacingDeterminer(Terrain up, Terrain right, Terrain down, Terrain left) {
-            this.up = up;
-            this.right = right;
-            this.down = down;
-            this.left = left;
+        public void setTopSame(boolean topSame) {
+            this.isTopSame = topSame;
         }
 
-        public TerrainFacing getFacing(Terrain center) {
-            if (up.isSame(center)) {
+        public void setRightSame(boolean rightSame) {
+            isRightSame = rightSame;
+        }
+
+        public void setBottomSame(boolean bottomSame) {
+            this.isBottomSame = bottomSame;
+        }
+
+        public void setLeftSame(boolean leftSame) {
+            isLeftSame = leftSame;
+        }
+
+        public TerrainFacing getFacing() {
+            if (isTopSame) {
                 return TerrainFacing.TOP;
             }
-            if (right.isSame(center)) {
+            if (isRightSame) {
                 return TerrainFacing.RIGHT;
             }
-            if (down.isSame(center)) {
+            if (isBottomSame) {
                 return TerrainFacing.BOTTOM;
             }
-            if (left.isSame(center)) {
+            if (isLeftSame) {
                 return TerrainFacing.LEFT;
             }
             return TerrainFacing.MIDDLE;
