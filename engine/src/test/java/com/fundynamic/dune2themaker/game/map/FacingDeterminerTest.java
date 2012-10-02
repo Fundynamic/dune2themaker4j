@@ -2,10 +2,7 @@ package com.fundynamic.dune2themaker.game.map;
 
 import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 import junit.framework.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.mockito.AdditionalMatchers.not;
 
 public class FacingDeterminerTest {
 
@@ -49,7 +46,6 @@ public class FacingDeterminerTest {
     }
 
     @Test
-    @Ignore
     public void returnsTopWhenSameTypeAboveAndRight() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
         determiner.setTopSame(true);
@@ -59,9 +55,12 @@ public class FacingDeterminerTest {
     }
 
     @Test
-    @Ignore
     public void returnsFullWhenAllSameTypeOfNeighbours() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setTopSame(true);
+        determiner.setRightSame(true);
+        determiner.setBottomSame(true);
+        determiner.setLeftSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.FULL, facing);
     }
@@ -70,43 +69,4 @@ public class FacingDeterminerTest {
         return new FacingDeterminer();
     }
 
-    private class FacingDeterminer {
-
-        private boolean isTopSame;
-        private boolean isRightSame;
-        private boolean isBottomSame;
-        private boolean isLeftSame;
-
-        public void setTopSame(boolean topSame) {
-            this.isTopSame = topSame;
-        }
-
-        public void setRightSame(boolean rightSame) {
-            isRightSame = rightSame;
-        }
-
-        public void setBottomSame(boolean bottomSame) {
-            this.isBottomSame = bottomSame;
-        }
-
-        public void setLeftSame(boolean leftSame) {
-            isLeftSame = leftSame;
-        }
-
-        public TerrainFacing getFacing() {
-            if (isTopSame) {
-                return TerrainFacing.TOP;
-            }
-            if (isRightSame) {
-                return TerrainFacing.RIGHT;
-            }
-            if (isBottomSame) {
-                return TerrainFacing.BOTTOM;
-            }
-            if (isLeftSame) {
-                return TerrainFacing.LEFT;
-            }
-            return TerrainFacing.MIDDLE;
-        }
-    }
 }
