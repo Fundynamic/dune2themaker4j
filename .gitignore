@@ -7,3 +7,9 @@
 
 # IntelliJ
 .idea
+
+# Maven target dirs
+engine/target
+game/target
+d2tm/target
+target

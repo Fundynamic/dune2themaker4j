@@ -45,7 +45,7 @@ public class Map {
 		if (!initialized) {
 			// this does not work when we move the code in the constructor?
 			initializeEmptyMap(width, height);
-//			putTerrainOnMap();
+			putTerrainOnMap();
 			setTerrainFacingsForCells();
 			initialized = true;
 		}
