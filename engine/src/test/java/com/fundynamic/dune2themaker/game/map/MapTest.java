@@ -86,7 +86,21 @@ public class MapTest {
 		Mockito.verify(rock).setFacing(TerrainFacing.TOP_BOTTOM_LEFT);
 	}
 
-	private Map makeMap(int width, int height) throws Exception {
+    @Test
+    public void smoothCellWithBorderNeighboursAndLeftNeighbourOfDifferentTerrainSetTerrainFacingToTopRightBottom() throws Exception {
+        Map map = makeMap(2, 1);
+        Terrain rock = makeTerrain();
+        Terrain sand = makeTerrain();
+
+        map.getCell(1, 1).changeTerrain(rock);
+        map.getCell(2, 1).changeTerrain(sand);
+
+        map.smooth();
+
+        Mockito.verify(rock).setFacing(TerrainFacing.TOP_RIGHT_BOTTOM);
+    }
+
+    private Map makeMap(int width, int height) throws Exception {
 		Map map = new Map(terrainFactory, width, height);
 		map.init();
 		return map;

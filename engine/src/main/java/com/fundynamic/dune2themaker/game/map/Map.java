@@ -45,8 +45,7 @@ public class Map {
 		if (!initialized) {
 			// this does not work when we move the code in the constructor?
 			initializeEmptyMap(width, height);
-			putTerrainOnMap();
-			setTerrainFacingsForCells();
+			//putTerrainOnMap();
 			initialized = true;
 		}
 	}
@@ -71,10 +70,6 @@ public class Map {
 		}
 	}
 
-	private void setTerrainFacingsForCells() {
-
-	}
-
 	public void smooth() {
 		for (int x = 1; x <= this.width; x++) {
 			for (int y = 1; y <= this.height; y++) {
@@ -82,9 +77,12 @@ public class Map {
 				final Terrain terrain = cell.getTerrain();
 
 				final Cell rightNeighbour = cells[x+1][y];
+				final Cell leftNeighbour = cells[x-1][y];
 				if (cell.isSameTerrain(rightNeighbour.getTerrain())) {
 					terrain.setFacing(TerrainFacing.FULL);
-				} else {
+				} else if (!cell.isSameTerrain(leftNeighbour.getTerrain())) {
+                    terrain.setFacing(TerrainFacing.TOP_RIGHT_BOTTOM);
+                } else {
 					terrain.setFacing(TerrainFacing.TOP_BOTTOM_LEFT);
 				}
 			}
