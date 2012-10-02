@@ -36,6 +36,20 @@ public class FacingDeterminerTest {
     }
 
     @Test
+    public void returnsTopWhenSameTypeDown() throws Exception {
+        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, SAND, ROCK, SAND);
+        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        Assert.assertEquals(TerrainFacing.BOTTOM, facing);
+    }
+
+    @Test
+    public void returnsTopWhenSameTypeLeft() throws Exception {
+        FacingDeterminer facingDeterminer = new FacingDeterminer(SAND, SAND, SAND, ROCK);
+        TerrainFacing facing = facingDeterminer.getFacing(ROCK);
+        Assert.assertEquals(TerrainFacing.LEFT, facing);
+    }
+
+    @Test
     @Ignore
     public void returnsFullWhenAllSameTypeOfNeighbours() throws Exception {
         FacingDeterminer facingDeterminer = new FacingDeterminer(ROCK, ROCK, ROCK, ROCK);
@@ -69,6 +83,12 @@ public class FacingDeterminerTest {
             }
             if (right.isSame(center)) {
                 return TerrainFacing.RIGHT;
+            }
+            if (down.isSame(center)) {
+                return TerrainFacing.BOTTOM;
+            }
+            if (left.isSame(center)) {
+                return TerrainFacing.LEFT;
             }
             return TerrainFacing.MIDDLE;
         }
