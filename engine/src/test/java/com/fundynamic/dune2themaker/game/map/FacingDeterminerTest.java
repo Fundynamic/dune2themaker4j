@@ -14,42 +14,50 @@ public class FacingDeterminerTest {
     }
 
     @Test
-    public void returnsTopWhenSameTypeAbove() throws Exception {
+    public void returnsTopWhenDifferentTypeAbove() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
-        determiner.setTopSame(true);
+        determiner.setRightSame(true);
+        determiner.setBottomSame(true);
+        determiner.setLeftSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.TOP, facing);
     }
 
     @Test
-    public void returnsTopWhenSameTypeRight() throws Exception {
+    public void returnsRightWhenDifferentTypeRight() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
-        determiner.setRightSame(true);
+        determiner.setTopSame(true);
+        determiner.setBottomSame(true);
+        determiner.setLeftSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.RIGHT, facing);
     }
 
     @Test
-    public void returnsTopWhenSameTypeDown() throws Exception {
+    public void returnsBottomWhenDifferentTypeBottom() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
-        determiner.setBottomSame(true);
+        determiner.setTopSame(true);
+        determiner.setRightSame(true);
+        determiner.setLeftSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.BOTTOM, facing);
     }
 
     @Test
-    public void returnsTopWhenSameTypeLeft() throws Exception {
+    public void returnsLeftWhenDifferentTypeLeft() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
-        determiner.setLeftSame(true);
+        determiner.setTopSame(true);
+        determiner.setRightSame(true);
+        determiner.setBottomSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.LEFT, facing);
     }
 
     @Test
-    public void returnsTopWhenSameTypeAboveAndRight() throws Exception {
+    public void returnsTopRightWhenSameTypeBottomAndLeft() throws Exception {
         FacingDeterminer determiner = makeFacingDeterminer();
-        determiner.setTopSame(true);
-        determiner.setRightSame(true);
+        determiner.setBottomSame(true);
+        determiner.setLeftSame(true);
         TerrainFacing facing = determiner.getFacing();
         Assert.assertEquals(TerrainFacing.TOP_RIGHT, facing);
     }

@@ -14,11 +14,20 @@ package com.fundynamic.dune2themaker.game.terrain;
  * (we go clockwise), so the enum is TOP_RIGHT_BOTTOM
  */
 public enum TerrainFacing {
-	FULL,
-	TOP_RIGHT_BOTTOM, TOP_BOTTOM_LEFT, RIGHT_BOTTOM_LEFT, TOP_RIGHT_LEFT,
-	RIGHT_BOTTOM, TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT,
+    FULL,
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM,
+    TOP_LEFT,
+    RIGHT_BOTTOM,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
     MIDDLE,
-	RIGHT_LEFT,
-	LEFT, RIGHT, TOP, BOTTOM,
-	TOP_BOTTOM
+    TOP_BOTTOM,
+    TOP_RIGHT_BOTTOM,
+    TOP_BOTTOM_LEFT,
+    RIGHT_BOTTOM_LEFT,
+    TOP_RIGHT_LEFT,
+    RIGHT_LEFT
 }

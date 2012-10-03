@@ -1,13 +1,16 @@
 package com.fundynamic.dune2themaker.terrain;
 
-import org.newdawn.slick.Image;
+import com.fundynamic.dune2themaker.Theme;
 import com.fundynamic.dune2themaker.game.terrain.ConstructionGround;
-import com.fundynamic.dune2themaker.game.terrain.Terrain;
-import com.fundynamic.dune2themaker.game.terrain.TerrainFacing;
 
 public class Rock extends DuneTerrain implements ConstructionGround {
 
-	public Rock(Image tileImage) {
-		super(tileImage);
+	public Rock(Theme theme) {
+		super(theme);
 	}
+
+    @Override
+    protected int getTerrainType() {
+        return DuneTerrain.TERRAIN_ROCK;
+    }
 }

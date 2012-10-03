@@ -13,8 +13,9 @@ public class Theme {
 		this.spriteSheet = new SpriteSheet(image, Tile.WIDTH, Tile.HEIGHT);
 	}
 
-	public Image getTileImage(int rowOnSpriteSheet, TerrainFacing facing) {
-		return this.spriteSheet.getSprite(0, rowOnSpriteSheet);
+	public Image getTileImage(int row, TerrainFacing facing) {
+        int column = facing.ordinal();
+		return this.spriteSheet.getSprite(column, row);
 	}
 
 }

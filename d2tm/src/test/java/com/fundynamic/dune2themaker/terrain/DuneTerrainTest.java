@@ -1,5 +1,6 @@
 package com.fundynamic.dune2themaker.terrain;
 
+import com.fundynamic.dune2themaker.Theme;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,11 +44,11 @@ public class DuneTerrainTest {
 	}
 
 	private Rock makeRock() {
-		return new Rock(Mockito.mock(Image.class));
+		return new Rock(Mockito.mock(Theme.class));
 	}
 
 	private Sand makeSand() {
-		return new Sand(Mockito.mock(Image.class));
+		return new Sand(Mockito.mock(Theme.class));
 	}
 
 

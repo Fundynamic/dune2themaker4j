@@ -1,10 +1,15 @@
 package com.fundynamic.dune2themaker.terrain;
 
-import org.newdawn.slick.Image;
+import com.fundynamic.dune2themaker.Theme;
 
 public class Sand extends DuneTerrain {
 
-	public Sand(Image tileImage) {
-		super(tileImage);
+	public Sand(Theme theme) {
+		super(theme);
 	}
+
+    @Override
+    protected int getTerrainType() {
+        return DuneTerrain.TERRAIN_SAND;
+    }
 }
