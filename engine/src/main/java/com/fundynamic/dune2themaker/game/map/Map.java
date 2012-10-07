@@ -109,22 +109,24 @@ public class Map {
             facingDeterminer.setLeftSame(terrainOfCellInCenter.isSame(leftNeighbour.getTerrain()));
             return facingDeterminer.getFacing();
         }
+
+        private Cell getCellLeftNeighbour(int x, int y) {
+            return cells[x-1][y];
+        }
+
+        private Cell getCellBottomNeighbour(int x, int y) {
+            return cells[x][y+1];
+        }
+
+        private Cell getCellRightNeighbour(int x, int y) {
+            return cells[x+1][y];
+        }
+
+        private Cell getCellTopNeighbour(int x, int y) {
+            return cells[x][y-1];
+        }
     }
 
-    private Cell getCellLeftNeighbour(int xOfCellInCenter, int yOfCellInCenter) {
-        return cells[xOfCellInCenter-1][yOfCellInCenter];
-    }
 
-    private Cell getCellBottomNeighbour(int xOfCellInCenter, int yOfCellInCenter) {
-        return cells[xOfCellInCenter][yOfCellInCenter+1];
-    }
-
-    private Cell getCellRightNeighbour(int xOfCellInCenter, int yOfCellInCenter) {
-        return cells[xOfCellInCenter+1][yOfCellInCenter];
-    }
-
-    private Cell getCellTopNeighbour(int xOfCellInCenter, int yOfCellInCenter) {
-        return cells[xOfCellInCenter][yOfCellInCenter-1];
-    }
 
 }
