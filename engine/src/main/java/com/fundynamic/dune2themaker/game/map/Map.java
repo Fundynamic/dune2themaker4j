@@ -96,10 +96,10 @@ public class Map {
         private TerrainFacing determineFacing() {
             Terrain terrain = getTerrain();
             FacingDeterminer facingDeterminer = new FacingDeterminer();
-            facingDeterminer.setTopSame(terrain.isSame(getTerrainTopNeighbour()));
-            facingDeterminer.setRightSame(terrain.isSame(getTerrainRightNeighbour()));
-            facingDeterminer.setBottomSame(terrain.isSame(getTerrainBottomNeighbour()));
-            facingDeterminer.setLeftSame(terrain.isSame(getTerrainLeftNeighbour()));
+            facingDeterminer.setTopSame(terrain.isSame(topTerrain()));
+            facingDeterminer.setRightSame(terrain.isSame(rightTerrain()));
+            facingDeterminer.setBottomSame(terrain.isSame(bottomTerrain()));
+            facingDeterminer.setLeftSame(terrain.isSame(leftTerrain()));
             return facingDeterminer.getFacing();
         }
 
@@ -107,19 +107,19 @@ public class Map {
             return cells[x][y];
         }
 
-        private Terrain getTerrainLeftNeighbour() {
+        private Terrain leftTerrain() {
             return getCell(x - 1, y).getTerrain();
         }
 
-        private Terrain getTerrainBottomNeighbour() {
+        private Terrain bottomTerrain() {
             return getCell(x, y + 1).getTerrain();
         }
 
-        private Terrain getTerrainRightNeighbour() {
+        private Terrain rightTerrain() {
             return getCell(x + 1, y).getTerrain();
         }
 
-        private Terrain getTerrainTopNeighbour() {
+        private Terrain topTerrain() {
             return getCell(x, y - 1).getTerrain();
         }
     }
