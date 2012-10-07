@@ -76,8 +76,7 @@ public class Map {
             for (int y = 1; y <= this.height; y++) {
                 final SquareCell cell = new SquareCell(x, y);
                 final Terrain terrain = cell.getTerrain();
-                TerrainFacing facing = cell.determineFacing(x, y, terrain);
-                terrain.setFacing(facing);
+                terrain.setFacing(cell.determineFacing());
 			}
 		}
 	}
@@ -92,37 +91,37 @@ public class Map {
             this.y = y;
         }
 
-
         public Terrain getTerrain() {
             return cells[x][y].getTerrain();
         }
 
-        private TerrainFacing determineFacing(int xOfCellInCenter, int yOfCellInCenter, Terrain terrainOfCellInCenter) {
+        private TerrainFacing determineFacing() {
+            Terrain terrain = getTerrain();
             FacingDeterminer facingDeterminer = new FacingDeterminer();
-            final Cell topNeighbour = getCellTopNeighbour(xOfCellInCenter, yOfCellInCenter);
-            final Cell rightNeighbour = getCellRightNeighbour(xOfCellInCenter, yOfCellInCenter);
-            final Cell bottomNeighbour = getCellBottomNeighbour(xOfCellInCenter, yOfCellInCenter);
-            final Cell leftNeighbour = getCellLeftNeighbour(xOfCellInCenter, yOfCellInCenter);
-            facingDeterminer.setTopSame(terrainOfCellInCenter.isSame(topNeighbour.getTerrain()));
-            facingDeterminer.setRightSame(terrainOfCellInCenter.isSame(rightNeighbour.getTerrain()));
-            facingDeterminer.setBottomSame(terrainOfCellInCenter.isSame(bottomNeighbour.getTerrain()));
-            facingDeterminer.setLeftSame(terrainOfCellInCenter.isSame(leftNeighbour.getTerrain()));
+            final Cell topNeighbour = getCellTopNeighbour();
+            final Cell rightNeighbour = getCellRightNeighbour();
+            final Cell bottomNeighbour = getCellBottomNeighbour();
+            final Cell leftNeighbour = getCellLeftNeighbour();
+            facingDeterminer.setTopSame(terrain.isSame(topNeighbour.getTerrain()));
+            facingDeterminer.setRightSame(terrain.isSame(rightNeighbour.getTerrain()));
+            facingDeterminer.setBottomSame(terrain.isSame(bottomNeighbour.getTerrain()));
+            facingDeterminer.setLeftSame(terrain.isSame(leftNeighbour.getTerrain()));
             return facingDeterminer.getFacing();
         }
 
-        private Cell getCellLeftNeighbour(int x, int y) {
+        private Cell getCellLeftNeighbour() {
             return cells[x-1][y];
         }
 
-        private Cell getCellBottomNeighbour(int x, int y) {
+        private Cell getCellBottomNeighbour() {
             return cells[x][y+1];
         }
 
-        private Cell getCellRightNeighbour(int x, int y) {
+        private Cell getCellRightNeighbour() {
             return cells[x+1][y];
         }
 
-        private Cell getCellTopNeighbour(int x, int y) {
+        private Cell getCellTopNeighbour() {
             return cells[x][y-1];
         }
     }
