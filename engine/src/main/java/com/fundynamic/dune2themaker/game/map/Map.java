@@ -45,8 +45,8 @@ public class Map {
 		if (!initialized) {
 			// this does not work when we move the code in the constructor?
 			initializeEmptyMap(width, height);
-			//putTerrainOnMap();
-            //smooth();
+			putTerrainOnMap();
+            smooth();
             initialized = true;
 		}
 	}
@@ -72,23 +72,27 @@ public class Map {
 	}
 
 	public void smooth() {
-        FacingDeterminer facingDeterminer = new FacingDeterminer();
 		for (int x = 1; x <= this.width; x++) {
-			for (int y = 1; y <= this.height; y++) {
-				final Cell cell = cells[x][y];
-				final Terrain terrain = cell.getTerrain();
-
-                final Cell topNeighbour = cells[x][y-1];
-                final Cell rightNeighbour = cells[x+1][y];
-                final Cell bottomNeighbour = cells[x][y+1];
-                final Cell leftNeighbour = cells[x-1][y];
-                facingDeterminer.setTopSame(cell.isSameTerrain(topNeighbour.getTerrain()));
-                facingDeterminer.setRightSame(cell.isSameTerrain(rightNeighbour.getTerrain()));
-                facingDeterminer.setBottomSame(cell.isSameTerrain(bottomNeighbour.getTerrain()));
-                facingDeterminer.setLeftSame(cell.isSameTerrain(leftNeighbour.getTerrain()));
-                terrain.setFacing(facingDeterminer.getFacing());
+            for (int y = 1; y <= this.height; y++) {
+                final Cell cell = cells[x][y];
+                final Terrain terrain = cell.getTerrain();
+                TerrainFacing facing = determineFacing(x, y, terrain);
+                terrain.setFacing(facing);
 			}
 		}
 	}
+
+    private TerrainFacing determineFacing(int xOfCellInCenter, int yOfCellInCenter, Terrain terrainOfCellInCenter) {
+        FacingDeterminer facingDeterminer = new FacingDeterminer();
+        final Cell topNeighbour = cells[xOfCellInCenter][yOfCellInCenter-1];
+        final Cell rightNeighbour = cells[xOfCellInCenter+1][yOfCellInCenter];
+        final Cell bottomNeighbour = cells[xOfCellInCenter][yOfCellInCenter+1];
+        final Cell leftNeighbour = cells[xOfCellInCenter-1][yOfCellInCenter];
+        facingDeterminer.setTopSame(terrainOfCellInCenter.isSame(topNeighbour.getTerrain()));
+        facingDeterminer.setRightSame(terrainOfCellInCenter.isSame(rightNeighbour.getTerrain()));
+        facingDeterminer.setBottomSame(terrainOfCellInCenter.isSame(bottomNeighbour.getTerrain()));
+        facingDeterminer.setLeftSame(terrainOfCellInCenter.isSame(leftNeighbour.getTerrain()));
+        return facingDeterminer.getFacing();
+    }
 
 }
