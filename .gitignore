@@ -14,3 +14,14 @@ engine/target
 game/target
 d2tm/target
 target
+
+# Eclipse files
+engine/.classpath
+engine/.project
+engine/.settings*
+game/.classpath
+game/.project
+game/.settings*
+d2tm/.classpath
+d2tm/.project
+d2tm/.settings*
