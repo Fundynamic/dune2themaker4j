@@ -81,8 +81,6 @@ public class Map {
 		}
 	}
 
-
-
     private class SquareCell {
         private final int x, y;
 
@@ -98,31 +96,31 @@ public class Map {
         private TerrainFacing determineFacing() {
             Terrain terrain = getTerrain();
             FacingDeterminer facingDeterminer = new FacingDeterminer();
-            final Cell topNeighbour = getCellTopNeighbour();
-            final Cell rightNeighbour = getCellRightNeighbour();
-            final Cell bottomNeighbour = getCellBottomNeighbour();
-            final Cell leftNeighbour = getCellLeftNeighbour();
-            facingDeterminer.setTopSame(terrain.isSame(topNeighbour.getTerrain()));
-            facingDeterminer.setRightSame(terrain.isSame(rightNeighbour.getTerrain()));
-            facingDeterminer.setBottomSame(terrain.isSame(bottomNeighbour.getTerrain()));
-            facingDeterminer.setLeftSame(terrain.isSame(leftNeighbour.getTerrain()));
+            facingDeterminer.setTopSame(terrain.isSame(getTerrainTopNeighbour()));
+            facingDeterminer.setRightSame(terrain.isSame(getTerrainRightNeighbour()));
+            facingDeterminer.setBottomSame(terrain.isSame(getTerrainBottomNeighbour()));
+            facingDeterminer.setLeftSame(terrain.isSame(getTerrainLeftNeighbour()));
             return facingDeterminer.getFacing();
         }
 
-        private Cell getCellLeftNeighbour() {
-            return cells[x-1][y];
+        private Cell getCell(int x, int y) {
+            return cells[x][y];
         }
 
-        private Cell getCellBottomNeighbour() {
-            return cells[x][y+1];
+        private Terrain getTerrainLeftNeighbour() {
+            return getCell(x - 1, y).getTerrain();
         }
 
-        private Cell getCellRightNeighbour() {
-            return cells[x+1][y];
+        private Terrain getTerrainBottomNeighbour() {
+            return getCell(x, y + 1).getTerrain();
         }
 
-        private Cell getCellTopNeighbour() {
-            return cells[x][y-1];
+        private Terrain getTerrainRightNeighbour() {
+            return getCell(x + 1, y).getTerrain();
+        }
+
+        private Terrain getTerrainTopNeighbour() {
+            return getCell(x, y - 1).getTerrain();
         }
     }
 
