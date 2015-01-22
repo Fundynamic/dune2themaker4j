@@ -1,7 +1,8 @@
-package com.fundynamic.d2tm.game.terrain;
+package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.Theme;
 
 public class DuneTerrainFactory implements TerrainFactory {
@@ -27,7 +28,7 @@ public class DuneTerrainFactory implements TerrainFactory {
             case DuneTerrain.TERRAIN_SPICE_HILL:
                 return new SpiceHill(theme, cell, 100);
             case DuneTerrain.CONCRETE:
-                return new Concrete(theme);
+                return new ConcreteSlab(theme);
             default:
                 throw new IndexOutOfBoundsException("Invalid value for terrainType: " + terrainType);
         }

@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.Image;

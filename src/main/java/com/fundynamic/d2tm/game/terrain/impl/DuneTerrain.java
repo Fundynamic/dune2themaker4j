@@ -1,5 +1,6 @@
-package com.fundynamic.d2tm.game.terrain;
+package com.fundynamic.d2tm.game.terrain.impl;
 
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.newdawn.slick.Image;
@@ -25,8 +26,9 @@ public abstract class DuneTerrain implements Terrain {
 
     protected abstract int getTerrainType();
 
-    public void setFacing(TerrainFacing terrainFacing) {
+    public DuneTerrain setFacing(TerrainFacing terrainFacing) {
         this.tileImage = makeTileImage(terrainFacing);
+        return this;
     }
 
     public Image getTileImage() {

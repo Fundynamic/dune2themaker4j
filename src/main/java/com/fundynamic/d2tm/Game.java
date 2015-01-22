@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.PlayingState;
-import com.fundynamic.d2tm.game.TerrainFactory;
-import com.fundynamic.d2tm.game.terrain.DuneTerrainFactory;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.newdawn.slick.*;
 import org.newdawn.slick.util.Bootstrap;

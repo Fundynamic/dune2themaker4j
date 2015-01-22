@@ -4,6 +4,6 @@ public interface Destructable {
 
     int getHealth();
 
-    void damage(int hitPoints);
+    void doDamage(int hitPoints);
 
 }

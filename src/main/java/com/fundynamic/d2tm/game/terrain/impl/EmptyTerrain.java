@@ -1,5 +1,6 @@
-package com.fundynamic.d2tm.game.terrain;
+package com.fundynamic.d2tm.game.terrain.impl;
 
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import com.fundynamic.d2tm.graphics.Tile;
 import org.newdawn.slick.Color;
@@ -29,19 +30,37 @@ public class EmptyTerrain implements Terrain {
         this.image = image;
     }
 
-    public static EmptyTerrain testInstance() {
-        return new EmptyTerrain(null);
-    }
-
     public Image getTileImage() {
         return image;
     }
 
-    public void setFacing(TerrainFacing terrainFacing) {
+    @Override
+    public Terrain setFacing(TerrainFacing terrainFacing) {
+        return this;
     }
 
     public boolean isSame(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         return true;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+    public static class Builder {
+        private EmptyTerrain instance;
+
+        public Builder() {
+            instance = new EmptyTerrain(null);
+        }
+
+        public EmptyTerrain setFacing(TerrainFacing terrainFacing) {
+            instance.setFacing(terrainFacing);
+            return instance;
+        }
+
+        public EmptyTerrain getInstance() {
+            return instance;
+        }
     }
 }

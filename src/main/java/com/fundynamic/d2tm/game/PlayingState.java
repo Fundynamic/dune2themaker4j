@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.input.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;

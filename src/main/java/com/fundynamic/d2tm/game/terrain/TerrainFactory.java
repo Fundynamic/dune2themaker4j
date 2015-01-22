@@ -1,7 +1,6 @@
-package com.fundynamic.d2tm.game;
+package com.fundynamic.d2tm.game.terrain;
 
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.terrain.Terrain;
 
 public interface TerrainFactory {
 

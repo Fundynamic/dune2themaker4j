@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.terrain;
+package com.fundynamic.d2tm.game.terrain.impl;
 
 import com.fundynamic.d2tm.graphics.Theme;
 
@@ -10,6 +10,6 @@ public class Sand extends DuneTerrain {
 
     @Override
     protected int getTerrainType() {
-        return DuneTerrain.TERRAIN_SAND;
+        return TERRAIN_SAND;
     }
 }
