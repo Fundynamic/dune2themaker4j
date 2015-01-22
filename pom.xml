@@ -1,197 +1,87 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.fundynamic.games.dune2themaker</groupId>
-	<artifactId>dune2themaker</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>dune2themaker</name>
-	<url>http://dune2themaker.fundynamic.com</url>
+	<groupId>com.fundynamic</groupId>
+	<artifactId>d2tm</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>A Slick2d game</name>
 
 	<properties>
-		<java.library.path>resources\dll</java.library.path>
-        <d2tm.slick.library.version>1.2</d2tm.slick.library.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<main.class>com.fundynamic.d2tm.Game</main.class>
 	</properties>
-	<!-- create executable jar file -->
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slick2d</groupId>
+			<artifactId>slick2d-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- unit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.5</version>
+		</dependency>
+	</dependencies>
 
 	<build>
-
 		<plugins>
-
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>com.fundynamic.dune2themaker.main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
+				<groupId>com.googlecode.mavennatives</groupId>
+				<artifactId>maven-nativedependencies-plugin</artifactId>
+				<version>0.0.7</version>
 				<executions>
 					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- append to the packaging phase. -->
+						<id>unpacknatives</id>
+						<phase>generate-resources</phase>
 						<goals>
-							<goal>single</goal> <!-- goals == mojos -->
+							<goal>copy</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>${main.class}</mainClass>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>bundle-release</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>${project.basedir}/src/main/assembly/assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-
-		<resources>
-			<!-- native libraries -->
-			<resource>
-				<directory>src\main\resources\dll</directory>
-				<includes>
-					<include>**/*.dll</include>
-				</includes>
-			</resource>
-
-			<!-- other -->
-			<resource>
-				<directory>src\main\resources\images</directory>
-				<includes>
-					<include>**/*.*</include>
-				</includes>
-			</resource>
-		</resources>
-
 	</build>
-
-
-	<dependencyManagement>
-
-		<dependencies>
-
-			<!-- unit testing -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.7</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>1.8.5</version>
-			</dependency>
-
-			<!-- log4j for loggin purposes -->
-			
-			<!-- slick and its dependencies, installed using the install.bat http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html -->
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>hiero</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>ibxm</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>jinput</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>jnlp</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>jogg-0.0.7</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>jorbis-0.0.15</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>lwjgl</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>natives-linux</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>natives-mac</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>natives-win32</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>packulike</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>pedigree</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>scalar</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>slick-util</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.cokeandcode</groupId>
-				<artifactId>slick</artifactId>
-				<version>${d2tm.slick.library.version}</version>
-			</dependency>
-
-			<!-- D2TM -->
-			<dependency>
-				<groupId>com.fundynamic.games.dune2themaker</groupId>
-				<artifactId>engine</artifactId>
-				<version>1.0-SNAPSHOT</version>
-			</dependency>		
-
-			<dependency>
-				<groupId>com.fundynamic.games.dune2themaker</groupId>
-				<artifactId>d2tm</artifactId>
-				<version>1.0-SNAPSHOT</version>
-			</dependency>	
-
-		</dependencies>
-		
-	</dependencyManagement>
-
-	<modules>
-		<module>engine</module>
-		<module>d2tm</module>
-
-		<!-- the all-in-one game -->
-		<module>game</module>
-	</modules>
-
 </project>
