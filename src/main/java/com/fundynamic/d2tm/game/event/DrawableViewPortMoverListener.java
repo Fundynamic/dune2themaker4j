@@ -6,15 +6,15 @@ import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
     private final DrawableViewPort drawableViewPort;
-    private float velocityIncreaser;
+    private float scrollSpeed;
 
-    public DrawableViewPortMoverListener(DrawableViewPort drawableViewPort, float velocityIncreaser) {
+    public DrawableViewPortMoverListener(DrawableViewPort drawableViewPort, float scrollSpeed) {
         this.drawableViewPort = drawableViewPort;
-        this.velocityIncreaser = velocityIncreaser;
+        this.scrollSpeed = scrollSpeed;
     }
 
     public DrawableViewPortMoverListener(DrawableViewPort drawableViewPort) {
-        this(drawableViewPort, 0.5F);
+        this(drawableViewPort, 1F);
     }
 
     @Override
@@ -39,9 +39,7 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        if (newx <= 2) {
-            drawableViewPort.moveLeft(velocityIncreaser);
-        }
+        if (newx <= 2) drawableViewPort.setVelocityX(scrollSpeed);
     }
 
     @Override
