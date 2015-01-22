@@ -31,11 +31,7 @@ public class Mouse {
     }
 
     public String toString() {
-        final String TAB = "    ";
-
-        String retValue = "";
-
-        retValue = "Mouse ( " + "isLeftMouseButtonPressed = ["
+        String retValue = "Mouse ( " + "isLeftMouseButtonPressed = ["
                 + isLeftMouseButtonPressed() + "] "
                 + "isRightMouseButtonPressed = [" + isRightMouseButtonPressed()
                 + "] " + "isLeftMouseButtonPressed = [" + getXCoordinate()

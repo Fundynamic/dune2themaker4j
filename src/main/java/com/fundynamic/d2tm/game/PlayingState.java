@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.input.Keyboard;
 import com.fundynamic.d2tm.game.input.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
@@ -49,29 +50,21 @@ public class PlayingState {
         if (!initialized) {
             this.map.init();
             initialized = true;
+
+            try {
+                Vector2D viewPortDrawingPosition = new Vector2D(0,0);
+                final Viewport newViewport;
+                newViewport = new Viewport(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, this.map);
+                drawableViewPorts.add(new DrawableViewPort(newViewport, viewPortDrawingPosition, new Vector2D(Random.getRandomBetween(0, 2048), Random.getRandomBetween(0, 2048))));
+            } catch (SlickException e) {
+                throw new IllegalStateException("Unable to create new viewport!");
+            }
         }
     }
 
     public void update() {
         for (DrawableViewPort drawableViewPort : drawableViewPorts) {
             drawableViewPort.update();
-        }
-
-        if (mouse.isLeftMouseButtonPressed()) {
-            try {
-                Vector2D viewPortDrawingPosition = mouse.getVector2D();
-                final Viewport newViewport;
-                newViewport = new Viewport(Random.getRandomBetween(125, 350), Random.getRandomBetween(125, 350), this.map);
-                drawableViewPorts.add(new DrawableViewPort(newViewport, viewPortDrawingPosition, new Vector2D(Random.getRandomBetween(0, 2048), Random.getRandomBetween(0, 2048))));
-            } catch (SlickException e) {
-                throw new IllegalStateException("Unable to create new viewport!");
-            }
-        }
-
-        if (mouse.isRightMouseButtonPressed()) {
-            if (this.drawableViewPorts.size() > 0) {
-                this.drawableViewPorts.remove(this.drawableViewPorts.size() - 1);
-            }
         }
 
         if (keyboard.isEscPressed()) {
@@ -102,6 +95,7 @@ public class PlayingState {
         }
 
         void update() {
+            // use events?
             if (keyboard.isKeyUpPressed()) {
                 viewPortViewingPosition = viewPortViewingPosition.moveUp();
             }

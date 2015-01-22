@@ -1,4 +1,9 @@
 language: java
 
 script:
-    - mvn clean package 
+  - mvn clean package
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
