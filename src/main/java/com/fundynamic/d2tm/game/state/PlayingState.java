@@ -1,6 +1,7 @@
-package com.fundynamic.d2tm.game;
+package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.input.Keyboard;
 import com.fundynamic.d2tm.game.input.Mouse;
 import com.fundynamic.d2tm.game.map.Map;

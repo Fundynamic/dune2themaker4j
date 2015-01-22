@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm;
 
-import com.fundynamic.d2tm.game.PlayingState;
+import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
