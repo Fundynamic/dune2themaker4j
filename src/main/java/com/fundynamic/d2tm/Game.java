@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.newdawn.slick.*;
+import org.newdawn.slick.util.Bootstrap;
 
 
 public class Game extends BasicGame {
@@ -14,8 +15,8 @@ public class Game extends BasicGame {
 
     private PlayingState playingState;
 
-    public Game() {
-        super("Dune II - The Maker");
+    public Game(String title) {
+        super(title);
     }
 
     public void render(GameContainer container, Graphics g) throws SlickException {
@@ -39,12 +40,9 @@ public class Game extends BasicGame {
     public void update(GameContainer container, int delta) throws SlickException {
         playingState.update();
     }
-    
-    public static void main(String[] args) throws SlickException {
-        AppGameContainer app = new AppGameContainer(new Game());
-        app.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
-        app.setForceExit(true);
-        app.start();
+
+    public static void main(String[] args) {
+        Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, false);
     }
 
 }
