@@ -2,14 +2,14 @@ package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
-import com.fundynamic.d2tm.game.input.Keyboard;
-import com.fundynamic.d2tm.game.input.Mouse;
+import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -21,13 +21,8 @@ public class PlayingState {
 
     private Map map;
     private Graphics graphics;
-    private GameContainer gameContainer;
 
-    private Keyboard keyboard;
-    private Mouse mouse;
-
-
-    private List<DrawableViewPort> drawableViewPorts = new ArrayList<DrawableViewPort>();
+    private List<DrawableViewPort> drawableViewPorts = new ArrayList<>();
 
     private boolean initialized;
 
@@ -35,10 +30,9 @@ public class PlayingState {
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.graphics = gameContainer.getGraphics();
-        this.gameContainer = gameContainer;
 
-        this.keyboard = new Keyboard(gameContainer.getInput());
-        this.mouse = new Mouse(gameContainer.getInput());
+        Input input = gameContainer.getInput();
+        input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         // on map load...
         this.map = new Map(terrainFactory, 64, 64);
@@ -66,10 +60,6 @@ public class PlayingState {
         for (DrawableViewPort drawableViewPort : drawableViewPorts) {
             drawableViewPort.update();
         }
-
-        if (keyboard.isEscPressed()) {
-            this.gameContainer.exit();
-        }
     }
 
     public void render() throws SlickException {
@@ -96,18 +86,18 @@ public class PlayingState {
 
         void update() {
             // use events?
-            if (keyboard.isKeyUpPressed()) {
-                viewPortViewingPosition = viewPortViewingPosition.moveUp();
-            }
-            if (keyboard.isKeyDownPressed()) {
-                viewPortViewingPosition = viewPortViewingPosition.moveDown();
-            }
-            if (keyboard.isKeyLeftPressed()) {
-                viewPortViewingPosition = viewPortViewingPosition.moveLeft();
-            }
-            if (keyboard.isKeyRightPressed()) {
-                viewPortViewingPosition = viewPortViewingPosition.moveRight();
-            }
+//            if (keyboard.isKeyUpPressed()) {
+//                viewPortViewingPosition = viewPortViewingPosition.moveUp();
+//            }
+//            if (keyboard.isKeyDownPressed()) {
+//                viewPortViewingPosition = viewPortViewingPosition.moveDown();
+//            }
+//            if (keyboard.isKeyLeftPressed()) {
+//                viewPortViewingPosition = viewPortViewingPosition.moveLeft();
+//            }
+//            if (keyboard.isKeyRightPressed()) {
+//                viewPortViewingPosition = viewPortViewingPosition.moveRight();
+//            }
         }
     }
 
