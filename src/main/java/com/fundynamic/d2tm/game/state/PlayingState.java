@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
+import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Random;
@@ -46,10 +47,10 @@ public class PlayingState {
             initialized = true;
 
             try {
-                Vector2D viewPortDrawingPosition = new Vector2D(0,0);
+                Vector2D viewPortDrawingPosition = Vector2D.zero();
                 final Viewport newViewport;
                 newViewport = new Viewport(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, this.map);
-                drawableViewPorts.add(new DrawableViewPort(newViewport, viewPortDrawingPosition, new Vector2D(Random.getRandomBetween(0, 2048), Random.getRandomBetween(0, 2048))));
+                drawableViewPorts.add(new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics));
             } catch (SlickException e) {
                 throw new IllegalStateException("Unable to create new viewport!");
             }
@@ -67,44 +68,6 @@ public class PlayingState {
             drawableViewPort.render();
         }
         this.graphics.drawString("Drawing " + drawableViewPorts.size() + " viewports.", 10, 30);
-    }
-
-    private class DrawableViewPort {
-        private final Vector2D drawingVector;
-        private Vector2D<Float> viewingVector;
-        private final Viewport viewport;
-        private float xVelocity;
-        private float yVelocity;
-
-        private DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector) {
-            this.drawingVector = drawingVector;
-            this.viewingVector = viewingVector;
-            this.viewport = viewport;
-            this.xVelocity = 0F;
-            this.yVelocity = 0F;
-        }
-
-        void render() throws SlickException {
-            viewport.draw(graphics, drawingVector, viewingVector);
-        }
-
-        void update() {
-            // use events?
-            viewingVector = viewingVector.move(xVelocity, yVelocity, 0.5F);
-
-//            if (keyboard.isKeyUpPressed()) {
-//                viewingVector = viewingVector.moveUp();
-//            }
-//            if (keyboard.isKeyDownPressed()) {
-//                viewingVector = viewingVector.moveDown();
-//            }
-//            if (keyboard.isKeyLeftPressed()) {
-//                viewingVector = viewingVector.moveLeft();
-//            }
-//            if (keyboard.isKeyRightPressed()) {
-//                viewingVector = viewingVector.moveRight();
-//            }
-        }
     }
 
 }
