@@ -28,7 +28,6 @@ public class PlayingState {
 
 
     private List<DrawableViewPort> drawableViewPorts = new ArrayList<DrawableViewPort>();
-    private Viewport viewport;
 
     private boolean initialized;
 
