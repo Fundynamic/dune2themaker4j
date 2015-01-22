@@ -10,8 +10,8 @@ import org.newdawn.slick.util.Bootstrap;
 
 public class Game extends BasicGame {
 
-    private static final int SCREEN_WIDTH = 800;
-    private static final int SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 600;
 
     private PlayingState playingState;
 

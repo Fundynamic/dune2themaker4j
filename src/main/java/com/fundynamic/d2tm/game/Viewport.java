@@ -31,10 +31,6 @@ public class Viewport {
 
         // add more layers
 
-
-        bufferGraphics.setColor(Color.white);
-        bufferGraphics.drawRect(0, 0, (this.buffer.getWidth() - 1), (this.buffer.getHeight() - 1));
-
         // draw all on the big canvas
         drawBufferToGraphics(graphics, drawingVector);
     }
