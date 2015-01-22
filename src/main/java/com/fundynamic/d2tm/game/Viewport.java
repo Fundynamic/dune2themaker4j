@@ -2,11 +2,15 @@ package com.fundynamic.d2tm.game;
 
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+/**
+ * A Viewport class 'views' the map from a certain X, Y position and with a limited height and width.
+ *
+ * This class gets the map image, and views a portion of it.
+ */
 public class Viewport {
 
     private final Map map;
@@ -30,6 +34,7 @@ public class Viewport {
         // determine what items are visible & draw them on image
 
         // add more layers
+        // Units, etc
 
         // draw all on the big canvas
         drawBufferToGraphics(graphics, drawingVector);
@@ -40,7 +45,7 @@ public class Viewport {
     }
 
     private void drawViewableMapOnBuffer(Vector2D viewingVector, Graphics imageGraphics) throws SlickException {
-        final Image mapImage = map.getMapImage();
+        final Image mapImage = map.createOrGetMapImage();
         Image subImage = mapImage.getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
         imageGraphics.drawImage(subImage, 0, 0);
     }

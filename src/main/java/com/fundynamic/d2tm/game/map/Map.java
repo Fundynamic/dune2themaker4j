@@ -34,7 +34,7 @@ public class Map {
         return cells[x][y];
     }
 
-    public Image getMapImage() throws SlickException {
+    public Image createOrGetMapImage() throws SlickException {
         if (this.mapImage == null) {
             mapImage = new MapRenderer().render(this);
         }
