@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 public class DrawableViewPort {
+
     private final Viewport viewport;
     private final Graphics graphics;
 
@@ -14,8 +15,9 @@ public class DrawableViewPort {
 
     private float xVelocity;
     private float yVelocity;
+    private float moveSpeed;
 
-    public DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics) {
+    public DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
         this.viewport = viewport;
         this.graphics = graphics;
 
@@ -24,6 +26,12 @@ public class DrawableViewPort {
 
         this.xVelocity = 0F;
         this.yVelocity = 0F;
+
+        this.moveSpeed = moveSpeed;
+    }
+
+    public DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics) {
+        this(viewport, drawingVector, viewingVector, graphics, 0.5F);
     }
 
     public void render() throws SlickException {
@@ -31,7 +39,10 @@ public class DrawableViewPort {
     }
 
     public void update() {
-        viewingVector = viewingVector.move(xVelocity, yVelocity, 0.5F);
+        viewingVector = viewingVector.move(xVelocity, yVelocity, moveSpeed);
     }
 
+    public void moveLeft(float velocity) {
+        this.xVelocity -= velocity;
+    }
 }
