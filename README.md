@@ -11,5 +11,9 @@ To get this project up and running:
 
 Thats it!
 
+## Development
+Import the project using your favorite IDE.
 
+If you want to `run` or `debug` the project (you need to execute `Game`), then you probably run into a `java.lang.UnsatifsiedLinkError`.
 
+To fix that you need to add the following VM Arguments to your run configuration: `-Djava.library.path=target/natives`
