@@ -1,14 +1,12 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.terrain.Terrain;
-import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
 
     private Terrain terrain;
-    private TerrainFacing terrainFacing;
 
     public Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
