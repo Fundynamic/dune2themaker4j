@@ -6,42 +6,33 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-/**
- * A game using Slick2d
- */
+
 public class Game extends BasicGame {
 
-    /** Screen width */
-    private static final int WIDTH = 800;
-    /** Screen height */
-    private static final int HEIGHT = 600;
+    private static final int SCREEN_WIDTH = 800;
+    private static final int SCREEN_HEIGHT = 600;
     
-    /** A counter... */
-    private int counter;
-
     public Game() {
-        super("A Slick2d game");
+        super("Dune II - The Maker");
     }
 
     public void render(GameContainer container, Graphics g) throws SlickException {
-        g.drawString("Hello, " + Integer.toString(counter) + "!", 50, 50);
+        g.drawString("He who controls the spice... controls the universe!", 0, 0);
 
     }
 
     @Override
     public void init(GameContainer container) throws SlickException {
-        counter = 0;
     }
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException {
-        counter++;
     }
     
     public static void main(String[] args) throws SlickException {
         AppGameContainer app = new AppGameContainer(new Game());
-        app.setDisplayMode(WIDTH, HEIGHT, false);
-        app.setForceExit(false);
+        app.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+        app.setForceExit(true);
         app.start();
     }
 
