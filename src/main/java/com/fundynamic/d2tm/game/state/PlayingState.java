@@ -70,33 +70,33 @@ public class PlayingState {
     }
 
     private class DrawableViewPort {
-        private final Vector2D viewPortDrawingPosition;
-        private Vector2D viewPortViewingPosition;
+        private final Vector2D drawingVector;
+        private Vector2D viewingVector;
         private final Viewport viewport;
 
-        private DrawableViewPort(Viewport viewport, Vector2D viewPortDrawingPosition, Vector2D viewPortViewingPosition) {
-            this.viewPortDrawingPosition = viewPortDrawingPosition;
-            this.viewPortViewingPosition = viewPortViewingPosition;
+        private DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector) {
+            this.drawingVector = drawingVector;
+            this.viewingVector = viewingVector;
             this.viewport = viewport;
         }
 
         void render() throws SlickException {
-            viewport.draw(graphics, viewPortDrawingPosition, viewPortViewingPosition);
+            viewport.draw(graphics, drawingVector, viewingVector);
         }
 
         void update() {
             // use events?
 //            if (keyboard.isKeyUpPressed()) {
-//                viewPortViewingPosition = viewPortViewingPosition.moveUp();
+//                viewingVector = viewingVector.moveUp();
 //            }
 //            if (keyboard.isKeyDownPressed()) {
-//                viewPortViewingPosition = viewPortViewingPosition.moveDown();
+//                viewingVector = viewingVector.moveDown();
 //            }
 //            if (keyboard.isKeyLeftPressed()) {
-//                viewPortViewingPosition = viewPortViewingPosition.moveLeft();
+//                viewingVector = viewingVector.moveLeft();
 //            }
 //            if (keyboard.isKeyRightPressed()) {
-//                viewPortViewingPosition = viewPortViewingPosition.moveRight();
+//                viewingVector = viewingVector.moveRight();
 //            }
         }
     }
