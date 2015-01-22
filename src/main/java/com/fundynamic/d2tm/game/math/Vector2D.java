@@ -1,35 +1,31 @@
 package com.fundynamic.d2tm.game.math;
 
-public class Vector2D {
+public class Vector2D<T extends Number> {
 
-    private final int x, y;
+    private final T x, y;
 
-    public Vector2D(int x, int y) {
+    public Vector2D(T x, T y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public T getX() {
         return x;
     }
 
-    public int getY() {
+    public T getY() {
         return y;
     }
 
-    public Vector2D moveUp() {
-        return new Vector2D(x, y - 1);
+    public Vector2D<Float> move(float xVelocity, float yVelocity, float speed) {
+        float newX = x.floatValue() + (speed * xVelocity);
+        float newY = y.floatValue() + (speed * yVelocity);
+        return new Vector2D<>(newX, newY);
     }
 
-    public Vector2D moveDown() {
-        return new Vector2D(x, y + 1);
-    }
-
-    public Vector2D moveLeft() {
-        return new Vector2D(x - 1, y);
-    }
-
-    public Vector2D moveRight() {
-        return new Vector2D(x + 1, y);
+    public Vector2D<Integer> toInt() {
+        int newX = x.intValue();
+        int newY = y.intValue();
+        return new Vector2D<>(newX, newY);
     }
 }

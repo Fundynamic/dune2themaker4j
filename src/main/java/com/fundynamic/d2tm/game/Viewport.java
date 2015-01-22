@@ -26,11 +26,12 @@ public class Viewport {
         this.buffer = new Image(width, height);
     }
 
-    public void draw(Graphics graphics, Vector2D drawingVector, Vector2D viewingVector) throws SlickException {
+    public void draw(Graphics graphics, Vector2D<Integer> drawingVector, Vector2D<Float> viewingVector) throws SlickException {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         bufferGraphics.clear();
 
-        drawViewableMapOnBuffer(viewingVector, bufferGraphics);
+        Vector2D<Integer> intView = viewingVector.toInt();
+        drawViewableMapOnBuffer(intView, bufferGraphics);
         // determine what items are visible & draw them on image
 
         // add more layers
@@ -40,11 +41,11 @@ public class Viewport {
         drawBufferToGraphics(graphics, drawingVector);
     }
 
-    private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
+    private void drawBufferToGraphics(Graphics graphics, Vector2D<Integer> drawingVector) {
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
 
-    private void drawViewableMapOnBuffer(Vector2D viewingVector, Graphics imageGraphics) throws SlickException {
+    private void drawViewableMapOnBuffer(Vector2D<Integer> viewingVector, Graphics imageGraphics) throws SlickException {
         final Image mapImage = map.createOrGetMapImage();
         Image subImage = mapImage.getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
         imageGraphics.drawImage(subImage, 0, 0);

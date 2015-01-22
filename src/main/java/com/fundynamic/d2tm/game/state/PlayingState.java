@@ -71,13 +71,17 @@ public class PlayingState {
 
     private class DrawableViewPort {
         private final Vector2D drawingVector;
-        private Vector2D viewingVector;
+        private Vector2D<Float> viewingVector;
         private final Viewport viewport;
+        private float xVelocity;
+        private float yVelocity;
 
         private DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector) {
             this.drawingVector = drawingVector;
             this.viewingVector = viewingVector;
             this.viewport = viewport;
+            this.xVelocity = 0F;
+            this.yVelocity = 0F;
         }
 
         void render() throws SlickException {
@@ -86,6 +90,8 @@ public class PlayingState {
 
         void update() {
             // use events?
+            viewingVector = viewingVector.move(xVelocity, yVelocity, 0.5F);
+
 //            if (keyboard.isKeyUpPressed()) {
 //                viewingVector = viewingVector.moveUp();
 //            }
