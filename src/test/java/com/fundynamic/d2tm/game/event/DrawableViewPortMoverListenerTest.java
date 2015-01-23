@@ -172,6 +172,25 @@ public class DrawableViewPortMoverListenerTest {
         Assert.assertEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY(), 0.0001F);
     }
 
+    @Test
+    public void stopsMovingDownWhenAtTheRightEdge() throws SlickException {
+        int viewportX = 0;
+        int viewportY = 0;
+        float scrollSpeed = 16F;
+
+        float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - Game.SCREEN_WIDTH;
+
+        drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), MOVE_SPEED);
+        listener = new DrawableViewPortMoverListener(drawableViewPort, scrollSpeed);
+
+        listener.mouseMoved(SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER); // move right
+        updateAndRender();
+        updateAndRender();
+
+        Vector2D<Float> viewportVector = getLastCalledViewport();
+        Assert.assertEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX(), 0.0001F);
+    }
+
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
         updateAndRender();
         return getLastCalledViewport();
