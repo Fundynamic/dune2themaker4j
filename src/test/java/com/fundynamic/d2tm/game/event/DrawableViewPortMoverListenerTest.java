@@ -26,6 +26,8 @@ public class DrawableViewPortMoverListenerTest {
     public static final float SCROLL_SPEED = 2.0F;
 
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
+    public static final float INITIAL_VIEWPORT_X = 4F;
+    public static final float INITIAL_VIEWPORT_Y = 4F;
 
     @Mock
     private Viewport viewport;
@@ -37,7 +39,7 @@ public class DrawableViewPortMoverListenerTest {
 
     @Before
     public void setUp() {
-        drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), Vector2D.zero(), mock(Graphics.class), MOVE_SPEED);
+        drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, SCROLL_SPEED);
         renderAndUpdatedCalled = 0;
     }
@@ -49,8 +51,8 @@ public class DrawableViewPortMoverListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(-MOVE_SPEED * SCROLL_SPEED, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(0F, viewportVector.getY(), 0.0001F);
+        Assert.assertEquals((INITIAL_VIEWPORT_X - (MOVE_SPEED * SCROLL_SPEED)), viewportVector.getX(), 0.0001F);
+        Assert.assertEquals(INITIAL_VIEWPORT_Y, viewportVector.getY(), 0.0001F);
     }
 
     @Test
@@ -60,8 +62,8 @@ public class DrawableViewPortMoverListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(MOVE_SPEED * SCROLL_SPEED, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(0F, viewportVector.getY(), 0.0001F);
+        Assert.assertEquals((INITIAL_VIEWPORT_X + (MOVE_SPEED * SCROLL_SPEED)), viewportVector.getX(), 0.0001F);
+        Assert.assertEquals(INITIAL_VIEWPORT_Y, viewportVector.getY(), 0.0001F);
     }
 
     @Test
@@ -71,10 +73,9 @@ public class DrawableViewPortMoverListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(-MOVE_SPEED * SCROLL_SPEED, viewportVector.getY(), 0.0001F);
-        Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
+        Assert.assertEquals(INITIAL_VIEWPORT_X, viewportVector.getX(), 0.0001F);
+        Assert.assertEquals((INITIAL_VIEWPORT_Y - (MOVE_SPEED * SCROLL_SPEED)), viewportVector.getY(), 0.0001F);
     }
-
 
     @Test
     public void mouseHittingBottomOfScreenMovesViewportDown() throws SlickException {
@@ -83,8 +84,8 @@ public class DrawableViewPortMoverListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(MOVE_SPEED * SCROLL_SPEED, viewportVector.getY(), 0.0001F);
-        Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
+        Assert.assertEquals(INITIAL_VIEWPORT_X, viewportVector.getX(), 0.0001F);
+        Assert.assertEquals((INITIAL_VIEWPORT_Y + (MOVE_SPEED * SCROLL_SPEED)), viewportVector.getY(), 0.0001F);
     }
 
     @Test
