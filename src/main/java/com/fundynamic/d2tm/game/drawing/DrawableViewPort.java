@@ -52,10 +52,9 @@ public class DrawableViewPort {
         }
 
         Map map = viewport.getMap();
-        int heightOfMapInPixels = map.getHeight() * Tile.HEIGHT; // 640
+        int heightOfMapInPixels = map.getHeight() * Tile.HEIGHT;
 
-        // TODO: don't go over the right edge
-        int pixelsPlusScreenHeight = viewingVector.toInt().getY() + Game.SCREEN_HEIGHT; // 48 + 600 -> 648
+        int pixelsPlusScreenHeight = viewingVector.toInt().getY() + Game.SCREEN_HEIGHT;
         if (pixelsPlusScreenHeight > heightOfMapInPixels) {
             int subscract = pixelsPlusScreenHeight - heightOfMapInPixels;
             viewingVector = new Vector2D<>(viewingVector.getX(), viewingVector.getY() - subscract);
