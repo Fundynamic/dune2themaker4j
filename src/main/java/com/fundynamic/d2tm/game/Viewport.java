@@ -49,4 +49,8 @@ public class Viewport {
         Image subImage = mapImage.getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
         imageGraphics.drawImage(subImage, 0, 0);
     }
+
+    public Map getMap() {
+        return map;
+    }
 }

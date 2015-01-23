@@ -1,7 +1,10 @@
 package com.fundynamic.d2tm.game.drawing;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.graphics.Tile;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -47,6 +50,17 @@ public class DrawableViewPort {
         if (viewingVector.getY() < 0) {
             viewingVector = new Vector2D<>(viewingVector.getX(), 0F);
         }
+
+        Map map = viewport.getMap();
+        int heightOfMapInPixels = map.getHeight() * Tile.HEIGHT; // 640
+
+        // TODO: don't go over the right edge
+        int pixelsPlusScreenHeight = viewingVector.toInt().getY() + Game.SCREEN_HEIGHT; // 48 + 600 -> 648
+        if (pixelsPlusScreenHeight > heightOfMapInPixels) {
+            int subscract = pixelsPlusScreenHeight - heightOfMapInPixels;
+            viewingVector = new Vector2D<>(viewingVector.getX(), viewingVector.getY() - subscract);
+        }
+
     }
 
     public void moveLeft(float velocity) {

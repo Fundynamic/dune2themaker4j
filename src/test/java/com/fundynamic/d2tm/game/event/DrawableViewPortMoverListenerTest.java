@@ -1,8 +1,11 @@
 package com.fundynamic.d2tm.game.event;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.graphics.Tile;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -141,6 +144,31 @@ public class DrawableViewPortMoverListenerTest {
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
         Assert.assertEquals("Y position moved over the edge", 0F, viewportVector.getY(), 0.0001F);
+    }
+
+    @Test
+    public void stopsMovingDownWhenAtTheBottomEdge() throws SlickException {
+        int heightOfMap = 20;
+        int widthOfMap = 25;
+
+        int viewportX = 0;
+        int viewportY = 0;
+        float scrollSpeed = 16F;
+
+        float maxYViewportPosition = (heightOfMap * Tile.HEIGHT) - Game.SCREEN_HEIGHT; // 40F
+
+        Mockito.when(viewport.getMap()).thenReturn(new Map(null, widthOfMap, heightOfMap));
+
+        drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), MOVE_SPEED);
+        listener = new DrawableViewPortMoverListener(drawableViewPort, scrollSpeed);
+
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT); // move down
+        updateAndRender();
+        updateAndRender();
+        updateAndRender();
+
+        Vector2D<Float> viewportVector = getLastCalledViewport();
+        Assert.assertEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY(), 0.0001F);
     }
 
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
