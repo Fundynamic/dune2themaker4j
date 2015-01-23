@@ -18,7 +18,7 @@ public class DrawableViewPortMoverListenerTest {
     public static final float SCROLL_SPEED = 2.0F;
 
     @Test
-    public void mouseHittingLeftEdgeOfScreenMovesViewportToLeft() throws SlickException {
+    public void mouseHittingLeftBorderOfScreenMovesViewportToLeft() throws SlickException {
         Viewport viewport = mock(Viewport.class);
         DrawableViewPort drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), Vector2D.zero(), mock(Graphics.class), MOVE_SPEED);
 
