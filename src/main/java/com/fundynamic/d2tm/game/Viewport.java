@@ -30,8 +30,7 @@ public class Viewport {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         bufferGraphics.clear();
 
-        Vector2D<Integer> intView = viewingVector.toInt();
-        drawViewableMapOnBuffer(intView, bufferGraphics);
+        drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
         // determine what items are visible & draw them on image
 
         // add more layers
