@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
+import com.fundynamic.d2tm.game.event.DrawableViewPortMoverListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Random;
@@ -26,13 +27,14 @@ public class PlayingState {
     private List<DrawableViewPort> drawableViewPorts = new ArrayList<>();
 
     private boolean initialized;
+    private final Input input;
 
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.graphics = gameContainer.getGraphics();
 
-        Input input = gameContainer.getInput();
+        input = gameContainer.getInput();
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         // on map load...
@@ -50,7 +52,12 @@ public class PlayingState {
                 Vector2D viewPortDrawingPosition = Vector2D.zero();
                 final Viewport newViewport;
                 newViewport = new Viewport(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, this.map);
-                drawableViewPorts.add(new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics));
+                DrawableViewPort drawableViewPort = new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics);
+
+                // Add listener for this viewport
+                input.addMouseListener(new DrawableViewPortMoverListener(drawableViewPort, 5.0F));
+
+                drawableViewPorts.add(drawableViewPort);
             } catch (SlickException e) {
                 throw new IllegalStateException("Unable to create new viewport!");
             }
@@ -67,7 +74,6 @@ public class PlayingState {
         for (DrawableViewPort drawableViewPort : drawableViewPorts) {
             drawableViewPort.render();
         }
-        this.graphics.drawString("Drawing " + drawableViewPorts.size() + " viewports.", 10, 30);
     }
 
 }
