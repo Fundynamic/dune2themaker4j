@@ -87,6 +87,23 @@ public class DrawableViewPortMoverListenerTest {
         Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
     }
 
+    @Test
+    public void mouseFromTopLeftToNoBorderStopsMoving() throws SlickException {
+        // this updates viewport coordinates one move up and to the left
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
+        renderAndUpdate(); // and move the viewport
+        Vector2D<Float> tickOneViewportVector = drawableViewPort.getViewingVector();
+
+        // move back to the middle
+        listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
+        renderAndUpdate(); // and stop moving
+
+        // Check that the viewport stopped moving
+        Vector2D<Float> viewportVector = getLastCalledViewport();
+        Assert.assertEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY(), 0.0001F);
+        Assert.assertEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX(), 0.0001F);
+    }
+
     // TODO:
     // Leaving border (left/right/top/bottom) will stop moving viewport
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
