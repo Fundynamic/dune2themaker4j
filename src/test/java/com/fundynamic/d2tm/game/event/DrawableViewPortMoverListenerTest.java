@@ -158,7 +158,7 @@ public class DrawableViewPortMoverListenerTest {
         int viewportY = 0;
         float scrollSpeed = 16F;
 
-        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - Game.SCREEN_HEIGHT; // 40F
+        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - Game.SCREEN_HEIGHT;
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, scrollSpeed);
@@ -173,7 +173,7 @@ public class DrawableViewPortMoverListenerTest {
     }
 
     @Test
-    public void stopsMovingDownWhenAtTheRightEdge() throws SlickException {
+    public void stopsMovingRightWhenAtTheRightEdge() throws SlickException {
         int viewportX = 0;
         int viewportY = 0;
         float scrollSpeed = 16F;
