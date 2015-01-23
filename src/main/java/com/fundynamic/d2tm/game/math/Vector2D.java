@@ -33,6 +33,9 @@ public class Vector2D<T extends Number> {
         return new Vector2D<>(newX, newY);
     }
 
+    public String shortString() {
+        return "{" + x + ", " + y + "}";
+    }
     @Override
     public String toString() {
         return "Vector2D{" +

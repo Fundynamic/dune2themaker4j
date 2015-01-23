@@ -36,6 +36,7 @@ public class DrawableViewPort {
 
     public void render() throws SlickException {
         viewport.draw(graphics, drawingVector, viewingVector);
+        graphics.drawString("Drawing viewport at " + drawingVector.shortString() + " viewing " + viewingVector.shortString(), 10, 30);
     }
 
     public void update() {
