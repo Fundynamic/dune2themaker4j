@@ -8,15 +8,9 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
     public static final int PIXELS_NEAR_BORDER = 2;
     private final DrawableViewPort drawableViewPort;
-    private float scrollSpeed;
-
-    public DrawableViewPortMoverListener(DrawableViewPort drawableViewPort, float scrollSpeed) {
-        this.drawableViewPort = drawableViewPort;
-        this.scrollSpeed = scrollSpeed;
-    }
 
     public DrawableViewPortMoverListener(DrawableViewPort drawableViewPort) {
-        this(drawableViewPort, 1F);
+        this.drawableViewPort = drawableViewPort;
     }
 
     @Override
@@ -42,19 +36,19 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
         if (newx <= PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveLeft(scrollSpeed);
+            drawableViewPort.moveLeft();
         } else if (newx >= Game.SCREEN_WIDTH - PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveRight(scrollSpeed);
+            drawableViewPort.moveRight();
         } else {
-            drawableViewPort.moveRight(0F);
+            drawableViewPort.stopMovingHorizontally();
         }
 
         if (newy <= PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveUp(scrollSpeed);
+            drawableViewPort.moveUp();
         } else if (newy >= Game.SCREEN_HEIGHT - PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveDown(scrollSpeed);
+            drawableViewPort.moveDown();
         } else {
-            drawableViewPort.moveDown(0F);
+            drawableViewPort.stopMovingVertically();
         }
     }
 

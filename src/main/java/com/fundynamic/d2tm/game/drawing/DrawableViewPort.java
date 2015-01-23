@@ -20,6 +20,10 @@ public class DrawableViewPort {
     private float velocityY;
     private float moveSpeed;
 
+    public DrawableViewPort(Viewport viewport, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
+        this(viewport, Vector2D.zero(), viewingVector, graphics, moveSpeed);
+    }
+
     public DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
         this.viewport = viewport;
         this.graphics = graphics;
@@ -70,20 +74,28 @@ public class DrawableViewPort {
 
     }
 
-    public void moveLeft(float velocity) {
-        this.velocityX = -velocity;
+    public void moveLeft() {
+        this.velocityX = -1F;
     }
 
-    public void moveRight(float velocity) {
-        this.velocityX = velocity;
+    public void moveRight() {
+        this.velocityX = 1F;
     }
 
-    public void moveUp(float velocity) {
-        this.velocityY = -velocity;
+    public void moveUp() {
+        this.velocityY = -1F;
     }
 
-    public void moveDown(float velocity) {
-        this.velocityY = velocity;
+    public void moveDown() {
+        this.velocityY = 1;
+    }
+
+    public void stopMovingHorizontally() {
+        this.velocityX = 0F;
+    }
+
+    public void stopMovingVertically() {
+        this.velocityY = 0F;
     }
 
     public Vector2D<Float> getViewingVector() {

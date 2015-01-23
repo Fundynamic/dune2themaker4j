@@ -49,13 +49,14 @@ public class PlayingState {
             initialized = true;
 
             try {
+                float moveSpeed = 15.0F;
                 Vector2D viewPortDrawingPosition = Vector2D.zero();
                 final Viewport newViewport;
                 newViewport = new Viewport(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, this.map);
-                DrawableViewPort drawableViewPort = new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics);
+                DrawableViewPort drawableViewPort = new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics, moveSpeed);
 
                 // Add listener for this viewport
-                input.addMouseListener(new DrawableViewPortMoverListener(drawableViewPort, 5.0F));
+                input.addMouseListener(new DrawableViewPortMoverListener(drawableViewPort));
 
                 drawableViewPorts.add(drawableViewPort);
             } catch (SlickException e) {
