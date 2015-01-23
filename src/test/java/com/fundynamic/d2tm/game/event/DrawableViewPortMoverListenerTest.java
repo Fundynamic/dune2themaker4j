@@ -59,6 +59,10 @@ public class DrawableViewPortMoverListenerTest {
         Assert.assertEquals(0F, viewportVector.getY(), 0.0001F);
     }
 
+
+    // TODO:
+    // Leaving border (left/right/top/bottom) will stop moving viewport
+
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
         drawableViewPort.update();
         drawableViewPort.render();
