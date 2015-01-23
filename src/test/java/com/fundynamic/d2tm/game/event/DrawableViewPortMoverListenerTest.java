@@ -32,7 +32,7 @@ public class DrawableViewPortMoverListenerTest {
     public static final float INITIAL_VIEWPORT_Y = 4F;
 
     public static int HEIGHT_OF_MAP = 20;
-    public static int WIDTH_OF_MAP = 25;
+    public static int WIDTH_OF_MAP = 26;
 
     @Mock
     private Viewport viewport;
