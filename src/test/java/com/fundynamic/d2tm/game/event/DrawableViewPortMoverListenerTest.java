@@ -31,8 +31,8 @@ public class DrawableViewPortMoverListenerTest {
     public static final float INITIAL_VIEWPORT_X = 4F;
     public static final float INITIAL_VIEWPORT_Y = 4F;
 
-    int heightOfMap = 20;
-    int widthOfMap = 25;
+    public static int HEIGHT_OF_MAP = 20;
+    public static int WIDTH_OF_MAP = 25;
 
     @Mock
     private Viewport viewport;
@@ -47,7 +47,7 @@ public class DrawableViewPortMoverListenerTest {
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, SCROLL_SPEED);
 
-        Mockito.when(viewport.getMap()).thenReturn(new Map(null, widthOfMap, heightOfMap));
+        Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
 
         renderAndUpdatedCalled = 0;
     }
@@ -158,8 +158,7 @@ public class DrawableViewPortMoverListenerTest {
         int viewportY = 0;
         float scrollSpeed = 16F;
 
-        float maxYViewportPosition = (heightOfMap * Tile.HEIGHT) - Game.SCREEN_HEIGHT; // 40F
-
+        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - Game.SCREEN_HEIGHT; // 40F
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, scrollSpeed);
