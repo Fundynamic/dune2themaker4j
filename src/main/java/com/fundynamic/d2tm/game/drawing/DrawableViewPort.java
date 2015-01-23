@@ -49,4 +49,8 @@ public class DrawableViewPort {
     public void moveRight(float velocity) {
         this.velocityX = velocity;
     }
+
+    public void moveUp(float velocity) {
+        this.velocityY = -velocity;
+    }
 }

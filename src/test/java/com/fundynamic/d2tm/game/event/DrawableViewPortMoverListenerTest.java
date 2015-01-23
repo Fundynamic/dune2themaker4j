@@ -59,6 +59,16 @@ public class DrawableViewPortMoverListenerTest {
         Assert.assertEquals(0F, viewportVector.getY(), 0.0001F);
     }
 
+    @Test
+    public void mouseHittingTopBorderOfScreenMovesViewportToAbove() throws SlickException {
+        // moved to 2 pixels close to the top of the screen
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 3, ANY_COORDINATE_NOT_NEAR_BORDER, 2);
+
+        Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
+
+        Assert.assertEquals(-MOVE_SPEED * SCROLL_SPEED, viewportVector.getY(), 0.0001F);
+        Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
+    }
 
     // TODO:
     // Leaving border (left/right/top/bottom) will stop moving viewport
