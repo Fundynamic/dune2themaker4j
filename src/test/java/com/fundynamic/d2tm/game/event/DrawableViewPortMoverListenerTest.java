@@ -138,17 +138,17 @@ public class DrawableViewPortMoverListenerTest {
 
     @Test
     public void stopsMovingUpWhenAtTheUpperEdge() throws SlickException {
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
 
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
 
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("X position moved over the edge", 0F, viewportVector.getX(), 0.0001F);
+        Assert.assertEquals("Y position moved over the edge", 0F, viewportVector.getY(), 0.0001F);
     }
 
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
