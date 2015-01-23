@@ -42,10 +42,11 @@ public class DrawableViewPortMoverListenerTest {
 
     @Before
     public void setUp() throws SlickException {
+        Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
+
         drawableViewPort = new DrawableViewPort(viewport, new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort);
 
-        Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
 
         renderAndUpdatedCalled = 0;
     }
