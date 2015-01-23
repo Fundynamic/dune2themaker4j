@@ -136,9 +136,8 @@ public class DrawableViewPortMoverListenerTest {
     }
 
     private Vector2D<Float> getLastCalledViewport() throws SlickException {
-        ArgumentCaptor<Vector2D> captor = ArgumentCaptor.forClass(Vector2D.class);
-        Mockito.verify(viewport, times(renderAndUpdatedCalled)).draw(Mockito.<Graphics>anyObject(), Mockito.<Vector2D<Integer>>anyObject(), captor.capture());
-        return captor.getValue();
+        Mockito.verify(viewport, times(renderAndUpdatedCalled)).draw(Mockito.<Graphics>anyObject(), Mockito.<Vector2D<Integer>>anyObject(), Mockito.<Vector2D<Float>>any());
+        return drawableViewPort.getViewingVector();
     }
 
 }
