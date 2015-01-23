@@ -125,11 +125,7 @@ public class DrawableViewPortMoverListenerTest {
     public void stopsMovingLeftWhenAtTheLeftEdge() throws SlickException {
         listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
         updateAndRender();
-
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
         updateAndRender();
-
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
@@ -140,11 +136,7 @@ public class DrawableViewPortMoverListenerTest {
     public void stopsMovingUpWhenAtTheUpperEdge() throws SlickException {
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
-
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
-
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
