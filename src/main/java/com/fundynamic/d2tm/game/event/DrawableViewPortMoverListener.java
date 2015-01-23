@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 
 public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
+    public static final int PIXELS_NEAR_BORDER = 2;
     private final DrawableViewPort drawableViewPort;
     private float scrollSpeed;
 
@@ -40,17 +41,17 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        if (newx <= 2) {
+        if (newx <= PIXELS_NEAR_BORDER) {
             drawableViewPort.moveLeft(scrollSpeed);
-        } else if (newx >= Game.SCREEN_WIDTH - 2) {
+        } else if (newx >= Game.SCREEN_WIDTH - PIXELS_NEAR_BORDER) {
             drawableViewPort.moveRight(scrollSpeed);
         } else {
             drawableViewPort.moveRight(0F);
         }
 
-        if (newy <= 2) {
+        if (newy <= PIXELS_NEAR_BORDER) {
             drawableViewPort.moveUp(scrollSpeed);
-        } else if (newy >= Game.SCREEN_HEIGHT - 2) {
+        } else if (newy >= Game.SCREEN_HEIGHT - PIXELS_NEAR_BORDER) {
             drawableViewPort.moveDown(scrollSpeed);
         } else {
             drawableViewPort.moveDown(0F);
