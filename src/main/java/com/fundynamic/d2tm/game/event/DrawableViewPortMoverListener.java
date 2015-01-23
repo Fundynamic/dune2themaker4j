@@ -43,6 +43,7 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
         if (newx <= 2) drawableViewPort.moveLeft(scrollSpeed);
         if (newx >= Game.SCREEN_WIDTH - 2) drawableViewPort.moveRight(scrollSpeed);
         if (newy <= 2) drawableViewPort.moveUp(scrollSpeed);
+        if (newy >= Game.SCREEN_HEIGHT - 2) drawableViewPort.moveDown(scrollSpeed);
     }
 
     @Override

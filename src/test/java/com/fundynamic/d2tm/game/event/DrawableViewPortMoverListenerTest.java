@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.Game.SCREEN_HEIGHT;
 import static com.fundynamic.d2tm.Game.SCREEN_WIDTH;
 import static org.mockito.Mockito.mock;
 
@@ -60,13 +61,25 @@ public class DrawableViewPortMoverListenerTest {
     }
 
     @Test
-    public void mouseHittingTopBorderOfScreenMovesViewportToAbove() throws SlickException {
+    public void mouseHittingTopOfScreenMovesViewportUp() throws SlickException {
         // moved to 2 pixels close to the top of the screen
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 3, ANY_COORDINATE_NOT_NEAR_BORDER, 2);
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
         Assert.assertEquals(-MOVE_SPEED * SCROLL_SPEED, viewportVector.getY(), 0.0001F);
+        Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
+    }
+
+
+    @Test
+    public void mouseHittingBottomOfScreenMovesViewportDown() throws SlickException {
+        // moved to 2 pixels close to the bottom of the screen
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT - 3, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT - 2);
+
+        Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
+
+        Assert.assertEquals(MOVE_SPEED * SCROLL_SPEED, viewportVector.getY(), 0.0001F);
         Assert.assertEquals(0F, viewportVector.getX(), 0.0001F);
     }
 
