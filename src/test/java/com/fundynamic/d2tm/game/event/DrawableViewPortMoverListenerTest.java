@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -18,6 +17,7 @@ import org.newdawn.slick.SlickException;
 import static com.fundynamic.d2tm.Game.SCREEN_HEIGHT;
 import static com.fundynamic.d2tm.Game.SCREEN_WIDTH;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DrawableViewPortMoverListenerTest {
@@ -29,13 +29,17 @@ public class DrawableViewPortMoverListenerTest {
 
     @Mock
     private Viewport viewport;
+
     private DrawableViewPort drawableViewPort;
     private DrawableViewPortMoverListener listener;
+
+    private int renderAndUpdatedCalled;
 
     @Before
     public void setUp() {
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), Vector2D.zero(), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, SCROLL_SPEED);
+        renderAndUpdatedCalled = 0;
     }
 
     @Test
@@ -85,14 +89,20 @@ public class DrawableViewPortMoverListenerTest {
 
     // TODO:
     // Leaving border (left/right/top/bottom) will stop moving viewport
-
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
+        renderAndUpdate();
+        return getLastCalledViewport();
+    }
+
+    private void renderAndUpdate() throws SlickException {
         drawableViewPort.update();
         drawableViewPort.render();
+        renderAndUpdatedCalled++;
+    }
 
+    private Vector2D<Float> getLastCalledViewport() throws SlickException {
         ArgumentCaptor<Vector2D> captor = ArgumentCaptor.forClass(Vector2D.class);
-        Mockito.verify(viewport).draw(Mockito.<Graphics>anyObject(), Mockito.<Vector2D<Integer>>anyObject(), captor.capture());
-
+        Mockito.verify(viewport, times(renderAndUpdatedCalled)).draw(Mockito.<Graphics>anyObject(), Mockito.<Vector2D<Integer>>anyObject(), captor.capture());
         return captor.getValue();
     }
 
