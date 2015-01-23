@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -92,12 +91,12 @@ public class DrawableViewPortMoverListenerTest {
     public void mouseFromTopLeftToNoBorderStopsMoving() throws SlickException {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
-        renderAndUpdate(); // and move the viewport
+        updateAndRender(); // and move the viewport
         Vector2D<Float> tickOneViewportVector = drawableViewPort.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
-        renderAndUpdate(); // and stop moving
+        updateAndRender(); // and stop moving
 
         // Check that the viewport stopped moving
         Vector2D<Float> viewportVector = getLastCalledViewport();
@@ -109,12 +108,12 @@ public class DrawableViewPortMoverListenerTest {
     public void mouseFromBottomRightToNoBorderStopsMoving() throws SlickException {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_WIDTH, SCREEN_HEIGHT);
-        renderAndUpdate(); // and move the viewport
+        updateAndRender(); // and move the viewport
         Vector2D<Float> tickOneViewportVector = drawableViewPort.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(SCREEN_WIDTH, SCREEN_HEIGHT, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
-        renderAndUpdate(); // and stop moving
+        updateAndRender(); // and stop moving
 
         // Check that the viewport stopped moving
         Vector2D<Float> viewportVector = getLastCalledViewport();
@@ -125,24 +124,39 @@ public class DrawableViewPortMoverListenerTest {
     @Test
     public void stopsMovingLeftWhenAtTheLeftEdge() throws SlickException {
         listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
-        renderAndUpdate();
+        updateAndRender();
 
         listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
-        renderAndUpdate();
+        updateAndRender();
 
         listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
-        renderAndUpdate();
+        updateAndRender();
+
+        Vector2D<Float> viewportVector = getLastCalledViewport();
+        Assert.assertEquals("X position moved over the edge", 0F, viewportVector.getX(), 0.0001F);
+    }
+
+    @Test
+    public void stopsMovingUpWhenAtTheUpperEdge() throws SlickException {
+        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        updateAndRender();
+
+        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        updateAndRender();
+
+        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
+        updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
         Assert.assertEquals("X position moved over the edge", 0F, viewportVector.getX(), 0.0001F);
     }
 
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
-        renderAndUpdate();
+        updateAndRender();
         return getLastCalledViewport();
     }
 
-    private void renderAndUpdate() throws SlickException {
+    private void updateAndRender() throws SlickException {
         drawableViewPort.update();
         drawableViewPort.render();
         renderAndUpdatedCalled++;
