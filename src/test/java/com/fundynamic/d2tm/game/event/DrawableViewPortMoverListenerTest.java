@@ -31,6 +31,9 @@ public class DrawableViewPortMoverListenerTest {
     public static final float INITIAL_VIEWPORT_X = 4F;
     public static final float INITIAL_VIEWPORT_Y = 4F;
 
+    int heightOfMap = 20;
+    int widthOfMap = 25;
+
     @Mock
     private Viewport viewport;
 
@@ -40,9 +43,12 @@ public class DrawableViewPortMoverListenerTest {
     private int renderAndUpdatedCalled;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SlickException {
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, SCROLL_SPEED);
+
+        Mockito.when(viewport.getMap()).thenReturn(new Map(null, widthOfMap, heightOfMap));
+
         renderAndUpdatedCalled = 0;
     }
 
@@ -148,16 +154,12 @@ public class DrawableViewPortMoverListenerTest {
 
     @Test
     public void stopsMovingDownWhenAtTheBottomEdge() throws SlickException {
-        int heightOfMap = 20;
-        int widthOfMap = 25;
-
         int viewportX = 0;
         int viewportY = 0;
         float scrollSpeed = 16F;
 
         float maxYViewportPosition = (heightOfMap * Tile.HEIGHT) - Game.SCREEN_HEIGHT; // 40F
 
-        Mockito.when(viewport.getMap()).thenReturn(new Map(null, widthOfMap, heightOfMap));
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), MOVE_SPEED);
         listener = new DrawableViewPortMoverListener(drawableViewPort, scrollSpeed);
