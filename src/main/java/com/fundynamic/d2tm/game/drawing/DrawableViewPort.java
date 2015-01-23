@@ -44,6 +44,9 @@ public class DrawableViewPort {
         if (viewingVector.getX() < 0) {
             viewingVector = new Vector2D<>(0F, viewingVector.getY());
         }
+        if (viewingVector.getY() < 0) {
+            viewingVector = new Vector2D<>(viewingVector.getX(), 0F);
+        }
     }
 
     public void moveLeft(float velocity) {
