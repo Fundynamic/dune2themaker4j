@@ -49,7 +49,7 @@ public class PlayingState {
             initialized = true;
 
             try {
-                float moveSpeed = 15.0F;
+                float moveSpeed = 16.0F;
                 Vector2D viewPortDrawingPosition = Vector2D.zero();
                 final Viewport newViewport;
                 newViewport = new Viewport(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, this.map);
