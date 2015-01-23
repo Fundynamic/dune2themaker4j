@@ -27,6 +27,7 @@ public class Game extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         try {
+            gameContainer.setVSync(true);
             Theme theme = new Theme(new Image("sheet_terrain.png"));
             TerrainFactory terrainFactory = new DuneTerrainFactory(theme);
             playingState = new PlayingState(gameContainer, terrainFactory);
