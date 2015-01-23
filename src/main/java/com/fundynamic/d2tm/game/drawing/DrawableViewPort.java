@@ -42,7 +42,7 @@ public class DrawableViewPort {
         viewingVector = viewingVector.move(velocityX, velocityY, moveSpeed);
     }
 
-    public void setVelocityX(float velocity) {
-        this.velocityX = velocity;
+    public void moveLeft(float velocity) {
+        this.velocityX = -velocity;
     }
 }

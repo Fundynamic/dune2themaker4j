@@ -39,7 +39,7 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        if (newx <= 2) drawableViewPort.setVelocityX(scrollSpeed);
+        if (newx <= 2) drawableViewPort.moveLeft(scrollSpeed);
     }
 
     @Override
