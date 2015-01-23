@@ -60,6 +60,14 @@ public class DrawableViewPort {
             viewingVector = new Vector2D<>(viewingVector.getX(), viewingVector.getY() - subscract);
         }
 
+        int widthOfMapInPixels = map.getWidth() * Tile.WIDTH;
+
+        int pixelsPlusScreenWidth = viewingVector.toInt().getX() + Game.SCREEN_WIDTH;
+        if (pixelsPlusScreenWidth > widthOfMapInPixels) {
+            int subscract = pixelsPlusScreenWidth - widthOfMapInPixels;
+            viewingVector = new Vector2D<>(viewingVector.getX() - subscract, viewingVector.getY());
+        }
+
     }
 
     public void moveLeft(float velocity) {
