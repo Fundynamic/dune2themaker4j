@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.event;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 
 public class DrawableViewPortMoverListener extends AbstractMouseListener {
@@ -40,6 +41,7 @@ public class DrawableViewPortMoverListener extends AbstractMouseListener {
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
         if (newx <= 2) drawableViewPort.moveLeft(scrollSpeed);
+        if (newx >= Game.SCREEN_WIDTH - 2) drawableViewPort.moveRight(scrollSpeed);
     }
 
     @Override
