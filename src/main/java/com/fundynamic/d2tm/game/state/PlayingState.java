@@ -40,7 +40,7 @@ public class PlayingState {
         // on map load...
         this.map = new Map(terrainFactory, 64, 64);
 
-        this.screenResolution = new Vector2D<>(gameContainer.getScreenWidth(), gameContainer.getScreenHeight());
+        this.screenResolution = new Vector2D<>(gameContainer.getWidth(), gameContainer.getHeight());
     }
 
     public void init() throws SlickException {
