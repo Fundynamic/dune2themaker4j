@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.event;
 
+import com.fundynamic.d2tm.game.AssertHelper;
 import com.fundynamic.d2tm.game.drawing.ViewPort;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -14,6 +15,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,8 +61,8 @@ public class ViewPortMovementListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(INITIAL_VIEWPORT_X - MOVE_SPEED, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(INITIAL_VIEWPORT_Y, viewportVector.getY(), 0.0001F);
+        assertFloatEquals(INITIAL_VIEWPORT_X - MOVE_SPEED, viewportVector.getX());
+        assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
     }
 
     @Test
@@ -70,8 +72,8 @@ public class ViewPortMovementListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(INITIAL_VIEWPORT_X + MOVE_SPEED, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(INITIAL_VIEWPORT_Y, viewportVector.getY(), 0.0001F);
+        assertFloatEquals(INITIAL_VIEWPORT_X + MOVE_SPEED, viewportVector.getX());
+        assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
     }
 
     @Test
@@ -81,8 +83,8 @@ public class ViewPortMovementListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(INITIAL_VIEWPORT_X, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(INITIAL_VIEWPORT_Y - MOVE_SPEED, viewportVector.getY(), 0.0001F);
+        assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
+        assertFloatEquals(INITIAL_VIEWPORT_Y - MOVE_SPEED, viewportVector.getY());
     }
 
     @Test
@@ -92,8 +94,8 @@ public class ViewPortMovementListenerTest {
 
         Vector2D<Float> viewportVector = updateAndRenderAndReturnNewViewportVector();
 
-        Assert.assertEquals(INITIAL_VIEWPORT_X, viewportVector.getX(), 0.0001F);
-        Assert.assertEquals(INITIAL_VIEWPORT_Y + MOVE_SPEED, viewportVector.getY(), 0.0001F);
+        assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
+        assertFloatEquals(INITIAL_VIEWPORT_Y + MOVE_SPEED, viewportVector.getY());
     }
 
     @Test
@@ -109,8 +111,8 @@ public class ViewPortMovementListenerTest {
 
         // Check that the viewport stopped moving
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY(), 0.0001F);
-        Assert.assertEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX(), 0.0001F);
+        assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
+        assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
     }
 
     @Test
@@ -126,8 +128,8 @@ public class ViewPortMovementListenerTest {
 
         // Check that the viewport stopped moving
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY(), 0.0001F);
-        Assert.assertEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX(), 0.0001F);
+        assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
+        assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
     }
 
     @Test
@@ -138,7 +140,7 @@ public class ViewPortMovementListenerTest {
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("X position moved over the edge", 0F, viewportVector.getX(), 0.0001F);
+        assertFloatEquals("X position moved over the edge", 0F, viewportVector.getX());
     }
 
     @Test
@@ -149,7 +151,7 @@ public class ViewPortMovementListenerTest {
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("Y position moved over the edge", 0F, viewportVector.getY(), 0.0001F);
+        assertFloatEquals("Y position moved over the edge", 0F, viewportVector.getY());
     }
 
     @Test
@@ -169,7 +171,7 @@ public class ViewPortMovementListenerTest {
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY(), 0.0001F);
+        assertFloatEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY());
     }
 
     @Test
@@ -187,7 +189,7 @@ public class ViewPortMovementListenerTest {
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
-        Assert.assertEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX(), 0.0001F);
+        assertFloatEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX());
     }
 
     private Vector2D<Float> updateAndRenderAndReturnNewViewportVector() throws SlickException {
