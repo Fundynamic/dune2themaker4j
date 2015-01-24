@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm;
 
-import com.fundynamic.d2tm.game.PlayingState;
+import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
@@ -10,8 +10,8 @@ import org.newdawn.slick.util.Bootstrap;
 
 public class Game extends BasicGame {
 
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 600;
+    private static final int SCREEN_WIDTH = 800;
+    private static final int SCREEN_HEIGHT = 600;
 
     private PlayingState playingState;
 
@@ -27,6 +27,7 @@ public class Game extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         try {
+            gameContainer.setVSync(true);
             Theme theme = new Theme(new Image("sheet_terrain.png"));
             TerrainFactory terrainFactory = new DuneTerrainFactory(theme);
             playingState = new PlayingState(gameContainer, terrainFactory);

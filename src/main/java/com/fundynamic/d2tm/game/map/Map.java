@@ -81,6 +81,11 @@ public class Map {
         }
     }
 
+    public Image getSubImage(int x, int y, int width, int height) throws SlickException {
+        final Image mapImage = createOrGetMapImage();
+        return mapImage.getSubImage(x, y, width, height);
+    }
+
     private class SquareCell {
         private final int x, y;
 
