@@ -27,6 +27,7 @@ public class PlayingState {
 
     private boolean initialized;
     private final Input input;
+    private Vector2D<Integer> screenResolution;
 
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
@@ -38,6 +39,8 @@ public class PlayingState {
 
         // on map load...
         this.map = new Map(terrainFactory, 64, 64);
+
+        this.screenResolution = new Vector2D<>(gameContainer.getScreenWidth(), gameContainer.getScreenHeight());
     }
 
     public void init() throws SlickException {
@@ -55,7 +58,7 @@ public class PlayingState {
                 DrawableViewPort drawableViewPort = new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics, moveSpeed);
 
                 // Add listener for this viewport
-                input.addMouseListener(new DrawableViewPortMovementListener(drawableViewPort));
+                input.addMouseListener(new DrawableViewPortMovementListener(drawableViewPort, screenResolution));
 
                 drawableViewPorts.add(drawableViewPort);
             } catch (SlickException e) {

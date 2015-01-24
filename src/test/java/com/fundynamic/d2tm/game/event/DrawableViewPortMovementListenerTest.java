@@ -39,14 +39,16 @@ public class DrawableViewPortMovementListenerTest {
     private DrawableViewPortMovementListener listener;
 
     private int renderAndUpdatedCalled;
+    private Vector2D<Integer> screenResolution;
 
     @Before
     public void setUp() throws SlickException {
         Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
 
         drawableViewPort = new DrawableViewPort(viewport, new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
-        listener = new DrawableViewPortMovementListener(drawableViewPort);
 
+        screenResolution = new Vector2D<>(800, 600);
+        listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
 
         renderAndUpdatedCalled = 0;
     }
@@ -157,10 +159,10 @@ public class DrawableViewPortMovementListenerTest {
         int viewportY = 0;
         float moveSpeed = 16F;
 
-        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - Game.SCREEN_HEIGHT;
+        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - screenResolution.getY();
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
-        listener = new DrawableViewPortMovementListener(drawableViewPort);
+        listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT); // move down
         updateAndRender();
@@ -177,10 +179,10 @@ public class DrawableViewPortMovementListenerTest {
         int viewportY = 0;
         float moveSpeed = 32F;
 
-        float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - Game.SCREEN_WIDTH;
+        float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - screenResolution.getX();
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
-        listener = new DrawableViewPortMovementListener(drawableViewPort);
+        listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
 
         listener.mouseMoved(SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
