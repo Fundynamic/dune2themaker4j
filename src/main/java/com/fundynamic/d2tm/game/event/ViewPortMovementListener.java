@@ -1,19 +1,19 @@
 package com.fundynamic.d2tm.game.event;
 
 
-import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
+import com.fundynamic.d2tm.game.drawing.ViewPort;
 import com.fundynamic.d2tm.game.math.Vector2D;
 
-public class DrawableViewPortMovementListener extends AbstractMouseListener {
+public class ViewPortMovementListener extends AbstractMouseListener {
 
     public static final int PIXELS_NEAR_BORDER = 2;
 
-    private final DrawableViewPort drawableViewPort;
+    private final ViewPort viewPort;
     private final Vector2D<Integer> screenResolution;
 
-    public DrawableViewPortMovementListener(DrawableViewPort drawableViewPort, Vector2D<Integer> screenResolution) {
+    public ViewPortMovementListener(ViewPort viewPort, Vector2D<Integer> screenResolution) {
         this.screenResolution = screenResolution;
-        this.drawableViewPort = drawableViewPort;
+        this.viewPort = viewPort;
     }
 
     @Override
@@ -39,19 +39,19 @@ public class DrawableViewPortMovementListener extends AbstractMouseListener {
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
         if (newx <= PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveLeft();
+            viewPort.moveLeft();
         } else if (newx >= screenResolution.getX() - PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveRight();
+            viewPort.moveRight();
         } else {
-            drawableViewPort.stopMovingHorizontally();
+            viewPort.stopMovingHorizontally();
         }
 
         if (newy <= PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveUp();
+            viewPort.moveUp();
         } else if (newy >= screenResolution.getY() - PIXELS_NEAR_BORDER) {
-            drawableViewPort.moveDown();
+            viewPort.moveDown();
         } else {
-            drawableViewPort.stopMovingVertically();
+            viewPort.stopMovingVertically();
         }
     }
 

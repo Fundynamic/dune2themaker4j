@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.drawing;
 
-import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -9,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class DrawableViewPort {
+public class ViewPort {
 
     private final Map map;
 
@@ -29,11 +28,11 @@ public class DrawableViewPort {
     private Vector2D<Float> viewingVector;
 
 
-    public DrawableViewPort(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public ViewPort(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
         this(screenResolution, Vector2D.zero(), viewingVector, graphics, map, moveSpeed);
     }
 
-    public DrawableViewPort(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public ViewPort(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
         this.graphics = graphics;
         this.map = map;
 

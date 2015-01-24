@@ -1,10 +1,8 @@
 package com.fundynamic.d2tm.game.state;
 
-import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.Viewport;
-import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
-import com.fundynamic.d2tm.game.event.DrawableViewPortMovementListener;
+import com.fundynamic.d2tm.game.drawing.ViewPort;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
+import com.fundynamic.d2tm.game.event.ViewPortMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -23,7 +21,7 @@ public class PlayingState {
     private Map map;
     private Graphics graphics;
 
-    private List<DrawableViewPort> drawableViewPorts = new ArrayList<>();
+    private List<ViewPort> viewPorts = new ArrayList<>();
 
     private boolean initialized;
     private final Input input;
@@ -53,12 +51,12 @@ public class PlayingState {
             try {
                 float moveSpeed = 16.0F;
                 Vector2D viewPortDrawingPosition = Vector2D.zero();
-                DrawableViewPort drawableViewPort = new DrawableViewPort(screenResolution, viewPortDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
+                ViewPort viewPort = new ViewPort(screenResolution, viewPortDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
 
                 // Add listener for this viewport
-                input.addMouseListener(new DrawableViewPortMovementListener(drawableViewPort, screenResolution));
+                input.addMouseListener(new ViewPortMovementListener(viewPort, screenResolution));
 
-                drawableViewPorts.add(drawableViewPort);
+                viewPorts.add(viewPort);
             } catch (SlickException e) {
                 throw new IllegalStateException("Unable to create new viewport!", e);
             }
@@ -66,14 +64,14 @@ public class PlayingState {
     }
 
     public void update() {
-        for (DrawableViewPort drawableViewPort : drawableViewPorts) {
-            drawableViewPort.update();
+        for (ViewPort viewPort : viewPorts) {
+            viewPort.update();
         }
     }
 
     public void render() throws SlickException {
-        for (DrawableViewPort drawableViewPort : drawableViewPorts) {
-            drawableViewPort.render();
+        for (ViewPort viewPort : viewPorts) {
+            viewPort.render();
         }
     }
 
