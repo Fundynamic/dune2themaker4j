@@ -175,7 +175,7 @@ public class DrawableViewPortMovementListenerTest {
     public void stopsMovingRightWhenAtTheRightEdge() throws SlickException {
         int viewportX = 0;
         int viewportY = 0;
-        float moveSpeed = 16F;
+        float moveSpeed = 32F;
 
         float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - Game.SCREEN_WIDTH;
 
@@ -183,7 +183,6 @@ public class DrawableViewPortMovementListenerTest {
         listener = new DrawableViewPortMovementListener(drawableViewPort);
 
         listener.mouseMoved(SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER); // move right
-        updateAndRender();
         updateAndRender();
 
         Vector2D<Float> viewportVector = getLastCalledViewport();
