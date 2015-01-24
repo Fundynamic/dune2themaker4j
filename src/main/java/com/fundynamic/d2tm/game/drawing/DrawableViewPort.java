@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.drawing;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.BoundedVector2D;
+import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.graphics.Tile;
 import org.newdawn.slick.Graphics;
@@ -15,8 +15,9 @@ public class DrawableViewPort {
     private final Graphics graphics;
 
     private final Vector2D<Integer> drawingVector;
-    private BoundedVector2D<Float> viewingVector;
+    private Vector2D<Float> viewingVector;
 
+    private final Perimeter<Float> viewingVectorPerimiter;
     private float velocityX;
     private float velocityY;
     private float moveSpeed;
@@ -34,15 +35,11 @@ public class DrawableViewPort {
         Map map = viewport.getMap();
         float heightOfMapInPixels = map.getHeight() * Tile.HEIGHT;
         float widthOfMapInPixels = map.getWidth() * Tile.WIDTH;
-        this.viewingVector = new BoundedVector2D(
-                viewingVector.getX().floatValue(),
-                viewingVector.getY().floatValue(),
-                0F,
+        this.viewingVectorPerimiter = new Perimeter<>(0F,
                 widthOfMapInPixels - Game.SCREEN_WIDTH,
                 0F,
-                heightOfMapInPixels - Game.SCREEN_HEIGHT
-        );
-
+                heightOfMapInPixels - Game.SCREEN_HEIGHT);
+        this.viewingVector = viewingVector;
         this.velocityX = 0F;
         this.velocityY = 0F;
 
@@ -55,7 +52,7 @@ public class DrawableViewPort {
     }
 
     public void update() {
-        viewingVector = viewingVector.move(velocityX, velocityY, moveSpeed);
+        viewingVector = viewingVectorPerimiter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY, moveSpeed));
     }
 
     public void moveLeft() {
