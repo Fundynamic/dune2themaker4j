@@ -59,7 +59,7 @@ public class PlayingState {
 
                 drawableViewPorts.add(drawableViewPort);
             } catch (SlickException e) {
-                throw new IllegalStateException("Unable to create new viewport!");
+                throw new IllegalStateException("Unable to create new viewport!", e);
             }
         }
     }
