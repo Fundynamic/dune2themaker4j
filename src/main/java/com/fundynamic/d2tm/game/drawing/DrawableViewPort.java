@@ -22,11 +22,11 @@ public class DrawableViewPort {
     private float velocityY;
     private float moveSpeed;
 
-    public DrawableViewPort(Viewport viewport, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
-        this(viewport, Vector2D.zero(), viewingVector, graphics, moveSpeed);
+    public DrawableViewPort(Vector2D screenResolution, Viewport viewport, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
+        this(screenResolution, viewport, Vector2D.zero(), viewingVector, graphics, moveSpeed);
     }
 
-    public DrawableViewPort(Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
+    public DrawableViewPort(Vector2D<Integer> screenResolution, Viewport viewport, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, float moveSpeed) {
         this.viewport = viewport;
         this.graphics = graphics;
 
@@ -36,9 +36,9 @@ public class DrawableViewPort {
         float heightOfMapInPixels = map.getHeight() * Tile.HEIGHT;
         float widthOfMapInPixels = map.getWidth() * Tile.WIDTH;
         this.viewingVectorPerimeter = new Perimeter<>(0F,
-                widthOfMapInPixels - Game.SCREEN_WIDTH,
+                widthOfMapInPixels - screenResolution.getX(),
                 0F,
-                heightOfMapInPixels - Game.SCREEN_HEIGHT);
+                heightOfMapInPixels - screenResolution.getY());
         this.viewingVector = viewingVector;
         this.velocityX = 0F;
         this.velocityY = 0F;
