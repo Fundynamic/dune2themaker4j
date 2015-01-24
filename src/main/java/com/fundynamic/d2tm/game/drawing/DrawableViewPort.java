@@ -17,7 +17,7 @@ public class DrawableViewPort {
     private final Vector2D<Integer> drawingVector;
     private Vector2D<Float> viewingVector;
 
-    private final Perimeter<Float> viewingVectorPerimiter;
+    private final Perimeter<Float> viewingVectorPerimeter;
     private float velocityX;
     private float velocityY;
     private float moveSpeed;
@@ -35,7 +35,7 @@ public class DrawableViewPort {
         Map map = viewport.getMap();
         float heightOfMapInPixels = map.getHeight() * Tile.HEIGHT;
         float widthOfMapInPixels = map.getWidth() * Tile.WIDTH;
-        this.viewingVectorPerimiter = new Perimeter<>(0F,
+        this.viewingVectorPerimeter = new Perimeter<>(0F,
                 widthOfMapInPixels - Game.SCREEN_WIDTH,
                 0F,
                 heightOfMapInPixels - Game.SCREEN_HEIGHT);
@@ -52,7 +52,7 @@ public class DrawableViewPort {
     }
 
     public void update() {
-        viewingVector = viewingVectorPerimiter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY));
+        viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY));
     }
 
     public void moveLeft() {
