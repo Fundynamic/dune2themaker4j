@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -28,9 +27,6 @@ public class DrawableViewPortMovementListenerTest {
 
     public static int HEIGHT_OF_MAP = 20;
     public static int WIDTH_OF_MAP = 26;
-
-    @Mock
-    private Viewport viewport;
 
     private DrawableViewPort drawableViewPort;
     private DrawableViewPortMovementListener listener;
