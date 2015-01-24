@@ -60,6 +60,9 @@ public class ViewPort {
         bufferGraphics.clear();
 
         drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
+        // Stefan 24-01-2015: This will get hairy once we draw other stuff on the screen.
+        // this class will then probably get loads of dependencies to other sources like Units, Structures, etc. Is that what we want?
+        // perhaps we can draw these things elsewhere, and then later stack images here? Like a stack of cards? 
         // determine what items are visible & draw them on image
 
         // add more layers
