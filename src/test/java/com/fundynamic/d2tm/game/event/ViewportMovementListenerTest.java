@@ -1,11 +1,9 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.game.AssertHelper;
-import com.fundynamic.d2tm.game.drawing.ViewPort;
+import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.graphics.Tile;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,7 @@ import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ViewPortMovementListenerTest {
+public class ViewportMovementListenerTest {
     public static final float MOVE_SPEED = 2.0F;
 
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
@@ -29,8 +27,8 @@ public class ViewPortMovementListenerTest {
     public static int HEIGHT_OF_MAP = 20;
     public static int WIDTH_OF_MAP = 26;
 
-    private ViewPort viewPort;
-    private ViewPortMovementListener listener;
+    private Viewport viewport;
+    private ViewportMovementListener listener;
 
     private Vector2D<Integer> screenResolution;
     private Map map;
@@ -40,12 +38,12 @@ public class ViewPortMovementListenerTest {
         map = new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D<>(800, 600);
 
-        viewPort = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewPortMovementListener(viewPort, screenResolution);
+        viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
+        listener = new ViewportMovementListener(viewport, screenResolution);
     }
 
-    private ViewPort makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new ViewPort(screenResolution, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
+    private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
+        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D<Integer> screenResolution) throws SlickException {
@@ -103,7 +101,7 @@ public class ViewPortMovementListenerTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
         updateAndRender(); // and move the viewport
-        Vector2D<Float> tickOneViewportVector = viewPort.getViewingVector();
+        Vector2D<Float> tickOneViewportVector = viewport.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
@@ -120,7 +118,7 @@ public class ViewPortMovementListenerTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), screenResolution.getY());
         updateAndRender(); // and move the viewport
-        Vector2D<Float> tickOneViewportVector = viewPort.getViewingVector();
+        Vector2D<Float> tickOneViewportVector = viewport.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(screenResolution.getX(), screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
@@ -162,8 +160,8 @@ public class ViewPortMovementListenerTest {
 
         float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - screenResolution.getY();
 
-        viewPort = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewPortMovementListener(viewPort, screenResolution);
+        viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
+        listener = new ViewportMovementListener(viewport, screenResolution);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY()); // move down
         updateAndRender();
@@ -182,8 +180,8 @@ public class ViewPortMovementListenerTest {
 
         float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - screenResolution.getX();
 
-        viewPort = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewPortMovementListener(viewPort, screenResolution);
+        viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
+        listener = new ViewportMovementListener(viewport, screenResolution);
 
         listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
@@ -198,12 +196,12 @@ public class ViewPortMovementListenerTest {
     }
 
     private void updateAndRender() throws SlickException {
-        viewPort.update();
-        viewPort.render();
+        viewport.update();
+        viewport.render();
     }
 
     private Vector2D<Float> getLastCalledViewport() throws SlickException {
-        return viewPort.getViewingVector();
+        return viewport.getViewingVector();
     }
 
 }

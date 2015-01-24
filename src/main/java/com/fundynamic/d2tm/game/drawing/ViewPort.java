@@ -8,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class ViewPort {
+public class Viewport {
 
     private final Map map;
 
@@ -28,11 +28,11 @@ public class ViewPort {
     private Vector2D<Float> viewingVector;
 
 
-    public ViewPort(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public Viewport(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
         this(screenResolution, Vector2D.zero(), viewingVector, graphics, map, moveSpeed);
     }
 
-    public ViewPort(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public Viewport(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
         this.graphics = graphics;
         this.map = map;
 
