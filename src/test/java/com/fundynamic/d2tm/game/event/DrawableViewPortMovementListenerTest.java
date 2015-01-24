@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 import com.fundynamic.d2tm.game.map.Map;
@@ -14,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DrawableViewPortMovementListenerTest {
@@ -36,19 +35,26 @@ public class DrawableViewPortMovementListenerTest {
     private DrawableViewPort drawableViewPort;
     private DrawableViewPortMovementListener listener;
 
-    private int renderAndUpdatedCalled;
     private Vector2D<Integer> screenResolution;
+    private Map map;
 
     @Before
     public void setUp() throws SlickException {
-        Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
-
+        map = new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D<>(800, 600);
 
-        drawableViewPort = new DrawableViewPort(screenResolution, viewport, new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
+        drawableViewPort = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
         listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
+    }
 
-        renderAndUpdatedCalled = 0;
+    private DrawableViewPort makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
+        return new DrawableViewPort(screenResolution, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
+            // ugly seam in the code, but I'd rather do this than create a Spy
+            @Override
+            protected Image constructImage(Vector2D<Integer> screenResolution) throws SlickException {
+                return Mockito.mock(Image.class);
+            }
+        };
     }
 
     @Test
@@ -159,7 +165,7 @@ public class DrawableViewPortMovementListenerTest {
 
         float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - screenResolution.getY();
 
-        drawableViewPort = new DrawableViewPort(screenResolution, viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
+        drawableViewPort = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY()); // move down
@@ -179,7 +185,7 @@ public class DrawableViewPortMovementListenerTest {
 
         float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - screenResolution.getX();
 
-        drawableViewPort = new DrawableViewPort(screenResolution, viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
+        drawableViewPort = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new DrawableViewPortMovementListener(drawableViewPort, screenResolution);
 
         listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
@@ -197,11 +203,9 @@ public class DrawableViewPortMovementListenerTest {
     private void updateAndRender() throws SlickException {
         drawableViewPort.update();
         drawableViewPort.render();
-        renderAndUpdatedCalled++;
     }
 
     private Vector2D<Float> getLastCalledViewport() throws SlickException {
-        Mockito.verify(viewport, times(renderAndUpdatedCalled)).draw(Mockito.<Graphics>anyObject(), Mockito.<Vector2D<Integer>>anyObject(), Mockito.<Vector2D<Float>>any());
         return drawableViewPort.getViewingVector();
     }
 

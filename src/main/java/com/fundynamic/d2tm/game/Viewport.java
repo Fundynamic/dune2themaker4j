@@ -13,44 +13,5 @@ import org.newdawn.slick.SlickException;
  */
 public class Viewport {
 
-    private final Map map;
 
-    private final int width, height;
-
-    private Image buffer;
-
-    public Viewport(int width, int height, Map map) throws SlickException {
-        this.map = map;
-        this.height = height;
-        this.width = width;
-        this.buffer = new Image(width, height);
-    }
-
-    public void draw(Graphics graphics, Vector2D<Integer> drawingVector, Vector2D<Float> viewingVector) throws SlickException {
-        final Graphics bufferGraphics = this.buffer.getGraphics();
-        bufferGraphics.clear();
-
-        drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
-        // determine what items are visible & draw them on image
-
-        // add more layers
-        // Units, etc
-
-        // draw all on the big canvas
-        drawBufferToGraphics(graphics, drawingVector);
-    }
-
-    private void drawBufferToGraphics(Graphics graphics, Vector2D<Integer> drawingVector) {
-        graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
-    }
-
-    private void drawViewableMapOnBuffer(Vector2D<Integer> viewingVector, Graphics imageGraphics) throws SlickException {
-        final Image mapImage = map.createOrGetMapImage();
-        Image subImage = mapImage.getSubImage(viewingVector.getX(), viewingVector.getY(), width, height);
-        imageGraphics.drawImage(subImage, 0, 0);
-    }
-
-    public Map getMap() {
-        return map;
-    }
 }

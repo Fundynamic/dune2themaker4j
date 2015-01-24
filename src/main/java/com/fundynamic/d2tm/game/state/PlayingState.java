@@ -53,9 +53,7 @@ public class PlayingState {
             try {
                 float moveSpeed = 16.0F;
                 Vector2D viewPortDrawingPosition = Vector2D.zero();
-                final Viewport newViewport;
-                newViewport = new Viewport(screenResolution.getX(), screenResolution.getY(), this.map);
-                DrawableViewPort drawableViewPort = new DrawableViewPort(screenResolution, newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics, moveSpeed);
+                DrawableViewPort drawableViewPort = new DrawableViewPort(screenResolution, viewPortDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
 
                 // Add listener for this viewport
                 input.addMouseListener(new DrawableViewPortMovementListener(drawableViewPort, screenResolution));
