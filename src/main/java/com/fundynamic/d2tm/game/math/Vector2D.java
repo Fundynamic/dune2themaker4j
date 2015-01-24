@@ -21,10 +21,10 @@ public class Vector2D<T extends Number> {
         return y;
     }
 
-    public Vector2D<Float> move(float xVelocity, float yVelocity, float speed) {
-        float newX = x.floatValue() + (speed * xVelocity);
-        float newY = y.floatValue() + (speed * yVelocity);
-        return new Vector2D<>(newX, newY);
+    public Vector2D<Float> move(T xVelocity, T yVelocity) {
+        float newX = x.floatValue() + xVelocity.floatValue();
+        float newY = y.floatValue() + yVelocity.floatValue();
+        return new Vector2D<Float>(newX, newY);
     }
 
     public Vector2D<Integer> toInt() {

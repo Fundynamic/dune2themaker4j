@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
 public class DrawableViewPortMovementListener extends AbstractMouseListener {
 
     public static final int PIXELS_NEAR_BORDER = 2;
+
     private final DrawableViewPort drawableViewPort;
 
     public DrawableViewPortMovementListener(DrawableViewPort drawableViewPort) {

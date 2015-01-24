@@ -52,23 +52,23 @@ public class DrawableViewPort {
     }
 
     public void update() {
-        viewingVector = viewingVectorPerimiter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY, moveSpeed));
+        viewingVector = viewingVectorPerimiter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY));
     }
 
     public void moveLeft() {
-        this.velocityX = -1F;
+        this.velocityX = -moveSpeed;
     }
 
     public void moveRight() {
-        this.velocityX = 1F;
+        this.velocityX = moveSpeed;
     }
 
     public void moveUp() {
-        this.velocityY = -1F;
+        this.velocityY = -moveSpeed;
     }
 
     public void moveDown() {
-        this.velocityY = 1;
+        this.velocityY = moveSpeed;
     }
 
     public void stopMovingHorizontally() {
