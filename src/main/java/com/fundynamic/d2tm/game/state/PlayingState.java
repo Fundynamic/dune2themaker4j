@@ -3,10 +3,9 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.Viewport;
 import com.fundynamic.d2tm.game.drawing.DrawableViewPort;
-import com.fundynamic.d2tm.game.event.DrawableViewPortMoverListener;
+import com.fundynamic.d2tm.game.event.DrawableViewPortMovementListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import org.newdawn.slick.GameContainer;
@@ -56,7 +55,7 @@ public class PlayingState {
                 DrawableViewPort drawableViewPort = new DrawableViewPort(newViewport, viewPortDrawingPosition, Vector2D.zero(), graphics, moveSpeed);
 
                 // Add listener for this viewport
-                input.addMouseListener(new DrawableViewPortMoverListener(drawableViewPort));
+                input.addMouseListener(new DrawableViewPortMovementListener(drawableViewPort));
 
                 drawableViewPorts.add(drawableViewPort);
             } catch (SlickException e) {

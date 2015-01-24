@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DrawableViewPortMoverListenerTest {
+public class DrawableViewPortMovementListenerTest {
     public static final float MOVE_SPEED = 2.0F;
 
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
@@ -36,7 +36,7 @@ public class DrawableViewPortMoverListenerTest {
     private Viewport viewport;
 
     private DrawableViewPort drawableViewPort;
-    private DrawableViewPortMoverListener listener;
+    private DrawableViewPortMovementListener listener;
 
     private int renderAndUpdatedCalled;
 
@@ -45,7 +45,7 @@ public class DrawableViewPortMoverListenerTest {
         Mockito.when(viewport.getMap()).thenReturn(new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP));
 
         drawableViewPort = new DrawableViewPort(viewport, new Vector2D<>(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y), mock(Graphics.class), MOVE_SPEED);
-        listener = new DrawableViewPortMoverListener(drawableViewPort);
+        listener = new DrawableViewPortMovementListener(drawableViewPort);
 
 
         renderAndUpdatedCalled = 0;
@@ -160,7 +160,7 @@ public class DrawableViewPortMoverListenerTest {
         float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - Game.SCREEN_HEIGHT;
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
-        listener = new DrawableViewPortMoverListener(drawableViewPort);
+        listener = new DrawableViewPortMovementListener(drawableViewPort);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_HEIGHT); // move down
         updateAndRender();
@@ -180,7 +180,7 @@ public class DrawableViewPortMoverListenerTest {
         float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - Game.SCREEN_WIDTH;
 
         drawableViewPort = new DrawableViewPort(viewport, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), moveSpeed);
-        listener = new DrawableViewPortMoverListener(drawableViewPort);
+        listener = new DrawableViewPortMovementListener(drawableViewPort);
 
         listener.mouseMoved(SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER, SCREEN_WIDTH, ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
