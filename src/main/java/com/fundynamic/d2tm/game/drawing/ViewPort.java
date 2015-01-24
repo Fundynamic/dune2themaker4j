@@ -54,7 +54,19 @@ public class ViewPort {
     }
 
     public void render() throws SlickException {
-        draw();
+        final Graphics bufferGraphics = this.buffer.getGraphics();
+        if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
+
+        bufferGraphics.clear();
+
+        drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
+        // determine what items are visible & draw them on image
+
+        // add more layers
+        // Units, etc
+
+        // draw all on the big canvas
+        drawBufferToGraphics(graphics, drawingVector);
         graphics.drawString("Drawing viewport at " + drawingVector.shortString() + " viewing " + viewingVector.shortString(), 10, 30);
     }
 
@@ -86,26 +98,6 @@ public class ViewPort {
         this.velocityY = 0F;
     }
 
-    public Vector2D<Float> getViewingVector() {
-        return viewingVector;
-    }
-
-    public void draw() throws SlickException {
-        final Graphics bufferGraphics = this.buffer.getGraphics();
-        if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
-
-        bufferGraphics.clear();
-
-        drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
-        // determine what items are visible & draw them on image
-
-        // add more layers
-        // Units, etc
-
-        // draw all on the big canvas
-        drawBufferToGraphics(graphics, drawingVector);
-    }
-
     private void drawBufferToGraphics(Graphics graphics, Vector2D<Integer> drawingVector) {
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
@@ -119,6 +111,12 @@ public class ViewPort {
                     screenResolution.getY()),
             0, 0
         );
+    }
+
+    // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
+    // least not the use them in the non-test code.
+    public Vector2D<Float> getViewingVector() {
+        return viewingVector;
     }
 
     protected Image constructImage(Vector2D<Integer> screenResolution) throws SlickException {
