@@ -10,21 +10,25 @@ public class Map {
 
     private final TerrainFactory terrainFactory;
     private final int height, width;
+    private final int tileHeight;
+    private final int tileWidth;
     private Image mapImage;
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, int width, int height) throws SlickException {
+    public Map(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.height = height;
         this.width = width;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
 
         initializeEmptyMap(width, height);
     }
 
-    public static Map generateRandom(TerrainFactory terrainFactory, int width, int height) {
+    public static Map generateRandom(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) {
         try {
-            Map map = new Map(terrainFactory, width, height);
+            Map map = new Map(terrainFactory, width, height, tileWidth, tileHeight);
             map.putTerrainOnMap();
             map.smooth();
             return map;
@@ -48,7 +52,7 @@ public class Map {
 
     public Image createOrGetMapImage() throws SlickException {
         if (this.mapImage == null) {
-            mapImage = new MapRenderer().render(this);
+            mapImage = new MapRenderer(tileHeight, tileWidth).render(this);
         }
         return mapImage;
     }

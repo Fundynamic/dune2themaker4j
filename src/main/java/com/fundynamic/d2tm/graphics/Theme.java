@@ -8,8 +8,8 @@ public class Theme {
 
     private final SpriteSheet spriteSheet;
 
-    public Theme(Image image) {
-        this.spriteSheet = new SpriteSheet(image, Tile.WIDTH, Tile.HEIGHT);
+    public Theme(Image image, int tileWidth, int tileHeight) {
+        this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
     }
 
     public Image getTileImage(int row, TerrainFacing facing) {

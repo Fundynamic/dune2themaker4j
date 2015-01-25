@@ -15,13 +15,32 @@ public class Game extends StateBasedGame {
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 600;
 
+    private static final int TILE_WIDTH = 32;
+    private static final int TILE_HEIGHT = 32;
+
     public Game(String title) {
         super(title);
     }
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
-        addState(new PlayingState(container, new DuneTerrainFactory(new Theme(new Image("sheet_terrain.png")))));
+        DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
+                new Theme(
+                        new Image("sheet_terrain.png"),
+                        TILE_WIDTH,
+                        TILE_HEIGHT
+                ),
+                TILE_WIDTH,
+                TILE_HEIGHT
+        );
+
+        PlayingState playingState = new PlayingState(
+                container,
+                terrainFactory,
+                TILE_WIDTH,
+                TILE_HEIGHT
+        );
+        addState(playingState);
     }
 
     public static void main(String[] args) {

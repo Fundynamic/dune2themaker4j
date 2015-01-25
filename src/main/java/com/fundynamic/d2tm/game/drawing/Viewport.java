@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.drawing;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.graphics.Tile;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -20,6 +19,9 @@ public class Viewport {
 
     private final Perimeter<Float> viewingVectorPerimeter;
 
+    private final int tileHeight;
+    private final int tileWidth;
+
     private float velocityX;
     private float velocityY;
 
@@ -28,11 +30,11 @@ public class Viewport {
     private Vector2D<Float> viewingVector;
 
 
-    public Viewport(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
-        this(screenResolution, Vector2D.zero(), viewingVector, graphics, map, moveSpeed);
+    public Viewport(Vector2D screenResolution, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed, int tileWidth, int tileHeight) throws SlickException {
+        this(screenResolution, Vector2D.zero(), viewingVector, graphics, map, moveSpeed, tileWidth, tileHeight);
     }
 
-    public Viewport(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public Viewport(Vector2D<Integer> screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed, int tileWidth, int tileHeight) throws SlickException {
         this.graphics = graphics;
         this.map = map;
 
@@ -40,8 +42,11 @@ public class Viewport {
         this.screenResolution = screenResolution;
         this.buffer = constructImage(screenResolution);
 
-        float heightOfMapInPixels = map.getHeight() * Tile.HEIGHT;
-        float widthOfMapInPixels = map.getWidth() * Tile.WIDTH;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+
+        float heightOfMapInPixels = map.getHeight() * tileHeight;
+        float widthOfMapInPixels = map.getWidth() * tileWidth;
         this.viewingVectorPerimeter = new Perimeter<>(0F,
                 widthOfMapInPixels - screenResolution.getX(),
                 0F,

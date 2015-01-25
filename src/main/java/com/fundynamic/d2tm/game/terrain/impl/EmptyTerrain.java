@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.terrain.impl;
 
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
-import com.fundynamic.d2tm.graphics.Tile;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -13,12 +12,12 @@ public class EmptyTerrain implements Terrain {
     private final Image image;
     private static Image blackImage = null;
 
-    public EmptyTerrain() {
+    public EmptyTerrain(int tileWidth, int tileHeight) {
         try {
             if (blackImage == null) {
-                blackImage = new Image(Tile.WIDTH, Tile.HEIGHT);
+                blackImage = new Image(tileWidth, tileHeight);
                 blackImage.getGraphics().setColor(Color.black);
-                blackImage.getGraphics().fillRect(0, 0, Tile.WIDTH, Tile.HEIGHT);
+                blackImage.getGraphics().fillRect(0, 0, tileWidth, tileHeight);
             }
             this.image = blackImage;
         } catch (SlickException e) {

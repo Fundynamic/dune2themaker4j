@@ -24,13 +24,18 @@ public class PlayingState extends BasicGameState {
     private final Input input;
     private final Vector2D<Integer> screenResolution;
 
+    private final int tileWidth;
+    private final int tileHeight;
+
     private Map map;
     private Graphics graphics;
 
     private List<Viewport> viewports = new ArrayList<>();
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.graphics = gameContainer.getGraphics();
         this.input = gameContainer.getInput();
         this.screenResolution = new Vector2D<>(gameContainer.getWidth(), gameContainer.getHeight());
@@ -45,12 +50,12 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        this.map = Map.generateRandom(terrainFactory, 64, 64);
+        this.map = Map.generateRandom(terrainFactory, 64, 64, tileWidth, tileHeight);
 
         try {
             float moveSpeed = 16.0F;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed, tileWidth, tileHeight);
 
             // Add listener for this viewport
             input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
