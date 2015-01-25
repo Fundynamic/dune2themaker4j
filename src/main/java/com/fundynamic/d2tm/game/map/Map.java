@@ -12,14 +12,26 @@ public class Map {
     private final int height, width;
     private Image mapImage;
 
-    private boolean initialized;
-
     private Cell[][] cells;
 
     public Map(TerrainFactory terrainFactory, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.height = height;
         this.width = width;
+
+        initializeEmptyMap(width, height);
+    }
+
+    public static Map generateRandom(TerrainFactory terrainFactory, int width, int height) {
+        try {
+            Map map = new Map(terrainFactory, width, height);
+            map.putTerrainOnMap();
+            map.smooth();
+            return map;
+        } catch (SlickException e) {
+            System.err.println("Exception while creating map with terrainFactory: " + terrainFactory + ", width: " + width + ", height: " + height + ". --> " + e);
+            return null;
+        }
     }
 
     public int getWidth() {
@@ -39,16 +51,6 @@ public class Map {
             mapImage = new MapRenderer().render(this);
         }
         return mapImage;
-    }
-
-    public void init() throws SlickException {
-        if (!initialized) {
-            // this does not work when we move the code in the constructor?
-            initializeEmptyMap(width, height);
-            putTerrainOnMap();
-            smooth();
-            initialized = true;
-        }
     }
 
     private void initializeEmptyMap(int width, int height) {
@@ -128,7 +130,5 @@ public class Map {
             return getCell(x, y - 1).getTerrain();
         }
     }
-
-
 
 }

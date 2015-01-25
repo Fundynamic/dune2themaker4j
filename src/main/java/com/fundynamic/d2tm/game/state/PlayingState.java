@@ -45,10 +45,7 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        // on map load...
-        this.map = new Map(terrainFactory, 64, 64);
-
-        this.map.init();
+        this.map = Map.generateRandom(terrainFactory, 64, 64);
 
         try {
             float moveSpeed = 16.0F;
