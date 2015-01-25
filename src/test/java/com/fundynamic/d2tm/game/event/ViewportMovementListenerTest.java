@@ -3,6 +3,9 @@ package com.fundynamic.d2tm.game.event;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Tile;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,9 @@ public class ViewportMovementListenerTest {
 
     @Before
     public void setUp() throws SlickException {
-        map = new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP);
+        TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
+        Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
+        map = new Map(terrainFactory, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D<>(800, 600);
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
