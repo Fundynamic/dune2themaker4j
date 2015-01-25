@@ -1,16 +1,20 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
 
 public class DuneTerrainFactory implements TerrainFactory {
 
     private final Theme theme;
+    private final int tileWidth;
+    private final int tileHeight;
 
-    public DuneTerrainFactory(Theme theme) {
+    public DuneTerrainFactory(Theme theme, int tileWidth, int tileHeight) {
         this.theme = theme;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
     }
 
     public Terrain create(int terrainType, Cell cell) {
@@ -35,6 +39,6 @@ public class DuneTerrainFactory implements TerrainFactory {
     }
 
     public Terrain createEmptyTerrain() {
-        return new EmptyTerrain();
+        return new EmptyTerrain(tileWidth, tileHeight);
     }
 }

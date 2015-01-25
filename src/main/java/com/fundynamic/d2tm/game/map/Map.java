@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -10,16 +10,32 @@ public class Map {
 
     private final TerrainFactory terrainFactory;
     private final int height, width;
+    private final int tileHeight;
+    private final int tileWidth;
     private Image mapImage;
-
-    private boolean initialized;
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, int width, int height) throws SlickException {
+    public Map(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.height = height;
         this.width = width;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+
+        initializeEmptyMap(width, height);
+    }
+
+    public static Map generateRandom(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) {
+        try {
+            Map map = new Map(terrainFactory, width, height, tileWidth, tileHeight);
+            map.putTerrainOnMap();
+            map.smooth();
+            return map;
+        } catch (SlickException e) {
+            System.err.println("Exception while creating map with terrainFactory: " + terrainFactory + ", width: " + width + ", height: " + height + ". --> " + e);
+            return null;
+        }
     }
 
     public int getWidth() {
@@ -36,19 +52,9 @@ public class Map {
 
     public Image createOrGetMapImage() throws SlickException {
         if (this.mapImage == null) {
-            mapImage = new MapRenderer().render(this);
+            mapImage = new MapRenderer(tileHeight, tileWidth).render(this);
         }
         return mapImage;
-    }
-
-    public void init() throws SlickException {
-        if (!initialized) {
-            // this does not work when we move the code in the constructor?
-            initializeEmptyMap(width, height);
-            putTerrainOnMap();
-            smooth();
-            initialized = true;
-        }
     }
 
     private void initializeEmptyMap(int width, int height) {
@@ -128,7 +134,5 @@ public class Map {
             return getCell(x, y - 1).getTerrain();
         }
     }
-
-
 
 }

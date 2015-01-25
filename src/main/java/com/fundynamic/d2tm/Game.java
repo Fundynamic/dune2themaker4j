@@ -1,45 +1,46 @@
 package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.state.PlayingState;
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Bootstrap;
 
 
-public class Game extends BasicGame {
+public class Game extends StateBasedGame {
 
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 600;
 
-    private PlayingState playingState;
+    private static final int TILE_WIDTH = 32;
+    private static final int TILE_HEIGHT = 32;
 
     public Game(String title) {
         super(title);
     }
 
-    public void render(GameContainer container, Graphics g) throws SlickException {
-        playingState.init();
-        playingState.render();
-    }
-
     @Override
-    public void init(GameContainer gameContainer) throws SlickException {
-        try {
-            gameContainer.setVSync(true);
-            Theme theme = new Theme(new Image("sheet_terrain.png"));
-            TerrainFactory terrainFactory = new DuneTerrainFactory(theme);
-            playingState = new PlayingState(gameContainer, terrainFactory);
-            // calling init here does not work with images
-        } catch (Exception e) {
-            throw new SlickException("Exception occurred while initializing game.", e);
-        }
-    }
+    public void initStatesList(GameContainer container) throws SlickException {
+        DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
+                new Theme(
+                        new Image("sheet_terrain.png"),
+                        TILE_WIDTH,
+                        TILE_HEIGHT
+                ),
+                TILE_WIDTH,
+                TILE_HEIGHT
+        );
 
-    @Override
-    public void update(GameContainer container, int delta) throws SlickException {
-        playingState.update();
+        PlayingState playingState = new PlayingState(
+                container,
+                terrainFactory,
+                TILE_WIDTH,
+                TILE_HEIGHT
+        );
+        addState(playingState);
     }
 
     public static void main(String[] args) {

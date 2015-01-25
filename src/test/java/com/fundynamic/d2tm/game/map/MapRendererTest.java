@@ -1,7 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import static org.junit.Assert.*;
-
 import com.fundynamic.d2tm.game.TestableImage;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -18,9 +16,13 @@ import static org.mockito.Matchers.*;
 @RunWith(MockitoJUnitRunner.class)
 public class MapRendererTest {
 
+    private static final int TILE_WIDTH = 32;
+    private static final int TILE_HEIGHT = 32;
+
     private static final int ANY_WIDTH = 0;
     private static final int ANY_HEIGHT = 0;
     private static final Cell ANY_CELL = Mockito.mock(Cell.class);
+
 
     @Mock
     private Graphics graphics;
@@ -118,6 +120,10 @@ public class MapRendererTest {
     }
 
     private class TestingMapRenderer extends MapRenderer {
+
+        private TestingMapRenderer() {
+            super(TILE_WIDTH, TILE_HEIGHT);
+        }
 
         @Override
         protected Image makeImage(int width, int height) throws SlickException {

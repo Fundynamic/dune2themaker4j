@@ -10,69 +10,73 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayingState {
+public class PlayingState extends BasicGameState {
+
+    public static int ID = 0;
 
     private final TerrainFactory terrainFactory;
+    private final Input input;
+    private final Vector2D<Integer> screenResolution;
+
+    private final int tileWidth;
+    private final int tileHeight;
 
     private Map map;
     private Graphics graphics;
 
     private List<Viewport> viewports = new ArrayList<>();
 
-    private boolean initialized;
-    private final Input input;
-    private Vector2D<Integer> screenResolution;
-
-
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.graphics = gameContainer.getGraphics();
-
-        input = gameContainer.getInput();
-        input.addKeyListener(new QuitGameKeyListener(gameContainer));
-
-        // on map load...
-        this.map = new Map(terrainFactory, 64, 64);
-
+        this.input = gameContainer.getInput();
         this.screenResolution = new Vector2D<>(gameContainer.getWidth(), gameContainer.getHeight());
     }
 
-    public void init() throws SlickException {
-        // HACK HACK: we call init in render, and we only want to do it once so we check here. Ugly because now we check
-        // every iteration if we should do this...
-        if (!initialized) {
-            this.map.init();
-            initialized = true;
+    @Override
+    public int getID() {
+        return ID;
+    }
 
-            try {
-                float moveSpeed = 16.0F;
-                Vector2D viewportDrawingPosition = Vector2D.zero();
-                Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
+    @Override
+    public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
+        input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-                // Add listener for this viewport
-                input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
+        this.map = Map.generateRandom(terrainFactory, 64, 64, tileWidth, tileHeight);
 
-                viewports.add(viewport);
-            } catch (SlickException e) {
-                throw new IllegalStateException("Unable to create new viewport!", e);
-            }
+        try {
+            float moveSpeed = 16.0F;
+            Vector2D viewportDrawingPosition = Vector2D.zero();
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed, tileWidth, tileHeight);
+
+            // Add listener for this viewport
+            input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
+
+            viewports.add(viewport);
+        } catch (SlickException e) {
+            throw new IllegalStateException("Unable to create new viewport!", e);
         }
     }
 
-    public void update() {
-        for (Viewport viewport : viewports) {
-            viewport.update();
-        }
-    }
-
-    public void render() throws SlickException {
+    @Override
+    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         for (Viewport viewport : viewports) {
             viewport.render();
         }
     }
 
+    @Override
+    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        for (Viewport viewport : viewports) {
+            viewport.update();
+        }
+    }
 }

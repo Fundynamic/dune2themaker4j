@@ -3,7 +3,8 @@ package com.fundynamic.d2tm.game.event;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.graphics.Tile;
+import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,9 @@ import static org.mockito.Mockito.mock;
 public class ViewportMovementListenerTest {
     public static final float MOVE_SPEED = 2.0F;
 
+    private static final int TILE_WIDTH = 32;
+    private static final int TILE_HEIGHT = 32;
+
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
     public static final float INITIAL_VIEWPORT_X = 4F;
     public static final float INITIAL_VIEWPORT_Y = 4F;
@@ -35,7 +39,9 @@ public class ViewportMovementListenerTest {
 
     @Before
     public void setUp() throws SlickException {
-        map = new Map(null, WIDTH_OF_MAP, HEIGHT_OF_MAP);
+        TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
+        Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
+        map = new Map(terrainFactory, WIDTH_OF_MAP, HEIGHT_OF_MAP, TILE_WIDTH, TILE_HEIGHT);
         screenResolution = new Vector2D<>(800, 600);
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
@@ -43,7 +49,7 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
+        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D<>(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D<Integer> screenResolution) throws SlickException {
@@ -158,7 +164,7 @@ public class ViewportMovementListenerTest {
         int viewportY = 0;
         float moveSpeed = 16F;
 
-        float maxYViewportPosition = (HEIGHT_OF_MAP * Tile.HEIGHT) - screenResolution.getY();
+        float maxYViewportPosition = (HEIGHT_OF_MAP * TILE_HEIGHT) - screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new ViewportMovementListener(viewport, screenResolution);
@@ -178,7 +184,7 @@ public class ViewportMovementListenerTest {
         int viewportY = 0;
         float moveSpeed = 32F;
 
-        float maxXViewportPosition = (WIDTH_OF_MAP * Tile.WIDTH) - screenResolution.getX();
+        float maxXViewportPosition = (WIDTH_OF_MAP * TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new ViewportMovementListener(viewport, screenResolution);
