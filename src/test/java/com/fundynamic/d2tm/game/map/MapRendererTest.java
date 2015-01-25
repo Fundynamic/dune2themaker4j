@@ -1,7 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import static org.junit.Assert.*;
-
 import com.fundynamic.d2tm.game.TestableImage;
 import junit.framework.Assert;
 import org.junit.Test;

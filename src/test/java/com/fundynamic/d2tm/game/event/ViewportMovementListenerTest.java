@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
-import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Tile;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Theme;
 
 public class DuneTerrainFactory implements TerrainFactory {
