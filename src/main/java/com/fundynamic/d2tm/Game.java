@@ -46,6 +46,7 @@ public class Game extends StateBasedGame {
                 TILE_WIDTH,
                 TILE_HEIGHT
         );
+
         addState(playingState);
     }
 

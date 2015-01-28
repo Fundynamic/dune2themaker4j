@@ -9,9 +9,9 @@ public class ViewportMovementListener extends AbstractMouseListener {
     public static final int PIXELS_NEAR_BORDER = 2;
 
     private final Viewport viewport;
-    private final Vector2D<Integer> screenResolution;
+    private final Vector2D screenResolution;
 
-    public ViewportMovementListener(Viewport viewport, Vector2D<Integer> screenResolution) {
+    public ViewportMovementListener(Viewport viewport, Vector2D screenResolution) {
         this.screenResolution = screenResolution;
         this.viewport = viewport;
     }

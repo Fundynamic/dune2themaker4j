@@ -1,46 +1,53 @@
 package com.fundynamic.d2tm.game.math;
 
-public class Vector2D<T extends Number> {
+import org.newdawn.slick.geom.Vector2f;
 
-    private final T x, y;
+public class Vector2D {
+
+    private final Vector2f vec;
 
     public static Vector2D zero() {
         return new Vector2D(0, 0);
     }
 
-    public Vector2D(T x, T y) {
-        this.x = x;
-        this.y = y;
+    public Vector2D(float x, float y) {
+        this.vec = new Vector2f(x, y);
     }
 
-    public T getX() {
-        return x;
+    public int getX() {
+        return (int) vec.getX();
     }
 
-    public T getY() {
-        return y;
+    public int getY() {
+        return (int) vec.getY();
     }
 
-    public Vector2D<Float> move(T xVelocity, T yVelocity) {
-        float newX = x.floatValue() + xVelocity.floatValue();
-        float newY = y.floatValue() + yVelocity.floatValue();
-        return new Vector2D<Float>(newX, newY);
-    }
-
-    public Vector2D<Integer> toInt() {
-        int newX = x.intValue();
-        int newY = y.intValue();
-        return new Vector2D<>(newX, newY);
+    public Vector2D move(float xVelocity, float yVelocity) {
+        float newX = vec.getX() + xVelocity;
+        float newY = vec.getY() + yVelocity;
+        return new Vector2D(newX, newY);
     }
 
     public String shortString() {
-        return "{" + x + ", " + y + "}";
+        return "{" + vec.getX() + ", " + vec.getX() + "}";
     }
     @Override
     public String toString() {
         return "Vector2D{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + vec.getX() +
+                ", y=" + vec.getX() +
                 '}';
+    }
+
+    public Vector2D diff(Vector2D otherVector) {
+        return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
+    }
+
+    public int getXAsInt() {
+        return (int) vec.getX();
+    }
+
+    public int getYAsInt() {
+        return (int) vec.getY();
     }
 }

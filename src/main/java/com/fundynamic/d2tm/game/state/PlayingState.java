@@ -24,7 +24,7 @@ public class PlayingState extends BasicGameState {
     private final TerrainFactory terrainFactory;
     private final Shroud shroud;
     private final Input input;
-    private final Vector2D<Integer> screenResolution;
+    private final Vector2D screenResolution;
 
     private final int tileWidth;
     private final int tileHeight;
@@ -41,7 +41,7 @@ public class PlayingState extends BasicGameState {
         this.tileHeight = tileHeight;
         this.graphics = gameContainer.getGraphics();
         this.input = gameContainer.getInput();
-        this.screenResolution = new Vector2D<>(gameContainer.getWidth(), gameContainer.getHeight());
+        this.screenResolution = new Vector2D(gameContainer.getWidth(), gameContainer.getHeight());
     }
 
     @Override
