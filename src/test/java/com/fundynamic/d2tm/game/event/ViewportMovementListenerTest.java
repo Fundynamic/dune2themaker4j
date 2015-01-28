@@ -51,7 +51,7 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT) {
+        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {

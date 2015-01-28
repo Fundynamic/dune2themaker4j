@@ -19,9 +19,6 @@ public class Viewport {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final int tileHeight;
-    private final int tileWidth;
-
     private float velocityX;
     private float velocityY;
 
@@ -30,7 +27,7 @@ public class Viewport {
     private Vector2D viewingVector;
 
 
-    public Viewport(Vector2D screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed, int tileWidth, int tileHeight) throws SlickException {
+    public Viewport(Vector2D screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
         this.graphics = graphics;
         this.map = map;
 
@@ -38,15 +35,10 @@ public class Viewport {
         this.screenResolution = screenResolution;
         this.buffer = constructImage(screenResolution);
 
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-
-        float heightOfMapInPixels = map.getHeight() * tileHeight;
-        float widthOfMapInPixels = map.getWidth() * tileWidth;
         this.viewingVectorPerimeter = new Perimeter(0F,
-                widthOfMapInPixels - screenResolution.getX(),
+                map.getWidthInPixels() - screenResolution.getX(),
                 0F,
-                heightOfMapInPixels - screenResolution.getY());
+                map.getHeightInPixels() - screenResolution.getY());
         this.viewingVector = viewingVector;
         this.velocityX = 0F;
         this.velocityY = 0F;

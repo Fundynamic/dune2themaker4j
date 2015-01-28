@@ -97,6 +97,14 @@ public class Map {
         return mapImage.getSubImage(x, y, width, height);
     }
 
+    public int getWidthInPixels() {
+        return this.width * this.tileWidth;
+    }
+
+    public int getHeightInPixels() {
+        return this.height * this.tileHeight;
+    }
+
     private class SquareCell {
         private final int x, y;
 
