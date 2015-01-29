@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -21,6 +22,7 @@ public class PlayingState extends BasicGameState {
     public static int ID = 0;
 
     private final TerrainFactory terrainFactory;
+    private final Shroud shroud;
     private final Input input;
     private final Vector2D<Integer> screenResolution;
 
@@ -32,8 +34,9 @@ public class PlayingState extends BasicGameState {
 
     private List<Viewport> viewports = new ArrayList<>();
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, int tileWidth, int tileHeight) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
+        this.shroud = shroud;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.graphics = gameContainer.getGraphics();
@@ -50,7 +53,7 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        this.map = Map.generateRandom(terrainFactory, 64, 64, tileWidth, tileHeight);
+        this.map = Map.generateRandom(terrainFactory, shroud, 64, 64, tileWidth, tileHeight);
 
         try {
             float moveSpeed = 16.0F;

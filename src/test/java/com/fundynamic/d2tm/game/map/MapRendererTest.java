@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.TestableImage;
+import com.fundynamic.d2tm.graphics.Shroud;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -122,7 +123,7 @@ public class MapRendererTest {
     private class TestingMapRenderer extends MapRenderer {
 
         private TestingMapRenderer() {
-            super(TILE_WIDTH, TILE_HEIGHT);
+            super(TILE_WIDTH, TILE_HEIGHT, Mockito.mock(Shroud.class));
         }
 
         @Override

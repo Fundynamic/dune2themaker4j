@@ -2,6 +2,7 @@ package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
@@ -37,6 +38,11 @@ public class Game extends StateBasedGame {
         PlayingState playingState = new PlayingState(
                 container,
                 terrainFactory,
+                new Shroud(
+                    new Image("shroud_edges.png"),
+                    TILE_WIDTH,
+                    TILE_HEIGHT
+                ),
                 TILE_WIDTH,
                 TILE_HEIGHT
         );

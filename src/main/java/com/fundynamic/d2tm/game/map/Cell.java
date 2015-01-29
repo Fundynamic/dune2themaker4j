@@ -7,10 +7,12 @@ import org.newdawn.slick.SlickException;
 public class Cell {
 
     private Terrain terrain;
+    private boolean shrouded;
 
     public Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
+        this.shrouded = true;
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -27,5 +29,13 @@ public class Cell {
 
     public boolean isSameTerrain(Terrain terrain) {
         return this.terrain.isSame(terrain);
+    }
+
+    public boolean isShrouded() {
+        return shrouded;
+    }
+
+    public void setShrouded(boolean shrouded) {
+        this.shrouded = shrouded;
     }
 }

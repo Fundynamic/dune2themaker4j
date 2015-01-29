@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -9,6 +10,7 @@ import org.newdawn.slick.SlickException;
 public class Map {
 
     private final TerrainFactory terrainFactory;
+    private Shroud shroud;
     private final int height, width;
     private final int tileHeight;
     private final int tileWidth;
@@ -16,8 +18,9 @@ public class Map {
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) throws SlickException {
+    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
+        this.shroud = shroud;
         this.height = height;
         this.width = width;
         this.tileWidth = tileWidth;
@@ -26,9 +29,9 @@ public class Map {
         initializeEmptyMap(width, height);
     }
 
-    public static Map generateRandom(TerrainFactory terrainFactory, int width, int height, int tileWidth, int tileHeight) {
+    public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) {
         try {
-            Map map = new Map(terrainFactory, width, height, tileWidth, tileHeight);
+            Map map = new Map(terrainFactory, shroud, width, height, tileWidth, tileHeight);
             map.putTerrainOnMap();
             map.smooth();
             return map;
@@ -52,7 +55,7 @@ public class Map {
 
     public Image createOrGetMapImage() throws SlickException {
         if (this.mapImage == null) {
-            mapImage = new MapRenderer(tileHeight, tileWidth).render(this);
+            mapImage = new MapRenderer(tileHeight, tileWidth, shroud).render(this);
         }
         return mapImage;
     }
@@ -72,6 +75,7 @@ public class Map {
             for (int y = 1; y <= this.height; y++) {
                 final Cell cell = cells[x][y];
                 final Terrain terrain = terrainFactory.create((int) (Math.random() * 7), cell);
+                cell.setShrouded((int)(Math.random() * 2) == 0);
                 cell.changeTerrain(terrain);
             }
         }
@@ -106,7 +110,7 @@ public class Map {
 
         private TerrainFacing determineFacing() {
             Terrain terrain = getTerrain();
-            FacingDeterminer facingDeterminer = new FacingDeterminer();
+            TerrainFacingDeterminer facingDeterminer = new TerrainFacingDeterminer();
             facingDeterminer.setTopSame(terrain.isSame(topTerrain()));
             facingDeterminer.setRightSame(terrain.isSame(rightTerrain()));
             facingDeterminer.setBottomSame(terrain.isSame(bottomTerrain()));

@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 
-public class FacingDeterminer {
+public class TerrainFacingDeterminer {
     private static final int BIT_MASK_NONE = 0;
     private static final int BIT_MASK_TOP = 0x0008;
     private static final int BIT_MASK_RIGHT = 0x0004;
