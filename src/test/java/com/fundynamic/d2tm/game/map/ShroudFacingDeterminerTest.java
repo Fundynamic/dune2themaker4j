@@ -7,20 +7,22 @@ import org.junit.Test;
 public class ShroudFacingDeterminerTest {
 
     @Test
-    public void returnsMiddleWhenNoSameTypeOfNeighbours() throws Exception {
-        ShroudFacingDeterminer determiner = makeFacingDeterminer();
-        ShroudFacing facing = determiner.getFacing();
-//        Assert.assertEquals(ShroudFacing.MIDDLE, facing); // does not exist
-    }
-
-    @Test
     public void RIGHT_BOTTOM_LEFT() throws Exception {
         ShroudFacingDeterminer determiner = makeFacingDeterminer();
         determiner.setRightShrouded(true);
         determiner.setBottomShrouded(true);
         determiner.setLeftShrouded(true);
-        ShroudFacing facing = determiner.getFacing();
-        Assert.assertEquals(ShroudFacing.RIGHT_BOTTOM_LEFT, facing);
+        Assert.assertEquals(ShroudFacing.RIGHT_BOTTOM_LEFT, determiner.getFacing());
+    }
+
+    @Test
+    public void returnsNullWhenNoShroudAround() throws Exception {
+        ShroudFacingDeterminer determiner = makeFacingDeterminer();
+        determiner.setRightShrouded(false);
+        determiner.setBottomShrouded(false);
+        determiner.setLeftShrouded(false);
+        determiner.setTopShrouded(false);
+        Assert.assertNull(determiner.getFacing());
     }
 
     private ShroudFacingDeterminer makeFacingDeterminer() {
