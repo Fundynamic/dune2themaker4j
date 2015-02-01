@@ -29,28 +29,7 @@ public class ShroudFacingDeterminer {
         null,                              // 0x1111
     };
 
-    private boolean isTopShrouded;
-    private boolean isRightShrouded;
-    private boolean isBottomShrouded;
-    private boolean isLeftShrouded;
-
-    public void setTopShrouded(boolean topSame) {
-        this.isTopShrouded = topSame;
-    }
-
-    public void setRightShrouded(boolean rightSame) {
-        isRightShrouded = rightSame;
-    }
-
-    public void setBottomShrouded(boolean bottomSame) {
-        this.isBottomShrouded = bottomSame;
-    }
-
-    public void setLeftShrouded(boolean leftSame) {
-        isLeftShrouded = leftSame;
-    }
-
-    public ShroudFacing getFacing() {
+    public static ShroudFacing getFacing(boolean isTopShrouded, boolean isRightShrouded, boolean isBottomShrouded, boolean isLeftShrouded) {
         int value = 0;
         value |= isTopShrouded    ? BIT_MASK_TOP    : BIT_MASK_NONE;
         value |= isRightShrouded  ? BIT_MASK_RIGHT  : BIT_MASK_NONE;

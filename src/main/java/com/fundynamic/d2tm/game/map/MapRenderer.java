@@ -50,12 +50,12 @@ public class MapRenderer {
             return ShroudFacing.FULL;
         }
 
-        ShroudFacingDeterminer facingDeterminer = new ShroudFacingDeterminer();
-        facingDeterminer.setTopShrouded(isShrouded(map, x, y -1));
-        facingDeterminer.setRightShrouded(isShrouded(map, x +1, y));
-        facingDeterminer.setBottomShrouded(isShrouded(map, x, y +1));
-        facingDeterminer.setLeftShrouded(isShrouded(map, x -1, y));
-        return facingDeterminer.getFacing();
+        return ShroudFacingDeterminer.getFacing(
+                isShrouded(map, x, y -1),
+                isShrouded(map, x +1, y),
+                isShrouded(map, x, y +1),
+                isShrouded(map, x -1, y)
+        );
     }
 
     private boolean isShrouded(Map map, int x, int y) {
