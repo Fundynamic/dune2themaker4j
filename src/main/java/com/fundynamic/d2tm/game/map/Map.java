@@ -65,6 +65,7 @@ public class Map {
         for (int x = 0; x < this.width + 2; x++) {
             for (int y = 0; y < this.height + 2; y++) {
                 cells[x][y] = new Cell(terrainFactory.createEmptyTerrain());
+                cells[x][y].setShrouded(false);
             }
         }
     }
