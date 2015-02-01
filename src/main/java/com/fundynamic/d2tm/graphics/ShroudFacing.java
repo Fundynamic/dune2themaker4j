@@ -24,5 +24,8 @@ public enum ShroudFacing {
     TOP_BOTTOM_LEFT,
     TOP_RIGHT_LEFT,
     TOP_RIGHT_BOTTOM,
-    RIGHT_BOTTOM_LEFT
+    RIGHT_BOTTOM_LEFT,
+    TOP_BOTTOM,
+    RIGHT_LEFT,
+    MIDDLE
 }

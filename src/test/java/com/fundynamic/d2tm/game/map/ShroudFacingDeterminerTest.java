@@ -9,9 +9,8 @@ import static com.fundynamic.d2tm.graphics.ShroudFacing.*;
 public class ShroudFacingDeterminerTest {
 
     @Test
-    public void FULL_is_null() throws Exception {
-        Assert.assertTrue(getFacing(true, true, true, true) != FULL);
-        Assert.assertEquals(null, getFacing(true, true, true, true)); // instead of FULL
+    public void MIDDLE() throws Exception {
+        Assert.assertEquals(MIDDLE, getFacing(true, true, true, true));
     }
 
     @Test
@@ -72,6 +71,16 @@ public class ShroudFacingDeterminerTest {
     @Test
     public void RIGHT_BOTTOM_LEFT() throws Exception {
         Assert.assertEquals(RIGHT_BOTTOM_LEFT, getFacing(false, true, true, true));
+    }
+
+    @Test
+    public void TOP_BOTTOM() throws Exception {
+        Assert.assertEquals(TOP_BOTTOM, getFacing(true, false, true, false));
+    }
+
+    @Test
+    public void RIGHT_LEFT() throws Exception {
+        Assert.assertEquals(RIGHT_LEFT, getFacing(false, true, false, true));
     }
 
     @Test

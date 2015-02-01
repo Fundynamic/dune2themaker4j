@@ -55,7 +55,7 @@ public class Map {
 
     public Image createOrGetMapImage() throws SlickException {
         if (this.mapImage == null) {
-            mapImage = new MapRenderer(tileHeight, tileWidth, shroud).render(this);
+            mapImage = new MapRenderer(tileHeight, tileWidth, shroud).render(this); // Shroud is permanent here! :S
         }
         return mapImage;
     }

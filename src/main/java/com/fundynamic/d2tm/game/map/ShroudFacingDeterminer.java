@@ -17,6 +17,9 @@ public class ShroudFacingDeterminer {
         if (isTopShrouded && isLeftShrouded && isRightShrouded && !isBottomShrouded) return ShroudFacing.TOP_RIGHT_LEFT;
         if (isTopShrouded && !isLeftShrouded && isRightShrouded && isBottomShrouded) return ShroudFacing.TOP_RIGHT_BOTTOM;
         if (!isTopShrouded && isLeftShrouded && isRightShrouded && isBottomShrouded) return ShroudFacing.RIGHT_BOTTOM_LEFT;
+        if (isTopShrouded && !isLeftShrouded && !isRightShrouded && isBottomShrouded) return ShroudFacing.TOP_BOTTOM;
+        if (!isTopShrouded && isLeftShrouded && isRightShrouded && !isBottomShrouded) return ShroudFacing.RIGHT_LEFT;
+        if (isTopShrouded && isLeftShrouded && isRightShrouded && isBottomShrouded) return ShroudFacing.MIDDLE;
         return null;
     }
 }
