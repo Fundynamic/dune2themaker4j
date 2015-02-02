@@ -21,7 +21,7 @@ public class MapRenderer {
 
     public Image render(Map map) throws SlickException {
         Image image = makeImage(map.getWidth() * tileWidth, map.getHeight() * tileHeight);
-        renderMap(image.getGraphics(), map);
+        renderMap(image, map);
         return image;
     }
 
@@ -29,7 +29,8 @@ public class MapRenderer {
         return new Image(width, height);
     }
 
-    private void renderMap(Graphics graphics, Map map) throws SlickException {
+    private void renderMap(Image imageToDrawOn, Map map) throws SlickException {
+        Graphics graphics = imageToDrawOn.getGraphics();
         for (int x = 1; x <= map.getWidth(); x++) {
             for (int y = 1; y <= map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
