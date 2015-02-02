@@ -38,7 +38,7 @@ public class MapRenderer {
                 int cellY = (y - 1) * tileHeight;
                 graphics.drawImage(cell.getTileImage(), cellX, cellY);
 
-                ShroudFacing shroudFacing = determineFacing(map, x, y);
+                ShroudFacing shroudFacing = determineShroudFacing(map, x, y);
                 if (shroudFacing != null) {
                     graphics.drawImage(shroud.getShroudImage(shroudFacing), cellX, cellY);
                 }
@@ -46,7 +46,7 @@ public class MapRenderer {
         }
     }
 
-    private ShroudFacing determineFacing(Map map, int x, int y) {
+    private ShroudFacing determineShroudFacing(Map map, int x, int y) {
         if (map.getCell(x,y).isShrouded()) {
             return ShroudFacing.FULL;
         }
