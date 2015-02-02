@@ -111,12 +111,13 @@ public class Map {
 
         private TerrainFacing determineFacing() {
             Terrain terrain = getTerrain();
-            TerrainFacingDeterminer facingDeterminer = new TerrainFacingDeterminer();
-            facingDeterminer.setTopSame(terrain.isSame(topTerrain()));
-            facingDeterminer.setRightSame(terrain.isSame(rightTerrain()));
-            facingDeterminer.setBottomSame(terrain.isSame(bottomTerrain()));
-            facingDeterminer.setLeftSame(terrain.isSame(leftTerrain()));
-            return facingDeterminer.getFacing();
+
+            return TerrainFacingDeterminer.getFacing(
+                    terrain.isSame(topTerrain()),
+                    terrain.isSame(rightTerrain()),
+                    terrain.isSame(bottomTerrain()),
+                    terrain.isSame(leftTerrain())
+            );
         }
 
         private Cell getCell(int x, int y) {

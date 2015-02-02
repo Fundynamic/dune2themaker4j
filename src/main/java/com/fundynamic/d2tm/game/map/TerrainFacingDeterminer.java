@@ -28,28 +28,7 @@ public class TerrainFacingDeterminer {
             TerrainFacing.FULL,                 // 0x1111
     };
 
-    private boolean isTopSame;
-    private boolean isRightSame;
-    private boolean isBottomSame;
-    private boolean isLeftSame;
-
-    public void setTopSame(boolean topSame) {
-        this.isTopSame = topSame;
-    }
-
-    public void setRightSame(boolean rightSame) {
-        isRightSame = rightSame;
-    }
-
-    public void setBottomSame(boolean bottomSame) {
-        this.isBottomSame = bottomSame;
-    }
-
-    public void setLeftSame(boolean leftSame) {
-        isLeftSame = leftSame;
-    }
-
-    public TerrainFacing getFacing() {
+    public static TerrainFacing getFacing(boolean isTopSame, boolean isRightSame, boolean isBottomSame, boolean isLeftSame) {
         int value = 0;
         value |= isTopSame    ? BIT_MASK_TOP    : BIT_MASK_NONE;
         value |= isRightSame  ? BIT_MASK_RIGHT  : BIT_MASK_NONE;
