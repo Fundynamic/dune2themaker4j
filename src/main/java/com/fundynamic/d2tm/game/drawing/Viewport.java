@@ -62,8 +62,6 @@ public class Viewport {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
-        bufferGraphics.clear();
-
         drawViewableMapOnBuffer(viewingVector.toInt(), bufferGraphics);
         // Stefan 24-01-2015: This will get hairy once we draw other stuff on the screen.
         // this class will then probably get loads of dependencies to other sources like Units, Structures, etc. Is that what we want?
