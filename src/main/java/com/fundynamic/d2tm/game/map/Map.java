@@ -105,6 +105,13 @@ public class Map {
         return this.height * this.tileHeight;
     }
 
+    public Perimeter createViewablePerimeter(Vector2D screenResolution) {
+        return new Perimeter(tileWidth,
+                (getWidthInPixels() - tileWidth) - screenResolution.getX(),
+                tileHeight,
+                (getHeightInPixels() - tileHeight) - screenResolution.getY());
+    }
+
     private class SquareCell {
         private final int x, y;
 

@@ -35,10 +35,7 @@ public class Viewport {
         this.screenResolution = screenResolution;
         this.buffer = constructImage(screenResolution);
 
-        this.viewingVectorPerimeter = new Perimeter(0F,
-                map.getWidthInPixels() - screenResolution.getX(),
-                0F,
-                map.getHeightInPixels() - screenResolution.getY());
+        this.viewingVectorPerimeter = map.createViewablePerimeter(screenResolution);
         this.viewingVector = viewingVector;
         this.velocityX = 0F;
         this.velocityY = 0F;
