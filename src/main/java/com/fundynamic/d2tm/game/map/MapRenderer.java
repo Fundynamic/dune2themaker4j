@@ -21,6 +21,24 @@ public class MapRenderer {
     }
 
     public void render(Image imageToDrawOn, Vector2D viewingVector, Vector2D windowDimensions, Map map) throws SlickException {
+        /**
+         * some thoughts:
+         *
+         * Basically this is 'selecting' a bunch of cells worthy to be drawn, and then draws them.
+         * What is to be drawed should not matter really, what matters is that something within the range is drawable, and then gets
+         * drawed.
+         *
+         * For now there is 'terrain' and 'shroud'. Frankly these could be "Drawables" or some sort. Perhaps passed in this
+         * method so the actual drawing is delegated ie:
+         *
+         * void draw(Graphics graphics, int mapX, int mapY, int drawX, int drawY) {
+         *   Cell cell = map.getCell(mapX, mapY);
+         *   graphics.drawImage(cell.getTileImage(), drawX, drawY); // draw terrain
+         * }
+         *
+         * that could also be done for shroud, the same way, and then we could have 'layers' one level up in the stack
+         * (in the playingState)?
+         */
         int startCellX = (viewingVector.getX() / tileWidth);
         int startCellY = (viewingVector.getY() / tileHeight);
         int cellsThatFitHorizontally = (windowDimensions.getX() / tileWidth) + 1; // one extra
@@ -32,9 +50,12 @@ public class MapRenderer {
 
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
-                Cell cell = map.getCell(x, y);
                 int cellX = ((x - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
                 int cellY = ((y - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
+
+                // insert drawable/callback here? (cellX == drawX, cellY == drawY)
+                // ie: drawable.draw(graphics, x, y, cellX, cellY);
+                Cell cell = map.getCell(x, y);
                 graphics.drawImage(cell.getTileImage(), cellX, cellY);
 
                 ShroudFacing shroudFacing = determineShroudFacing(map, x, y);
