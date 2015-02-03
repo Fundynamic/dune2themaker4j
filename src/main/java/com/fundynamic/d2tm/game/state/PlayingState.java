@@ -53,7 +53,7 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        this.map = Map.generateRandom(terrainFactory, shroud, 64, 64, tileWidth, tileHeight);
+        this.map = Map.generateRandom(terrainFactory, shroud, 2048, 2048, tileWidth, tileHeight);
 
         try {
             float moveSpeed = 16.0F;
