@@ -10,6 +10,10 @@ public class Vector2D {
         return new Vector2D(0, 0);
     }
 
+    public static Vector2D create(float x, float y) {
+        return new Vector2D(x, y);
+    }
+
     public Vector2D(float x, float y) {
         this.vec = new Vector2f(x, y);
     }
