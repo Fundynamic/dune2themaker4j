@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.TestableImage;
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.graphics.Shroud;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -29,8 +30,33 @@ public class MapRendererTest {
 
     @Mock
     private Graphics graphics;
+
     @Mock
     private Image tileImage;
+
+
+    @Test(timeout = 1000)
+    public void rendersCells() throws SlickException {
+        MapRenderer renderer = makeMapRenderer();
+
+        Image imageToRenderOn = mock(Image.class);
+        Graphics graphicsRenderer = mock(Graphics.class);
+        when(imageToRenderOn.getGraphics()).thenReturn(graphicsRenderer);
+
+        Vector2D viewingVector = Vector2D.zero();
+        Vector2D resolution = Vector2D.create(800, 600);
+
+        Map map = makeMap(64, 64);
+
+        renderer.render(imageToRenderOn, viewingVector, resolution, map);
+
+        int cellsToDrawHorizontally = (800 / TILE_WIDTH) + 1; // 1 extra for 'rounding' purposes at right
+        int cellsToDrawVertically = (600 / TILE_HEIGHT) + 1; // 1 extra for 'rounding' purposes at bottom
+        int numberOfCellsToDraw = cellsToDrawHorizontally * cellsToDrawVertically;
+
+        verify(graphicsRenderer, times(numberOfCellsToDraw)).drawImage(Mockito.<Image>any(), anyFloat(), anyFloat());
+    }
+
 
     @Test
     public void renderShouldCreateImage() throws Exception {

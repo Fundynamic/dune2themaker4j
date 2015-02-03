@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.ShroudFacing;
 import org.newdawn.slick.Graphics;
@@ -17,6 +18,23 @@ public class MapRenderer {
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
         this.shroud = shroud;
+    }
+
+    public void render(Image imageToDrawOn, Vector2D viewingVector, Vector2D windowDimensions, Map map) throws SlickException {
+        // 800 / 32 = 25 cells ( + 1 )
+        // 600 / 32 = 18,75 cells (19?) ( + 1)
+        int startCellX = viewingVector.getX();
+        int startCellY = viewingVector.getY();
+        int endCellX = windowDimensions.getX() / tileWidth;
+        int endCellY = windowDimensions.getY() / tileHeight;
+        for (int x = startCellX; x <= endCellX; x++) {
+            for (int y = startCellY; y <= endCellY; y++) {
+                Cell cell = map.getCell(x, y);
+                int cellX = (x - 1) * tileWidth;
+                int cellY = (y - 1) * tileHeight;
+                imageToDrawOn.getGraphics().drawImage(cell.getTileImage(), cellX, cellY);
+            }
+        }
     }
 
     public Image render(Map map) throws SlickException {
