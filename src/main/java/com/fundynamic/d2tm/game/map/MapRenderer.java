@@ -66,7 +66,7 @@ public class MapRenderer {
         }
     }
 
-    private ShroudFacing determineShroudFacing(Map map, int x, int y) {
+    protected ShroudFacing determineShroudFacing(Map map, int x, int y) {
         if (map.getCell(x,y).isShrouded()) {
             return ShroudFacing.FULL;
         }
