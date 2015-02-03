@@ -13,6 +13,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MapRendererTest {
@@ -22,7 +24,7 @@ public class MapRendererTest {
 
     private static final int ANY_WIDTH = 0;
     private static final int ANY_HEIGHT = 0;
-    private static final Cell ANY_CELL = Mockito.mock(Cell.class);
+    private static final Cell ANY_CELL = mock(Cell.class);
 
 
     @Mock
@@ -86,10 +88,10 @@ public class MapRendererTest {
         Map map = makeMap(1, 1);
         Cell cell = makeCell(tileImage);
 
-        Mockito.when(map.getCell(1, 1)).thenReturn(cell);
+        when(map.getCell(1, 1)).thenReturn(cell);
         renderer.render(map);
 
-        Mockito.verify(graphics).drawImage(same(tileImage), eq(0f), eq(0f));
+        verify(graphics).drawImage(same(tileImage), eq(0f), eq(0f));
     }
 
     @Test
@@ -98,10 +100,10 @@ public class MapRendererTest {
         Map map = makeMap(2, 1);
         Cell cell = makeCell(tileImage);
 
-        Mockito.when(map.getCell(2, 1)).thenReturn(cell);
+        when(map.getCell(2, 1)).thenReturn(cell);
         renderer.render(map);
 
-        Mockito.verify(graphics).drawImage(same(tileImage), eq(32f), eq(0f));
+        verify(graphics).drawImage(same(tileImage), eq(32f), eq(0f));
     }
 
     @Test
@@ -110,10 +112,10 @@ public class MapRendererTest {
         Map map = makeMap(1, 2);
         Cell cell = makeCell(tileImage);
 
-        Mockito.when(map.getCell(1, 2)).thenReturn(cell);
+        when(map.getCell(1, 2)).thenReturn(cell);
         renderer.render(map);
 
-        Mockito.verify(graphics).drawImage(same(tileImage), eq(0f), eq(32f));
+        verify(graphics).drawImage(same(tileImage), eq(0f), eq(32f));
     }
 
     private TestingMapRenderer makeMapRenderer() throws SlickException {
@@ -123,7 +125,7 @@ public class MapRendererTest {
     private class TestingMapRenderer extends MapRenderer {
 
         private TestingMapRenderer() {
-            super(TILE_WIDTH, TILE_HEIGHT, Mockito.mock(Shroud.class));
+            super(TILE_WIDTH, TILE_HEIGHT, mock(Shroud.class));
         }
 
         @Override
@@ -133,16 +135,16 @@ public class MapRendererTest {
     }
 
     private Map makeMap(int width, int height) {
-        Map map = Mockito.mock(Map.class);
-        Mockito.when(map.getWidth()).thenReturn(width);
-        Mockito.when(map.getHeight()).thenReturn(height);
-        Mockito.when(map.getCell(anyInt(), anyInt())).thenReturn(ANY_CELL);
+        Map map = mock(Map.class);
+        when(map.getWidth()).thenReturn(width);
+        when(map.getHeight()).thenReturn(height);
+        when(map.getCell(anyInt(), anyInt())).thenReturn(ANY_CELL);
         return map;
     }
 
     private Cell makeCell(Image image) throws SlickException {
-        Cell cell = Mockito.mock(Cell.class);
-        Mockito.when(cell.getTileImage()).thenReturn(image);
+        Cell cell = mock(Cell.class);
+        when(cell.getTileImage()).thenReturn(image);
         return cell;
     }
 }
