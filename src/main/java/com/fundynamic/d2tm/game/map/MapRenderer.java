@@ -31,8 +31,16 @@ public class MapRenderer {
 
     private void renderMap(Image imageToDrawOn, Map map) throws SlickException {
         Graphics graphics = imageToDrawOn.getGraphics();
-        for (int x = 1; x <= map.getWidth(); x++) {
-            for (int y = 1; y <= map.getHeight(); y++) {
+        int startCellX = 1;
+        int startCellY = 1;
+        int endCellX = map.getWidth();
+        int endCellY = map.getHeight();
+        renderCells(map, graphics, startCellX, startCellY, endCellX, endCellY);
+    }
+
+    private void renderCells(Map map, Graphics graphics, int startCellX, int startCellY, int endCellX, int endCellY) throws SlickException {
+        for (int x = startCellX; x <= endCellX; x++) {
+            for (int y = startCellY; y <= endCellY; y++) {
                 Cell cell = map.getCell(x, y);
                 int cellX = (x - 1) * tileWidth;
                 int cellY = (y - 1) * tileHeight;
