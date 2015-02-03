@@ -36,6 +36,11 @@ public class MapRenderer {
                 int cellX = ((x - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
                 int cellY = ((y - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
                 graphics.drawImage(cell.getTileImage(), cellX, cellY);
+
+                ShroudFacing shroudFacing = determineShroudFacing(map, x, y);
+                if (shroudFacing != null) {
+                    graphics.drawImage(shroud.getShroudImage(shroudFacing), cellX, cellY);
+                }
             }
         }
     }
