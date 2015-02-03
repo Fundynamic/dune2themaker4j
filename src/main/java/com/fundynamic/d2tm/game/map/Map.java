@@ -15,6 +15,7 @@ public class Map {
     private final int tileHeight;
     private final int tileWidth;
     private Image mapImage;
+    private MapRenderer mapRenderer;
 
     private Cell[][] cells;
 
@@ -25,6 +26,7 @@ public class Map {
         this.width = width;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
+        this.mapRenderer = null;
 
         initializeEmptyMap(width, height);
     }
@@ -103,6 +105,13 @@ public class Map {
 
     public int getHeightInPixels() {
         return this.height * this.tileHeight;
+    }
+
+    public MapRenderer getOrCreateMapRenderer() {
+        if (mapRenderer == null) {
+            mapRenderer = new MapRenderer(tileHeight, tileWidth, shroud);
+        }
+        return mapRenderer;
     }
 
     public Perimeter createViewablePerimeter(Vector2D screenResolution) {

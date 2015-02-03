@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.drawing;
 
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapRenderer;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -47,7 +48,8 @@ public class Viewport {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
-        drawViewableMapOnBuffer(viewingVector, bufferGraphics);
+        MapRenderer mapRenderer = map.getOrCreateMapRenderer();
+        mapRenderer.render(this.buffer, viewingVector, screenResolution, map);
         // Stefan 24-01-2015: This will get hairy once we draw other stuff on the screen.
         // this class will then probably get loads of dependencies to other sources like Units, Structures, etc. Is that what we want?
         // perhaps we can draw these things elsewhere, and then later stack images here? Like a stack of cards? 
@@ -92,17 +94,6 @@ public class Viewport {
 
     private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
-    }
-
-    private void drawViewableMapOnBuffer(Vector2D viewingVector, Graphics imageGraphics) throws SlickException {
-        imageGraphics.drawImage(
-            map.getSubImage(
-                    viewingVector.getXAsInt(),
-                    viewingVector.getYAsInt(),
-                    screenResolution.getXAsInt(),
-                    screenResolution.getYAsInt()),
-            0, 0
-        );
     }
 
     // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
