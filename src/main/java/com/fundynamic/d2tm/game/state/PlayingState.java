@@ -5,12 +5,10 @@ import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -54,6 +52,9 @@ public class PlayingState extends BasicGameState {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
+
+        this.map.getCell(10,10).
+                setConstructionYard(new ConstructionYard(new Image("structures/2x2_constyard.png")));
 
         try {
             float moveSpeed = 16.0F;

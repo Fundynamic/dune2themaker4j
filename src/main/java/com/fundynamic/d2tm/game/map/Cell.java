@@ -1,10 +1,13 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
+
+    private ConstructionYard constructionYard;
 
     private Terrain terrain;
     private boolean shrouded;
@@ -13,6 +16,7 @@ public class Cell {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
         this.shrouded = true;
+        this.constructionYard = null;
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -37,5 +41,13 @@ public class Cell {
 
     public void setShrouded(boolean shrouded) {
         this.shrouded = shrouded;
+    }
+
+    public ConstructionYard getConstructionYard() {
+        return constructionYard;
+    }
+
+    public void setConstructionYard(ConstructionYard constructionYard) {
+        this.constructionYard = constructionYard;
     }
 }

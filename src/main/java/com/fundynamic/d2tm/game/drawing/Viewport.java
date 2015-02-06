@@ -4,9 +4,10 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
 import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
+import com.fundynamic.d2tm.game.map.renderer.StructureRenderer;
 import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
-import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import org.newdawn.slick.*;
 
 public class Viewport {
@@ -17,7 +18,10 @@ public class Viewport {
     private final Vector2D drawingVector;
 
     private final Perimeter viewingVectorPerimeter;
-    private SpriteSheet constyard;
+
+    private final StructureRenderer structureRenderer;
+    private final TerrainCellRenderer terrainCellRenderer;
+    private final ShroudRenderer shroudRenderer;
 
     private Vector2D velocity;
 
@@ -25,9 +29,6 @@ public class Viewport {
 
     private Vector2D viewingVector;
     private MapRenderer mapRenderer;
-    private final TerrainCellRenderer terrainCellRenderer;
-    private final ShroudRenderer shroudRenderer;
-
 
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
@@ -49,15 +50,10 @@ public class Viewport {
         this.moveSpeed = moveSpeed;
 
         this.mapRenderer = new MapRenderer(tileHeight, tileWidth, viewportDimensions);
+
         this.terrainCellRenderer = new TerrainCellRenderer(map);
         this.shroudRenderer = new ShroudRenderer(map);
-
-        constyard = null;
-        try {
-            constyard = new SpriteSheet(new Image("structures/2x2_constyard.png"), 64, 64);
-        } catch (Throwable t) {
-            // swallow for now...
-        }
+        this.structureRenderer = new StructureRenderer(map);
     }
 
     public void render() throws SlickException {
@@ -65,9 +61,9 @@ public class Viewport {
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
         mapRenderer.render(this.buffer, viewingVector, terrainCellRenderer);
+        mapRenderer.render(this.buffer, viewingVector, structureRenderer);
 //        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
 
-        bufferGraphics.drawImage(constyard.getSprite(0, Random.getRandomBetween(0, 2)), 100, 100);
         drawBufferToGraphics(graphics, drawingVector);
     }
 
