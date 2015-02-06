@@ -14,7 +14,7 @@ public class Map {
     private final TerrainFactory terrainFactory;
     private Shroud shroud;
     private final int height, width;
-    private MapRenderer mapRenderer;
+    private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
 
@@ -23,9 +23,10 @@ public class Map {
         this.shroud = shroud;
         this.height = height;
         this.width = width;
-        this.mapRenderer = null;
+        this.heightWithInvisibleBorder = height + 2;
+        this.widthWithInvisibleBorder = width + 2;
 
-        initializeEmptyMap(width, height);
+        initializeEmptyMap();
     }
 
     public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height) {
@@ -49,15 +50,40 @@ public class Map {
         return height;
     }
 
+    /**
+     * Get the exact cell on x,y directly from the internals. Only should be used for drawing (not for game logic).
+     * The map class has an 'invisible border'. So a map of 64x64 is actually 66x66.
+     * @param x
+     * @param y
+     * @return
+     */
     public Cell getCell(int x, int y) {
-        return cells[x][y];
+        try {
+            return cells[x][y];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ArrayIndexOutOfBoundsException( "You're going out of bounds!\n" +
+                    "Parameters given: x = " + x + ", y = " + y + ".\n" +
+                    "You must keep within the dimensions:\n" +
+                    "Width: 0 to (not on or over!) " + widthWithInvisibleBorder + "\n" +
+                    "Height: 0 to (not on or over!) " + heightWithInvisibleBorder);
+        }
+    }
+
+    public Cell getCellProtected(int x, int y) {
+        int correctedX = x;
+        if (correctedX < 0) correctedX = 0;
+        if (correctedX >= widthWithInvisibleBorder) correctedX = widthWithInvisibleBorder - 1;
+        int correctedY = y;
+        if (correctedY < 0) correctedY = 0;
+        if (correctedY >= heightWithInvisibleBorder) correctedY = heightWithInvisibleBorder - 1;
+        return getCell(correctedX, correctedY);
     }
 
 
-    private void initializeEmptyMap(int width, int height) {
-        this.cells = new Cell[width + 2][height + 2];
-        for (int x = 0; x < this.width + 2; x++) {
-            for (int y = 0; y < this.height + 2; y++) {
+    private void initializeEmptyMap() {
+        this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
+        for (int x = 0; x < widthWithInvisibleBorder; x++) {
+            for (int y = 0; y < heightWithInvisibleBorder; y++) {
                 cells[x][y] = new Cell(terrainFactory.createEmptyTerrain());
                 cells[x][y].setShrouded(false);
             }
@@ -69,7 +95,7 @@ public class Map {
         System.out.println("Putting terrain on map");
         for (int x = 1; x <= this.width; x++) {
             for (int y = 1; y <= this.height; y++) {
-                final Cell cell = cells[x][y];
+                final Cell cell = getCell(x, y);
                 final Terrain terrain = terrainFactory.create((int) (Math.random() * 7), cell);
                 cell.setShrouded((int)(Math.random() * 2) == 0);
                 cell.changeTerrain(terrain);
