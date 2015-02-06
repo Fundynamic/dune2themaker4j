@@ -6,6 +6,14 @@ import org.junit.Test;
 public class Vector2DTest {
 
     @Test
+    public void movesVectorWithMoveVector() {
+        Vector2D vec = new Vector2D(0F, 1F);
+        Vector2D velocity = new Vector2D(10, 10);
+        Vector2D moved = vec.move(velocity);
+        Assert.assertEquals(10F, moved.getX(), 0.0001F);
+        Assert.assertEquals(11F, moved.getY(), 0.0001F);
+    }
+    @Test
     public void movesVector() {
         Vector2D vec = new Vector2D(0F, 1F);
         Vector2D moved = vec.move(10F, 10F);
@@ -27,6 +35,11 @@ public class Vector2DTest {
         Vector2D vecDiff = vecOrg.diff(vecNew);
         Assert.assertEquals(5,  vecDiff.getXAsInt());
         Assert.assertEquals(-2,  vecDiff.getYAsInt());
+    }
+
+    @Test
+    public void movement() {
+        Vector2D org = Vector2D.create(10, 10);
     }
 
 }

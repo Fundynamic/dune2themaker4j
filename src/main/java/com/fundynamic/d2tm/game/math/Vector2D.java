@@ -26,6 +26,10 @@ public class Vector2D {
         return (int) vec.getY();
     }
 
+    public Vector2D move(Vector2D velocity) {
+        return move(velocity.getX(), velocity.getY());
+    }
+
     public Vector2D move(float xVelocity, float yVelocity) {
         float newX = vec.getX() + xVelocity;
         float newY = vec.getY() + yVelocity;

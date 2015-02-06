@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.drawing;
 
-import com.fundynamic.d2tm.game.map.*;
+import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
 import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
 import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
@@ -15,12 +16,10 @@ public class Viewport {
     private final Image buffer;
 
     private final Vector2D drawingVector;
-    private final Vector2D screenResolution;
 
     private final Perimeter viewingVectorPerimeter;
 
-    private float velocityX;
-    private float velocityY;
+    private Vector2D velocity;
 
     private float moveSpeed;
 
@@ -41,13 +40,11 @@ public class Viewport {
         this.graphics = graphics;
 
         this.drawingVector = drawingVector;
-        this.screenResolution = screenResolution;
         this.buffer = constructImage(screenResolution);
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(screenResolution, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
-        this.velocityX = 0F;
-        this.velocityY = 0F;
+        this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
         this.mapRenderer = new MapRenderer(tileHeight, tileWidth, screenResolution);
@@ -67,32 +64,32 @@ public class Viewport {
     }
 
     public void update() {
-        Vector2D newViewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.move(velocityX, velocityY));
+        Vector2D newViewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.move(velocity));
         viewingVector = newViewingVector;
     }
 
     public void moveLeft() {
-        this.velocityX = -moveSpeed;
+        this.velocity = new Vector2D(-moveSpeed, this.velocity.getY());
     }
 
     public void moveRight() {
-        this.velocityX = moveSpeed;
+        this.velocity = new Vector2D(moveSpeed, this.velocity.getY());
     }
 
     public void moveUp() {
-        this.velocityY = -moveSpeed;
+        this.velocity = new Vector2D(this.velocity.getX(), -moveSpeed);
     }
 
     public void moveDown() {
-        this.velocityY = moveSpeed;
+        this.velocity = new Vector2D(this.velocity.getX(), moveSpeed);
     }
 
     public void stopMovingHorizontally() {
-        this.velocityX = 0F;
+        this.velocity = new Vector2D(0, this.velocity.getY());
     }
 
     public void stopMovingVertically() {
-        this.velocityY = 0F;
+        this.velocity = new Vector2D(this.velocity.getX(), 0);
     }
 
     private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
