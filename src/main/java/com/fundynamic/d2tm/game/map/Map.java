@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
+import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Map {
@@ -12,26 +14,24 @@ public class Map {
     private final TerrainFactory terrainFactory;
     private Shroud shroud;
     private final int height, width;
-    private final int tileHeight;
-    private final int tileWidth;
-    private Image mapImage;
+    private MapRenderer mapRenderer;
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) throws SlickException {
+    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
         this.height = height;
         this.width = width;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.mapRenderer = null;
 
         initializeEmptyMap(width, height);
     }
 
-    public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) {
+    public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height) {
         try {
-            Map map = new Map(terrainFactory, shroud, width, height, tileWidth, tileHeight);
+            System.out.println("Generating random map sized " + width + "x" + height);
+            Map map = new Map(terrainFactory, shroud, width, height);
             map.putTerrainOnMap();
             map.smooth();
             return map;
@@ -53,12 +53,6 @@ public class Map {
         return cells[x][y];
     }
 
-    public Image createOrGetMapImage() throws SlickException {
-        if (this.mapImage == null) {
-            this.mapImage = new MapRenderer(tileHeight, tileWidth, shroud).render(this); // Shroud is permanent here! :S
-        }
-        return mapImage;
-    }
 
     private void initializeEmptyMap(int width, int height) {
         this.cells = new Cell[width + 2][height + 2];
@@ -72,6 +66,7 @@ public class Map {
 
     // @TODO: move this to a MapLoader / MapCreator / MapFactory / MapRepository
     private void putTerrainOnMap() {
+        System.out.println("Putting terrain on map");
         for (int x = 1; x <= this.width; x++) {
             for (int y = 1; y <= this.height; y++) {
                 final Cell cell = cells[x][y];
@@ -83,6 +78,7 @@ public class Map {
     }
 
     public void smooth() {
+        System.out.println("Smoothing all cells");
         for (int x = 1; x <= this.width; x++) {
             for (int y = 1; y <= this.height; y++) {
                 final SquareCell cell = new SquareCell(x, y);
@@ -92,17 +88,23 @@ public class Map {
         }
     }
 
-    public Image getSubImage(int x, int y, int width, int height) throws SlickException {
-        final Image mapImage = createOrGetMapImage();
-        return mapImage.getSubImage(x, y, width, height);
+    public int getWidthInPixels(int tileWidth) {
+        return this.width * tileWidth;
     }
 
-    public int getWidthInPixels() {
-        return this.width * this.tileWidth;
+    public int getHeightInPixels(int tileHeight) {
+        return this.height * tileHeight;
     }
 
-    public int getHeightInPixels() {
-        return this.height * this.tileHeight;
+    public Perimeter createViewablePerimeter(Vector2D screenResolution, int tileWidth, int tileHeight) {
+        return new Perimeter(tileWidth,
+                (getWidthInPixels(tileWidth) - tileWidth) - screenResolution.getX(),
+                tileHeight,
+                (getHeightInPixels(tileHeight) - tileHeight) - screenResolution.getY());
+    }
+
+    public Shroud getShroud() {
+        return shroud;
     }
 
     private class SquareCell {

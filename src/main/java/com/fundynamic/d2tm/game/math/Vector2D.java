@@ -10,6 +10,10 @@ public class Vector2D {
         return new Vector2D(0, 0);
     }
 
+    public static Vector2D create(float x, float y) {
+        return new Vector2D(x, y);
+    }
+
     public Vector2D(float x, float y) {
         this.vec = new Vector2f(x, y);
     }
@@ -20,6 +24,10 @@ public class Vector2D {
 
     public int getY() {
         return (int) vec.getY();
+    }
+
+    public Vector2D move(Vector2D velocity) {
+        return move(velocity.getX(), velocity.getY());
     }
 
     public Vector2D move(float xVelocity, float yVelocity) {

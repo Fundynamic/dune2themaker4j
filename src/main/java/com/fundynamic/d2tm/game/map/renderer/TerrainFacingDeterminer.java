@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.map;
+package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 

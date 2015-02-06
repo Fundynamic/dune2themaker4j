@@ -20,9 +20,12 @@ public class MapTest {
         int mapHeight = 20;
         int tileWidth = 16;
         int tileHeight = 24;
-        Map map = new Map(terrainFactory, shroud, mapWidth, mapHeight, tileWidth, tileHeight);
+        Map map = new Map(terrainFactory, shroud, mapWidth, mapHeight);
 
-        Assert.assertEquals(mapWidth * tileWidth, map.getWidthInPixels());
-        Assert.assertEquals(mapHeight * tileHeight, map.getHeightInPixels());
+        Assert.assertEquals(mapWidth * tileWidth, map.getWidthInPixels(tileWidth));
+        Assert.assertEquals(mapHeight * tileHeight, map.getHeightInPixels(tileHeight));
     }
+
+    // TODO: perimeter! (> tileWidth && max - tileWidth)
+    // TODO: perimeter! (> tileHeight && max - tileHeight)
 }
