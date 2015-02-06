@@ -29,7 +29,7 @@ public class Viewport {
     private final ShroudRenderer shroudRenderer;
 
 
-    public Viewport(Vector2D screenResolution,
+    public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
                     Vector2D viewingVector,
                     Graphics graphics,
@@ -40,15 +40,15 @@ public class Viewport {
         this.graphics = graphics;
 
         this.drawingVector = drawingVector;
-        this.buffer = constructImage(screenResolution);
+        this.buffer = constructImage(viewportDimensions);
 
-        this.viewingVectorPerimeter = map.createViewablePerimeter(screenResolution, tileWidth, tileHeight);
+        this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
         this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
-        this.mapRenderer = new MapRenderer(tileHeight, tileWidth, screenResolution);
 
+        this.mapRenderer = new MapRenderer(tileHeight, tileWidth, viewportDimensions);
         this.terrainCellRenderer = new TerrainCellRenderer(map);
         this.shroudRenderer = new ShroudRenderer(map);
     }
