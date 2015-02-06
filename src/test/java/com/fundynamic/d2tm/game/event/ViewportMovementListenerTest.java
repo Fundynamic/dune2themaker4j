@@ -43,7 +43,7 @@ public class ViewportMovementListenerTest {
         TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
         Shroud shroud = Mockito.mock(Shroud.class);
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
-        map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP, TILE_WIDTH, TILE_HEIGHT);
+        map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
@@ -51,7 +51,7 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed) {
+        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {

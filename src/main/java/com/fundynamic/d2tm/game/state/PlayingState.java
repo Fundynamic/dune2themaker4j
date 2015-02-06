@@ -53,12 +53,12 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        this.map = Map.generateRandom(terrainFactory, shroud, 2048, 2048, tileWidth, tileHeight);
+        this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
 
         try {
             float moveSpeed = 16.0F;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed, tileWidth, tileHeight);
 
             // Add listener for this viewport
             input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));

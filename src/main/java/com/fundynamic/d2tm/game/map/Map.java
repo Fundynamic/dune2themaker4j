@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
+import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -12,28 +14,24 @@ public class Map {
     private final TerrainFactory terrainFactory;
     private Shroud shroud;
     private final int height, width;
-    private final int tileHeight;
-    private final int tileWidth;
     private MapRenderer mapRenderer;
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) throws SlickException {
+    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
         this.height = height;
         this.width = width;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
         this.mapRenderer = null;
 
         initializeEmptyMap(width, height);
     }
 
-    public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height, int tileWidth, int tileHeight) {
+    public static Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height) {
         try {
             System.out.println("Generating random map sized " + width + "x" + height);
-            Map map = new Map(terrainFactory, shroud, width, height, tileWidth, tileHeight);
+            Map map = new Map(terrainFactory, shroud, width, height);
             map.putTerrainOnMap();
             map.smooth();
             return map;
@@ -90,26 +88,23 @@ public class Map {
         }
     }
 
-    public int getWidthInPixels() {
-        return this.width * this.tileWidth;
+    public int getWidthInPixels(int tileWidth) {
+        return this.width * tileWidth;
     }
 
-    public int getHeightInPixels() {
-        return this.height * this.tileHeight;
+    public int getHeightInPixels(int tileHeight) {
+        return this.height * tileHeight;
     }
 
-    public MapRenderer getOrCreateMapRenderer() {
-        if (mapRenderer == null) {
-            mapRenderer = new MapRenderer(tileHeight, tileWidth, shroud);
-        }
-        return mapRenderer;
-    }
-
-    public Perimeter createViewablePerimeter(Vector2D screenResolution) {
+    public Perimeter createViewablePerimeter(Vector2D screenResolution, int tileWidth, int tileHeight) {
         return new Perimeter(tileWidth,
-                (getWidthInPixels() - tileWidth) - screenResolution.getX(),
+                (getWidthInPixels(tileWidth) - tileWidth) - screenResolution.getX(),
                 tileHeight,
-                (getHeightInPixels() - tileHeight) - screenResolution.getY());
+                (getHeightInPixels(tileHeight) - tileHeight) - screenResolution.getY());
+    }
+
+    public Shroud getShroud() {
+        return shroud;
     }
 
     private class SquareCell {

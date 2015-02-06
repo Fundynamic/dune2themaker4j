@@ -1,16 +1,15 @@
 package com.fundynamic.d2tm.game.drawing;
 
-import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapRenderer;
-import com.fundynamic.d2tm.game.map.Perimeter;
+import com.fundynamic.d2tm.game.map.*;
+import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
+import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
+import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Viewport {
-
-    private final Map map;
 
     private final Graphics graphics;
     private final Image buffer;
@@ -26,41 +25,45 @@ public class Viewport {
     private float moveSpeed;
 
     private Vector2D viewingVector;
+    private MapRenderer mapRenderer;
+    private final TerrainCellRenderer terrainCellRenderer;
+    private final ShroudRenderer shroudRenderer;
 
 
-    public Viewport(Vector2D screenResolution, Vector2D drawingVector, Vector2D viewingVector, Graphics graphics, Map map, float moveSpeed) throws SlickException {
+    public Viewport(Vector2D screenResolution,
+                    Vector2D drawingVector,
+                    Vector2D viewingVector,
+                    Graphics graphics,
+                    Map map,
+                    float moveSpeed,
+                    int tileWidth,
+                    int tileHeight) throws SlickException {
         this.graphics = graphics;
-        this.map = map;
 
         this.drawingVector = drawingVector;
         this.screenResolution = screenResolution;
         this.buffer = constructImage(screenResolution);
 
-        this.viewingVectorPerimeter = map.createViewablePerimeter(screenResolution);
+        this.viewingVectorPerimeter = map.createViewablePerimeter(screenResolution, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
         this.velocityX = 0F;
         this.velocityY = 0F;
 
         this.moveSpeed = moveSpeed;
+        this.mapRenderer = new MapRenderer(tileHeight, tileWidth, screenResolution);
+
+        this.terrainCellRenderer = new TerrainCellRenderer(map);
+        this.shroudRenderer = new ShroudRenderer(map);
     }
 
     public void render() throws SlickException {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
-        MapRenderer mapRenderer = map.getOrCreateMapRenderer();
-        mapRenderer.render(this.buffer, viewingVector, screenResolution, map);
-        // Stefan 24-01-2015: This will get hairy once we draw other stuff on the screen.
-        // this class will then probably get loads of dependencies to other sources like Units, Structures, etc. Is that what we want?
-        // perhaps we can draw these things elsewhere, and then later stack images here? Like a stack of cards? 
-        // determine what items are visible & draw them on image
+        mapRenderer.render(this.buffer, viewingVector, terrainCellRenderer);
+        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
 
-        // add more layers
-        // Units, etc
-
-        // draw all on the big canvas
         drawBufferToGraphics(graphics, drawingVector);
-        graphics.drawString("Drawing viewport at " + drawingVector.shortString() + " viewing " + viewingVector.shortString(), 10, 30);
     }
 
     public void update() {

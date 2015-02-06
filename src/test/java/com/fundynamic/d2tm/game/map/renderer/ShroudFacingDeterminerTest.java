@@ -1,9 +1,9 @@
-package com.fundynamic.d2tm.game.map;
+package com.fundynamic.d2tm.game.map.renderer;
 
 import junit.framework.Assert;
 import org.junit.Test;
 
-import static com.fundynamic.d2tm.game.map.ShroudFacingDeterminer.getFacing;
+import static com.fundynamic.d2tm.game.map.renderer.ShroudFacingDeterminer.getFacing;
 import static com.fundynamic.d2tm.graphics.ShroudFacing.*;
 
 public class ShroudFacingDeterminerTest {
