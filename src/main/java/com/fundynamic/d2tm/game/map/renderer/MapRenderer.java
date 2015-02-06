@@ -12,8 +12,8 @@ public class MapRenderer {
 
     private final int tileHeight;
     private final int tileWidth;
-    private int cellsThatFitHorizontally;
-    private int cellsThatFitVertically;
+    private final int cellsThatFitHorizontally;
+    private final int cellsThatFitVertically;
 
     public MapRenderer(int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.tileHeight = tileHeight;
