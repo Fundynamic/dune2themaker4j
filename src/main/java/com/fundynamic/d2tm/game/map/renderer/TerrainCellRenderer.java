@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.renderer.Renderer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
