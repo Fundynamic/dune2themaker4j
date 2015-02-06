@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.ShroudFacing;
 import org.newdawn.slick.Graphics;
 
-public class ShroudRenderer implements Renderer {
+public class ShroudRenderer implements CellRenderer {
 
     private final Map map;
     private final Shroud shroud;

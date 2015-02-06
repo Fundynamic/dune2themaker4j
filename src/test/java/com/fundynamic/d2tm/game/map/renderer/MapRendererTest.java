@@ -24,14 +24,14 @@ public class MapRendererTest {
 
         Vector2D viewingVector = Vector2D.zero();
 
-        Renderer renderer = mock(Renderer.class);
-        mapRenderer.render(mock(Image.class), viewingVector, renderer);
+        CellRenderer cellRenderer = mock(CellRenderer.class);
+        mapRenderer.render(mock(Image.class), viewingVector, cellRenderer);
 
         int cellsToDrawHorizontally = (screenWidth / TILE_WIDTH) + 2; // 2 extra for 'rounding' purposes at right
         int cellsToDrawVertically = (screenHeight / TILE_HEIGHT) + 2; // 2 extra for 'rounding' purposes at bottom
         int numberOfCellsToDraw = cellsToDrawHorizontally * cellsToDrawVertically;
 
-        verify(renderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), anyInt(), anyInt(), anyInt(), anyInt());
+        verify(cellRenderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), anyInt(), anyInt(), anyInt(), anyInt());
     }
 
 }

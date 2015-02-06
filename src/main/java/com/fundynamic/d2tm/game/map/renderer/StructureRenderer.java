@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import org.newdawn.slick.Graphics;
 
-public class StructureRenderer implements Renderer {
+public class StructureRenderer implements CellRenderer {
 
     private final Map map;
 

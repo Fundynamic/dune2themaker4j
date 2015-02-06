@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class TerrainCellRenderer implements Renderer {
+public class TerrainCellRenderer implements CellRenderer {
 
     private final Map map;
 

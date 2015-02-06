@@ -22,7 +22,7 @@ public class MapRenderer {
         cellsThatFitVertically = (windowDimensions.getY() / tileHeight) + 1;
     }
 
-    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer renderer) throws SlickException {
+    public void render(Image imageToDrawOn, Vector2D viewingVector, CellRenderer cellRenderer) throws SlickException {
         int startCellX = (viewingVector.getX() / tileWidth);
         int startCellY = (viewingVector.getY() / tileHeight);
 
@@ -34,7 +34,7 @@ public class MapRenderer {
                 int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
                 int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
 
-                renderer.draw(imageToDrawOn.getGraphics(), x, y, drawX, drawY);
+                cellRenderer.draw(imageToDrawOn.getGraphics(), x, y, drawX, drawY);
             }
         }
     }
