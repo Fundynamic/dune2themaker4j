@@ -9,10 +9,10 @@ public class ViewportMovementListener extends AbstractMouseListener {
     public static final int PIXELS_NEAR_BORDER = 2;
 
     private final Viewport viewport;
-    private final Vector2D screenResolution;
+    private final Vector2D viewportDimensions;
 
-    public ViewportMovementListener(Viewport viewport, Vector2D screenResolution) {
-        this.screenResolution = screenResolution;
+    public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions) {
+        this.viewportDimensions = viewportDimensions;
         this.viewport = viewport;
     }
 
@@ -38,9 +38,11 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
+        // Stefan: I think screenresolution should go
+
         if (newx <= PIXELS_NEAR_BORDER) {
             viewport.moveLeft();
-        } else if (newx >= screenResolution.getX() - PIXELS_NEAR_BORDER) {
+        } else if (newx >= viewportDimensions.getX() - PIXELS_NEAR_BORDER) {
             viewport.moveRight();
         } else {
             viewport.stopMovingHorizontally();
@@ -48,7 +50,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
         if (newy <= PIXELS_NEAR_BORDER) {
             viewport.moveUp();
-        } else if (newy >= screenResolution.getY() - PIXELS_NEAR_BORDER) {
+        } else if (newy >= viewportDimensions.getY() - PIXELS_NEAR_BORDER) {
             viewport.moveDown();
         } else {
             viewport.stopMovingVertically();
