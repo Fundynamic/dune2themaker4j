@@ -32,7 +32,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
         // TODO: this is here for now, but we might (probably...) want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
-                mouse.selectStructureOnCell();
+                mouse.selectStructure();
             }
         }
     }

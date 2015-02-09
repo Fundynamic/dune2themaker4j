@@ -26,7 +26,11 @@ public class Mouse {
         return hoverCell;
     }
 
-    public void selectStructureOnCell() {
+    /**
+     * When a structure is bound to a cell, this method makes sure that is the only selected structure.
+     * If there is no structure bound to the cell then this automatically deselects the structure.
+     */
+    public void selectStructure() {
         selectedStructure = hoverCell.getConstructionYard(); // TODO: change "construction Yard" into "Structure"
         // TODO: tell structure it is being selected? (for perhaps other listeners GUI related!?)
         // ie: hoverCell.selectStructureOnCell();
