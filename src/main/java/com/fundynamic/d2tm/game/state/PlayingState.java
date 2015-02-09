@@ -56,10 +56,13 @@ public class PlayingState extends BasicGameState {
         this.map.getCell(10,10).
                 setConstructionYard(new ConstructionYard(new Image("structures/2x2_constyard.png")));
 
+        this.map.getCell(5, 5).setHoveredOver(true);
+
         try {
             float moveSpeed = 16.0F;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed, tileWidth, tileHeight);
+            Vector2D viewingVector = Vector2D.create(40, 40);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight);
 
             // Add listener for this viewport
             input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
