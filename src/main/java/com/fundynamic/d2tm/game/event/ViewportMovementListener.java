@@ -11,6 +11,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Viewport viewport;
     private final Vector2D viewportDimensions;
 
+    // Viewport dimensions belong to Viewport actually
     public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions) {
         this.viewportDimensions = viewportDimensions;
         this.viewport = viewport;
@@ -38,7 +39,11 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        // Stefan: I think screenresolution should go
+        // Viewport dimensions belong to Viewport actually, so we can change the code below to:
+        // if (viewport.isNearLeftBorder(newx) etc..
+        // or..
+        // viewport.updateMousePosition(newx, newy) and move the logic here to viewport to respond to that
+        // ie -> Tell don't ask
 
         if (newx <= PIXELS_NEAR_BORDER) {
             viewport.moveLeft();
