@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 
 /**
  * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)
@@ -10,6 +11,7 @@ import com.fundynamic.d2tm.game.map.Cell;
 public class Mouse {
 
     private Cell hoverCell;
+    private ConstructionYard selectedStructure;
 
     public Mouse(Cell hoverCell) {
         this.hoverCell = hoverCell;
@@ -22,5 +24,16 @@ public class Mouse {
 
     public Cell getHoverCell() {
         return hoverCell;
+    }
+
+    public void selectStructureOnCell() {
+        selectedStructure = hoverCell.getConstructionYard(); // TODO: change "construction Yard" into "Structure"
+        // TODO: tell structure it is being selected? (for perhaps other listeners GUI related!?)
+        // ie: hoverCell.selectStructureOnCell();
+        //       -- structure.select(); ...
+    }
+
+    public ConstructionYard getSelectedStructure() {
+        return selectedStructure;
     }
 }

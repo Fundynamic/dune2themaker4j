@@ -2,11 +2,14 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +18,9 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.command.MouseButtonControl;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.mock;
@@ -40,7 +45,6 @@ public class ViewportMovementListenerTest {
     private Vector2D screenResolution;
     private Map map;
 
-    @Mock
     private Mouse mouse;
 
     @Before
@@ -50,9 +54,14 @@ public class ViewportMovementListenerTest {
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
         map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
+        this.mouse = new Mouse(makeCell());
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
         listener = new ViewportMovementListener(viewport, screenResolution, mouse);
+    }
+
+    private Cell makeCell() {
+        return new Cell(Mockito.mock(Terrain.class));
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
@@ -201,6 +210,19 @@ public class ViewportMovementListenerTest {
 
         Vector2D viewportVector = getLastCalledViewport();
         assertFloatEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX());
+    }
+
+    @Test
+    public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
+        int NOT_APPLICABLE = -1;
+        Cell cell = makeCell();
+        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class));
+        cell.setConstructionYard(constructionYard);
+        mouse.setHoverCell(cell);
+
+        listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
+
+        Assert.assertSame(constructionYard, mouse.getSelectedStructure());
     }
 
     private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {

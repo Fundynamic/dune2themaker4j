@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.newdawn.slick.Image;
 
 public class MouseTest {
 
@@ -27,6 +29,16 @@ public class MouseTest {
     public void throwsIllegalArgumentWhenHoverCellIsNull() {
         Mouse mouse = new Mouse(makeCell());
         mouse.setHoverCell(null);
+    }
+
+    @Test
+    public void canSelectStructureOnCell() {
+        Cell hoverCell = makeCell();
+        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class));
+        hoverCell.setConstructionYard(constructionYard);
+        Mouse mouse = new Mouse(hoverCell);
+        mouse.selectStructureOnCell();
+        Assert.assertEquals(constructionYard, mouse.getSelectedStructure());
     }
 
     private Cell makeCell() {

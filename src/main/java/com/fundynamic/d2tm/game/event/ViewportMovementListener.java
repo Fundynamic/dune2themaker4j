@@ -3,7 +3,9 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
 
@@ -27,7 +29,12 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
-
+        // TODO: this is here for now, but we might (probably...) want to put this in a separate listener!
+        if (clickCount == 1) {
+            if (button == Input.MOUSE_LEFT_BUTTON) {
+                mouse.selectStructureOnCell();
+            }
+        }
     }
 
     @Override
