@@ -7,8 +7,9 @@ import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
 import com.fundynamic.d2tm.game.map.renderer.StructureRenderer;
 import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.ConstructionYard;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 public class Viewport {
 
