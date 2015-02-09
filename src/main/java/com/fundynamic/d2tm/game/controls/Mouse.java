@@ -33,6 +33,12 @@ public class Mouse {
         //       -- structure.select(); ...
     }
 
+    public boolean hasStructureSelected(ConstructionYard structureToCheck) {
+        if (structureToCheck == null) return false;
+        if (this.selectedStructure == null) return false;
+        return this.selectedStructure == structureToCheck;
+    }
+
     public ConstructionYard getSelectedStructure() {
         return selectedStructure;
     }
