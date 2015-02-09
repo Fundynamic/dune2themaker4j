@@ -11,6 +11,8 @@ import org.newdawn.slick.SlickException;
 
 public class Map {
 
+    private static final int TILE_SIZE = 32; // If possible, get rid of this!
+
     private final TerrainFactory terrainFactory;
     private Shroud shroud;
     private final int height, width;
@@ -131,6 +133,10 @@ public class Map {
 
     public Shroud getShroud() {
         return shroud;
+    }
+
+    public Cell getCellByPixelsCoordinates(int pixelX, int pixelY) {
+        return cells[pixelX / TILE_SIZE][pixelY / TILE_SIZE];
     }
 
     private class SquareCell {

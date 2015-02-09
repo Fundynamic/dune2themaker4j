@@ -53,24 +53,10 @@ public class ViewportMovementListener extends AbstractMouseListener {
             viewport.stopMovingHorizontally();
         }
 
-        int TILE_SIZE = 32; // HACK HACK TILE_SIZE HERE!
+        int mapPixelX = newx + viewport.getViewingVector().getX();
+        int mapPixelY = newy + viewport.getViewingVector().getY();
 
-        int cellsHorizontallyWithinViewport = viewport.getViewingVector().getXAsInt() / TILE_SIZE;
-        int cellsVerticallyWithinViewport = viewport.getViewingVector().getYAsInt() / TILE_SIZE;
-
-        int remainderHorizontallyInPixels = viewport.getViewingVector().getXAsInt() % TILE_SIZE;
-        int remainderVerticallyInPixels = viewport.getViewingVector().getYAsInt() % TILE_SIZE;
-
-        int relativeX = newx + remainderHorizontallyInPixels; // - relativeX (another indication this should be within the Viewport!)
-        int relativeY = newy + remainderVerticallyInPixels;   // - relativeY (another indication this should be within the Viewport!)
-
-        int cellX = relativeX / TILE_SIZE;
-        int cellY = relativeY / TILE_SIZE;
-
-        cellX = cellX + cellsHorizontallyWithinViewport;
-        cellY = cellY + cellsVerticallyWithinViewport;
-
-        viewport.getMap().getCell(cellX, cellY).setHoveredOver(true);
+        viewport.getMap().getCellByPixelsCoordinates(mapPixelX, mapPixelY).setHoveredOver(true);
 
         if (newy <= PIXELS_NEAR_BORDER) {
             viewport.moveUp();

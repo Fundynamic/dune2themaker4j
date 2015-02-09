@@ -77,6 +77,33 @@ public class MapTest {
         map.getCell(MAP_WIDTH + 2, MAP_HEIGHT + 2); // go over the invisible border
     }
 
-    // TODO: perimeter! (> tileWidth && max - tileWidth)
-    // TODO: perimeter! (> tileHeight && max - tileHeight)
+    @Test
+    public void returnsCellForPixelCoordinatesTopLeftOfMapTopLeftOfCell() {
+        Cell cell = map.getCellByPixelsCoordinates(0, 0);
+        Assert.assertTrue(cell.getTerrain() instanceof Sand);
+    }
+
+    @Test
+    public void returnsCellForPixelCoordinatesTopLeftOfMapMiddleOfCell() {
+        int TILE_SIZE = 32;
+        Cell cell = map.getCellByPixelsCoordinates(TILE_SIZE / 2, TILE_SIZE / 2);
+        Assert.assertTrue(cell.getTerrain() instanceof Sand);
+    }
+
+    @Test
+    public void returnsCellForPixelCoordinatesMiddleOfMapBottomRightOfCell() {
+        int TILE_SIZE = 32;
+
+        // at 5,5 (see setup) is Spice
+        int pixelX = TILE_SIZE * 5;
+        int pixelY = TILE_SIZE * 5;
+
+        // keep just within the cell
+        pixelX += (TILE_SIZE - 1);
+        pixelY += (TILE_SIZE - 1);
+
+        Cell cell = map.getCellByPixelsCoordinates(pixelX, pixelY);
+        Assert.assertTrue(cell.getTerrain() instanceof Spice);
+    }
+
 }
