@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -20,9 +20,10 @@ public class StructureRenderer implements CellRenderer {
 
     @Override
     public void draw(Graphics graphics, int x, int y, int drawX, int drawY) {
-        ConstructionYard constructionYard = map.getCell(x, y).getConstructionYard();
-        if (constructionYard != null) {
-            Image sprite = constructionYard.getSpriteSheet().getSprite(0, Random.getRandomBetween(0, 2));
+        Cell cell = map.getCell(x, y);
+        ConstructionYard constructionYard = cell.getConstructionYard();
+        if (cell.isTopLeftOfStructure() && constructionYard != null) {
+            Image sprite = constructionYard.getSprite();
             graphics.drawImage(sprite, drawX, drawY);
 
             // if selected, draw a rectangle
@@ -30,7 +31,7 @@ public class StructureRenderer implements CellRenderer {
             if (mouse.hasStructureSelected(constructionYard)) {
                 graphics.setColor(Color.white);
                 graphics.setLineWidth(1.1f);
-                graphics.drawRect(drawX, drawY, sprite.getWidth() - 1, sprite.getHeight() - 1);
+                graphics.drawRect(drawX, drawY, constructionYard.getWidth() - 1, constructionYard.getHeight() - 1);
             }
         }
     }

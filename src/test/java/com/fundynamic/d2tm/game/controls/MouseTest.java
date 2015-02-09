@@ -34,7 +34,7 @@ public class MouseTest {
     @Test
     public void canSelectStructureOnCell() {
         Cell hoverCell = makeCell();
-        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class));
+        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class), 64, 64);
         hoverCell.setConstructionYard(constructionYard);
         Mouse mouse = new Mouse(hoverCell);
         mouse.selectStructure();

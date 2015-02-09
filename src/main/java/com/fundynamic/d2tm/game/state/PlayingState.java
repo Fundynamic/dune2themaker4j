@@ -57,8 +57,11 @@ public class PlayingState extends BasicGameState {
 
         this.mouse = new Mouse(this.map.getCell(0, 0));
 
-        this.map.getCell(10,10).
-                setConstructionYard(new ConstructionYard(new Image("structures/2x2_constyard.png")));
+        ConstructionYard constructionYard = new ConstructionYard(new Image("structures/2x2_constyard.png"), 64, 64);
+        this.map.getCell(10,10).setConstructionYard(constructionYard).setTopLeftOfStructure(true);
+        this.map.getCell(11,10).setConstructionYard(constructionYard);
+        this.map.getCell(10,11).setConstructionYard(constructionYard);
+        this.map.getCell(11,11).setConstructionYard(constructionYard);
 
         try {
             float moveSpeed = 16.0F;

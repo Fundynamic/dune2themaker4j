@@ -216,7 +216,7 @@ public class ViewportMovementListenerTest {
     public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
         int NOT_APPLICABLE = -1;
         Cell cell = makeCell();
-        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class));
+        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class), 64, 64);
         cell.setConstructionYard(constructionYard);
         mouse.setHoverCell(cell);
 

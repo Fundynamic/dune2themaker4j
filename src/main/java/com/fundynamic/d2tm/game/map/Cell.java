@@ -11,12 +11,14 @@ public class Cell {
 
     private Terrain terrain;
     private boolean shrouded;
+    private boolean topLeftOfStructure;
 
     public Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
         this.shrouded = true;
         this.constructionYard = null;
+        this.topLeftOfStructure = false;
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -47,12 +49,21 @@ public class Cell {
         return constructionYard;
     }
 
-    public void setConstructionYard(ConstructionYard constructionYard) {
+    public Cell setConstructionYard(ConstructionYard constructionYard) {
         this.constructionYard = constructionYard;
+        return this;
     }
 
     public boolean hasStructure(ConstructionYard selectedStructure) {
         if (this.constructionYard == null) return false;
         return this.constructionYard == selectedStructure;
+    }
+
+    public void setTopLeftOfStructure(boolean topLeftOfStructure) {
+        this.topLeftOfStructure = topLeftOfStructure;
+    }
+
+    public boolean isTopLeftOfStructure() {
+        return topLeftOfStructure;
     }
 }
