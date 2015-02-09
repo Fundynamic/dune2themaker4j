@@ -31,6 +31,8 @@ public class Viewport {
     private Vector2D viewingVector;
     private MapRenderer mapRenderer;
 
+    private Map map;
+
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
                     Vector2D viewingVector,
@@ -39,6 +41,7 @@ public class Viewport {
                     float moveSpeed,
                     int tileWidth,
                     int tileHeight) throws SlickException {
+        this.map = map;
         this.graphics = graphics;
 
         this.drawingVector = drawingVector;
@@ -111,4 +114,7 @@ public class Viewport {
         return new Image(screenResolution.getX(), screenResolution.getY());
     }
 
+    public Map getMap() {
+        return this.map;
+    }
 }
