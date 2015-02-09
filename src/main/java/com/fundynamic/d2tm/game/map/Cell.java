@@ -11,6 +11,7 @@ public class Cell {
 
     private Terrain terrain;
     private boolean shrouded;
+    private boolean hoveredOver;
 
     public Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
@@ -49,5 +50,13 @@ public class Cell {
 
     public void setConstructionYard(ConstructionYard constructionYard) {
         this.constructionYard = constructionYard;
+    }
+
+    public boolean isHoveredOver() {
+        return hoveredOver;
+    }
+
+    public void setHoveredOver(boolean hoveredOver) {
+        this.hoveredOver = hoveredOver;
     }
 }
