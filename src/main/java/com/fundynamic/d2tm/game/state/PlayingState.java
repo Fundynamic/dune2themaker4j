@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
@@ -29,6 +30,7 @@ public class PlayingState extends BasicGameState {
 
     private Map map;
     private Graphics graphics;
+    private Mouse mouse;
 
     private List<Viewport> viewports = new ArrayList<>();
 
@@ -53,19 +55,19 @@ public class PlayingState extends BasicGameState {
 
         this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
 
+        this.mouse = new Mouse(this.map.getCell(0, 0));
+
         this.map.getCell(10,10).
                 setConstructionYard(new ConstructionYard(new Image("structures/2x2_constyard.png")));
-
-        this.map.getCell(5, 5).setHoveredOver(true);
 
         try {
             float moveSpeed = 16.0F;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(40, 40);
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
-            input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
+            input.addMouseListener(new ViewportMovementListener(viewport, screenResolution, mouse));
 
             viewports.add(viewport);
         } catch (SlickException e) {

@@ -1,11 +1,9 @@
 package com.fundynamic.d2tm.game.drawing;
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
-import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
-import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
-import com.fundynamic.d2tm.game.map.renderer.StructureRenderer;
-import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
+import com.fundynamic.d2tm.game.map.renderer.*;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -23,6 +21,7 @@ public class Viewport {
     private final StructureRenderer structureRenderer;
     private final TerrainCellRenderer terrainCellRenderer;
     private final ShroudRenderer shroudRenderer;
+    private final MouseCellInteractionRenderer mouseCellInteractionRenderer;
 
     private Vector2D velocity;
 
@@ -40,7 +39,8 @@ public class Viewport {
                     Map map,
                     float moveSpeed,
                     int tileWidth,
-                    int tileHeight) throws SlickException {
+                    int tileHeight,
+                    Mouse mouse) throws SlickException {
         this.map = map;
         this.graphics = graphics;
 
@@ -58,6 +58,7 @@ public class Viewport {
         this.terrainCellRenderer = new TerrainCellRenderer(map);
         this.shroudRenderer = new ShroudRenderer(map);
         this.structureRenderer = new StructureRenderer(map);
+        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(mouse, map);
     }
 
     public void render() throws SlickException {
@@ -66,6 +67,7 @@ public class Viewport {
 
         mapRenderer.render(this.buffer, viewingVector, terrainCellRenderer);
         mapRenderer.render(this.buffer, viewingVector, structureRenderer);
+        mapRenderer.render(this.buffer, viewingVector, mouseCellInteractionRenderer);
 //        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);

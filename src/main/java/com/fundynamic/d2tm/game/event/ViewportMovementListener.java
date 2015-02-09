@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.event;
 
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.math.Vector2D;
 
@@ -10,11 +11,13 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     private final Viewport viewport;
     private final Vector2D viewportDimensions;
+    private final Mouse mouse;
 
     // Viewport dimensions belong to Viewport actually
-    public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions) {
+    public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions, Mouse mouse) {
         this.viewportDimensions = viewportDimensions;
         this.viewport = viewport;
+        this.mouse = mouse;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
         int mapPixelX = newx + viewport.getViewingVector().getX();
         int mapPixelY = newy + viewport.getViewingVector().getY();
 
-        viewport.getMap().getCellByPixelsCoordinates(mapPixelX, mapPixelY).setHoveredOver(true);
+        mouse.setHoverCell(viewport.getMap().getCellByPixelsCoordinates(mapPixelX, mapPixelY));
 
         if (newy <= PIXELS_NEAR_BORDER) {
             viewport.moveUp();

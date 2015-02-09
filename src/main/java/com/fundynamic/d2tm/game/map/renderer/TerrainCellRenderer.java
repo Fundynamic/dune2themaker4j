@@ -18,10 +18,6 @@ public class TerrainCellRenderer implements CellRenderer {
         Cell cell = map.getCell(x, y);
         try {
             graphics.drawImage(cell.getTileImage(), drawX, drawY);
-            if (cell.isHoveredOver()) {
-                graphics.setLineWidth(1.1f);
-                graphics.drawRect(drawX, drawY, 31, 31);
-            }
         } catch (SlickException e) {
             // draw nothing!?
             System.err.println("Unable to get cell tile image on " + x + "," + y + ". Exception: " + e);
