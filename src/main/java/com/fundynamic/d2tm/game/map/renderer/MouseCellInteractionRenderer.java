@@ -1,7 +1,9 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 
@@ -17,7 +19,13 @@ public class MouseCellInteractionRenderer implements CellRenderer {
 
     @Override
     public void draw(Graphics graphics, int x, int y, int drawX, int drawY) {
-        if (map.getCell(x, y).equals(mouse.getHoverCell())) {
+        Cell cell = map.getCell(x, y);
+        if (cell.equals(mouse.getHoverCell())) {
+            if (cell.hasStructure(mouse.getSelectedStructure())) {
+                graphics.setColor(Color.red);
+            } else {
+                graphics.setColor(Color.white);
+            }
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, 31, 31);
         }

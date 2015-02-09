@@ -51,4 +51,8 @@ public class Cell {
         this.constructionYard = constructionYard;
     }
 
+    public boolean hasStructure(ConstructionYard selectedStructure) {
+        if (this.constructionYard == null) return false;
+        return this.constructionYard == selectedStructure;
+    }
 }
