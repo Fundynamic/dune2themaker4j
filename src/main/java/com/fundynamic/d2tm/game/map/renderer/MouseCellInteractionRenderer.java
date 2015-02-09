@@ -12,7 +12,7 @@ public class MouseCellInteractionRenderer implements CellRenderer {
     private final Mouse mouse;
     private final Map map;
 
-    public MouseCellInteractionRenderer(Mouse mouse, Map map) {
+    public MouseCellInteractionRenderer(Map map, Mouse mouse) {
         this.mouse = mouse;
         this.map = map;
     }

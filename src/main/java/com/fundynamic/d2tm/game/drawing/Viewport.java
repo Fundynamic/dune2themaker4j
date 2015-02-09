@@ -57,8 +57,8 @@ public class Viewport {
 
         this.terrainCellRenderer = new TerrainCellRenderer(map);
         this.shroudRenderer = new ShroudRenderer(map);
-        this.structureRenderer = new StructureRenderer(map);
-        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(mouse, map);
+        this.structureRenderer = new StructureRenderer(map, mouse);
+        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(map, mouse);
     }
 
     public void render() throws SlickException {
