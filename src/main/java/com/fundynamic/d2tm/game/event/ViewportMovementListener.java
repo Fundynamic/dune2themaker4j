@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.event;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import org.newdawn.slick.Input;
@@ -41,7 +42,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
             }
             // TODO: for now place logic here, but that will probably be moved to another listener?
             if (!mouse.hasAnyStructureSelected()) {
-                structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), StructuresRepository.CONSTRUCTION_YARD);
+                structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
             }
         }
     }

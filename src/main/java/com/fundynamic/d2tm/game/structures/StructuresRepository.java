@@ -9,8 +9,9 @@ import org.newdawn.slick.SlickException;
 public class StructuresRepository {
 
     public static int CONSTRUCTION_YARD = 0;
+    public static int REFINERY = 1;
 
-    public static int MAX_TYPES = 1;
+    public static int MAX_TYPES = 2;
 
     private final Map map;
 
@@ -23,6 +24,12 @@ public class StructuresRepository {
         constructionYard.image = new Image("structures/2x2_constyard.png");
         constructionYard.width = 64;
         constructionYard.height = 64;
+
+        StructureData refinery = new StructureData();
+        structureData[REFINERY] = refinery;
+        refinery.image = new Image("structures/3x2_refinery.png");
+        refinery.width = 96;
+        refinery.height = 64;
     }
 
     public void placeStructureOnMap(Vector2D topLeft, int type) {
