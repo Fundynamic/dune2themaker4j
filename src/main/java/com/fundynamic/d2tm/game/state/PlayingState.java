@@ -57,11 +57,19 @@ public class PlayingState extends BasicGameState {
 
         this.mouse = new Mouse(this.map.getCell(0, 0));
 
+        Vector2D topLeft = Vector2D.create(10, 10);
         ConstructionYard constructionYard = new ConstructionYard(new Image("structures/2x2_constyard.png"), 64, 64);
-        this.map.getCell(10,10).setConstructionYard(constructionYard).setTopLeftOfStructure(true);
-        this.map.getCell(11,10).setConstructionYard(constructionYard);
-        this.map.getCell(10,11).setConstructionYard(constructionYard);
-        this.map.getCell(11,11).setConstructionYard(constructionYard);
+        this.map.getCell(topLeft.getX(), topLeft.getY()).setConstructionYard(constructionYard).setTopLeftOfStructure(true);
+        this.map.getCell(topLeft.getX() + 1, topLeft.getY()).setConstructionYard(constructionYard);
+        this.map.getCell(topLeft.getX(), topLeft.getY() + 1).setConstructionYard(constructionYard);
+        this.map.getCell(topLeft.getX() + 1, topLeft.getY() + 1).setConstructionYard(constructionYard);
+
+        topLeft = Vector2D.create(20, 20);
+        constructionYard = new ConstructionYard(new Image("structures/2x2_constyard.png"), 64, 64);
+        this.map.getCell(topLeft.getX(), topLeft.getY()).setConstructionYard(constructionYard).setTopLeftOfStructure(true);
+        this.map.getCell(topLeft.getX() + 1, topLeft.getY()).setConstructionYard(constructionYard);
+        this.map.getCell(topLeft.getX(), topLeft.getY() + 1).setConstructionYard(constructionYard);
+        this.map.getCell(topLeft.getX() + 1, topLeft.getY() + 1).setConstructionYard(constructionYard);
 
         try {
             float moveSpeed = 16.0F;
