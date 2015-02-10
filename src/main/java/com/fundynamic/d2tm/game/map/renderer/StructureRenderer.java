@@ -28,7 +28,7 @@ public class StructureRenderer implements CellRenderer {
 
             // if selected, draw a rectangle
             // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
-            if (mouse.hasStructureSelected(constructionYard)) {
+            if (mouse.hasThisStructureSelected(constructionYard)) {
                 graphics.setColor(Color.white);
                 graphics.setLineWidth(1.1f);
                 graphics.drawRect(drawX, drawY, constructionYard.getWidth() - 1, constructionYard.getHeight() - 1);

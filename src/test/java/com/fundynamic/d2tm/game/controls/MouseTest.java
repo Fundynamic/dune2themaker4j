@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.ConstructionYard;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import junit.framework.Assert;
@@ -21,14 +22,20 @@ public class MouseTest {
     public void updatesHoverCell() {
         Mouse mouse = new Mouse(makeCell());
         Cell hoverCell = makeCell();
-        mouse.setHoverCell(hoverCell);
+        mouse.setHoverCell(hoverCell, Vector2D.zero());
         Assert.assertSame(hoverCell, mouse.getHoverCell());
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void throwsIllegalArgumentWhenHoverCellIsNull() {
         Mouse mouse = new Mouse(makeCell());
-        mouse.setHoverCell(null);
+        mouse.setHoverCell(null, Vector2D.zero());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void throwsIllegalArgumentWhenVectorIsNull() {
+        Mouse mouse = new Mouse(makeCell());
+        mouse.setHoverCell(makeCell(), null);
     }
 
     @Test

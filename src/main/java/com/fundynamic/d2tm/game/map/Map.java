@@ -138,6 +138,10 @@ public class Map {
         return cells[pixelX / TILE_SIZE][pixelY / TILE_SIZE];
     }
 
+    public Vector2D getVector2DByPixelsCoordinates(int pixelX, int pixelY) {
+        return Vector2D.create(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+    }
+
     private class SquareCell {
         private final int x, y;
 

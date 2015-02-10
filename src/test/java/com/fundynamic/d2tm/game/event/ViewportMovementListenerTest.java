@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.ConstructionYard;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -45,6 +46,9 @@ public class ViewportMovementListenerTest {
     private Vector2D screenResolution;
     private Map map;
 
+    @Mock
+    private StructuresRepository structuresRepository;
+
     private Mouse mouse;
 
     @Before
@@ -57,7 +61,7 @@ public class ViewportMovementListenerTest {
         this.mouse = new Mouse(makeCell());
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse);
+        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
     }
 
     private Cell makeCell() {
@@ -183,7 +187,7 @@ public class ViewportMovementListenerTest {
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse);
+        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY()); // move down
         updateAndRender();
@@ -203,7 +207,7 @@ public class ViewportMovementListenerTest {
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse);
+        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
 
         listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
@@ -218,7 +222,7 @@ public class ViewportMovementListenerTest {
         Cell cell = makeCell();
         ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class), 64, 64);
         cell.setConstructionYard(constructionYard);
-        mouse.setHoverCell(cell);
+        mouse.setHoverCell(cell, Vector2D.zero());
 
         listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 

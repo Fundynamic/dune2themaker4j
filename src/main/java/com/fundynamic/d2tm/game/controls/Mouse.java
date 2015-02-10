@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.ConstructionYard;
 
 /**
@@ -11,19 +12,26 @@ import com.fundynamic.d2tm.game.structures.ConstructionYard;
 public class Mouse {
 
     private Cell hoverCell;
+    private Vector2D hoverCellMapVector;
     private ConstructionYard selectedStructure;
 
     public Mouse(Cell hoverCell) {
         this.hoverCell = hoverCell;
     }
 
-    public void setHoverCell(Cell cell) {
+    public void setHoverCell(Cell cell, Vector2D hoverCellMapVector) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
+        if (hoverCellMapVector == null) throw new IllegalArgumentException("argument hoverCellMapVector may not be null");
         this.hoverCell = cell;
+        this.hoverCellMapVector = hoverCellMapVector;
     }
 
     public Cell getHoverCell() {
         return hoverCell;
+    }
+
+    public Vector2D getHoverCellMapVector() {
+        return hoverCellMapVector;
     }
 
     /**
@@ -37,7 +45,11 @@ public class Mouse {
         //       -- structure.select(); ...
     }
 
-    public boolean hasStructureSelected(ConstructionYard structureToCheck) {
+    public boolean hasAnyStructureSelected() {
+        return this.selectedStructure != null;
+    }
+
+    public boolean hasThisStructureSelected(ConstructionYard structureToCheck) {
         if (structureToCheck == null) return false;
         if (this.selectedStructure == null) return false;
         return this.selectedStructure == structureToCheck;

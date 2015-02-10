@@ -3,9 +3,12 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
-import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import org.newdawn.slick.Input;
+
+import java.sql.Struct;
 
 public class ViewportMovementListener extends AbstractMouseListener {
 
@@ -14,12 +17,14 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Viewport viewport;
     private final Vector2D viewportDimensions;
     private final Mouse mouse;
+    private final StructuresRepository structuresRepository;
 
     // Viewport dimensions belong to Viewport actually
-    public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions, Mouse mouse) {
+    public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions, Mouse mouse, StructuresRepository structuresRepository) {
         this.viewportDimensions = viewportDimensions;
         this.viewport = viewport;
         this.mouse = mouse;
+        this.structuresRepository = structuresRepository;
     }
 
     @Override
@@ -33,6 +38,10 @@ public class ViewportMovementListener extends AbstractMouseListener {
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 mouse.selectStructure();
+            }
+            // TODO: for now place logic here, but that will probably be moved to another listener?
+            if (!mouse.hasAnyStructureSelected()) {
+                structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), StructuresRepository.CONSTRUCTION_YARD);
             }
         }
     }
@@ -66,7 +75,12 @@ public class ViewportMovementListener extends AbstractMouseListener {
         int mapPixelX = newx + viewport.getViewingVector().getX();
         int mapPixelY = newy + viewport.getViewingVector().getY();
 
-        mouse.setHoverCell(viewport.getMap().getCellByPixelsCoordinates(mapPixelX, mapPixelY));
+        Map map = viewport.getMap();
+
+        mouse.setHoverCell(
+                map.getCellByPixelsCoordinates(mapPixelX, mapPixelY),
+                map.getVector2DByPixelsCoordinates(mapPixelX, mapPixelY)
+        );
 
         if (newy <= PIXELS_NEAR_BORDER) {
             viewport.moveUp();
