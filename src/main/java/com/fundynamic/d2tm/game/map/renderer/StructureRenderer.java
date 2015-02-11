@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.map.renderer;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.structures.ConstructionYard;
+import com.fundynamic.d2tm.game.structures.Structure;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -21,17 +21,17 @@ public class StructureRenderer implements CellRenderer {
     @Override
     public void draw(Graphics graphics, int x, int y, int drawX, int drawY) {
         Cell cell = map.getCell(x, y);
-        ConstructionYard constructionYard = cell.getConstructionYard();
-        if (cell.isTopLeftOfStructure() && constructionYard != null) {
-            Image sprite = constructionYard.getSprite();
+        Structure structure = cell.getStructure();
+        if (cell.isTopLeftOfStructure() && structure != null) {
+            Image sprite = structure.getSprite();
             graphics.drawImage(sprite, drawX, drawY);
 
             // if selected, draw a rectangle
             // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
-            if (mouse.hasThisStructureSelected(constructionYard)) {
+            if (mouse.hasThisStructureSelected(structure)) {
                 graphics.setColor(Color.white);
                 graphics.setLineWidth(1.1f);
-                graphics.drawRect(drawX, drawY, constructionYard.getWidth() - 1, constructionYard.getHeight() - 1);
+                graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
             }
         }
     }

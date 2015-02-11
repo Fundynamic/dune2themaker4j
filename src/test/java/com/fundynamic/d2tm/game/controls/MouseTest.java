@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.ConstructionYard;
+import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -41,11 +41,11 @@ public class MouseTest {
     @Test
     public void canSelectStructureOnCell() {
         Cell hoverCell = makeCell();
-        ConstructionYard constructionYard = new ConstructionYard(Mockito.mock(Image.class), 64, 64);
-        hoverCell.setConstructionYard(constructionYard);
+        Structure structure = new Structure(Mockito.mock(Image.class), 64, 64);
+        hoverCell.setStructure(structure);
         Mouse mouse = new Mouse(hoverCell);
         mouse.selectStructure();
-        Assert.assertEquals(constructionYard, mouse.getSelectedStructure());
+        Assert.assertEquals(structure, mouse.getSelectedStructure());
     }
 
     private Cell makeCell() {

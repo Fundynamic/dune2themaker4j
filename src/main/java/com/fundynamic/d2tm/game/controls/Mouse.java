@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.ConstructionYard;
+import com.fundynamic.d2tm.game.structures.Structure;
 
 /**
  * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)
@@ -13,7 +13,7 @@ public class Mouse {
 
     private Cell hoverCell;
     private Vector2D hoverCellMapVector;
-    private ConstructionYard selectedStructure;
+    private Structure selectedStructure;
 
     public Mouse(Cell hoverCell) {
         this.hoverCell = hoverCell;
@@ -39,7 +39,7 @@ public class Mouse {
      * If there is no structure bound to the cell then this automatically deselects the structure.
      */
     public void selectStructure() {
-        selectedStructure = hoverCell.getConstructionYard(); // TODO: change "construction Yard" into "Structure"
+        selectedStructure = hoverCell.getStructure(); // TODO: change "construction Yard" into "Structure"
         // TODO: tell structure it is being selected? (for perhaps other listeners GUI related!?)
         // ie: hoverCell.selectStructureOnCell();
         //       -- structure.select(); ...
@@ -49,13 +49,13 @@ public class Mouse {
         return this.selectedStructure != null;
     }
 
-    public boolean hasThisStructureSelected(ConstructionYard structureToCheck) {
+    public boolean hasThisStructureSelected(Structure structureToCheck) {
         if (structureToCheck == null) return false;
         if (this.selectedStructure == null) return false;
         return this.selectedStructure == structureToCheck;
     }
 
-    public ConstructionYard getSelectedStructure() {
+    public Structure getSelectedStructure() {
         return selectedStructure;
     }
 }

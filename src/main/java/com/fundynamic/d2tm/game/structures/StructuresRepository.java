@@ -18,6 +18,7 @@ public class StructuresRepository {
     private StructureData structureData[] = new StructureData[MAX_TYPES];
 
     public StructuresRepository(Map map) throws SlickException {
+        // TODO: read this data from an external (XML/JSON/YML/INI) file
         this.map = map;
         StructureData constructionYard = new StructureData();
         structureData[CONSTRUCTION_YARD] = constructionYard;
@@ -34,16 +35,16 @@ public class StructuresRepository {
 
     public void placeStructureOnMap(Vector2D topLeft, int type) {
         StructureData data = structureData[type];
-        ConstructionYard constructionYard = new ConstructionYard(data.image, data.width, data.height);
+        Structure structure = new Structure(data.image, data.width, data.height);
 
-        map.getCell(topLeft.getX(), topLeft.getY()).setConstructionYard(constructionYard).setTopLeftOfStructure(true);
+        map.getCell(topLeft.getX(), topLeft.getY()).setStructure(structure).setTopLeftOfStructure(true);
 
         int widthInCells = data.width / 32;
         int heightInCells = data.height / 32;
 
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                map.getCell(topLeft.getX() + x, topLeft.getY() + y).setConstructionYard(constructionYard);
+                map.getCell(topLeft.getX() + x, topLeft.getY() + y).setStructure(structure);
             }
         }
 

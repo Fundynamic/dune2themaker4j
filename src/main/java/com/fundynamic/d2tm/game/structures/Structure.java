@@ -4,16 +4,16 @@ import com.fundynamic.d2tm.game.math.Random;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class ConstructionYard {
+public class Structure {
 
     private final SpriteSheet spriteSheet;
     private final int width;
     private final int height;
 
-    public ConstructionYard(Image imageOfConstructionYard, int width, int height) {
+    public Structure(Image imageOfStructure, int width, int height) {
         this.width = width;
         this.height = height;
-        this.spriteSheet = new SpriteSheet(imageOfConstructionYard, width, height);
+        this.spriteSheet = new SpriteSheet(imageOfStructure, width, height);
     }
 
     public SpriteSheet getSpriteSheet() {
