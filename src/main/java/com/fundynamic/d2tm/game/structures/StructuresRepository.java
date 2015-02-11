@@ -16,10 +16,14 @@ public class StructuresRepository {
     private final Map map;
 
     private StructureData structureData[] = new StructureData[MAX_TYPES];
+    private final int tileWidth;
+    private final int tileHeight;
 
-    public StructuresRepository(Map map) throws SlickException {
+    public StructuresRepository(Map map, int tileWidth, int tileHeight) throws SlickException {
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         this.map = map;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         StructureData constructionYard = new StructureData();
         structureData[CONSTRUCTION_YARD] = constructionYard;
         constructionYard.image = new Image("structures/2x2_constyard.png");
@@ -39,15 +43,14 @@ public class StructuresRepository {
 
         map.getCell(topLeft.getX(), topLeft.getY()).setStructure(structure).setTopLeftOfStructure(true);
 
-        int widthInCells = data.width / 32;
-        int heightInCells = data.height / 32;
+        int widthInCells = data.width / tileWidth;
+        int heightInCells = data.height / tileHeight;
 
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
                 map.getCell(topLeft.getX() + x, topLeft.getY() + y).setStructure(structure);
             }
         }
-
     }
 
     class StructureData {

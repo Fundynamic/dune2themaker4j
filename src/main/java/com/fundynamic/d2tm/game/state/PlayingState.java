@@ -56,7 +56,7 @@ public class PlayingState extends BasicGameState {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
-        this.structuresRepository = new StructuresRepository(map);
+        this.structuresRepository = new StructuresRepository(map, tileWidth, tileHeight);
 
         this.mouse = new Mouse(this.map.getCell(0, 0));
 
