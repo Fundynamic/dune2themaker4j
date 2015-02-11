@@ -9,8 +9,6 @@ import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import org.newdawn.slick.Input;
 
-import java.sql.Struct;
-
 public class ViewportMovementListener extends AbstractMouseListener {
 
     public static final int PIXELS_NEAR_BORDER = 2;
@@ -20,7 +18,6 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Mouse mouse;
     private final StructuresRepository structuresRepository;
 
-    // Viewport dimensions belong to Viewport actually
     public ViewportMovementListener(Viewport viewport, Vector2D viewportDimensions, Mouse mouse, StructuresRepository structuresRepository) {
         this.viewportDimensions = viewportDimensions;
         this.viewport = viewport;
@@ -35,12 +32,13 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
-        // TODO: this is here for now, but we might (probably...) want to put this in a separate listener!
+
+        // TODO: this is here for now, but we want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 mouse.selectStructure();
             }
-            // TODO: for now place logic here, but that will probably be moved to another listener?
+            // TODO: same goes for this... which basically is 'place structure here'
             if (!mouse.hasAnyStructureSelected()) {
                 structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
             }
