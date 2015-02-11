@@ -11,6 +11,10 @@ import org.newdawn.slick.SlickException;
 
 public class Viewport {
 
+    private static final int PIXELS_NEAR_BORDER = 2;
+
+    private final Vector2D viewportDimensions;
+
     private final Graphics graphics;
     private final Image buffer;
 
@@ -41,6 +45,7 @@ public class Viewport {
                     int tileWidth,
                     int tileHeight,
                     Mouse mouse) throws SlickException {
+        this.viewportDimensions = viewportDimensions;
         this.map = map;
         this.graphics = graphics;
 
@@ -78,27 +83,27 @@ public class Viewport {
         viewingVector = newViewingVector;
     }
 
-    public void moveLeft() {
+    private void moveLeft() {
         this.velocity = new Vector2D(-moveSpeed, this.velocity.getY());
     }
 
-    public void moveRight() {
+    private void moveRight() {
         this.velocity = new Vector2D(moveSpeed, this.velocity.getY());
     }
 
-    public void moveUp() {
+    private void moveUp() {
         this.velocity = new Vector2D(this.velocity.getX(), -moveSpeed);
     }
 
-    public void moveDown() {
+    private void moveDown() {
         this.velocity = new Vector2D(this.velocity.getX(), moveSpeed);
     }
 
-    public void stopMovingHorizontally() {
+    private void stopMovingHorizontally() {
         this.velocity = new Vector2D(0, this.velocity.getY());
     }
 
-    public void stopMovingVertically() {
+    private void stopMovingVertically() {
         this.velocity = new Vector2D(this.velocity.getX(), 0);
     }
 
@@ -118,5 +123,37 @@ public class Viewport {
 
     public Map getMap() {
         return this.map;
+    }
+
+    public void tellAboutNewMousePositions(int newx, int newy) {
+        if (newx <= PIXELS_NEAR_BORDER) {
+            moveLeft();
+        } else if (newx >= viewportDimensions.getX() - PIXELS_NEAR_BORDER) {
+            moveRight();
+        } else {
+            stopMovingHorizontally();
+        }
+
+        if (newy <= PIXELS_NEAR_BORDER) {
+            moveUp();
+        } else if (newy >= viewportDimensions.getY() - PIXELS_NEAR_BORDER) {
+            moveDown();
+        } else {
+            stopMovingVertically();
+        }
+    }
+
+    /**
+     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
+     */
+    public int getAbsoluteX(int xPositionOnScreen) {
+        return xPositionOnScreen + viewingVector.getX();
+    }
+
+    /**
+     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
+     */
+    public int getAbsoluteY(int yPositionOnScreen) {
+        return yPositionOnScreen + viewingVector.getY();
     }
 }

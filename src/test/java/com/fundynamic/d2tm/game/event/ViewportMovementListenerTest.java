@@ -61,7 +61,7 @@ public class ViewportMovementListenerTest {
         this.mouse = new Mouse(makeCell());
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
     }
 
     private Cell makeCell() {
@@ -187,7 +187,7 @@ public class ViewportMovementListenerTest {
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY()); // move down
         updateAndRender();
@@ -207,7 +207,7 @@ public class ViewportMovementListenerTest {
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
 
         listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();

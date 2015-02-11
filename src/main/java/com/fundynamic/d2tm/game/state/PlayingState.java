@@ -70,7 +70,7 @@ public class PlayingState extends BasicGameState {
             Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
-            input.addMouseListener(new ViewportMovementListener(viewport, screenResolution, mouse, structuresRepository));
+            input.addMouseListener(new ViewportMovementListener(viewport, mouse, structuresRepository));
 
             viewports.add(viewport);
         } catch (SlickException e) {

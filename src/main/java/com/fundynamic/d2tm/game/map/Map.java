@@ -134,11 +134,11 @@ public class Map {
         return shroud;
     }
 
-    public Cell getCellByPixelsCoordinates(int pixelX, int pixelY) {
+    public Cell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
         return cells[pixelX / TILE_SIZE][pixelY / TILE_SIZE];
     }
 
-    public Vector2D getVector2DByPixelsCoordinates(int pixelX, int pixelY) {
+    public Vector2D getVector2DByAbsolutePixelCoordinates(int pixelX, int pixelY) {
         return Vector2D.create(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
