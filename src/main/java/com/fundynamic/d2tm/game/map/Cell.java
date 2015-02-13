@@ -1,18 +1,40 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
 
+    private Structure structure;
+
     private Terrain terrain;
     private boolean shrouded;
+    private boolean topLeftOfStructure;
 
-    public Cell(Terrain terrain) {
+    protected Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
         this.shrouded = true;
+        this.structure = null;
+        this.topLeftOfStructure = false;
+    }
+
+    protected Cell(Cell other) {
+        if (other == null) throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
+        this.terrain = other.getTerrain();
+        this.shrouded = other.isShrouded();
+        this.topLeftOfStructure = other.isTopLeftOfStructure();
+        this.structure = other.getStructure();
+    }
+
+    public static Cell withTerrain(Terrain terrain) {
+        return new Cell(terrain);
+    }
+
+    public static Cell copy(Cell other) {
+        return new Cell(other);
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -38,4 +60,27 @@ public class Cell {
     public void setShrouded(boolean shrouded) {
         this.shrouded = shrouded;
     }
+
+    public Structure getStructure() {
+        return structure;
+    }
+
+    public Cell setStructure(Structure structure) {
+        this.structure = structure;
+        return this;
+    }
+
+    public boolean hasStructure(Structure selectedStructure) {
+        if (this.structure == null) return false;
+        return this.structure == selectedStructure;
+    }
+
+    public void setTopLeftOfStructure(boolean topLeftOfStructure) {
+        this.topLeftOfStructure = topLeftOfStructure;
+    }
+
+    public boolean isTopLeftOfStructure() {
+        return topLeftOfStructure;
+    }
+
 }

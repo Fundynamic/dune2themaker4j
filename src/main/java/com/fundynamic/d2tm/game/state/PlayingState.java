@@ -1,16 +1,15 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -31,8 +30,11 @@ public class PlayingState extends BasicGameState {
 
     private Map map;
     private Graphics graphics;
+    private Mouse mouse;
 
     private List<Viewport> viewports = new ArrayList<>();
+
+    private StructuresRepository structuresRepository;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -54,14 +56,20 @@ public class PlayingState extends BasicGameState {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
+        this.structuresRepository = new StructuresRepository(map, tileWidth, tileHeight);
+
+        this.mouse = new Mouse();
+
+        this.structuresRepository.placeStructureOnMap(Vector2D.create(5, 5), StructuresRepository.REFINERY);
 
         try {
             float moveSpeed = 16.0F;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, Vector2D.zero(), graphics, this.map, moveSpeed, tileWidth, tileHeight);
+            Vector2D viewingVector = Vector2D.create(40, 40);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
-            input.addMouseListener(new ViewportMovementListener(viewport, screenResolution));
+            input.addMouseListener(new ViewportMovementListener(viewport, mouse, structuresRepository));
 
             viewports.add(viewport);
         } catch (SlickException e) {

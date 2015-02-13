@@ -1,19 +1,23 @@
 package com.fundynamic.d2tm.game.event;
 
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.math.Random;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
+import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
 
-    public static final int PIXELS_NEAR_BORDER = 2;
-
     private final Viewport viewport;
-    private final Vector2D screenResolution;
+    private final Mouse mouse;
+    private final StructuresRepository structuresRepository;
 
-    public ViewportMovementListener(Viewport viewport, Vector2D screenResolution) {
-        this.screenResolution = screenResolution;
+    public ViewportMovementListener(Viewport viewport, Mouse mouse, StructuresRepository structuresRepository) {
         this.viewport = viewport;
+        this.mouse = mouse;
+        this.structuresRepository = structuresRepository;
     }
 
     @Override
@@ -24,6 +28,16 @@ public class ViewportMovementListener extends AbstractMouseListener {
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
 
+        // TODO: this is here for now, but we want to put this in a separate listener!
+        if (clickCount == 1) {
+            if (button == Input.MOUSE_LEFT_BUTTON) {
+                mouse.selectStructure();
+            }
+            // TODO: same goes for this... which basically is 'place structure here'
+            if (!mouse.hasAnyStructureSelected()) {
+                structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
+            }
+        }
     }
 
     @Override
@@ -38,21 +52,14 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        if (newx <= PIXELS_NEAR_BORDER) {
-            viewport.moveLeft();
-        } else if (newx >= screenResolution.getX() - PIXELS_NEAR_BORDER) {
-            viewport.moveRight();
-        } else {
-            viewport.stopMovingHorizontally();
-        }
+        viewport.tellAboutNewMousePositions(newx, newy);
 
-        if (newy <= PIXELS_NEAR_BORDER) {
-            viewport.moveUp();
-        } else if (newy >= screenResolution.getY() - PIXELS_NEAR_BORDER) {
-            viewport.moveDown();
-        } else {
-            viewport.stopMovingVertically();
-        }
+        int absoluteX = viewport.getAbsoluteX(newx);
+        int absoluteY = viewport.getAbsoluteY(newy);
+
+        Map map = viewport.getMap();
+
+        mouse.setHoverCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
     }
 
     @Override

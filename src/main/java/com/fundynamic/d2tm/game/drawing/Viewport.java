@@ -1,16 +1,19 @@
 package com.fundynamic.d2tm.game.drawing;
 
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
-import com.fundynamic.d2tm.game.map.renderer.MapRenderer;
-import com.fundynamic.d2tm.game.map.renderer.ShroudRenderer;
-import com.fundynamic.d2tm.game.map.renderer.TerrainCellRenderer;
+import com.fundynamic.d2tm.game.map.renderer.*;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Viewport {
+
+    private static final int PIXELS_NEAR_BORDER = 2;
+
+    private final Vector2D viewportDimensions;
 
     private final Graphics graphics;
     private final Image buffer;
@@ -19,15 +22,19 @@ public class Viewport {
 
     private final Perimeter viewingVectorPerimeter;
 
+    private final StructureRenderer structureRenderer;
+    private final TerrainCellRenderer terrainCellRenderer;
+    private final ShroudRenderer shroudRenderer;
+    private final MouseCellInteractionRenderer mouseCellInteractionRenderer;
+
     private Vector2D velocity;
 
     private float moveSpeed;
 
     private Vector2D viewingVector;
     private MapRenderer mapRenderer;
-    private final TerrainCellRenderer terrainCellRenderer;
-    private final ShroudRenderer shroudRenderer;
 
+    private Map map;
 
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
@@ -36,7 +43,10 @@ public class Viewport {
                     Map map,
                     float moveSpeed,
                     int tileWidth,
-                    int tileHeight) throws SlickException {
+                    int tileHeight,
+                    Mouse mouse) throws SlickException {
+        this.viewportDimensions = viewportDimensions;
+        this.map = map;
         this.graphics = graphics;
 
         this.drawingVector = drawingVector;
@@ -48,9 +58,12 @@ public class Viewport {
 
         this.moveSpeed = moveSpeed;
 
-        this.mapRenderer = new MapRenderer(tileHeight, tileWidth, viewportDimensions);
-        this.terrainCellRenderer = new TerrainCellRenderer(map);
+        this.mapRenderer = new MapRenderer(map, tileHeight, tileWidth, viewportDimensions);
+
+        this.terrainCellRenderer = new TerrainCellRenderer();
         this.shroudRenderer = new ShroudRenderer(map);
+        this.structureRenderer = new StructureRenderer(mouse);
+        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(mouse);
     }
 
     public void render() throws SlickException {
@@ -58,7 +71,9 @@ public class Viewport {
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
         mapRenderer.render(this.buffer, viewingVector, terrainCellRenderer);
-        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
+        mapRenderer.render(this.buffer, viewingVector, structureRenderer);
+        mapRenderer.render(this.buffer, viewingVector, mouseCellInteractionRenderer);
+//        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);
     }
@@ -68,27 +83,27 @@ public class Viewport {
         viewingVector = newViewingVector;
     }
 
-    public void moveLeft() {
+    private void moveLeft() {
         this.velocity = new Vector2D(-moveSpeed, this.velocity.getY());
     }
 
-    public void moveRight() {
+    private void moveRight() {
         this.velocity = new Vector2D(moveSpeed, this.velocity.getY());
     }
 
-    public void moveUp() {
+    private void moveUp() {
         this.velocity = new Vector2D(this.velocity.getX(), -moveSpeed);
     }
 
-    public void moveDown() {
+    private void moveDown() {
         this.velocity = new Vector2D(this.velocity.getX(), moveSpeed);
     }
 
-    public void stopMovingHorizontally() {
+    private void stopMovingHorizontally() {
         this.velocity = new Vector2D(0, this.velocity.getY());
     }
 
-    public void stopMovingVertically() {
+    private void stopMovingVertically() {
         this.velocity = new Vector2D(this.velocity.getX(), 0);
     }
 
@@ -106,4 +121,39 @@ public class Viewport {
         return new Image(screenResolution.getX(), screenResolution.getY());
     }
 
+    public Map getMap() {
+        return this.map;
+    }
+
+    public void tellAboutNewMousePositions(int newx, int newy) {
+        if (newx <= PIXELS_NEAR_BORDER) {
+            moveLeft();
+        } else if (newx >= viewportDimensions.getX() - PIXELS_NEAR_BORDER) {
+            moveRight();
+        } else {
+            stopMovingHorizontally();
+        }
+
+        if (newy <= PIXELS_NEAR_BORDER) {
+            moveUp();
+        } else if (newy >= viewportDimensions.getY() - PIXELS_NEAR_BORDER) {
+            moveDown();
+        } else {
+            stopMovingVertically();
+        }
+    }
+
+    /**
+     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
+     */
+    public int getAbsoluteX(int xPositionOnScreen) {
+        return xPositionOnScreen + viewingVector.getX();
+    }
+
+    /**
+     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
+     */
+    public int getAbsoluteY(int yPositionOnScreen) {
+        return yPositionOnScreen + viewingVector.getY();
+    }
 }
