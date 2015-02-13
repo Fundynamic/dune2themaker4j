@@ -59,10 +59,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
         Map map = viewport.getMap();
 
-        mouse.setHoverCell(
-                map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY),
-                map.getVector2DByAbsolutePixelCoordinates(absoluteX, absoluteY)
-        );
+        mouse.setHoverCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
     }
 
     @Override

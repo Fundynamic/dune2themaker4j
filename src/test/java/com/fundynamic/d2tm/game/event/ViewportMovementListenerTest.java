@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
@@ -23,6 +24,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
+import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,14 +59,10 @@ public class ViewportMovementListenerTest {
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
         map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
-        this.mouse = new Mouse(makeCell());
+        this.mouse = new Mouse();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
         listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
-    }
-
-    private Cell makeCell() {
-        return new Cell(Mockito.mock(Terrain.class));
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
@@ -218,10 +216,10 @@ public class ViewportMovementListenerTest {
     @Test
     public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
         int NOT_APPLICABLE = -1;
-        Cell cell = makeCell();
+        MapCell cell = makeCell();
         Structure structure = new Structure(Mockito.mock(Image.class), 64, 64);
         cell.setStructure(structure);
-        mouse.setHoverCell(cell, Vector2D.zero());
+        mouse.setHoverCell(cell);
 
         listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 

@@ -25,7 +25,7 @@ public class EmptyTerrain implements Terrain {
         }
     }
 
-    private EmptyTerrain(Image image) {
+    public EmptyTerrain(Image image) {
         this.image = image;
     }
 

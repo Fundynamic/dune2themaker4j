@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 
@@ -11,27 +11,26 @@ import com.fundynamic.d2tm.game.structures.Structure;
  */
 public class Mouse {
 
-    private Cell hoverCell;
-    private Vector2D hoverCellMapVector;
+    private MapCell hoverCell;
     private Structure selectedStructure;
 
-    public Mouse(Cell hoverCell) {
+    public Mouse(){}
+
+    public Mouse(MapCell hoverCell) {
         this.hoverCell = hoverCell;
     }
 
-    public void setHoverCell(Cell cell, Vector2D hoverCellMapVector) {
+    public void setHoverCell(MapCell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
-        if (hoverCellMapVector == null) throw new IllegalArgumentException("argument hoverCellMapVector may not be null");
         this.hoverCell = cell;
-        this.hoverCellMapVector = hoverCellMapVector;
     }
 
-    public Cell getHoverCell() {
+    public MapCell getHoverCell() {
         return hoverCell;
     }
 
     public Vector2D getHoverCellMapVector() {
-        return hoverCellMapVector;
+        return hoverCell.getCoordinatesAsVector2D();
     }
 
     /**

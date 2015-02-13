@@ -21,6 +21,14 @@ public class Cell {
         this.topLeftOfStructure = false;
     }
 
+    public Cell(Cell other) {
+        if (other == null) throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
+        this.terrain = other.getTerrain();
+        this.shrouded = other.isShrouded();
+        this.topLeftOfStructure = other.isTopLeftOfStructure();
+        this.structure = other.getStructure();
+    }
+
     public void changeTerrain(Terrain terrain) {
         this.terrain = terrain;
     }

@@ -1,8 +1,7 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.structures.Structure;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -10,19 +9,16 @@ import org.newdawn.slick.Image;
 
 public class StructureRenderer implements CellRenderer {
 
-    private final Map map;
     private final Mouse mouse;
 
-    public StructureRenderer(Map map, Mouse mouse) {
-        this.map = map;
+    public StructureRenderer(Mouse mouse) {
         this.mouse = mouse;
     }
 
     @Override
-    public void draw(Graphics graphics, int x, int y, int drawX, int drawY) {
-        Cell cell = map.getCell(x, y);
-        Structure structure = cell.getStructure();
-        if (cell.isTopLeftOfStructure() && structure != null) {
+    public void draw(Graphics graphics, MapCell mapCell, int drawX, int drawY) {
+        Structure structure = mapCell.getStructure();
+        if (mapCell.isTopLeftOfStructure() && structure != null) {
             Image sprite = structure.getSprite();
             graphics.drawImage(sprite, drawX, drawY);
 

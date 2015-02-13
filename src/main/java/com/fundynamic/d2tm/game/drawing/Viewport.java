@@ -58,12 +58,12 @@ public class Viewport {
 
         this.moveSpeed = moveSpeed;
 
-        this.mapRenderer = new MapRenderer(tileHeight, tileWidth, viewportDimensions);
+        this.mapRenderer = new MapRenderer(map, tileHeight, tileWidth, viewportDimensions);
 
-        this.terrainCellRenderer = new TerrainCellRenderer(map);
+        this.terrainCellRenderer = new TerrainCellRenderer();
         this.shroudRenderer = new ShroudRenderer(map);
-        this.structureRenderer = new StructureRenderer(map, mouse);
-        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(map, mouse);
+        this.structureRenderer = new StructureRenderer(mouse);
+        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(mouse);
     }
 
     public void render() throws SlickException {
