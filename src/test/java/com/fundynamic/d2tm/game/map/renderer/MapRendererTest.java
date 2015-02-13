@@ -30,7 +30,7 @@ public class MapRendererTest {
 
         // Ugly leaky abstraction here!
         CellFactory.stubCellForMap(map);
-        
+
         MapRenderer mapRenderer = new MapRenderer(map, TILE_HEIGHT, TILE_WIDTH, new Vector2D(screenWidth, screenHeight));
 
         Vector2D viewingVector = Vector2D.zero();
