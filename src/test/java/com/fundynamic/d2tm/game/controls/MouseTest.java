@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.map.MapCell;
+import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class MouseTest {
     @Test
     public void canSelectStructureOnCell() {
         MapCell hoverCell = makeCell();
-        Structure structure = new Structure(Mockito.mock(Image.class), 64, 64);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
         hoverCell.setStructure(structure);
         Mouse mouse = new Mouse(hoverCell);
         mouse.selectStructure();

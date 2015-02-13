@@ -4,7 +4,7 @@ import com.fundynamic.d2tm.game.map.MapCell;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class TerrainCellRenderer implements CellRenderer {
+public class MapCellTerrainRenderer implements Renderer<MapCell> {
 
     @Override
     public void draw(Graphics graphics, MapCell mapCell, int drawX, int drawY) {

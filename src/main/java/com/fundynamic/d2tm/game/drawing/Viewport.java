@@ -23,16 +23,18 @@ public class Viewport {
     private final Perimeter viewingVectorPerimeter;
 
     private final StructureRenderer structureRenderer;
-    private final TerrainCellRenderer terrainCellRenderer;
-    private final ShroudRenderer shroudRenderer;
-    private final MouseCellInteractionRenderer mouseCellInteractionRenderer;
+    private final StructureViewportRenderer structureViewportRenderer;
+
+    private final MapCellTerrainRenderer mapCellTerrainRenderer;
+    private final MapCellShroudRenderer mapCellShroudRenderer;
+    private final MapCellMouseInteractionRenderer mapCellMouseInteractionRenderer;
+    private final MapCellViewportRenderer mapCellViewportRenderer;
 
     private Vector2D velocity;
 
     private float moveSpeed;
 
     private Vector2D viewingVector;
-    private MapRenderer mapRenderer;
 
     private Map map;
 
@@ -58,21 +60,22 @@ public class Viewport {
 
         this.moveSpeed = moveSpeed;
 
-        this.mapRenderer = new MapRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.mapCellViewportRenderer = new MapCellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.structureViewportRenderer = new StructureViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
 
-        this.terrainCellRenderer = new TerrainCellRenderer();
-        this.shroudRenderer = new ShroudRenderer(map);
+        this.mapCellTerrainRenderer = new MapCellTerrainRenderer();
+        this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
         this.structureRenderer = new StructureRenderer(mouse);
-        this.mouseCellInteractionRenderer = new MouseCellInteractionRenderer(mouse);
+        this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
     }
 
     public void render() throws SlickException {
         final Graphics bufferGraphics = this.buffer.getGraphics();
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
-        mapRenderer.render(this.buffer, viewingVector, terrainCellRenderer);
-        mapRenderer.render(this.buffer, viewingVector, structureRenderer);
-        mapRenderer.render(this.buffer, viewingVector, mouseCellInteractionRenderer);
+        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
+        structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
+        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
 //        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);

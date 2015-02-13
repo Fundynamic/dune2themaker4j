@@ -138,6 +138,7 @@ public class Map {
         return new MapCell(this, pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
+    // We also have a MapCell, they both are the same!? (somewhat?)
     private class SquareCell {
         private final int x, y;
 

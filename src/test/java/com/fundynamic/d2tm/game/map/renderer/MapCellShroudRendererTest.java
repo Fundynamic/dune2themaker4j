@@ -3,10 +3,10 @@ package com.fundynamic.d2tm.game.map.renderer;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import static com.fundynamic.d2tm.game.map.renderer.ShroudFacingDeterminer.getFacing;
+import static com.fundynamic.d2tm.game.map.renderer.MapCellShroudRenderer.getFacing;
 import static com.fundynamic.d2tm.graphics.ShroudFacing.*;
 
-public class ShroudFacingDeterminerTest {
+public class MapCellShroudRendererTest {
 
     @Test
     public void MIDDLE() throws Exception {
@@ -87,5 +87,4 @@ public class ShroudFacingDeterminerTest {
     public void returnsNullWhenNoShroudAround() throws Exception {
         Assert.assertNull(getFacing(false, false, false, false));
     }
-
 }

@@ -39,7 +39,7 @@ public class StructuresRepository {
 
     public void placeStructureOnMap(Vector2D topLeft, int type) {
         StructureData data = structureData[type];
-        Structure structure = new Structure(data.image, data.width, data.height);
+        Structure structure = new Structure(topLeft, data.image, data.width, data.height);
 
         map.getCell(topLeft.getX(), topLeft.getY()).setStructure(structure).setTopLeftOfStructure(true);
 

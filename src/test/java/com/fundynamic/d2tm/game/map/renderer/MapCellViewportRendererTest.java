@@ -15,7 +15,7 @@ import org.newdawn.slick.SlickException;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MapRendererTest {
+public class MapCellViewportRendererTest {
 
     private static final int TILE_WIDTH = 32;
     private static final int TILE_HEIGHT = 32;
@@ -31,18 +31,18 @@ public class MapRendererTest {
         // Ugly leaky abstraction here!
         CellFactory.stubCellForMap(map);
 
-        MapRenderer mapRenderer = new MapRenderer(map, TILE_HEIGHT, TILE_WIDTH, new Vector2D(screenWidth, screenHeight));
+        MapCellViewportRenderer mapCellViewportRenderer = new MapCellViewportRenderer(map, TILE_HEIGHT, TILE_WIDTH, new Vector2D(screenWidth, screenHeight));
 
         Vector2D viewingVector = Vector2D.zero();
 
-        CellRenderer cellRenderer = mock(CellRenderer.class);
-        mapRenderer.render(mock(Image.class), viewingVector, cellRenderer);
+        Renderer renderer = mock(Renderer.class);
+        mapCellViewportRenderer.render(mock(Image.class), viewingVector, renderer);
 
         int cellsToDrawHorizontally = (screenWidth / TILE_WIDTH) + 2; // 2 extra for 'rounding' purposes at right
         int cellsToDrawVertically = (screenHeight / TILE_HEIGHT) + 2; // 2 extra for 'rounding' purposes at bottom
         int numberOfCellsToDraw = cellsToDrawHorizontally * cellsToDrawVertically;
 
-        verify(cellRenderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), any(MapCell.class), anyInt(), anyInt());
+        verify(renderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), any(MapCell.class), anyInt(), anyInt());
     }
 
 }

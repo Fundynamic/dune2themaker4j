@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
  * Responsible for selecting cells in view and calling the renderer for those drawing positions.
  *
  */
-public class MapRenderer {
+public class MapCellViewportRenderer implements ViewportRenderer<MapCell> {
 
     private final int tileHeight;
     private final int tileWidth;
@@ -18,7 +18,7 @@ public class MapRenderer {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public MapRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public MapCellViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
@@ -26,7 +26,7 @@ public class MapRenderer {
         cellsThatFitVertically = (windowDimensions.getY() / tileHeight) + 1;
     }
 
-    public void render(Image imageToDrawOn, Vector2D viewingVector, CellRenderer cellRenderer) throws SlickException {
+    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<MapCell> renderer) throws SlickException {
         int startCellX = (viewingVector.getX() / tileWidth);
         int startCellY = (viewingVector.getY() / tileHeight);
 
@@ -38,7 +38,7 @@ public class MapRenderer {
                 int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
                 int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
 
-                cellRenderer.draw(imageToDrawOn.getGraphics(), new MapCell(map, x, y), drawX, drawY);
+                renderer.draw(imageToDrawOn.getGraphics(), new MapCell(map, x, y), drawX, drawY);
             }
         }
     }
