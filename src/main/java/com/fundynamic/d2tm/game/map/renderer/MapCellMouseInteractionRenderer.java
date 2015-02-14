@@ -17,11 +17,7 @@ public class MapCellMouseInteractionRenderer implements Renderer<MapCell> {
     @Override
     public void draw(Graphics graphics, MapCell mapCell, int drawX, int drawY) {
         if (mapCell.isAtSameLocationAs(mouse.getHoverCell())) {
-            if (mapCell.hasStructure(mouse.getSelectedStructure())) {
-                graphics.setColor(Color.red);
-            } else {
-                graphics.setColor(Color.white);
-            }
+            graphics.setColor(Color.white);
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, 31, 31);
         }
