@@ -12,17 +12,15 @@ public class StructureRenderer implements Renderer<Structure> {
 
     @Override
     public void draw(Graphics graphics, Structure structure, int drawX, int drawY) {
-        if (structure != null) {
-            Image sprite = structure.getSprite();
-            graphics.drawImage(sprite, drawX, drawY);
+        Image sprite = structure.getSprite();
+        graphics.drawImage(sprite, drawX, drawY);
 
-            // if selected, draw a rectangle
-            // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
-            if (structure.isSelected()) {
-                graphics.setColor(Color.white);
-                graphics.setLineWidth(1.1f);
-                graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
-            }
+        // if selected, draw a rectangle
+        // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
+        if (structure.isSelected()) {
+            graphics.setColor(Color.white);
+            graphics.setLineWidth(1.1f);
+            graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
         }
     }
 
