@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.newdawn.slick.Image;
@@ -15,49 +16,49 @@ import static org.junit.Assert.assertNull;
 
 public class MouseTest {
 
+    private MapCell defaultHoverCell;
+    private Mouse mouse;
+
+    @Before
+    public void setUp() {
+        defaultHoverCell = makeCell();
+        mouse = new Mouse(defaultHoverCell);
+    }
+
     @Test
     public void returnsCellItHoversOver() {
-        MapCell hoverCell = makeCell();
-        Mouse mouse = new Mouse(hoverCell);
-        Assert.assertSame(hoverCell, mouse.getHoverCell());
+        Assert.assertSame(defaultHoverCell, mouse.getHoverCell());
     }
 
     @Test
     public void updatesHoverCell() {
-        Mouse mouse = new Mouse(makeCell());
-        MapCell hoverCell = makeCell();
-        mouse.setHoverCell(hoverCell);
-        Assert.assertSame(hoverCell, mouse.getHoverCell());
+        MapCell newHoverCell = makeCell();
+        mouse.setHoverCell(newHoverCell);
+        Assert.assertSame(newHoverCell, mouse.getHoverCell());
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void throwsIllegalArgumentWhenHoverCellIsNull() {
-        Mouse mouse = new Mouse(makeCell());
         mouse.setHoverCell(null);
     }
 
     @Test
     public void selectStructureOnCell() {
-        MapCell hoverCell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        hoverCell.setStructure(structure);
-        Mouse mouse = new Mouse(hoverCell);
+        defaultHoverCell.setStructure(structure);
         mouse.selectStructure();
         assertEquals(structure, mouse.getLastSelectedStructure());
     }
 
     @Test
     public void lastSelectedStructureIsNullWhenNoStructureIsSelected() {
-        assertNull(new Mouse(makeCell()).getLastSelectedStructure());
+        assertNull(mouse.getLastSelectedStructure());
     }
 
     @Test
     public void selectStructureOnCellWithoutStructureWillNotInfluenceLastSelectedStructure() {
-        MapCell hoverCell = makeCell();
-        Mouse mouse = new Mouse(hoverCell);
-
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        hoverCell.setStructure(structure);
+        defaultHoverCell.setStructure(structure);
         mouse.selectStructure();
 
         MapCell hoverCellWithoutStructure = makeCell();
@@ -68,12 +69,9 @@ public class MouseTest {
     }
 
     @Test
-    public void deselectStructure() {
-        MapCell hoverCell = makeCell();
-        Mouse mouse = new Mouse(hoverCell);
-
+    public void deselectStructureDeselectsPreviouslySelectedStructure() {
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        hoverCell.setStructure(structure);
+        defaultHoverCell.setStructure(structure);
         mouse.selectStructure();
         mouse.deselectStructure();
 
@@ -81,4 +79,16 @@ public class MouseTest {
         assertFalse(structure.isSelected());
     }
 
+    @Test
+    public void deselectStructureIgnoresNullHoverCell() {
+        mouse = new Mouse(null);
+        mouse.deselectStructure();
+        assertNull(mouse.getLastSelectedStructure());
+    }
+
+    @Test
+    public void deselectStructureIgnoresWhenNoStructureWasSelectedInTheFirstPlace() {
+        mouse.deselectStructure();
+        assertNull(mouse.getLastSelectedStructure());
+    }
 }
