@@ -25,6 +25,9 @@ import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
+import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -223,7 +226,21 @@ public class ViewportMovementListenerTest {
 
         listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 
-        Assert.assertSame(structure, mouse.getSelectedStructure());
+        assertSame(structure, mouse.getLastSelectedStructure());
+    }
+
+    @Test
+    public void rightMouseButtonDeSelectsStructure() {
+        int NOT_APPLICABLE = -1;
+        MapCell cell = makeCell();
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
+        cell.setStructure(structure);
+        mouse.setHoverCell(cell);
+        mouse.selectStructure();
+
+        listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
+
+        assertEquals(null, mouse.getLastSelectedStructure());
     }
 
     private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {

@@ -65,7 +65,7 @@ public class Viewport {
 
         this.mapCellTerrainRenderer = new MapCellTerrainRenderer();
         this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
-        this.structureRenderer = new StructureRenderer(mouse);
+        this.structureRenderer = new StructureRenderer();
         this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
     }
 

@@ -31,11 +31,18 @@ public class ViewportMovementListener extends AbstractMouseListener {
         // TODO: this is here for now, but we want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
-                mouse.selectStructure();
+                if (mouse.hoversOverSelectableStructure()) {
+                    mouse.deselectStructure(); // deselect any previously selected structure
+                    mouse.selectStructure();
+                }
+
+                // TODO: same goes for this... which basically is 'place structure here'
+                if (!mouse.hasAnyStructureSelected()) {
+                    structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
+                }
             }
-            // TODO: same goes for this... which basically is 'place structure here'
-            if (!mouse.hasAnyStructureSelected()) {
-                structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
+            if (button == Input.MOUSE_RIGHT_BUTTON) {
+                mouse.deselectStructure();
             }
         }
     }

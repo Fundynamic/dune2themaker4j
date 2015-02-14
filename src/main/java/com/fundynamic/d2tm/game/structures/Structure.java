@@ -11,6 +11,7 @@ public class Structure {
     private final SpriteSheet spriteSheet;
     private final int width;
     private final int height;
+    private boolean selected;
 
     public Structure(Vector2D mapCoordinates, Image imageOfStructure, int width, int height) {
         this(mapCoordinates, new SpriteSheet(imageOfStructure, width, height), width, height);
@@ -21,6 +22,7 @@ public class Structure {
         this.height = height;
         this.spriteSheet = spriteSheet;
         this.mapCoordinates = mapCoordinates;
+        this.selected = false;
     }
 
     public SpriteSheet getSpriteSheet() {
@@ -42,5 +44,17 @@ public class Structure {
 
     public Vector2D getMapCoordinates() {
         return mapCoordinates;
+    }
+
+    public void select() {
+        selected = true;
+    }
+
+    public void deselect() {
+        selected = false;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 }

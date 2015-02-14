@@ -12,7 +12,7 @@ import com.fundynamic.d2tm.game.structures.Structure;
 public class Mouse {
 
     private MapCell hoverCell;
-    private Structure selectedStructure;
+    private Structure lastSelectedStructure;
 
     public Mouse(){}
 
@@ -38,20 +38,30 @@ public class Mouse {
      * If there is no structure bound to the cell then this automatically deselects the structure.
      */
     public void selectStructure() {
-        selectedStructure = hoverCell.getStructure();
+        if (hoverCell.getStructure() == null) return;
+        lastSelectedStructure = hoverCell.getStructure();
+        lastSelectedStructure.select();
     }
 
     public boolean hasAnyStructureSelected() {
-        return this.selectedStructure != null;
+        return this.lastSelectedStructure != null;
     }
 
-    public boolean hasThisStructureSelected(Structure structureToCheck) {
-        if (structureToCheck == null) return false;
-        if (this.selectedStructure == null) return false;
-        return this.selectedStructure == structureToCheck;
+    public Structure getLastSelectedStructure() {
+        return lastSelectedStructure;
     }
 
-    public Structure getSelectedStructure() {
-        return selectedStructure;
+    public void deselectStructure() {
+        if (lastSelectedStructure != null) {
+            lastSelectedStructure.deselect();
+        }
+        lastSelectedStructure = null;
+    }
+
+    public boolean hoversOverSelectableStructure() {
+        if (hoverCell == null) return false;
+        if (hoverCell.getStructure() == null) return false;
+        return !hoverCell.getStructure().isSelected();
+
     }
 }
