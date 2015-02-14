@@ -1,12 +1,16 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
 
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class StructureViewportRenderer implements ViewportRenderer<Structure> {
 
@@ -32,15 +36,56 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
 
+        Set<StructureToDraw> structuresToDraw = new HashSet<>();
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
-                int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
-                int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
+                Cell cell = map.getCell(x, y);
+                if (cell.getStructure() == null) continue;
 
-                if (map.getCell(x, y).isTopLeftOfStructure()) {
-                    renderer.draw(imageToDrawOn.getGraphics(), map.getCell(x, y).getStructure(), drawX, drawY);
-                }
+                Vector2D mapCoordinates = cell.getStructure().getMapCoordinates();
+
+                int drawX = ((mapCoordinates.getX() - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
+                int drawY = ((mapCoordinates.getY() - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
+
+                structuresToDraw.add(new StructureToDraw(cell.getStructure(), drawX, drawY));
             }
+        }
+
+        for (StructureToDraw structureToDraw : structuresToDraw) {
+            renderer.draw(imageToDrawOn.getGraphics(), structureToDraw.structure, structureToDraw.drawX, structureToDraw.drawY);
+        }
+    }
+
+    private class StructureToDraw {
+        private Structure structure;
+        private int drawX, drawY;
+
+        public StructureToDraw(Structure structure, int drawX, int drawY) {
+            this.structure = structure;
+            this.drawX = drawX;
+            this.drawY = drawY;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            StructureToDraw that = (StructureToDraw) o;
+
+            if (drawX != that.drawX) return false;
+            if (drawY != that.drawY) return false;
+            if (structure != null ? !structure.equals(that.structure) : that.structure != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = structure != null ? structure.hashCode() : 0;
+            result = 31 * result + drawX;
+            result = 31 * result + drawY;
+            return result;
         }
     }
 
