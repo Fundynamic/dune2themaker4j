@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
-import org.newdawn.slick.geom.Vector2f;
+import com.fundynamic.d2tm.game.math.Vector2D;
 
 public class Perimeter {
 
@@ -16,9 +16,10 @@ public class Perimeter {
         this.maxY = maxY;
     }
 
-    public Vector2f makeSureVectorStaysWithin(Vector2f vec) {
+    // TODO: Write test for this?
+    public Vector2D makeSureVectorStaysWithin(Vector2D vec) {
         float x = Math.min(Math.max(vec.getX(), minX), maxX);
         float y = Math.min(Math.max(vec.getY(), minY), maxY);
-        return new Vector2f(x, y);
+        return Vector2D.create(x, y);
     }
 }

@@ -41,14 +41,14 @@ public class StructuresRepository {
         StructureData data = structureData[type];
         Structure structure = new Structure(topLeft, data.image, data.width, data.height);
 
-        map.getCell(topLeft.getX(), topLeft.getY()).setStructure(structure).setTopLeftOfStructure(true);
+        map.getCell(topLeft.getXAsInt(), topLeft.getYAsInt()).setStructure(structure).setTopLeftOfStructure(true);
 
         int widthInCells = data.width / tileWidth;
         int heightInCells = data.height / tileHeight;
 
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                map.getCell(topLeft.getX() + x, topLeft.getY() + y).setStructure(structure);
+                map.getCell(topLeft.getXAsInt() + x, topLeft.getYAsInt() + y).setStructure(structure);
             }
         }
     }

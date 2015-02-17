@@ -69,7 +69,7 @@ public class PlayingState extends BasicGameState {
         try {
             float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Vector2f viewingVector = new Vector2f(40, 40);
+            Vector2D viewingVector = Vector2D.create(40, 40);
             Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
@@ -95,4 +95,6 @@ public class PlayingState extends BasicGameState {
             viewport.update(deltaMs);
         }
     }
+
+    // The amount of time thats passed in millisecond since last update
 }

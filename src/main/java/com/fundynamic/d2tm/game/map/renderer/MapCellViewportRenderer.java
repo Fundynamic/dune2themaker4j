@@ -23,21 +23,21 @@ public class MapCellViewportRenderer implements ViewportRenderer<MapCell> {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
-        cellsThatFitHorizontally = (windowDimensions.getX() / tileWidth) + 1;
-        cellsThatFitVertically = (windowDimensions.getY() / tileHeight) + 1;
+        cellsThatFitHorizontally = (windowDimensions.getXAsInt() / tileWidth) + 1;
+        cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
     }
 
-    public void render(Image imageToDrawOn, Vector2f viewingVector, Renderer<MapCell> renderer) throws SlickException {
-        int startCellX = (int)(viewingVector.getX() / tileWidth);
-        int startCellY = (int)(viewingVector.getY() / tileHeight);
+    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<MapCell> renderer) throws SlickException {
+        int startCellX = viewingVector.getXAsInt() / tileWidth;
+        int startCellY = viewingVector.getYAsInt() / tileHeight;
 
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
 
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
-                int drawX = ((x - startCellX) * tileWidth) - ((int)viewingVector.getX() % tileWidth);
-                int drawY = ((y - startCellY) * tileHeight) - ((int)viewingVector.getY() % tileHeight);
+                int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);
+                int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getYAsInt() % tileHeight);
 
                 renderer.draw(imageToDrawOn.getGraphics(), new MapCell(map, x, y), drawX, drawY);
             }

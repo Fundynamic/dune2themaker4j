@@ -31,16 +31,16 @@ public class Viewport {
     private final MapCellMouseInteractionRenderer mapCellMouseInteractionRenderer;
     private final MapCellViewportRenderer mapCellViewportRenderer;
 
-    private Vector2f velocity;
+    private Vector2D velocity;
     private float moveSpeed;
 
-    private Vector2f viewingVector;
+    private Vector2D viewingVector;
 
     private Map map;
 
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
-                    Vector2f viewingVector,
+                    Vector2D viewingVector,
                     Graphics graphics,
                     Map map,
                     float moveSpeed,
@@ -56,7 +56,7 @@ public class Viewport {
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
-        this.velocity = new Vector2f(0, 0);
+        this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
 
@@ -82,32 +82,32 @@ public class Viewport {
     }
 
     public void update(float delta) {
-        Vector2f translation = velocity.copy().scale(delta);
-        viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.copy().add(translation));
+        Vector2D translation = velocity.scale(delta);
+        viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.add(translation));
     }
 
     private void moveLeft() {
-        this.velocity = new Vector2f(-moveSpeed, this.velocity.getY());
+        this.velocity = Vector2D.create(-moveSpeed, this.velocity.getY());
     }
 
     private void moveRight() {
-        this.velocity = new Vector2f(moveSpeed, this.velocity.getY());
+        this.velocity = Vector2D.create(moveSpeed, this.velocity.getY());
     }
 
     private void moveUp() {
-        this.velocity = new Vector2f(this.velocity.getX(), -moveSpeed);
+        this.velocity = Vector2D.create(this.velocity.getX(), -moveSpeed);
     }
 
     private void moveDown() {
-        this.velocity = new Vector2f(this.velocity.getX(), moveSpeed);
+        this.velocity = Vector2D.create(this.velocity.getX(), moveSpeed);
     }
 
     private void stopMovingHorizontally() {
-        this.velocity = new Vector2f(0, this.velocity.getY());
+        this.velocity = Vector2D.create(0, this.velocity.getY());
     }
 
     private void stopMovingVertically() {
-        this.velocity = new Vector2f(this.velocity.getX(), 0);
+        this.velocity = Vector2D.create(this.velocity.getX(), 0);
     }
 
     private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
@@ -116,12 +116,12 @@ public class Viewport {
 
     // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
     // least not the use them in the non-test code.
-    public Vector2f getViewingVector() {
+    public Vector2D getViewingVector() {
         return viewingVector;
     }
 
     protected Image constructImage(Vector2D screenResolution) throws SlickException {
-        return new Image(screenResolution.getX(), screenResolution.getY());
+        return new Image(screenResolution.getXAsInt(), screenResolution.getYAsInt());
     }
 
     public Map getMap() {
