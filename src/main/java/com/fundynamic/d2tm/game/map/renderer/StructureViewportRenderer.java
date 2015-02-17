@@ -3,11 +3,11 @@ package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +29,9 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
     }
 
     @Override
-    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<Structure> renderer) throws SlickException {
-        int startCellX = (viewingVector.getX() / tileWidth);
-        int startCellY = (viewingVector.getY() / tileHeight);
+    public void render(Image imageToDrawOn, Vector2f viewingVector, Renderer<Structure> renderer) throws SlickException {
+        int startCellX = (int)(viewingVector.getX() / tileWidth);
+        int startCellY = (int)(viewingVector.getY() / tileHeight);
 
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
@@ -44,8 +44,8 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
 
                 Vector2D mapCoordinates = cell.getStructure().getMapCoordinates();
 
-                int drawX = ((mapCoordinates.getX() - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
-                int drawY = ((mapCoordinates.getY() - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
+                int drawX = ((mapCoordinates.getX() - startCellX) * tileWidth) - ((int)viewingVector.getX() % tileWidth);
+                int drawY = ((mapCoordinates.getY() - startCellY) * tileHeight) - ((int)viewingVector.getY() % tileHeight);
 
                 structuresToDraw.add(new StructureToDraw(cell.getStructure(), drawX, drawY));
             }

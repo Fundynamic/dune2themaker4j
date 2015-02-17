@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -11,7 +10,6 @@ import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,12 +20,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
 import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,7 +67,7 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse) {
+        return new Viewport(screenResolution, Vector2D.zero(), new Vector2f(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {
@@ -83,7 +81,7 @@ public class ViewportMovementListenerTest {
         // moved to 2 pixels close to the left of the screen
         listener.mouseMoved(3, ANY_COORDINATE_NOT_NEAR_BORDER, 2, ANY_COORDINATE_NOT_NEAR_BORDER);
 
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
+        Vector2f viewportVector = updateAndRenderAndReturnNewViewportVector();
 
         assertFloatEquals(INITIAL_VIEWPORT_X - MOVE_SPEED, viewportVector.getX());
         assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
@@ -94,7 +92,7 @@ public class ViewportMovementListenerTest {
         // moved to 2 pixels close to the right of the screen
         listener.mouseMoved(screenResolution.getX() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX() - 2, ANY_COORDINATE_NOT_NEAR_BORDER);
 
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
+        Vector2f viewportVector = updateAndRenderAndReturnNewViewportVector();
 
         assertFloatEquals(INITIAL_VIEWPORT_X + MOVE_SPEED, viewportVector.getX());
         assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
@@ -105,7 +103,7 @@ public class ViewportMovementListenerTest {
         // moved to 2 pixels close to the top of the screen
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 3, ANY_COORDINATE_NOT_NEAR_BORDER, 2);
 
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
+        Vector2f viewportVector = updateAndRenderAndReturnNewViewportVector();
 
         assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
         assertFloatEquals(INITIAL_VIEWPORT_Y - MOVE_SPEED, viewportVector.getY());
@@ -116,7 +114,7 @@ public class ViewportMovementListenerTest {
         // moved to 2 pixels close to the bottom of the screen
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY() - 2);
 
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
+        Vector2f viewportVector = updateAndRenderAndReturnNewViewportVector();
 
         assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
         assertFloatEquals(INITIAL_VIEWPORT_Y + MOVE_SPEED, viewportVector.getY());
@@ -127,14 +125,14 @@ public class ViewportMovementListenerTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
         updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = viewport.getViewingVector();
+        Vector2f tickOneViewportVector = viewport.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
         updateAndRender(); // and stop moving
 
         // Check that the viewport stopped moving
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
         assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
     }
@@ -144,14 +142,14 @@ public class ViewportMovementListenerTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), screenResolution.getY());
         updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = viewport.getViewingVector();
+        Vector2f tickOneViewportVector = viewport.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(screenResolution.getX(), screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
         updateAndRender(); // and stop moving
 
         // Check that the viewport stopped moving
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
         assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
     }
@@ -163,7 +161,7 @@ public class ViewportMovementListenerTest {
         updateAndRender();
         updateAndRender();
 
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("X position moved over the edge", 32F, viewportVector.getX());
     }
 
@@ -174,7 +172,7 @@ public class ViewportMovementListenerTest {
         updateAndRender();
         updateAndRender();
 
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("Y position moved over the edge", 32F, viewportVector.getY());
     }
 
@@ -194,7 +192,7 @@ public class ViewportMovementListenerTest {
         updateAndRender();
         updateAndRender();
 
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY());
     }
 
@@ -212,7 +210,7 @@ public class ViewportMovementListenerTest {
         listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
 
-        Vector2D viewportVector = getLastCalledViewport();
+        Vector2f viewportVector = getLastCalledViewport();
         assertFloatEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX());
     }
 
@@ -243,17 +241,17 @@ public class ViewportMovementListenerTest {
         assertEquals(null, mouse.getLastSelectedStructure());
     }
 
-    private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {
+    private Vector2f updateAndRenderAndReturnNewViewportVector() throws SlickException {
         updateAndRender();
         return getLastCalledViewport();
     }
 
     private void updateAndRender() throws SlickException {
-        viewport.update();
+        viewport.update(1f);  // 1 frame per second
         viewport.render();
     }
 
-    private Vector2D getLastCalledViewport() throws SlickException {
+    private Vector2f getLastCalledViewport() throws SlickException {
         return viewport.getViewingVector();
     }
 

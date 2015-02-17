@@ -9,7 +9,11 @@ import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -63,9 +67,9 @@ public class PlayingState extends BasicGameState {
         this.structuresRepository.placeStructureOnMap(Vector2D.create(5, 5), StructuresRepository.REFINERY);
 
         try {
-            float moveSpeed = 16.0F;
+            float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
-            Vector2D viewingVector = Vector2D.create(40, 40);
+            Vector2f viewingVector = new Vector2f(40, 40);
             Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
@@ -86,8 +90,9 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        float deltaMs = delta / 1000f;
         for (Viewport viewport : viewports) {
-            viewport.update();
+            viewport.update(deltaMs);
         }
     }
 }

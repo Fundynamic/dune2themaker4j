@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 import static org.mockito.Mockito.*;
 
@@ -33,7 +34,7 @@ public class MapCellViewportRendererTest {
 
         MapCellViewportRenderer mapCellViewportRenderer = new MapCellViewportRenderer(map, TILE_HEIGHT, TILE_WIDTH, new Vector2D(screenWidth, screenHeight));
 
-        Vector2D viewingVector = Vector2D.zero();
+        Vector2f viewingVector = new Vector2f(0, 0);
 
         Renderer renderer = mock(Renderer.class);
         mapCellViewportRenderer.render(mock(Image.class), viewingVector, renderer);

@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 
 public class Viewport {
 
@@ -30,17 +31,16 @@ public class Viewport {
     private final MapCellMouseInteractionRenderer mapCellMouseInteractionRenderer;
     private final MapCellViewportRenderer mapCellViewportRenderer;
 
-    private Vector2D velocity;
-
+    private Vector2f velocity;
     private float moveSpeed;
 
-    private Vector2D viewingVector;
+    private Vector2f viewingVector;
 
     private Map map;
 
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
-                    Vector2D viewingVector,
+                    Vector2f viewingVector,
                     Graphics graphics,
                     Map map,
                     float moveSpeed,
@@ -56,7 +56,7 @@ public class Viewport {
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
-        this.velocity = Vector2D.zero();
+        this.velocity = new Vector2f(0, 0);
 
         this.moveSpeed = moveSpeed;
 
@@ -81,33 +81,33 @@ public class Viewport {
         drawBufferToGraphics(graphics, drawingVector);
     }
 
-    public void update() {
-        Vector2D newViewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.move(velocity));
-        viewingVector = newViewingVector;
+    public void update(float delta) {
+        Vector2f translation = velocity.copy().scale(delta);
+        viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.copy().add(translation));
     }
 
     private void moveLeft() {
-        this.velocity = new Vector2D(-moveSpeed, this.velocity.getY());
+        this.velocity = new Vector2f(-moveSpeed, this.velocity.getY());
     }
 
     private void moveRight() {
-        this.velocity = new Vector2D(moveSpeed, this.velocity.getY());
+        this.velocity = new Vector2f(moveSpeed, this.velocity.getY());
     }
 
     private void moveUp() {
-        this.velocity = new Vector2D(this.velocity.getX(), -moveSpeed);
+        this.velocity = new Vector2f(this.velocity.getX(), -moveSpeed);
     }
 
     private void moveDown() {
-        this.velocity = new Vector2D(this.velocity.getX(), moveSpeed);
+        this.velocity = new Vector2f(this.velocity.getX(), moveSpeed);
     }
 
     private void stopMovingHorizontally() {
-        this.velocity = new Vector2D(0, this.velocity.getY());
+        this.velocity = new Vector2f(0, this.velocity.getY());
     }
 
     private void stopMovingVertically() {
-        this.velocity = new Vector2D(this.velocity.getX(), 0);
+        this.velocity = new Vector2f(this.velocity.getX(), 0);
     }
 
     private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
@@ -116,7 +116,7 @@ public class Viewport {
 
     // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
     // least not the use them in the non-test code.
-    public Vector2D getViewingVector() {
+    public Vector2f getViewingVector() {
         return viewingVector;
     }
 
@@ -150,13 +150,13 @@ public class Viewport {
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteX(int xPositionOnScreen) {
-        return xPositionOnScreen + viewingVector.getX();
+        return xPositionOnScreen + (int)viewingVector.getX();
     }
 
     /**
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteY(int yPositionOnScreen) {
-        return yPositionOnScreen + viewingVector.getY();
+        return yPositionOnScreen + (int)viewingVector.getY();
     }
 }
