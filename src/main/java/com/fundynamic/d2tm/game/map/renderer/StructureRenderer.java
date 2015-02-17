@@ -24,7 +24,7 @@ public class StructureRenderer implements Renderer<Structure> {
 
         if (structure.isSelected()) {
             graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));
-            graphics.setLineWidth(1.1f);
+            graphics.setLineWidth(2.f);
             graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
 
             if (selectedDarkening) {
