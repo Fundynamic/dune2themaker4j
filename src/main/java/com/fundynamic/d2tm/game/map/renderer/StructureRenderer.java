@@ -9,10 +9,10 @@ public class StructureRenderer implements Renderer<Structure> {
 
     private float selectedIntensity;
     private boolean selectedDarkening;
-    
-	public StructureRenderer() {
-		selectedIntensity = 1.0f;
-		selectedDarkening = true;
+
+    public StructureRenderer() {
+        selectedIntensity = 1.0f;
+        selectedDarkening = true;
     }
 
     @Override
@@ -26,25 +26,23 @@ public class StructureRenderer implements Renderer<Structure> {
             graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
-            
+
             // Amount to change intensity by
             // TODO: Scale according to current FPS instead of fixed value
-            float intensityChange = 0.5f/60;
-            if ( selectedDarkening ) {
-            	selectedIntensity -= intensityChange;
-            }
-            else {
-            	selectedIntensity += intensityChange;
+            float intensityChange = 0.5f / 60;
+            if (selectedDarkening) {
+                selectedIntensity -= intensityChange;
+            } else {
+                selectedIntensity += intensityChange;
             }
             // Change if we're increasing or decreasing intensity
-        	if ( selectedIntensity <= 0.0f ) {
-        		selectedIntensity = 0.0f;
-        		selectedDarkening = false;
-        	}
-        	else if ( selectedIntensity >= 1.0f ) {
-        		selectedIntensity = 1.0f;
-        		selectedDarkening = true;
-        	}
+            if (selectedIntensity <= 0.0f) {
+                selectedIntensity = 0.0f;
+                selectedDarkening = false;
+            } else if (selectedIntensity >= 1.0f) {
+                selectedIntensity = 1.0f;
+                selectedDarkening = true;
+            }
         }
     }
 
