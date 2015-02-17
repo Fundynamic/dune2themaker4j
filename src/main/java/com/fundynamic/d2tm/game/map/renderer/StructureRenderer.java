@@ -7,7 +7,12 @@ import org.newdawn.slick.Image;
 
 public class StructureRenderer implements Renderer<Structure> {
 
-    public StructureRenderer() {
+    private float selectedIntensity;
+    private boolean selectedDarkening;
+    
+	public StructureRenderer() {
+		selectedIntensity = 1.0f;
+		selectedDarkening = true;
     }
 
     @Override
@@ -18,9 +23,28 @@ public class StructureRenderer implements Renderer<Structure> {
         // if selected, draw a rectangle
         // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
         if (structure.isSelected()) {
-            graphics.setColor(Color.white);
+            graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
+            
+            // Amount to change intensity by
+            // TODO: Scale according to current FPS instead of fixed value
+            float intensityChange = 0.5f/60;
+            if ( selectedDarkening ) {
+            	selectedIntensity -= intensityChange;
+            }
+            else {
+            	selectedIntensity += intensityChange;
+            }
+            // Change if we're increasing or decreasing intensity
+        	if ( selectedIntensity <= 0.0f ) {
+        		selectedIntensity = 0.0f;
+        		selectedDarkening = false;
+        	}
+        	else if ( selectedIntensity >= 1.0f ) {
+        		selectedIntensity = 1.0f;
+        		selectedDarkening = true;
+        	}
         }
     }
 
