@@ -9,10 +9,12 @@ public class StructureRenderer implements Renderer<Structure> {
 
     private float selectedIntensity;
     private boolean selectedDarkening;
+    private final float intensityChange;
 
     public StructureRenderer() {
         selectedIntensity = 1.0f;
         selectedDarkening = true;
+        intensityChange = 0.5f / 60; // TODO: make time based
     }
 
     @Override
@@ -20,22 +22,18 @@ public class StructureRenderer implements Renderer<Structure> {
         Image sprite = structure.getSprite();
         graphics.drawImage(sprite, drawX, drawY);
 
-        // if selected, draw a rectangle
-        // TODO: make it a fading rectangle aka Dune 2? (the feelz!)
         if (structure.isSelected()) {
             graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, structure.getWidth() - 1, structure.getHeight() - 1);
 
-            // Amount to change intensity by
-            // TODO: Scale according to current FPS instead of fixed value
-            float intensityChange = 0.5f / 60;
             if (selectedDarkening) {
                 selectedIntensity -= intensityChange;
             } else {
                 selectedIntensity += intensityChange;
             }
-            // Change if we're increasing or decreasing intensity
+
+            // fade back and forth
             if (selectedIntensity <= 0.0f) {
                 selectedIntensity = 0.0f;
                 selectedDarkening = false;
