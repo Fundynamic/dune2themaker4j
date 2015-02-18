@@ -76,7 +76,7 @@ public class Viewport {
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
         structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
-//        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
+        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);
     }
