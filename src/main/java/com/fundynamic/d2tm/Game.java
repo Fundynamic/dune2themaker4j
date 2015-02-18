@@ -37,7 +37,6 @@ public class Game extends StateBasedGame {
                 TILE_HEIGHT
         );
 
-//        container.setVSync(true);
         container.setMinimumLogicUpdateInterval(MIN_DELTA_BETWEEN_FRAMES);
 
         PlayingState playingState = new PlayingState(
