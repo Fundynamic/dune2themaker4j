@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.map;
 import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -22,6 +23,7 @@ public class Map {
     private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
+    private Set<Structure> structures;
 
     public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -30,6 +32,7 @@ public class Map {
         this.width = width;
         this.heightWithInvisibleBorder = height + 2;
         this.widthWithInvisibleBorder = width + 2;
+        this.structures = new HashSet<>();
 
         initializeEmptyMap();
     }
@@ -142,20 +145,20 @@ public class Map {
         return new MapCell(this, pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
-    public Set<Structure> getStructures() {
-        // TODO: This is a sub-optimal way to get all structures. It would be
-        // better to append it to an in-memory list when the structure is added
-        // to the map.
-        Set<Structure> structures = new HashSet<>();
-        for (int x = 1; x <= this.width; x++) {
-            for (int y = 1; y <= this.height; y++) {
-                Structure structure = getCell(x, y).getStructure();
-                if (structure != null) {
-                    structures.add(structure);
-                }
+    public Set<Structure> getStructures() { return structures; }
+
+    public void placeStructure(Vector2D topLeft, Structure structure, StructuresRepository.StructureData data) {
+        int widthInCells = data.width / TILE_SIZE;
+        int heightInCells = data.height / TILE_SIZE;
+
+        getCell(topLeft.getXAsInt(), topLeft.getYAsInt()).setStructure(structure).setTopLeftOfStructure(true);
+        for (int x = 0; x < widthInCells; x++) {
+            for (int y = 0; y < heightInCells; y++) {
+                getCell(topLeft.getXAsInt() + x, topLeft.getYAsInt() + y).setStructure(structure);
             }
         }
-        return structures;
+
+        structures.add(structure);
     }
 
     // We also have a MapCell, they both are the same!? (somewhat?)
