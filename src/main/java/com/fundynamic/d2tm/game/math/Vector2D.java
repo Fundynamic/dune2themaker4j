@@ -65,4 +65,21 @@ public class Vector2D {
         Vector2f added = vec.copy().add(other.vec);
         return Vector2D.create(added.getX(), added.getY());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector2D vector2D = (Vector2D) o;
+
+        if (vec != null ? !vec.equals(vector2D.vec) : vector2D.vec != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return vec != null ? vec.hashCode() : 0;
+    }
 }
