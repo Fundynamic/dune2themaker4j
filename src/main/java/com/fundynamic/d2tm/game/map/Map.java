@@ -2,11 +2,16 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.Structure;
+import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.SlickException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Map {
 
@@ -18,6 +23,7 @@ public class Map {
     private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
+    private Set<Structure> structures;
 
     public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -26,6 +32,7 @@ public class Map {
         this.width = width;
         this.heightWithInvisibleBorder = height + 2;
         this.widthWithInvisibleBorder = width + 2;
+        this.structures = new HashSet<>();
 
         initializeEmptyMap();
     }
@@ -136,6 +143,22 @@ public class Map {
 
     public MapCell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
         return new MapCell(this, pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+    }
+
+    public Set<Structure> getStructures() { return structures; }
+
+    public void placeStructure(Structure structure, StructuresRepository.StructureData data) {
+        Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
+        int widthInCells = data.width / TILE_SIZE;
+        int heightInCells = data.height / TILE_SIZE;
+
+        for (int x = 0; x < widthInCells; x++) {
+            for (int y = 0; y < heightInCells; y++) {
+                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setStructure(structure);
+            }
+        }
+
+        structures.add(structure);
     }
 
     // We also have a MapCell, they both are the same!? (somewhat?)

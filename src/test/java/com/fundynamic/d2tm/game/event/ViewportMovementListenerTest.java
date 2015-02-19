@@ -37,6 +37,7 @@ public class ViewportMovementListenerTest {
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
     public static final float INITIAL_VIEWPORT_X = 34F;
     public static final float INITIAL_VIEWPORT_Y = 34F;
+    public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
 
     public static int HEIGHT_OF_MAP = 40;
     public static int WIDTH_OF_MAP = 46;
@@ -66,7 +67,7 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), new Vector2D(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse) {
+        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), mock(Graphics.class), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {
@@ -89,7 +90,7 @@ public class ViewportMovementListenerTest {
     @Test
     public void mouseHittingRightBorderOfScreenMovesViewportToRight() throws SlickException {
         // moved to 2 pixels close to the right of the screen
-        listener.mouseMoved(screenResolution.getX() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX() - 2, ANY_COORDINATE_NOT_NEAR_BORDER);
+        listener.mouseMoved(screenResolution.getXAsInt() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt() - 2, ANY_COORDINATE_NOT_NEAR_BORDER);
 
         Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
 
@@ -111,7 +112,7 @@ public class ViewportMovementListenerTest {
     @Test
     public void mouseHittingBottomOfScreenMovesViewportDown() throws SlickException {
         // moved to 2 pixels close to the bottom of the screen
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY() - 2);
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt() - 2);
 
         Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
 
@@ -139,12 +140,12 @@ public class ViewportMovementListenerTest {
     @Test
     public void mouseFromBottomRightToNoBorderStopsMoving() throws SlickException {
         // this updates viewport coordinates one move up and to the left
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), screenResolution.getY());
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), screenResolution.getYAsInt());
         updateAndRender(); // and move the viewport
         Vector2D tickOneViewportVector = viewport.getViewingVector();
 
         // move back to the middle
-        listener.mouseMoved(screenResolution.getX(), screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
+        listener.mouseMoved(screenResolution.getXAsInt(), screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
         updateAndRender(); // and stop moving
 
         // Check that the viewport stopped moving
@@ -186,7 +187,7 @@ public class ViewportMovementListenerTest {
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
 
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getY()); // move down
+        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
         updateAndRender();
         updateAndRender();
         updateAndRender();
@@ -206,7 +207,7 @@ public class ViewportMovementListenerTest {
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
 
-        listener.mouseMoved(screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getX(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
+        listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
 
         Vector2D viewportVector = getLastCalledViewport();
@@ -246,7 +247,7 @@ public class ViewportMovementListenerTest {
     }
 
     private void updateAndRender() throws SlickException {
-        viewport.update();
+        viewport.update(ONE_FRAME_PER_SECOND_DELTA);
         viewport.render();
     }
 

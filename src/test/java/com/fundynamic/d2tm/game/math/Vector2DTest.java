@@ -38,8 +38,8 @@ public class Vector2DTest {
     }
 
     @Test
-    public void movement() {
-        Vector2D org = Vector2D.create(10, 10);
+    public void equals() {
+        Assert.assertEquals(Vector2D.create(10, 10), Vector2D.create(10, 10));
     }
 
 }

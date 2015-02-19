@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
-
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

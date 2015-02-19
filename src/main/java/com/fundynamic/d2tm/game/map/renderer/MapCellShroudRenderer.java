@@ -29,9 +29,9 @@ public class MapCellShroudRenderer implements Renderer<MapCell> {
 
         return getFacing(
                 mapCell.getCellAbove().isShrouded(),
-                mapCell.getCellLeft().isShrouded(),
+                mapCell.getCellRight().isShrouded(),
                 mapCell.getCellBeneath().isShrouded(),
-                mapCell.getCellRight().isShrouded());
+                mapCell.getCellLeft().isShrouded());
     }
 
     public static ShroudFacing getFacing(boolean isTopShrouded, boolean isRightShrouded, boolean isBottomShrouded, boolean isLeftShrouded) {

@@ -18,12 +18,12 @@ public class Vector2D {
         this.vec = new Vector2f(x, y);
     }
 
-    public int getX() {
-        return (int) vec.getX();
+    public float getX() {
+        return vec.getX();
     }
 
-    public int getY() {
-        return (int) vec.getY();
+    public float getY() {
+        return vec.getY();
     }
 
     public Vector2D move(Vector2D velocity) {
@@ -36,9 +36,6 @@ public class Vector2D {
         return new Vector2D(newX, newY);
     }
 
-    public String shortString() {
-        return "{" + vec.getX() + ", " + vec.getX() + "}";
-    }
     @Override
     public String toString() {
         return "Vector2D{" +
@@ -57,5 +54,32 @@ public class Vector2D {
 
     public int getYAsInt() {
         return (int) vec.getY();
+    }
+
+    public Vector2D scale(float delta) {
+        Vector2f scaled = vec.copy().scale(delta);
+        return Vector2D.create(scaled.getX(), scaled.getY());
+    }
+
+    public Vector2D add(Vector2D other) {
+        Vector2f added = vec.copy().add(other.vec);
+        return Vector2D.create(added.getX(), added.getY());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector2D vector2D = (Vector2D) o;
+
+        if (vec != null ? !vec.equals(vector2D.vec) : vector2D.vec != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return vec != null ? vec.hashCode() : 0;
     }
 }

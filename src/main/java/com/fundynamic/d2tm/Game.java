@@ -35,8 +35,6 @@ public class Game extends StateBasedGame {
                 TILE_HEIGHT
         );
 
-        container.setVSync(true);
-
         PlayingState playingState = new PlayingState(
                 container,
                 terrainFactory,

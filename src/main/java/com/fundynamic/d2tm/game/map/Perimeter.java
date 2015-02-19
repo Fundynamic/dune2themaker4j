@@ -6,7 +6,6 @@ public class Perimeter {
 
     private final float minX;
     private final float maxX;
-
     private final float minY;
     private final float maxY;
 
@@ -18,12 +17,8 @@ public class Perimeter {
     }
 
     public Vector2D makeSureVectorStaysWithin(Vector2D vec) {
-        float vecX = vec.getX();
-        float vecY = vec.getY();
-        if (vecX < minX) vecX = minX;
-        if (vecX > maxX) vecX = maxX;
-        if (vecY < minY) vecY = minY;
-        if (vecY > maxY) vecY = maxY;
-        return new Vector2D(vecX, vecY);
+        float x = Math.min(Math.max(vec.getX(), minX), maxX);
+        float y = Math.min(Math.max(vec.getY(), minY), maxY);
+        return Vector2D.create(x, y);
     }
 }

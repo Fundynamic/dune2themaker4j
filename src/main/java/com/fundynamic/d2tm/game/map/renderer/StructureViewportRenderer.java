@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import org.newdawn.slick.Image;
@@ -24,14 +23,14 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
-        cellsThatFitHorizontally = (windowDimensions.getX() / tileWidth) + 1;
-        cellsThatFitVertically = (windowDimensions.getY() / tileHeight) + 1;
+        cellsThatFitHorizontally = (windowDimensions.getXAsInt() / tileWidth) + 1;
+        cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
     }
 
     @Override
     public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<Structure> renderer) throws SlickException {
-        int startCellX = (viewingVector.getX() / tileWidth);
-        int startCellY = (viewingVector.getY() / tileHeight);
+        int startCellX = viewingVector.getXAsInt() / tileWidth;
+        int startCellY = viewingVector.getYAsInt() / tileHeight;
 
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
@@ -44,8 +43,8 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
 
                 Vector2D mapCoordinates = cell.getStructure().getMapCoordinates();
 
-                int drawX = ((mapCoordinates.getX() - startCellX) * tileWidth) - (viewingVector.getX() % tileWidth);
-                int drawY = ((mapCoordinates.getY() - startCellY) * tileHeight) - (viewingVector.getY() % tileHeight);
+                int drawX = ((mapCoordinates.getXAsInt() - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);
+                int drawY = ((mapCoordinates.getYAsInt() - startCellY) * tileHeight) - (viewingVector.getYAsInt() % tileHeight);
 
                 structuresToDraw.add(new StructureToDraw(cell.getStructure(), drawX, drawY));
             }

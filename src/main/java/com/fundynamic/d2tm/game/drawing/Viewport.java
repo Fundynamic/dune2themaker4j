@@ -31,7 +31,6 @@ public class Viewport {
     private final MapCellViewportRenderer mapCellViewportRenderer;
 
     private Vector2D velocity;
-
     private float moveSpeed;
 
     private Vector2D viewingVector;
@@ -76,38 +75,38 @@ public class Viewport {
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
         structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
-//        mapRenderer.render(this.buffer, viewingVector, shroudRenderer);
+        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);
     }
 
-    public void update() {
-        Vector2D newViewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.move(velocity));
-        viewingVector = newViewingVector;
+    public void update(float delta) {
+        Vector2D translation = velocity.scale(delta);
+        viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.add(translation));
     }
 
     private void moveLeft() {
-        this.velocity = new Vector2D(-moveSpeed, this.velocity.getY());
+        this.velocity = Vector2D.create(-moveSpeed, this.velocity.getY());
     }
 
     private void moveRight() {
-        this.velocity = new Vector2D(moveSpeed, this.velocity.getY());
+        this.velocity = Vector2D.create(moveSpeed, this.velocity.getY());
     }
 
     private void moveUp() {
-        this.velocity = new Vector2D(this.velocity.getX(), -moveSpeed);
+        this.velocity = Vector2D.create(this.velocity.getX(), -moveSpeed);
     }
 
     private void moveDown() {
-        this.velocity = new Vector2D(this.velocity.getX(), moveSpeed);
+        this.velocity = Vector2D.create(this.velocity.getX(), moveSpeed);
     }
 
     private void stopMovingHorizontally() {
-        this.velocity = new Vector2D(0, this.velocity.getY());
+        this.velocity = Vector2D.create(0, this.velocity.getY());
     }
 
     private void stopMovingVertically() {
-        this.velocity = new Vector2D(this.velocity.getX(), 0);
+        this.velocity = Vector2D.create(this.velocity.getX(), 0);
     }
 
     private void drawBufferToGraphics(Graphics graphics, Vector2D drawingVector) {
@@ -121,7 +120,7 @@ public class Viewport {
     }
 
     protected Image constructImage(Vector2D screenResolution) throws SlickException {
-        return new Image(screenResolution.getX(), screenResolution.getY());
+        return new Image(screenResolution.getXAsInt(), screenResolution.getYAsInt());
     }
 
     public Map getMap() {
@@ -150,13 +149,13 @@ public class Viewport {
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteX(int xPositionOnScreen) {
-        return xPositionOnScreen + viewingVector.getX();
+        return xPositionOnScreen + (int)viewingVector.getX();
     }
 
     /**
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteY(int yPositionOnScreen) {
-        return yPositionOnScreen + viewingVector.getY();
+        return yPositionOnScreen + (int)viewingVector.getY();
     }
 }
