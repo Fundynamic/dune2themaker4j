@@ -2,11 +2,15 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.SlickException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Map {
 
@@ -136,6 +140,22 @@ public class Map {
 
     public MapCell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
         return new MapCell(this, pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+    }
+
+    public Set<Structure> getStructures() {
+        // TODO: This is a sub-optimal way to get all structures. It would be
+        // better to append it to an in-memory list when the structure is added
+        // to the map.
+        Set<Structure> structures = new HashSet<>();
+        for (int x = 1; x <= this.width; x++) {
+            for (int y = 1; y <= this.height; y++) {
+                Structure structure = getCell(x, y).getStructure();
+                if (structure != null) {
+                    structures.add(structure);
+                }
+            }
+        }
+        return structures;
     }
 
     // We also have a MapCell, they both are the same!? (somewhat?)

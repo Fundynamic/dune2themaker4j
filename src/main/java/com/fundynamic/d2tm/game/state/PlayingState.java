@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -89,11 +90,13 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        float deltaMs = delta / 1000f;
+        float deltaInSeconds = delta / 1000f;
+
+        for (Structure structure : map.getStructures()) {
+          structure.update(deltaInSeconds);
+        }
         for (Viewport viewport : viewports) {
-            viewport.update(deltaMs);
+            viewport.update(deltaInSeconds);
         }
     }
-
-    // The amount of time thats passed in millisecond since last update
 }

@@ -8,7 +8,6 @@ import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
 
 public class Viewport {
 
