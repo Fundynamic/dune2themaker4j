@@ -147,14 +147,14 @@ public class Map {
 
     public Set<Structure> getStructures() { return structures; }
 
-    public void placeStructure(Vector2D topLeft, Structure structure, StructuresRepository.StructureData data) {
+    public void placeStructure(Structure structure, StructuresRepository.StructureData data) {
+        Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
         int widthInCells = data.width / TILE_SIZE;
         int heightInCells = data.height / TILE_SIZE;
 
-        getCell(topLeft.getXAsInt(), topLeft.getYAsInt()).setStructure(structure).setTopLeftOfStructure(true);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                getCell(topLeft.getXAsInt() + x, topLeft.getYAsInt() + y).setStructure(structure);
+                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setStructure(structure);
             }
         }
 

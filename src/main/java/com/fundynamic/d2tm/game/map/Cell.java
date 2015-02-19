@@ -11,21 +11,18 @@ public class Cell {
 
     private Terrain terrain;
     private boolean shrouded;
-    private boolean topLeftOfStructure;
 
     protected Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
         this.shrouded = true;
         this.structure = null;
-        this.topLeftOfStructure = false;
     }
 
     protected Cell(Cell other) {
         if (other == null) throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
         this.terrain = other.getTerrain();
         this.shrouded = other.isShrouded();
-        this.topLeftOfStructure = other.isTopLeftOfStructure();
         this.structure = other.getStructure();
     }
 
@@ -73,14 +70,6 @@ public class Cell {
     public boolean hasStructure(Structure selectedStructure) {
         if (this.structure == null) return false;
         return this.structure == selectedStructure;
-    }
-
-    public void setTopLeftOfStructure(boolean topLeftOfStructure) {
-        this.topLeftOfStructure = topLeftOfStructure;
-    }
-
-    public boolean isTopLeftOfStructure() {
-        return topLeftOfStructure;
     }
 
 }
