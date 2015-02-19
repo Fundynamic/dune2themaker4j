@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.AssertHelper;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import junit.framework.Assert;
 import org.junit.Test;
 
 public class PerimeterTest {
@@ -20,36 +20,31 @@ public class PerimeterTest {
     @Test
     public void correctsWhenGoingOverLeftEdge() {
         Vector2D correctedVector = perimeter.makeSureVectorStaysWithin(Vector2D.create(MIN_X - 0.1F, MIN_Y));
-        AssertHelper.assertFloatEquals(MIN_X, correctedVector.getX());
-        AssertHelper.assertFloatEquals(MIN_Y, correctedVector.getY());
+        Assert.assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
     }
 
     @Test
     public void correctsWhenGoingOverRightEdge() {
         Vector2D correctedVector = perimeter.makeSureVectorStaysWithin(Vector2D.create(MAX_X + 0.1F, MIN_Y));
-        AssertHelper.assertFloatEquals(MAX_X, correctedVector.getX());
-        AssertHelper.assertFloatEquals(MIN_Y, correctedVector.getY());
+        Assert.assertEquals(Vector2D.create(MAX_X, MIN_Y), correctedVector);
     }
 
     @Test
     public void correctsWhenGoingUpperLeftEdge() {
         Vector2D correctedVector = perimeter.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MIN_Y - 0.1F));
-        AssertHelper.assertFloatEquals(MIN_X, correctedVector.getX());
-        AssertHelper.assertFloatEquals(MIN_Y, correctedVector.getY());
+        Assert.assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
     }
 
     @Test
     public void correctsWhenGoingBottomLeftEdge() {
         Vector2D correctedVector = perimeter.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MAX_Y + 0.1F));
-        AssertHelper.assertFloatEquals(MIN_X, correctedVector.getX());
-        AssertHelper.assertFloatEquals(MAX_Y, correctedVector.getY());
+        Assert.assertEquals(Vector2D.create(MIN_X, MAX_Y), correctedVector);
     }
 
     @Test
     public void doesNothingWhenVectorIsWithinPerimiter() {
         Vector2D correctedVector = perimeter.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MIN_Y));
-        AssertHelper.assertFloatEquals(MIN_X, correctedVector.getX());
-        AssertHelper.assertFloatEquals(MIN_Y, correctedVector.getY());
+        Assert.assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
     }
 
 }
