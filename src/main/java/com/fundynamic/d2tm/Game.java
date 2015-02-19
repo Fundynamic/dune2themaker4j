@@ -19,8 +19,6 @@ public class Game extends StateBasedGame {
     private static final int TILE_WIDTH = 32;
     private static final int TILE_HEIGHT = 32;
 
-    private static final int MIN_DELTA_BETWEEN_FRAMES = 10;
-
     public Game(String title) {
         super(title);
     }
@@ -36,8 +34,6 @@ public class Game extends StateBasedGame {
                 TILE_WIDTH,
                 TILE_HEIGHT
         );
-
-        container.setMinimumLogicUpdateInterval(MIN_DELTA_BETWEEN_FRAMES);
 
         PlayingState playingState = new PlayingState(
                 container,
