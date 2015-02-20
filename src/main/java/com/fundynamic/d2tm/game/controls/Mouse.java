@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.game.math.Vector2D;
@@ -64,7 +65,7 @@ public class Mouse {
     public boolean hoversOverSelectableEntity() {
         MapEntity mapEntity = hoverCell.getMapEntity();
         if (mapEntity == null) return false;
-        return !mapEntity.isSelected();
+        return mapEntity.isSelectable();
 
     }
 }

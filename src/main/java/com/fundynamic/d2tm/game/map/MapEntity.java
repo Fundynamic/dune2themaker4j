@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
@@ -21,8 +22,6 @@ public abstract class MapEntity {
         return mapCoordinates;
     }
 
-    public abstract boolean isSelectable();
-
     public abstract void render(Graphics graphics, int drawX, int drawY);
 
     public abstract void select();
@@ -31,4 +30,7 @@ public abstract class MapEntity {
 
     public abstract boolean isSelected();
 
+    public boolean isSelectable() {
+        return this instanceof Selectable;
+    }
 }

@@ -1,21 +1,20 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.game.behaviors.Selectable;
+import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
 import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends MapEntity {
+public class Structure extends MapEntity implements Selectable {
 
-    private final int width;
-    private final int height;
-    private boolean selected;
-    private float selectedIntensity;
-    private boolean selectedDarkening;
+    // Behaviors
+    private SelectableImpl selectableImpl;
+
+    // Implementation
     private float animationTimer;
-
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
@@ -25,21 +24,13 @@ public class Structure extends MapEntity {
 
     public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height) {
         super(mapCoordinates, spriteSheet);
-        this.width = width;
-        this.height = height;
-        this.selected = false;
-        this.selectedIntensity = 1f;
-        this.selectedDarkening = true;
-    }
-
-    public SpriteSheet getSpriteSheet() {
-        return spriteSheet;
+        this.selectableImpl = new SelectableImpl(width, height);
     }
 
     public Image getSprite() {
         // TODO: remove randomization here when we get a proper 'waving flag animation' done
         int animationFrame = (int)animationTimer;
-        return getSpriteSheet().getSprite(0, animationFrame);
+        return spriteSheet.getSprite(0, animationFrame);
     }
 
     public void update(float delta) {
@@ -47,34 +38,7 @@ public class Structure extends MapEntity {
         float offset = delta * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
-        if (isSelected()) {
-            float intensityChange = .5f * delta;
-            if (selectedDarkening) {
-                selectedIntensity -= intensityChange;
-            } else {
-                selectedIntensity += intensityChange;
-            }
-
-            // fade back and forth
-            if (selectedIntensity <= 0.0f) {
-                selectedIntensity = 0.0f;
-                selectedDarkening = false;
-            } else if (selectedIntensity >= 1.0f) {
-                selectedIntensity = 1.0f;
-                selectedDarkening = true;
-            }
-        } else {
-            selectedIntensity = 1f;
-            selectedDarkening = true;
-        }
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+        this.selectableImpl.update(delta);
     }
 
     public Vector2D getMapCoordinates() {
@@ -82,46 +46,30 @@ public class Structure extends MapEntity {
     }
 
     @Override
-    public boolean isSelectable() {
-        return true;
-    }
-
-    @Override
     public void render(Graphics graphics, int drawX, int drawY) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, drawX, drawY);
 
-        if (isSelected()) {
-            float intensity = getSelectedIntensity();
-            graphics.setColor(new Color(intensity, intensity, intensity));
-            graphics.setLineWidth(2.f);
-            graphics.drawRect(drawX, drawY, getWidth() - 1, getHeight() - 1);
-        }
+        selectableImpl.render(graphics, drawX, drawY);
     }
 
     public void select() {
-        selected = true;
+        selectableImpl.select();
     }
 
     public void deselect() {
-        selected = false;
+        selectableImpl.deselect();
     }
 
     public boolean isSelected() {
-        return selected;
+        return selectableImpl.isSelected();
     }
-
-    public float getSelectedIntensity() { return selectedIntensity; }
 
     @Override
     public String toString() {
         return "Structure{" +
-                "width=" + width +
-                ", height=" + height +
-                ", selected=" + selected +
-                ", selectedIntensity=" + selectedIntensity +
-                ", selectedDarkening=" + selectedDarkening +
-                ", animationTimer=" + animationTimer +
+                "animationTimer=" + animationTimer +
+                ", selectable=" + selectableImpl +
                 '}';
     }
 }

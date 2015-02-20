@@ -21,11 +21,6 @@ public class Unit extends MapEntity {
     }
 
     @Override
-    public boolean isSelectable() {
-        return false;
-    }
-
-    @Override
     public void render(Graphics graphics, int drawX, int drawY) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, drawX, drawY);
