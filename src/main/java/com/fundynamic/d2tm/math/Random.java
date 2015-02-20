@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.math;
+package com.fundynamic.d2tm.math;
 
 public class Random {
 

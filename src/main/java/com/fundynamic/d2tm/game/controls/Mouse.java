@@ -1,9 +1,8 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.map.MapEntity;
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.math.Vector2D;
 
 /**
  * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)

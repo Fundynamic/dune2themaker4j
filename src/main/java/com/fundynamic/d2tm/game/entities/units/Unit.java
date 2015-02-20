@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.map.MapEntity;
-import com.fundynamic.d2tm.game.math.Random;
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;

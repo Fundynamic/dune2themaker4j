@@ -63,8 +63,4 @@ public class SelectableImpl {
             graphics.drawRect(drawX, drawY, width, height - 1);
         }
     }
-
-    public static boolean isSelectable(MapEntity mapEntity) {
-        return mapEntity.getClass().isInstance(SelectableImpl.class);
-    }
 }

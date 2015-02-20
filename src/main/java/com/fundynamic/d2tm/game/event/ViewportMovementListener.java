@@ -4,7 +4,7 @@ package com.fundynamic.d2tm.game.event;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.Random;
+import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
 import org.newdawn.slick.Input;
 

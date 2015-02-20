@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.math.Vector2D;
 
 public class Perimeter {
 
