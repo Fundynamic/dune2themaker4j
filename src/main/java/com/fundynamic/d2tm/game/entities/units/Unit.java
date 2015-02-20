@@ -10,8 +10,8 @@ import org.newdawn.slick.SpriteSheet;
 public class Unit extends MapEntity {
     private final int facing;
 
-    public Unit(Vector2D mapCoordinates, Image imageOfStructure, int width, int height) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, width, height));
+    public Unit(Vector2D mapCoordinates, Image image, int width, int height) {
+        this(mapCoordinates, new SpriteSheet(image, width, height));
     }
 
     public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet) {

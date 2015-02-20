@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
@@ -73,7 +74,7 @@ public class PlayingState extends BasicGameState {
         for (int i = 0; i < 50; i++) {
             Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
             if (map.getCell(randomCell).getMapEntity() != null) continue;
-            this.unitsRepository.placeUnitOnMap(randomCell, UnitsRepository.QUAD);
+            this.unitsRepository.placeUnitOnMap(randomCell, Random.getInt(UnitsRepository.MAX_TYPES));
         }
 
 

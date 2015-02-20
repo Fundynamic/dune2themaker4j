@@ -8,9 +8,10 @@ import org.newdawn.slick.SlickException;
 
 public class UnitsRepository {
 
-    public static int QUAD = 0;
+    public static int TRIKE = 0;
+    public static int QUAD = 1;
 
-    public static int MAX_TYPES = 1;
+    public static int MAX_TYPES = 2;
 
     private final Map map;
 
@@ -24,6 +25,12 @@ public class UnitsRepository {
         quad.image = new Image("units/quad.png");
         quad.width = 32;
         quad.height = 32;
+
+        UnitData trike = new UnitData();
+        unitData[TRIKE] = trike;
+        trike.image = new Image("units/trike.png");
+        trike.width = 28;
+        trike.height = 26;
     }
 
     public void placeUnitOnMap(Vector2D topLeft, int type) {
