@@ -23,7 +23,7 @@ public class MapCellViewportRendererTest {
     @Mock
     private Map map;
 
-    @Test(timeout = 1000)
+    @Test(timeout = 2000)
     public void rendersCells() throws SlickException {
         int screenWidth = 800;
         int screenHeight = 600;
