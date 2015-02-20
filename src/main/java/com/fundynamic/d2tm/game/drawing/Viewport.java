@@ -88,7 +88,7 @@ public class Viewport {
     }
 
     public void update(float delta) {
-        Vector2D translation = velocity.scale(delta).div(1000f);
+        Vector2D translation = velocity.scale(delta);
         viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.add(translation));
     }
 

@@ -44,11 +44,11 @@ public class Structure {
 
     public void update(float delta) {
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
-        float offset = delta * (ANIMATION_FRAMES_PER_SECOND / 1000f);
+        float offset = delta * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
         if (isSelected()) {
-            float intensityChange = (.5f / 1000f) * delta;
+            float intensityChange = .5f * delta;
             if (selectedDarkening) {
                 selectedIntensity -= intensityChange;
             } else {

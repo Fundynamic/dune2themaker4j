@@ -98,11 +98,13 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        float deltaInSeconds = delta / 1000f;
+
         for (Structure structure : map.getStructures()) {
-          structure.update(delta);
+          structure.update(deltaInSeconds);
         }
         for (Viewport viewport : viewports) {
-            viewport.update(delta);
+            viewport.update(deltaInSeconds);
         }
     }
 }
