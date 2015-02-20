@@ -3,15 +3,15 @@ package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.Structure;
+import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class StructureViewportRenderer implements ViewportRenderer<Structure> {
+public class MapEntityViewportRenderer {
 
     private final int tileHeight;
     private final int tileWidth;
@@ -19,7 +19,7 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public StructureViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public MapEntityViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
@@ -27,40 +27,42 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
         cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
     }
 
-    @Override
-    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<Structure> renderer) throws SlickException {
+    public void render(Image imageToDrawOn, Vector2D viewingVector) throws SlickException {
         int startCellX = viewingVector.getXAsInt() / tileWidth;
         int startCellY = viewingVector.getYAsInt() / tileHeight;
 
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
 
-        Set<StructureToDraw> structuresToDraw = new HashSet<>();
+        Set<EntityToDraw> entitiesToDraw = new HashSet<>();
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
                 Cell cell = map.getCell(x, y);
-                if (cell.getStructure() == null) continue;
+                MapEntity entity = cell.getMapEntity();
+                if (entity == null) continue;
 
-                Vector2D mapCoordinates = cell.getStructure().getMapCoordinates();
+                // TODO: try to find entity without the use of map (from cell), but rather from a 'list' of entities, which
+                // TODO: we smartly query. Also, take order by z-order so we draw stuff over each other correctly
+                Vector2D mapCoordinates = entity.getMapCoordinates();
 
                 int drawX = ((mapCoordinates.getXAsInt() - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);
                 int drawY = ((mapCoordinates.getYAsInt() - startCellY) * tileHeight) - (viewingVector.getYAsInt() % tileHeight);
 
-                structuresToDraw.add(new StructureToDraw(cell.getStructure(), drawX, drawY));
+                entitiesToDraw.add(new EntityToDraw(entity, drawX, drawY));
             }
         }
 
-        for (StructureToDraw structureToDraw : structuresToDraw) {
-            renderer.draw(imageToDrawOn.getGraphics(), structureToDraw.structure, structureToDraw.drawX, structureToDraw.drawY);
+        for (EntityToDraw entityToDraw : entitiesToDraw) {
+            entityToDraw.entity.render(imageToDrawOn.getGraphics(), entityToDraw.drawX, entityToDraw.drawY);
         }
     }
 
-    private class StructureToDraw {
-        private Structure structure;
+    private class EntityToDraw {
+        private MapEntity entity;
         private int drawX, drawY;
 
-        public StructureToDraw(Structure structure, int drawX, int drawY) {
-            this.structure = structure;
+        public EntityToDraw(MapEntity entity, int drawX, int drawY) {
+            this.entity = entity;
             this.drawX = drawX;
             this.drawY = drawY;
         }
@@ -70,18 +72,18 @@ public class StructureViewportRenderer implements ViewportRenderer<Structure> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            StructureToDraw that = (StructureToDraw) o;
+            EntityToDraw that = (EntityToDraw) o;
 
             if (drawX != that.drawX) return false;
             if (drawY != that.drawY) return false;
-            if (structure != null ? !structure.equals(that.structure) : that.structure != null) return false;
+            if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
 
             return true;
         }
 
         @Override
         public int hashCode() {
-            int result = structure != null ? structure.hashCode() : 0;
+            int result = entity != null ? entity.hashCode() : 0;
             result = 31 * result + drawX;
             result = 31 * result + drawY;
             return result;

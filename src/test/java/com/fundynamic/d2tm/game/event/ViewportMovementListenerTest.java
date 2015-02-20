@@ -4,9 +4,9 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapCell;
-import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.Structure;
-import com.fundynamic.d2tm.game.structures.StructuresRepository;
+import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -219,12 +219,12 @@ public class ViewportMovementListenerTest {
         int NOT_APPLICABLE = -1;
         MapCell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        cell.setStructure(structure);
+        cell.setMapEntity(structure);
         mouse.setHoverCell(cell);
 
         listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 
-        assertSame(structure, mouse.getLastSelectedStructure());
+        assertSame(structure, mouse.getLastSelectedEntity());
     }
 
     @Test
@@ -232,13 +232,13 @@ public class ViewportMovementListenerTest {
         int NOT_APPLICABLE = -1;
         MapCell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        cell.setStructure(structure);
+        cell.setMapEntity(structure);
         mouse.setHoverCell(cell);
         mouse.selectStructure();
 
         listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 
-        assertEquals(null, mouse.getLastSelectedStructure());
+        assertEquals(null, mouse.getLastSelectedEntity());
     }
 
     private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {

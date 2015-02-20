@@ -4,7 +4,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.map.renderer.*;
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -22,8 +22,7 @@ public class Viewport {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final StructureRenderer structureRenderer;
-    private final StructureViewportRenderer structureViewportRenderer;
+    private final MapEntityViewportRenderer mapEntityViewportRenderer;
 
     private final MapCellTerrainRenderer mapCellTerrainRenderer;
     private final MapCellShroudRenderer mapCellShroudRenderer;
@@ -60,12 +59,11 @@ public class Viewport {
         this.moveSpeed = moveSpeed;
 
         this.mapCellViewportRenderer = new MapCellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.structureViewportRenderer = new StructureViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-
         this.mapCellTerrainRenderer = new MapCellTerrainRenderer();
         this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
-        this.structureRenderer = new StructureRenderer();
         this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
+
+        this.mapEntityViewportRenderer = new MapEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }
 
     public void render() throws SlickException {
@@ -73,9 +71,9 @@ public class Viewport {
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
-        structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
+        mapEntityViewportRenderer.render(this.buffer, viewingVector);
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
-        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
+//        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);
     }

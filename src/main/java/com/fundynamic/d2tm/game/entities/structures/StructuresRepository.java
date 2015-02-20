@@ -1,8 +1,8 @@
-package com.fundynamic.d2tm.game.structures;
+package com.fundynamic.d2tm.game.entities.structures;
 
 
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.math.Vector2D;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 

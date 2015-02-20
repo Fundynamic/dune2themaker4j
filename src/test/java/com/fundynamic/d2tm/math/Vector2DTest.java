@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.math;
+package com.fundynamic.d2tm.math;
 
 import org.junit.Assert;
 import org.junit.Test;

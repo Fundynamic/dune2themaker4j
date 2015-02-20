@@ -1,8 +1,9 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.map.MapCell;
-import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.Structure;
+import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.math.Vector2D;
 
 /**
  * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)
@@ -12,7 +13,7 @@ import com.fundynamic.d2tm.game.structures.Structure;
 public class Mouse {
 
     private MapCell hoverCell;
-    private Structure lastSelectedStructure;
+    private MapEntity lastSelectedEntity;
 
     public Mouse(){}
 
@@ -38,30 +39,35 @@ public class Mouse {
      * If there is no structure bound to the cell then this automatically deselects the structure.
      */
     public void selectStructure() {
-        if (hoverCell.getStructure() == null) return;
-        lastSelectedStructure = hoverCell.getStructure();
-        lastSelectedStructure.select();
+        if (hoverCell == null) return;
+        MapEntity mapEntity = hoverCell.getMapEntity();
+        if (mapEntity == null) return;
+        if (!mapEntity.isSelectable()) return;
+        lastSelectedEntity = mapEntity;
+        ((Selectable)lastSelectedEntity).select();
     }
 
-    public boolean hasAnyStructureSelected() {
-        return this.lastSelectedStructure != null;
+    public boolean hasAnyEntitySelected() {
+        return this.lastSelectedEntity != null;
     }
 
-    public Structure getLastSelectedStructure() {
-        return lastSelectedStructure;
+    public MapEntity getLastSelectedEntity() {
+        return lastSelectedEntity;
     }
 
     public void deselectStructure() {
-        if (lastSelectedStructure != null) {
-            lastSelectedStructure.deselect();
+        if (lastSelectedEntity != null) {
+            if (lastSelectedEntity.isSelectable()) {
+                ((Selectable) lastSelectedEntity).deselect();
+            }
         }
-        lastSelectedStructure = null;
+        lastSelectedEntity = null;
     }
 
-    public boolean hoversOverSelectableStructure() {
-        if (hoverCell == null) return false;
-        if (hoverCell.getStructure() == null) return false;
-        return !hoverCell.getStructure().isSelected();
+    public boolean hoversOverSelectableEntity() {
+        MapEntity mapEntity = hoverCell.getMapEntity();
+        if (mapEntity == null) return false;
+        return mapEntity.isSelectable();
 
     }
 }
