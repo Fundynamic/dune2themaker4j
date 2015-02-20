@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.math.Random;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
@@ -68,7 +69,10 @@ public class PlayingState extends BasicGameState {
         this.mouse = new Mouse();
 
         this.structuresRepository.placeStructureOnMap(Vector2D.create(5, 5), StructuresRepository.REFINERY);
-        this.unitsRepository.placeUnitOnMap(Vector2D.create(10, 10), UnitsRepository.QUAD);
+        for (int i = 0; i < 50; i++) {
+            this.unitsRepository.placeUnitOnMap(Vector2D.create(Random.getRandomBetween(0, 64), Random.getRandomBetween(0, 64)), UnitsRepository.QUAD);
+        }
+
 
         try {
             float moveSpeed = 30 * tileWidth;
