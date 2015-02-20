@@ -37,7 +37,6 @@ public class ViewportMovementListenerTest {
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
     public static final float INITIAL_VIEWPORT_X = 34F;
     public static final float INITIAL_VIEWPORT_Y = 34F;
-    public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
 
     public static int HEIGHT_OF_MAP = 40;
     public static int WIDTH_OF_MAP = 46;
@@ -247,7 +246,7 @@ public class ViewportMovementListenerTest {
     }
 
     private void updateAndRender() throws SlickException {
-        viewport.update(ONE_FRAME_PER_SECOND_DELTA);
+        viewport.update(1000f); // 1 second passed
         viewport.render();
     }
 
