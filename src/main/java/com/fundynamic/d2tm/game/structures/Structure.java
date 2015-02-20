@@ -1,13 +1,12 @@
 package com.fundynamic.d2tm.game.structures;
 
+import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure {
+public class Structure extends MapEntity {
 
-    private final Vector2D mapCoordinates;
-    private final SpriteSheet spriteSheet;
     private final int width;
     private final int height;
     private boolean selected;
@@ -23,10 +22,9 @@ public class Structure {
     }
 
     public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height) {
+        super(mapCoordinates, spriteSheet);
         this.width = width;
         this.height = height;
-        this.spriteSheet = spriteSheet;
-        this.mapCoordinates = mapCoordinates;
         this.selected = false;
         this.selectedIntensity = 1f;
         this.selectedDarkening = true;
