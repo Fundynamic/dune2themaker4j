@@ -36,7 +36,12 @@ public class StructuresRepository {
     public void placeStructureOnMap(Vector2D topLeft, int type) {
         StructureData data = structureData[type];
         Structure structure = new Structure(topLeft, data.image, data.width, data.height);
-        map.placeStructure(structure, data);
+        try {
+            map.placeStructure(structure, data);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e);
+            // TODO: swallow exception here for now
+        }
     }
 
     public class StructureData {
