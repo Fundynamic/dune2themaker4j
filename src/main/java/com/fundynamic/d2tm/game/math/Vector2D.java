@@ -2,6 +2,8 @@ package com.fundynamic.d2tm.game.math;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.Vector;
+
 public class Vector2D {
 
     private final Vector2f vec;
@@ -81,5 +83,11 @@ public class Vector2D {
     @Override
     public int hashCode() {
         return vec != null ? vec.hashCode() : 0;
+    }
+
+    public Vector2D div(float div) {
+        float divX = getX() / div;
+        float divY = getY() / div;
+        return Vector2D.create(divX, divY);
     }
 }
