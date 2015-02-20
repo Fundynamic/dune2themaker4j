@@ -61,6 +61,7 @@ public class Structure extends MapEntity implements Selectable {
         selectableImpl.deselect();
     }
 
+    @Override
     public boolean isSelected() {
         return selectableImpl.isSelected();
     }

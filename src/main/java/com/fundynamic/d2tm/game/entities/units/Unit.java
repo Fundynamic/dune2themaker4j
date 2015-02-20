@@ -26,21 +26,6 @@ public class Unit extends MapEntity {
         graphics.drawImage(sprite, drawX, drawY);
     }
 
-    @Override
-    public void select() {
-
-    }
-
-    @Override
-    public void deselect() {
-
-    }
-
-    @Override
-    public boolean isSelected() {
-        return false;
-    }
-
 
     public Image getSprite() {
         return spriteSheet.getSprite(facing, 0);

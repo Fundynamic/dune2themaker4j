@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -43,7 +44,7 @@ public class Mouse {
         if (mapEntity == null) return;
         if (!mapEntity.isSelectable()) return;
         lastSelectedEntity = mapEntity;
-        lastSelectedEntity.select();
+        ((Selectable)lastSelectedEntity).select();
     }
 
     public boolean hasAnyEntitySelected() {
@@ -56,7 +57,9 @@ public class Mouse {
 
     public void deselectStructure() {
         if (lastSelectedEntity != null) {
-            lastSelectedEntity.deselect();
+            if (lastSelectedEntity.isSelectable()) {
+                ((Selectable) lastSelectedEntity).deselect();
+            }
         }
         lastSelectedEntity = null;
     }

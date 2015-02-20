@@ -24,12 +24,6 @@ public abstract class MapEntity {
 
     public abstract void render(Graphics graphics, int drawX, int drawY);
 
-    public abstract void select();
-
-    public abstract void deselect();
-
-    public abstract boolean isSelected();
-
     public boolean isSelectable() {
         return this instanceof Selectable;
     }
