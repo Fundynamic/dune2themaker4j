@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.structures;
+package com.fundynamic.d2tm.game.entities.structures;
 
 
 import com.fundynamic.d2tm.game.map.Map;

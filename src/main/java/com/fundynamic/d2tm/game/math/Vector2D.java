@@ -14,6 +14,18 @@ public class Vector2D {
         return new Vector2D(x, y);
     }
 
+    /**
+     * Generate a vector with random (int) coordinates. Where X will be between 0 and given maxX and Y will be between
+     * 0 and maxY.
+     *
+     * @param maxX
+     * @param maxY
+     * @return new Vector instance
+     */
+    public static Vector2D random(int maxX, int maxY) {
+        return Vector2D.create(Random.getRandomBetween(0, maxX), Random.getRandomBetween(0, maxY));
+    }
+
     public Vector2D(float x, float y) {
         this.vec = new Vector2f(x, y);
     }

@@ -1,7 +1,9 @@
-package com.fundynamic.d2tm.game.structures;
+package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.game.math.Vector2D;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
@@ -79,6 +81,24 @@ public class Structure extends MapEntity {
         return mapCoordinates;
     }
 
+    @Override
+    public boolean isSelectable() {
+        return true;
+    }
+
+    @Override
+    public void render(Graphics graphics, int drawX, int drawY) {
+        Image sprite = getSprite();
+        graphics.drawImage(sprite, drawX, drawY);
+
+        if (isSelected()) {
+            float intensity = getSelectedIntensity();
+            graphics.setColor(new Color(intensity, intensity, intensity));
+            graphics.setLineWidth(2.f);
+            graphics.drawRect(drawX, drawY, getWidth() - 1, getHeight() - 1);
+        }
+    }
+
     public void select() {
         selected = true;
     }
@@ -92,4 +112,16 @@ public class Structure extends MapEntity {
     }
 
     public float getSelectedIntensity() { return selectedIntensity; }
+
+    @Override
+    public String toString() {
+        return "Structure{" +
+                "width=" + width +
+                ", height=" + height +
+                ", selected=" + selected +
+                ", selectedIntensity=" + selectedIntensity +
+                ", selectedDarkening=" + selectedDarkening +
+                ", animationTimer=" + animationTimer +
+                '}';
+    }
 }

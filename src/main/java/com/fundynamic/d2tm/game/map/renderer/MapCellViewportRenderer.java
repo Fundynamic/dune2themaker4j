@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Vector2f;
 
 /**
  * Responsible for selecting cells in view and calling the renderer for those drawing positions.

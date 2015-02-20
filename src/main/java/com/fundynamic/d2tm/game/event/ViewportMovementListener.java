@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.math.Random;
-import com.fundynamic.d2tm.game.structures.StructuresRepository;
+import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
 import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
@@ -31,13 +31,13 @@ public class ViewportMovementListener extends AbstractMouseListener {
         // TODO: this is here for now, but we want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
-                if (mouse.hoversOverSelectableStructure()) {
+                if (mouse.hoversOverSelectableEntity()) {
                     mouse.deselectStructure(); // deselect any previously selected structure
                     mouse.selectStructure();
                 }
 
                 // TODO: same goes for this... which basically is 'place structure here'
-                if (!mouse.hasAnyStructureSelected()) {
+                if (!mouse.hasAnyEntitySelected()) {
                     structuresRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructuresRepository.MAX_TYPES));
                 }
             }

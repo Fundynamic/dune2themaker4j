@@ -22,11 +22,7 @@ public class Viewport {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final StructureRenderer structureRenderer;
-    private final StructureViewportRenderer structureViewportRenderer;
-
-    private final UnitRenderer unitRenderer;
-    private final UnitViewportRenderer unitViewportRenderer;
+    private final MapEntityViewportRenderer mapEntityViewportRenderer;
 
     private final MapCellTerrainRenderer mapCellTerrainRenderer;
     private final MapCellShroudRenderer mapCellShroudRenderer;
@@ -67,11 +63,7 @@ public class Viewport {
         this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
         this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
 
-        this.structureViewportRenderer = new StructureViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.structureRenderer = new StructureRenderer();
-
-        this.unitViewportRenderer = new UnitViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.unitRenderer = new UnitRenderer();
+        this.mapEntityViewportRenderer = new MapEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }
 
     public void render() throws SlickException {
@@ -79,8 +71,7 @@ public class Viewport {
         if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
-        structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
-        unitViewportRenderer.render(this.buffer, viewingVector, unitRenderer);
+        mapEntityViewportRenderer.render(this.buffer, viewingVector);
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
 //        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 

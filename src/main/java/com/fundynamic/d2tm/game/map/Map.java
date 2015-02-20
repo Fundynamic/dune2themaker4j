@@ -2,12 +2,11 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.math.Vector2D;
-import com.fundynamic.d2tm.game.structures.Structure;
-import com.fundynamic.d2tm.game.structures.StructuresRepository;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
-import com.fundynamic.d2tm.game.units.Unit;
-import com.fundynamic.d2tm.game.units.UnitsRepository;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.SlickException;
@@ -152,7 +151,7 @@ public class Map {
     // the reference to StructuresRepository.StructureData is a bit awkward
     public void placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
-        getCell(mapCoordinates).setUnit(unit);
+        getCell(mapCoordinates).setMapEntity(unit);
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
@@ -164,14 +163,14 @@ public class Map {
 
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setStructure(structure);
+                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setMapEntity(structure);
             }
         }
 
         structures.add(structure);
     }
 
-    private Cell getCell(Vector2D mapCoordinates) {
+    public Cell getCell(Vector2D mapCoordinates) {
         return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
     }
 
