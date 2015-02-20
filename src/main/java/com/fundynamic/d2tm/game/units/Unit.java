@@ -21,7 +21,8 @@ public class Unit {
         this.spriteSheet = spriteSheet;
         this.width = width;
         this.height = height;
-        this.facing = Random.getRandomBetween(0, 8);
+        int possibleFacings = spriteSheet.getHorizontalCount();
+        this.facing = Random.getRandomBetween(0, possibleFacings);
     }
 
     public Vector2D getMapCoordinates() {
