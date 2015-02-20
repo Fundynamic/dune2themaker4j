@@ -2,12 +2,14 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.units.Unit;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
 
     private Structure structure;
+    private Unit unit;
 
     private Terrain terrain;
     private boolean shrouded;
@@ -17,13 +19,17 @@ public class Cell {
         this.terrain = terrain;
         this.shrouded = true;
         this.structure = null;
+        this.unit = null;
     }
 
+    // TODO: test this constructor?
     protected Cell(Cell other) {
-        if (other == null) throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
+        if (other == null)
+            throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
         this.terrain = other.getTerrain();
         this.shrouded = other.isShrouded();
         this.structure = other.getStructure();
+        this.unit = other.getUnit();
     }
 
     public static Cell withTerrain(Terrain terrain) {
@@ -72,4 +78,11 @@ public class Cell {
         return this.structure == selectedStructure;
     }
 
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
 }

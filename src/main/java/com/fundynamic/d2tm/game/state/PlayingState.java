@@ -9,6 +9,7 @@ import com.fundynamic.d2tm.game.math.Vector2D;
 import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.units.UnitsRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -39,6 +40,7 @@ public class PlayingState extends BasicGameState {
     private List<Viewport> viewports = new ArrayList<>();
 
     private StructuresRepository structuresRepository;
+    private UnitsRepository unitsRepository;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -61,10 +63,12 @@ public class PlayingState extends BasicGameState {
 
         this.map = Map.generateRandom(terrainFactory, shroud, 64, 64);
         this.structuresRepository = new StructuresRepository(map);
+        this.unitsRepository = new UnitsRepository(map);
 
         this.mouse = new Mouse();
 
         this.structuresRepository.placeStructureOnMap(Vector2D.create(5, 5), StructuresRepository.REFINERY);
+        this.unitsRepository.placeUnitOnMap(Vector2D.create(10, 10), UnitsRepository.QUAD);
 
         try {
             float moveSpeed = 30 * tileWidth;

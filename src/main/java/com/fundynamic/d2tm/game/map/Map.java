@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.game.structures.Structure;
 import com.fundynamic.d2tm.game.structures.StructuresRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.units.Unit;
+import com.fundynamic.d2tm.game.units.UnitsRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.SlickException;
@@ -147,8 +149,16 @@ public class Map {
 
     public Set<Structure> getStructures() { return structures; }
 
+    // the reference to StructuresRepository.StructureData is a bit awkward
+    public void placeUnit(Unit unit) {
+        Vector2D mapCoordinates = unit.getMapCoordinates();
+        getCell(mapCoordinates).setUnit(unit);
+    }
+
+    // the reference to StructuresRepository.StructureData is a bit awkward
     public void placeStructure(Structure structure, StructuresRepository.StructureData data) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
+        // TODO: these can be moved up in the stack (TILE_* is evil)
         int widthInCells = data.width / TILE_SIZE;
         int heightInCells = data.height / TILE_SIZE;
 
@@ -159,6 +169,10 @@ public class Map {
         }
 
         structures.add(structure);
+    }
+
+    private Cell getCell(Vector2D mapCoordinates) {
+        return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
     }
 
     // We also have a MapCell, they both are the same!? (somewhat?)

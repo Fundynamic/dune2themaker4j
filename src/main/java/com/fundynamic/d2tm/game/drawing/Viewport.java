@@ -25,6 +25,9 @@ public class Viewport {
     private final StructureRenderer structureRenderer;
     private final StructureViewportRenderer structureViewportRenderer;
 
+    private final UnitRenderer unitRenderer;
+    private final UnitViewportRenderer unitViewportRenderer;
+
     private final MapCellTerrainRenderer mapCellTerrainRenderer;
     private final MapCellShroudRenderer mapCellShroudRenderer;
     private final MapCellMouseInteractionRenderer mapCellMouseInteractionRenderer;
@@ -60,12 +63,15 @@ public class Viewport {
         this.moveSpeed = moveSpeed;
 
         this.mapCellViewportRenderer = new MapCellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.structureViewportRenderer = new StructureViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-
         this.mapCellTerrainRenderer = new MapCellTerrainRenderer();
         this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
-        this.structureRenderer = new StructureRenderer();
         this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
+
+        this.structureViewportRenderer = new StructureViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.structureRenderer = new StructureRenderer();
+
+        this.unitViewportRenderer = new UnitViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.unitRenderer = new UnitRenderer();
     }
 
     public void render() throws SlickException {
@@ -74,8 +80,9 @@ public class Viewport {
 
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
         structureViewportRenderer.render(this.buffer, viewingVector, structureRenderer);
+        unitViewportRenderer.render(this.buffer, viewingVector, unitRenderer);
         mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
-        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
+//        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
         drawBufferToGraphics(graphics, drawingVector);
     }
