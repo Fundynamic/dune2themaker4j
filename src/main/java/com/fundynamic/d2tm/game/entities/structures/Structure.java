@@ -10,10 +10,13 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Structure extends Entity implements Selectable {
 
+    public static int TILE_SIZE = 32; // HACK HACK
+
     // Behaviors
     private FadingSelection fadingSelection;
 
     // Implementation
+    private final int widthInCells, heightInCells;
     private float animationTimer;
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
@@ -25,6 +28,8 @@ public class Structure extends Entity implements Selectable {
     public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height) {
         super(mapCoordinates, spriteSheet);
         this.fadingSelection = new FadingSelection(width, height);
+        widthInCells = (int) Math.ceil(width / TILE_SIZE);
+        heightInCells = (int) Math.ceil(width / TILE_SIZE);
     }
 
     public Image getSprite() {
@@ -65,11 +70,21 @@ public class Structure extends Entity implements Selectable {
         return fadingSelection.isSelected();
     }
 
+    public int getHeightInCells() {
+        return heightInCells;
+    }
+
+    public int getWidthInCells() {
+        return widthInCells;
+    }
+
     @Override
     public String toString() {
         return "Structure{" +
-                "animationTimer=" + animationTimer +
-                ", selectable=" + fadingSelection +
+                "fadingSelection=" + fadingSelection +
+                ", widthInCells=" + widthInCells +
+                ", heightInCells=" + heightInCells +
+                ", animationTimer=" + animationTimer +
                 '}';
     }
 }

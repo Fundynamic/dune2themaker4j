@@ -2,22 +2,22 @@ package com.fundynamic.d2tm.game.event;
 
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Random;
-import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
 
     private final Viewport viewport;
     private final Mouse mouse;
-    private final StructureRepository structureRepository;
+    private final EntityRepository entityRepository;
 
-    public ViewportMovementListener(Viewport viewport, Mouse mouse, StructureRepository structureRepository) {
+    public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository) {
         this.viewport = viewport;
         this.mouse = mouse;
-        this.structureRepository = structureRepository;
+        this.entityRepository = entityRepository;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
                 // TODO: same goes for this... which basically is 'place structure here'
                 if (!mouse.hasAnyEntitySelected()) {
-                    structureRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructureRepository.MAX_TYPES));
+                    entityRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, 2));
                 }
             }
             if (button == Input.MOUSE_RIGHT_BUTTON) {

@@ -1,9 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -168,14 +166,12 @@ public class Map {
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
-    public void placeStructure(Structure structure, StructureRepository.StructureData data) {
+    public void placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
         // TODO: these can be moved up in the stack (TILE_* is evil)
-        int widthInCells = data.width / TILE_SIZE;
-        int heightInCells = data.height / TILE_SIZE;
 
-        for (int x = 0; x < widthInCells; x++) {
-            for (int y = 0; y < heightInCells; y++) {
+        for (int x = 0; x < structure.getWidthInCells(); x++) {
+            for (int y = 0; y < structure.getHeightInCells(); y++) {
                 getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
             }
         }
