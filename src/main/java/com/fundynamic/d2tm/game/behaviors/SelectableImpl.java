@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-import com.fundynamic.d2tm.game.map.MapEntity;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-public class SelectableImpl {
+/**
+ * A default implementation of selecting / deselecting something + with drawing effects
+ */
+public class SelectableImpl implements Selectable, Renderable {
 
     private float selectedIntensity;
     private boolean selectedDarkening;
@@ -56,6 +58,7 @@ public class SelectableImpl {
         return selected;
     }
 
+    @Override
     public void render(Graphics graphics, int drawX, int drawY) {
         if (selected) {
             graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));

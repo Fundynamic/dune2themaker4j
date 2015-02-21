@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.map.MapEntity;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -7,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Unit extends MapEntity {
+public class Unit extends MapEntity implements Renderable {
     private final int facing;
 
     public Unit(Vector2D mapCoordinates, Image image, int width, int height) {
@@ -21,9 +22,9 @@ public class Unit extends MapEntity {
     }
 
     @Override
-    public void render(Graphics graphics, int drawX, int drawY) {
+    public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
-        graphics.drawImage(sprite, drawX, drawY);
+        graphics.drawImage(sprite, x, y);
     }
 
 

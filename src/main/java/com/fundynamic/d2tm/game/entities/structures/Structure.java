@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
 import com.fundynamic.d2tm.game.map.MapEntity;
@@ -8,7 +9,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends MapEntity implements Selectable {
+public class Structure extends MapEntity implements Selectable, Renderable {
 
     // Behaviors
     private SelectableImpl selectableImpl;
@@ -46,11 +47,10 @@ public class Structure extends MapEntity implements Selectable {
     }
 
     @Override
-    public void render(Graphics graphics, int drawX, int drawY) {
+    public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
-        graphics.drawImage(sprite, drawX, drawY);
-
-        selectableImpl.render(graphics, drawX, drawY);
+        graphics.drawImage(sprite, x, y);
+        selectableImpl.render(graphics, x, y);
     }
 
     public void select() {
