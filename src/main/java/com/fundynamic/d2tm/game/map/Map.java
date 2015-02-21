@@ -8,7 +8,6 @@ import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.graphics.Shroud;
-import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashSet;
@@ -187,7 +186,7 @@ public class Map {
             return cells[x][y].getTerrain();
         }
 
-        private TerrainFacing determineFacing() {
+        private TerrainFacingDeterminer.TerrainFacing determineFacing() {
             Terrain terrain = getTerrain();
 
             return TerrainFacingDeterminer.getFacing(

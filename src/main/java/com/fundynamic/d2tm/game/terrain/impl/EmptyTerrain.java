@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
+import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.game.terrain.Terrain;
-import com.fundynamic.d2tm.graphics.TerrainFacing;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -34,7 +34,7 @@ public class EmptyTerrain implements Terrain {
     }
 
     @Override
-    public Terrain setFacing(TerrainFacing terrainFacing) {
+    public Terrain setFacing(TerrainFacingDeterminer.TerrainFacing terrainFacing) {
         return this;
     }
 
@@ -53,7 +53,7 @@ public class EmptyTerrain implements Terrain {
             instance = new EmptyTerrain(null);
         }
 
-        public EmptyTerrain setFacing(TerrainFacing terrainFacing) {
+        public EmptyTerrain setFacing(TerrainFacingDeterminer.TerrainFacing terrainFacing) {
             instance.setFacing(terrainFacing);
             return instance;
         }

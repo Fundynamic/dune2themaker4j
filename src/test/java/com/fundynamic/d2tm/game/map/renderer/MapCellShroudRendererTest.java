@@ -4,7 +4,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import static com.fundynamic.d2tm.game.map.renderer.MapCellShroudRenderer.getFacing;
-import static com.fundynamic.d2tm.graphics.ShroudFacing.*;
+import static com.fundynamic.d2tm.game.map.renderer.MapCellShroudRenderer.ShroudFacing.*;
 
 public class MapCellShroudRendererTest {
 

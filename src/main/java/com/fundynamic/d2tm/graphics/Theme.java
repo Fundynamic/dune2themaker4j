@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.graphics;
 
 
+import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
@@ -12,7 +13,7 @@ public class Theme {
         this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
     }
 
-    public Image getTileImage(int row, TerrainFacing facing) {
+    public Image getTileImage(int row, TerrainFacingDeterminer.TerrainFacing facing) {
         int column = facing.ordinal();
         return this.spriteSheet.getSprite(column, row);
     }
