@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class StructuresRepository {
+public class StructureRepository {
 
     public static int CONSTRUCTION_YARD = 0;
     public static int REFINERY = 1;
@@ -17,7 +17,7 @@ public class StructuresRepository {
 
     private StructureData structureData[] = new StructureData[MAX_TYPES];
 
-    public StructuresRepository(Map map) throws SlickException {
+    public StructureRepository(Map map) throws SlickException {
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         this.map = map;
         StructureData constructionYard = new StructureData();

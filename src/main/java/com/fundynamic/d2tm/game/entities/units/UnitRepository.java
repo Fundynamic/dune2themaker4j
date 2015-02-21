@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class UnitsRepository {
+public class UnitRepository {
 
     public static int TRIKE = 0;
     public static int QUAD = 1;
@@ -17,7 +17,7 @@ public class UnitsRepository {
 
     private UnitData unitData[] = new UnitData[MAX_TYPES];
 
-    public UnitsRepository(Map map) throws SlickException {
+    public UnitRepository(Map map) throws SlickException {
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         this.map = map;
         UnitData quad = new UnitData();

@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.map;
 import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
+import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -154,7 +154,7 @@ public class Map {
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
-    public void placeStructure(Structure structure, StructuresRepository.StructureData data) {
+    public void placeStructure(Structure structure, StructureRepository.StructureData data) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
         // TODO: these can be moved up in the stack (TILE_* is evil)
         int widthInCells = data.width / TILE_SIZE;

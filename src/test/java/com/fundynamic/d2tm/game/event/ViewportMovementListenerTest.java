@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
+import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -49,7 +49,7 @@ public class ViewportMovementListenerTest {
     private Map map;
 
     @Mock
-    private StructuresRepository structuresRepository;
+    private StructureRepository structureRepository;
 
     private Mouse mouse;
 
@@ -63,7 +63,7 @@ public class ViewportMovementListenerTest {
         this.mouse = new Mouse();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structureRepository);
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
@@ -185,7 +185,7 @@ public class ViewportMovementListenerTest {
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structureRepository);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
         updateAndRender();
@@ -205,7 +205,7 @@ public class ViewportMovementListenerTest {
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, structuresRepository);
+        listener = new ViewportMovementListener(viewport, mouse, structureRepository);
 
         listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();

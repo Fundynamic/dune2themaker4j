@@ -8,9 +8,9 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.structures.StructuresRepository;
+import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
-import com.fundynamic.d2tm.game.entities.units.UnitsRepository;
+import com.fundynamic.d2tm.game.entities.units.UnitRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -40,8 +40,8 @@ public class PlayingState extends BasicGameState {
 
     private List<Viewport> viewports = new ArrayList<>();
 
-    private StructuresRepository structuresRepository;
-    private UnitsRepository unitsRepository;
+    private StructureRepository structureRepository;
+    private UnitRepository unitRepository;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -65,16 +65,16 @@ public class PlayingState extends BasicGameState {
         int mapWidth = 64;
         int mapHeight = 64;
         this.map = Map.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
-        this.structuresRepository = new StructuresRepository(map);
-        this.unitsRepository = new UnitsRepository(map);
+        this.structureRepository = new StructureRepository(map);
+        this.unitRepository = new UnitRepository(map);
 
         this.mouse = new Mouse();
 
-        this.structuresRepository.placeStructureOnMap(Vector2D.create(5, 5), StructuresRepository.REFINERY);
+        this.structureRepository.placeStructureOnMap(Vector2D.create(5, 5), StructureRepository.REFINERY);
         for (int i = 0; i < 50; i++) {
             Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
             if (map.getCell(randomCell).getMapEntity() != null) continue;
-            this.unitsRepository.placeUnitOnMap(randomCell, Random.getInt(UnitsRepository.MAX_TYPES));
+            this.unitRepository.placeUnitOnMap(randomCell, Random.getInt(UnitRepository.MAX_TYPES));
         }
 
 
@@ -85,7 +85,7 @@ public class PlayingState extends BasicGameState {
             Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
-            input.addMouseListener(new ViewportMovementListener(viewport, mouse, structuresRepository));
+            input.addMouseListener(new ViewportMovementListener(viewport, mouse, structureRepository));
 
             viewports.add(viewport);
         } catch (SlickException e) {
