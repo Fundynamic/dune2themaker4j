@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.drawing;
 
+import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
@@ -9,13 +10,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-public class Viewport {
+public class Viewport implements Renderable {
 
     private static final int PIXELS_NEAR_BORDER = 2;
 
     private final Vector2D viewportDimensions;
 
-    private final Graphics graphics;
     private final Image buffer;
 
     private final Vector2D drawingVector;
@@ -39,7 +39,6 @@ public class Viewport {
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,
                     Vector2D viewingVector,
-                    Graphics graphics,
                     Map map,
                     float moveSpeed,
                     int tileWidth,
@@ -47,7 +46,6 @@ public class Viewport {
                     Mouse mouse) throws SlickException {
         this.viewportDimensions = viewportDimensions;
         this.map = map;
-        this.graphics = graphics;
 
         this.drawingVector = drawingVector;
         this.buffer = constructImage(viewportDimensions);
@@ -66,16 +64,25 @@ public class Viewport {
         this.mapEntityViewportRenderer = new MapEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }
 
-    public void render() throws SlickException {
-        final Graphics bufferGraphics = this.buffer.getGraphics();
-        if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
+    public void render(Graphics graphics) {
+        render(graphics, drawingVector.getXAsInt(), drawingVector.getYAsInt());
+    }
 
-        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
-        mapEntityViewportRenderer.render(this.buffer, viewingVector);
-        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
+    @Override
+    public void render(Graphics graphics, int x, int y) {
+        try {
+            final Graphics bufferGraphics = this.buffer.getGraphics();
+            if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
+
+            mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
+            mapEntityViewportRenderer.render(this.buffer, viewingVector);
+            mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
 //        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
-        drawBufferToGraphics(graphics, drawingVector);
+            drawBufferToGraphics(graphics, drawingVector);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
     }
 
     public void update(float delta) {
@@ -156,4 +163,5 @@ public class Viewport {
     public int getAbsoluteY(int yPositionOnScreen) {
         return yPositionOnScreen + (int)viewingVector.getY();
     }
+
 }

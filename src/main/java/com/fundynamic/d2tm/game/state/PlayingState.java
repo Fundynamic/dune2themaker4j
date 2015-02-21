@@ -82,7 +82,7 @@ public class PlayingState extends BasicGameState {
             float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, graphics, this.map, moveSpeed, tileWidth, tileHeight, mouse);
+            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, this.map, moveSpeed, tileWidth, tileHeight, mouse);
 
             // Add listener for this viewport
             input.addMouseListener(new ViewportMovementListener(viewport, mouse, structuresRepository));
@@ -96,7 +96,7 @@ public class PlayingState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         for (Viewport viewport : viewports) {
-            viewport.render();
+            viewport.render(g);
         }
     }
 
