@@ -5,11 +5,11 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.Graphics;
 
-public class MapCellShroudRenderer implements Renderer<Cell> {
+public class CellShroudRenderer implements Renderer<Cell> {
 
     private final Shroud shroud;
 
-    public MapCellShroudRenderer(Map map) {
+    public CellShroudRenderer(Map map) {
         this.shroud = map.getShroud();
     }
 

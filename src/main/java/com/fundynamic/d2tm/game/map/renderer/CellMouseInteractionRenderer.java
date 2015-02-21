@@ -6,11 +6,11 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 
-public class MapCellMouseInteractionRenderer implements Renderer<Cell> {
+public class CellMouseInteractionRenderer implements Renderer<Cell> {
 
     private final Mouse mouse;
 
-    public MapCellMouseInteractionRenderer(Mouse mouse) {
+    public CellMouseInteractionRenderer(Mouse mouse) {
         this.mouse = mouse;
     }
 

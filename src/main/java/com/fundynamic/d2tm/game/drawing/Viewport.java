@@ -22,12 +22,12 @@ public class Viewport implements Renderable {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final MapEntityViewportRenderer mapEntityViewportRenderer;
+    private final EntityViewportRenderer entityViewportRenderer;
 
-    private final MapCellTerrainRenderer mapCellTerrainRenderer;
-    private final MapCellShroudRenderer mapCellShroudRenderer;
-    private final MapCellMouseInteractionRenderer mapCellMouseInteractionRenderer;
-    private final MapCellViewportRenderer mapCellViewportRenderer;
+    private final CellTerrainRenderer cellTerrainRenderer;
+    private final CellShroudRenderer cellShroudRenderer;
+    private final CellMouseInteractionRenderer cellMouseInteractionRenderer;
+    private final CellViewportRenderer cellViewportRenderer;
 
     private Vector2D velocity;
     private float moveSpeed;
@@ -56,12 +56,12 @@ public class Viewport implements Renderable {
 
         this.moveSpeed = moveSpeed;
 
-        this.mapCellViewportRenderer = new MapCellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.mapCellTerrainRenderer = new MapCellTerrainRenderer();
-        this.mapCellShroudRenderer = new MapCellShroudRenderer(map);
-        this.mapCellMouseInteractionRenderer = new MapCellMouseInteractionRenderer(mouse);
+        this.cellViewportRenderer = new CellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.cellTerrainRenderer = new CellTerrainRenderer();
+        this.cellShroudRenderer = new CellShroudRenderer(map);
+        this.cellMouseInteractionRenderer = new CellMouseInteractionRenderer(mouse);
 
-        this.mapEntityViewportRenderer = new MapEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }
 
     public void render(Graphics graphics) {
@@ -74,9 +74,9 @@ public class Viewport implements Renderable {
             final Graphics bufferGraphics = this.buffer.getGraphics();
             if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
-            mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellTerrainRenderer);
-            mapEntityViewportRenderer.render(this.buffer, viewingVector);
-            mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellMouseInteractionRenderer);
+            cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
+            entityViewportRenderer.render(this.buffer, viewingVector);
+            cellViewportRenderer.render(this.buffer, viewingVector, cellMouseInteractionRenderer);
 //        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
 
             drawBufferToGraphics(graphics, drawingVector);

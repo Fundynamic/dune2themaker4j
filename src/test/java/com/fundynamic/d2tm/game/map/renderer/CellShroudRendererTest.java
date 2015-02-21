@@ -3,10 +3,10 @@ package com.fundynamic.d2tm.game.map.renderer;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import static com.fundynamic.d2tm.game.map.renderer.MapCellShroudRenderer.getFacing;
-import static com.fundynamic.d2tm.game.map.renderer.MapCellShroudRenderer.ShroudFacing.*;
+import static com.fundynamic.d2tm.game.map.renderer.CellShroudRenderer.getFacing;
+import static com.fundynamic.d2tm.game.map.renderer.CellShroudRenderer.ShroudFacing.*;
 
-public class MapCellShroudRendererTest {
+public class CellShroudRendererTest {
 
     @Test
     public void MIDDLE() throws Exception {

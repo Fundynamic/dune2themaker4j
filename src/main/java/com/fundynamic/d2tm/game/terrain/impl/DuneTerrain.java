@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.map.renderer.TerrainFacingDeterminer;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.newdawn.slick.Image;
@@ -21,12 +21,12 @@ public abstract class DuneTerrain implements Terrain {
 
     public DuneTerrain(Theme theme) {
         this.theme = theme;
-        this.tileImage = makeTileImage(TerrainFacingDeterminer.TerrainFacing.FULL);
+        this.tileImage = makeTileImage(Map.TerrainFacing.FULL);
     }
 
     protected abstract int getTerrainType();
 
-    public DuneTerrain setFacing(TerrainFacingDeterminer.TerrainFacing terrainFacing) {
+    public DuneTerrain setFacing(Map.TerrainFacing terrainFacing) {
         this.tileImage = makeTileImage(terrainFacing);
         return this;
     }
@@ -40,7 +40,7 @@ public abstract class DuneTerrain implements Terrain {
         return this.getClass().equals(terrain.getClass());
     }
 
-    private Image makeTileImage(TerrainFacingDeterminer.TerrainFacing terrainFacing) {
+    private Image makeTileImage(Map.TerrainFacing terrainFacing) {
         return theme.getTileImage(getTerrainType(), terrainFacing);
     }
 }

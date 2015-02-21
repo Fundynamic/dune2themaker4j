@@ -11,7 +11,7 @@ import org.newdawn.slick.SlickException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MapEntityViewportRenderer {
+public class EntityViewportRenderer {
 
     private final int tileHeight;
     private final int tileWidth;
@@ -19,7 +19,7 @@ public class MapEntityViewportRenderer {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public MapEntityViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public EntityViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;

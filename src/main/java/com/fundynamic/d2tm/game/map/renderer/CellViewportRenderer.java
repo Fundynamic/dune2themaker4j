@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
  * Responsible for selecting cells in view and calling the renderer for those drawing positions.
  *
  */
-public class MapCellViewportRenderer implements ViewportRenderer<Cell> {
+public class CellViewportRenderer implements ViewportRenderer<Cell> {
 
     private final int tileHeight;
     private final int tileWidth;
@@ -18,7 +18,7 @@ public class MapCellViewportRenderer implements ViewportRenderer<Cell> {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public MapCellViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public CellViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
