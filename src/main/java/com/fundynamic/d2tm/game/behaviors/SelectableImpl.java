@@ -6,7 +6,7 @@ import org.newdawn.slick.Graphics;
 /**
  * A default implementation of selecting / deselecting something + with drawing effects
  */
-public class SelectableImpl implements Selectable, Renderable {
+public class SelectableImpl implements Selectable, Renderable, Updateable {
 
     private float selectedIntensity;
     private boolean selectedDarkening;

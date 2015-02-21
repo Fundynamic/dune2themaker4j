@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -8,6 +9,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
@@ -105,12 +107,29 @@ public class MouseTest {
 
     @Test
     public void hoversOverSelectableEntityReturnsFalseWhenHoveringOverNonSelectableEntity() {
-        Unit unit = new Unit(Vector2D.zero(), Mockito.mock(SpriteSheet.class)); // unit is not selectable at this point in time!
-        defaultHoverCell.setEntity(unit);
+        NotSelectableEntity notSelectableEntity = new NotSelectableEntity(Vector2D.zero(), Mockito.mock(SpriteSheet.class));
+        defaultHoverCell.setEntity(notSelectableEntity);
         Assert.assertFalse(mouse.hoversOverSelectableEntity());
     }
 
     private Structure makeStructure() {
         return new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
+    }
+
+    private class NotSelectableEntity extends Entity {
+
+        public NotSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet) {
+            super(mapCoordinates, spriteSheet);
+        }
+
+        @Override
+        public void render(Graphics graphics, int x, int y) {
+
+        }
+
+        @Override
+        public void update(float deltaInMs) {
+
+        }
     }
 }
