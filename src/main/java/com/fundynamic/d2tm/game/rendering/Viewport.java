@@ -71,12 +71,16 @@ public class Viewport implements Renderable {
     public void render(Graphics graphics, int x, int y) {
         try {
             final Graphics bufferGraphics = this.buffer.getGraphics();
-            if (bufferGraphics == null) return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
+            if (bufferGraphics == null)
+                return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
+            // TODO: Merge the culling into this viewport class(?)
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
+
             entityViewportRenderer.render(this.buffer, viewingVector);
+
             cellViewportRenderer.render(this.buffer, viewingVector, cellMouseInteractionRenderer);
-//        mapCellViewportRenderer.render(this.buffer, viewingVector, mapCellShroudRenderer);
+//            cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 
             drawBufferToGraphics(graphics, drawingVector);
         } catch (SlickException e) {
@@ -153,14 +157,14 @@ public class Viewport implements Renderable {
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteX(int xPositionOnScreen) {
-        return xPositionOnScreen + (int)viewingVector.getX();
+        return xPositionOnScreen + (int) viewingVector.getX();
     }
 
     /**
      * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
      */
     public int getAbsoluteY(int yPositionOnScreen) {
-        return yPositionOnScreen + (int)viewingVector.getY();
+        return yPositionOnScreen + (int) viewingVector.getY();
     }
 
 }
