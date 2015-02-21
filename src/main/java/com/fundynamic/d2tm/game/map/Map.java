@@ -170,8 +170,8 @@ public class Map {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
         // TODO: these can be moved up in the stack (TILE_* is evil)
 
-        for (int x = 0; x < structure.getWidthInCells(); x++) {
-            for (int y = 0; y < structure.getHeightInCells(); y++) {
+        for (int x = 0; x < (structure.getWidthInCells() - 1); x++) {
+            for (int y = 0; y < (structure.getHeightInCells() - 1); y++) {
                 getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
             }
         }
