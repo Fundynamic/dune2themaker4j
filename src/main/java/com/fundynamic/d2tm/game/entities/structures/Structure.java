@@ -2,13 +2,13 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
-import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends MapEntity implements Selectable {
+public class Structure extends Entity implements Selectable {
 
     // Behaviors
     private SelectableImpl selectableImpl;

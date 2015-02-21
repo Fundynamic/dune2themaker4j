@@ -73,7 +73,7 @@ public class PlayingState extends BasicGameState {
         this.structureRepository.placeStructureOnMap(Vector2D.create(5, 5), StructureRepository.REFINERY);
         for (int i = 0; i < 50; i++) {
             Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
-            if (map.getCell(randomCell).getMapEntity() != null) continue;
+            if (map.getCell(randomCell).getEntity() != null) continue;
             this.unitRepository.placeUnitOnMap(randomCell, Random.getInt(UnitRepository.MAX_TYPES));
         }
 

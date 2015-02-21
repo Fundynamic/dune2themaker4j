@@ -1,13 +1,13 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Unit extends MapEntity {
+public class Unit extends Entity {
     private final int facing;
 
     public Unit(Vector2D mapCoordinates, Image image, int width, int height) {

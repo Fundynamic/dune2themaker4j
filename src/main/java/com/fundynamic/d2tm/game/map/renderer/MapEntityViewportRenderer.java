@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.map.renderer;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -38,7 +38,7 @@ public class MapEntityViewportRenderer {
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
                 Cell cell = map.getCell(x, y);
-                MapEntity entity = cell.getMapEntity();
+                Entity entity = cell.getEntity();
                 if (entity == null) continue;
 
                 // TODO: try to find entity without the use of map (from cell), but rather from a 'list' of entities, which
@@ -58,10 +58,10 @@ public class MapEntityViewportRenderer {
     }
 
     private class EntityToDraw {
-        private MapEntity entity;
+        private Entity entity;
         private int drawX, drawY;
 
-        public EntityToDraw(MapEntity entity, int drawX, int drawY) {
+        public EntityToDraw(Entity entity, int drawX, int drawY) {
             this.entity = entity;
             this.drawX = drawX;
             this.drawY = drawY;

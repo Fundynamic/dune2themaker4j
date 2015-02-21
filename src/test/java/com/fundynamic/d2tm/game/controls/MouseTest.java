@@ -48,7 +48,7 @@ public class MouseTest {
     @Test
     public void selectStructureOnCell() {
         Structure structure = makeStructure();
-        defaultHoverCell.setMapEntity(structure);
+        defaultHoverCell.setEntity(structure);
         mouse.selectStructure();
         assertEquals(structure, mouse.getLastSelectedEntity());
         assertTrue(mouse.hasAnyEntitySelected());
@@ -62,7 +62,7 @@ public class MouseTest {
     @Test
     public void selectStructureOnCellWithoutStructureWillNotInfluenceLastSelectedStructure() {
         Structure structure = makeStructure();
-        defaultHoverCell.setMapEntity(structure);
+        defaultHoverCell.setEntity(structure);
         mouse.selectStructure();
 
         MapCell hoverCellWithoutStructure = makeCell();
@@ -75,7 +75,7 @@ public class MouseTest {
     @Test
     public void deselectStructureDeselectsPreviouslySelectedStructure() {
         Structure structure = makeStructure();
-        defaultHoverCell.setMapEntity(structure);
+        defaultHoverCell.setEntity(structure);
         mouse.selectStructure();
         mouse.deselectStructure();
 
@@ -99,14 +99,14 @@ public class MouseTest {
     @Test
     public void hoversOverSelectableEntityReturnsTrueWhenHoveringOverSelectableEntity() {
         Structure structure = makeStructure();
-        defaultHoverCell.setMapEntity(structure);
+        defaultHoverCell.setEntity(structure);
         Assert.assertTrue(mouse.hoversOverSelectableEntity());
     }
 
     @Test
     public void hoversOverSelectableEntityReturnsFalseWhenHoveringOverNonSelectableEntity() {
         Unit unit = new Unit(Vector2D.zero(), Mockito.mock(SpriteSheet.class)); // unit is not selectable at this point in time!
-        defaultHoverCell.setMapEntity(unit);
+        defaultHoverCell.setEntity(unit);
         Assert.assertFalse(mouse.hoversOverSelectableEntity());
     }
 

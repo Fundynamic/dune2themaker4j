@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -9,13 +10,13 @@ public class Cell {
 
     private Terrain terrain;
     private boolean shrouded;
-    private MapEntity mapEntity;
+    private Entity entity;
 
     protected Cell(Terrain terrain) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         this.terrain = terrain;
         this.shrouded = true;
-        this.mapEntity = null;
+        this.entity = null;
     }
 
     // TODO: test this constructor?
@@ -24,7 +25,7 @@ public class Cell {
             throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
         this.terrain = other.getTerrain();
         this.shrouded = other.isShrouded();
-        this.mapEntity = other.getMapEntity();
+        this.entity = other.getEntity();
     }
 
     public static Cell withTerrain(Terrain terrain) {
@@ -59,14 +60,14 @@ public class Cell {
         this.shrouded = shrouded;
     }
 
-    public MapEntity getMapEntity() {
-        return mapEntity;
+    public Entity getEntity() {
+        return entity;
     }
 
-    public void setMapEntity(MapEntity mapEntity) {
-        if (this.mapEntity != null) {
-            throw new IllegalArgumentException("Cannot place mapEntity (" + mapEntity + ") because mapEntity already exists: " + this.mapEntity);
+    public void setEntity(Entity entity) {
+        if (this.entity != null) {
+            throw new IllegalArgumentException("Cannot place mapEntity (" + entity + ") because mapEntity already exists: " + this.entity);
         }
-        this.mapEntity = mapEntity;
+        this.entity = entity;
     }
 }

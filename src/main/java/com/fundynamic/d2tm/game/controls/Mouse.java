@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.map.MapCell;
-import com.fundynamic.d2tm.game.map.MapEntity;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Vector2D;
 
 /**
@@ -13,7 +13,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 public class Mouse {
 
     private MapCell hoverCell;
-    private MapEntity lastSelectedEntity;
+    private Entity lastSelectedEntity;
 
     public Mouse(){}
 
@@ -40,10 +40,10 @@ public class Mouse {
      */
     public void selectStructure() {
         if (hoverCell == null) return;
-        MapEntity mapEntity = hoverCell.getMapEntity();
-        if (mapEntity == null) return;
-        if (!mapEntity.isSelectable()) return;
-        lastSelectedEntity = mapEntity;
+        Entity entity = hoverCell.getEntity();
+        if (entity == null) return;
+        if (!entity.isSelectable()) return;
+        lastSelectedEntity = entity;
         ((Selectable)lastSelectedEntity).select();
     }
 
@@ -51,7 +51,7 @@ public class Mouse {
         return this.lastSelectedEntity != null;
     }
 
-    public MapEntity getLastSelectedEntity() {
+    public Entity getLastSelectedEntity() {
         return lastSelectedEntity;
     }
 
@@ -65,9 +65,9 @@ public class Mouse {
     }
 
     public boolean hoversOverSelectableEntity() {
-        MapEntity mapEntity = hoverCell.getMapEntity();
-        if (mapEntity == null) return false;
-        return mapEntity.isSelectable();
+        Entity entity = hoverCell.getEntity();
+        if (entity == null) return false;
+        return entity.isSelectable();
 
     }
 }

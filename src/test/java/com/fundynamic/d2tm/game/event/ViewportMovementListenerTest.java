@@ -219,7 +219,7 @@ public class ViewportMovementListenerTest {
         int NOT_APPLICABLE = -1;
         MapCell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        cell.setMapEntity(structure);
+        cell.setEntity(structure);
         mouse.setHoverCell(cell);
 
         listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
@@ -232,7 +232,7 @@ public class ViewportMovementListenerTest {
         int NOT_APPLICABLE = -1;
         MapCell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
-        cell.setMapEntity(structure);
+        cell.setEntity(structure);
         mouse.setHoverCell(cell);
         mouse.selectStructure();
 

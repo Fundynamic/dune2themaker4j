@@ -150,7 +150,7 @@ public class Map {
     // the reference to StructuresRepository.StructureData is a bit awkward
     public void placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
-        getCell(mapCoordinates).setMapEntity(unit);
+        getCell(mapCoordinates).setEntity(unit);
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
@@ -162,7 +162,7 @@ public class Map {
 
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setMapEntity(structure);
+                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
             }
         }
 
