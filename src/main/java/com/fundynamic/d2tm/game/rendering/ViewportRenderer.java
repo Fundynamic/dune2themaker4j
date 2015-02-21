@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.map.renderer;
+package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -11,7 +11,7 @@ import org.newdawn.slick.SlickException;
  * <p>
  *     Implementations of this interface will select things of type T on any source of data (Map, Structures list, etc).
  *     When they are a candidate to draw on the actual screen it should delegate this to a concrete implementation of
- *     {@link com.fundynamic.d2tm.game.map.renderer.Renderer} of same type T.
+ *     {@link Renderer} of same type T.
  * </p>
  * <p>
  *     Example: Selecting which MapCells should be drawn is a different logic than selecting which Structures must be drawn

@@ -3,6 +3,8 @@ package com.fundynamic.d2tm.game.map.renderer;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.CellFactory;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.CellViewportRenderer;
+import com.fundynamic.d2tm.game.rendering.Renderer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.junit.runner.RunWith;

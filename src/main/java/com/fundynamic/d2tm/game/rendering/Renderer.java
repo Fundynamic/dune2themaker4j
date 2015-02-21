@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.map.renderer;
+package com.fundynamic.d2tm.game.rendering;
 
 import org.newdawn.slick.Graphics;
 
@@ -7,10 +7,10 @@ import org.newdawn.slick.Graphics;
  * Very abstract way of rendering 'things' on the screen.
  * </p>
  * <p>
- * This is used by the {@link com.fundynamic.d2tm.game.map.renderer.ViewportRenderer} to draw actual stuff on the screen.
+ * This is used by the {@link ViewportRenderer} to draw actual stuff on the screen.
  * </p>
  * <p>
- * A {@link com.fundynamic.d2tm.game.map.renderer.ViewportRenderer} is responsible for culling/selecting stuff to draw
+ * A {@link ViewportRenderer} is responsible for culling/selecting stuff to draw
  * on the screen, but delegates *what* to draw to a concrete implementation of this Renderer. The types (T) must be
  * the same for both ViewportRenderer and this Renderer.
  * </p>
@@ -21,7 +21,7 @@ import org.newdawn.slick.Graphics;
  *
  * @param <T> Type of thing to render
  */
-interface Renderer<T> {
+public interface Renderer<T> {
 
     void draw(Graphics graphics, T thingToRender, int drawX, int drawY);
 

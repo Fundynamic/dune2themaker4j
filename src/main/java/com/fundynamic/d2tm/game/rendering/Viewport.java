@@ -1,10 +1,9 @@
-package com.fundynamic.d2tm.game.drawing;
+package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
-import com.fundynamic.d2tm.game.map.renderer.*;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;

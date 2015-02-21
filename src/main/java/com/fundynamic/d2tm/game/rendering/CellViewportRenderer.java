@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.map.renderer;
+package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
