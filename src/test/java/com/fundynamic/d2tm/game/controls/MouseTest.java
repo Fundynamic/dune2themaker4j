@@ -49,7 +49,7 @@ public class MouseTest {
     public void selectStructureOnCell() {
         Structure structure = makeStructure();
         defaultHoverCell.setEntity(structure);
-        mouse.selectStructure();
+        mouse.selectEntity();
         assertEquals(structure, mouse.getLastSelectedEntity());
         assertTrue(mouse.hasAnyEntitySelected());
     }
@@ -63,11 +63,11 @@ public class MouseTest {
     public void selectStructureOnCellWithoutStructureWillNotInfluenceLastSelectedStructure() {
         Structure structure = makeStructure();
         defaultHoverCell.setEntity(structure);
-        mouse.selectStructure();
+        mouse.selectEntity();
 
         Cell hoverCellWithoutStructure = makeCell();
         mouse.setHoverCell(hoverCellWithoutStructure);
-        mouse.selectStructure(); // this should ignore the fact that the new hover cell has no structure
+        mouse.selectEntity(); // this should ignore the fact that the new hover cell has no structure
 
         assertEquals(structure, mouse.getLastSelectedEntity());
     }
@@ -76,8 +76,8 @@ public class MouseTest {
     public void deselectStructureDeselectsPreviouslySelectedStructure() {
         Structure structure = makeStructure();
         defaultHoverCell.setEntity(structure);
-        mouse.selectStructure();
-        mouse.deselectStructure();
+        mouse.selectEntity();
+        mouse.deselectEntity();
 
         assertNull(mouse.getLastSelectedEntity());
         assertFalse(structure.isSelected());
@@ -86,13 +86,13 @@ public class MouseTest {
     @Test
     public void deselectStructureIgnoresNullHoverCell() {
         mouse = new Mouse(null);
-        mouse.deselectStructure();
+        mouse.deselectEntity();
         assertNull(mouse.getLastSelectedEntity());
     }
 
     @Test
     public void deselectStructureIgnoresWhenNoStructureWasSelectedInTheFirstPlace() {
-        mouse.deselectStructure();
+        mouse.deselectEntity();
         assertNull(mouse.getLastSelectedEntity());
     }
 

@@ -38,7 +38,7 @@ public class Mouse {
      * When a structure is bound to a cell, this method makes sure that is the only selected structure.
      * If there is no structure bound to the cell then this automatically deselects the structure.
      */
-    public void selectStructure() {
+    public void selectEntity() {
         if (hoverCell == null) return;
         Entity entity = hoverCell.getEntity();
         if (entity == null) return;
@@ -55,7 +55,7 @@ public class Mouse {
         return lastSelectedEntity;
     }
 
-    public void deselectStructure() {
+    public void deselectEntity() {
         if (lastSelectedEntity != null) {
             if (lastSelectedEntity.isSelectable()) {
                 ((Selectable) lastSelectedEntity).deselect();

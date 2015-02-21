@@ -234,7 +234,7 @@ public class ViewportMovementListenerTest {
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
-        mouse.selectStructure();
+        mouse.selectEntity();
 
         listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
 

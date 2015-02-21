@@ -32,8 +32,8 @@ public class ViewportMovementListener extends AbstractMouseListener {
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 if (mouse.hoversOverSelectableEntity()) {
-                    mouse.deselectStructure(); // deselect any previously selected structure
-                    mouse.selectStructure();
+                    mouse.deselectEntity();
+                    mouse.selectEntity();
                 }
 
                 // TODO: same goes for this... which basically is 'place structure here'
@@ -42,7 +42,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
                 }
             }
             if (button == Input.MOUSE_RIGHT_BUTTON) {
-                mouse.deselectStructure();
+                mouse.deselectEntity();
             }
         }
     }
