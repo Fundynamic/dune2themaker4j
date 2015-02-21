@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Random;
@@ -13,11 +14,13 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Viewport viewport;
     private final Mouse mouse;
     private final EntityRepository entityRepository;
+    private EntityRepository.EntityType entityType;
 
     public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository) {
         this.viewport = viewport;
         this.mouse = mouse;
         this.entityRepository = entityRepository;
+        this.entityType = EntityRepository.EntityType.STRUCTURE;
     }
 
     @Override
@@ -34,11 +37,18 @@ public class ViewportMovementListener extends AbstractMouseListener {
                 if (mouse.hoversOverSelectableEntity()) {
                     mouse.deselectEntity();
                     mouse.selectEntity();
+
+                    // add some fun so we place units/structures depending on what we selected
+                    if (mouse.getLastSelectedEntity() instanceof Structure) {
+                        entityType = EntityRepository.EntityType.STRUCTURE;
+                    } else {
+                        entityType = EntityRepository.EntityType.UNIT;
+                    }
                 }
 
                 // TODO: same goes for this... which basically is 'place structure here'
                 if (!mouse.hasAnyEntitySelected()) {
-                    entityRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, 2));
+                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2));
                 }
             }
             if (button == Input.MOUSE_RIGHT_BUTTON) {
