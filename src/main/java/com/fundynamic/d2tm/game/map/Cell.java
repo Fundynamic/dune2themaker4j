@@ -2,38 +2,38 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
 
+    private final Map map;
+    private final int x;
+    private final int y;
 
     private Terrain terrain;
     private boolean shrouded;
+
+    // TODO: for now the cell has a direct link to an entity, this *will* become obselete and thus removed.
     private Entity entity;
 
-    protected Cell(Terrain terrain) {
+    public Cell(Map map, Terrain terrain, int x, int y) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
+        if (map == null) throw new IllegalArgumentException("Map argument may not be null");
         this.terrain = terrain;
+        this.map = map;
+        this.x = x;
+        this.y = y;
         this.shrouded = true;
         this.entity = null;
     }
 
-    // TODO: test this constructor?
-    protected Cell(Cell other) {
-        if (other == null)
-            throw new IllegalArgumentException("argument for copy constructor may not be null (cannot copy from NULL)");
-        this.terrain = other.getTerrain();
-        this.shrouded = other.isShrouded();
-        this.entity = other.getEntity();
-    }
-
-    public static Cell withTerrain(Terrain terrain) {
-        return new Cell(terrain);
-    }
-
-    public static Cell copy(Cell other) {
-        return new Cell(other);
+    public Cell createCopy() {
+        Cell copy = new Cell(map, terrain, x, y);
+        copy.shrouded = shrouded;
+        copy.entity = entity;
+        return copy;
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -69,5 +69,38 @@ public class Cell {
             throw new IllegalArgumentException("Cannot place mapEntity (" + entity + ") because mapEntity already exists: " + this.entity);
         }
         this.entity = entity;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Cell getCellAbove() {
+        return map.getCell(this.x, this.y - 1);
+    }
+
+    public Cell getCellLeft() {
+        return map.getCell(this.x - 1, this.y);
+    }
+
+    public Cell getCellBeneath() {
+        return map.getCell(this.x, this.y + 1);
+    }
+
+    public Cell getCellRight() {
+        return map.getCell(this.x + 1, this.y);
+    }
+
+    public Vector2D getCoordinatesAsVector2D() {
+        return Vector2D.create(x, y);
+    }
+
+    public boolean isAtSameLocationAs(Cell other) {
+        if (other == null) return false;
+        return this.x == other.getX() && y == other.getY();
     }
 }

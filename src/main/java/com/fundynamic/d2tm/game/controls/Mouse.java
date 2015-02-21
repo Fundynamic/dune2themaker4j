@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 
 /**
@@ -12,21 +12,21 @@ import com.fundynamic.d2tm.math.Vector2D;
  */
 public class Mouse {
 
-    private MapCell hoverCell;
+    private Cell hoverCell;
     private Entity lastSelectedEntity;
 
     public Mouse(){}
 
-    public Mouse(MapCell hoverCell) {
+    public Mouse(Cell hoverCell) {
         this.hoverCell = hoverCell;
     }
 
-    public void setHoverCell(MapCell cell) {
+    public void setHoverCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
         this.hoverCell = cell;
     }
 
-    public MapCell getHoverCell() {
+    public Cell getHoverCell() {
         return hoverCell;
     }
 

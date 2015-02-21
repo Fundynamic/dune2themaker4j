@@ -1,13 +1,13 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
-import com.fundynamic.d2tm.game.map.MapCell;
+import com.fundynamic.d2tm.game.map.Cell;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class MapCellTerrainRenderer implements Renderer<MapCell> {
+public class MapCellTerrainRenderer implements Renderer<Cell> {
 
     @Override
-    public void draw(Graphics graphics, MapCell mapCell, int drawX, int drawY) {
+    public void draw(Graphics graphics, Cell mapCell, int drawX, int drawY) {
         try {
             graphics.drawImage(mapCell.getTileImage(), drawX, drawY);
         } catch (SlickException e) {

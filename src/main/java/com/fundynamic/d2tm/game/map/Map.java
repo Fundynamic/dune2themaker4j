@@ -92,8 +92,9 @@ public class Map {
         this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                cells[x][y] = new Cell(terrainFactory.createEmptyTerrain());
-                cells[x][y].setShrouded(false);
+                Cell cell = new Cell(this, terrainFactory.createEmptyTerrain(), x, y);
+                cell.setShrouded(false);
+                cells[x][y] = cell; // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
             }
         }
     }
@@ -141,8 +142,8 @@ public class Map {
         return shroud;
     }
 
-    public MapCell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
-        return new MapCell(this, pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+    public Cell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
+        return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
     public Set<Structure> getStructures() { return structures; }

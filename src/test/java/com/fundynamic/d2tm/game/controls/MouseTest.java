@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.map.MapCell;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import junit.framework.Assert;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNull;
 
 public class MouseTest {
 
-    private MapCell defaultHoverCell;
+    private Cell defaultHoverCell;
     private Mouse mouse;
 
     @Before
@@ -35,7 +35,7 @@ public class MouseTest {
 
     @Test
     public void updatesHoverCell() {
-        MapCell newHoverCell = makeCell();
+        Cell newHoverCell = makeCell();
         mouse.setHoverCell(newHoverCell);
         Assert.assertSame(newHoverCell, mouse.getHoverCell());
     }
@@ -65,7 +65,7 @@ public class MouseTest {
         defaultHoverCell.setEntity(structure);
         mouse.selectStructure();
 
-        MapCell hoverCellWithoutStructure = makeCell();
+        Cell hoverCellWithoutStructure = makeCell();
         mouse.setHoverCell(hoverCellWithoutStructure);
         mouse.selectStructure(); // this should ignore the fact that the new hover cell has no structure
 

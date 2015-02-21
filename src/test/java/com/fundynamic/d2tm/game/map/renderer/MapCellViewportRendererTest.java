@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.CellFactory;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +42,7 @@ public class MapCellViewportRendererTest {
         int cellsToDrawVertically = (screenHeight / TILE_HEIGHT) + 2; // 2 extra for 'rounding' purposes at bottom
         int numberOfCellsToDraw = cellsToDrawHorizontally * cellsToDrawVertically;
 
-        verify(renderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), any(MapCell.class), anyInt(), anyInt());
+        verify(renderer, times(numberOfCellsToDraw)).draw(any(Graphics.class), any(Cell.class), anyInt(), anyInt());
     }
 
 }

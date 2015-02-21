@@ -2,14 +2,14 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.drawing.Viewport;
-import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapCell;
-import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -217,7 +217,7 @@ public class ViewportMovementListenerTest {
     @Test
     public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
         int NOT_APPLICABLE = -1;
-        MapCell cell = makeCell();
+        Cell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
@@ -230,7 +230,7 @@ public class ViewportMovementListenerTest {
     @Test
     public void rightMouseButtonDeSelectsStructure() {
         int NOT_APPLICABLE = -1;
-        MapCell cell = makeCell();
+        Cell cell = makeCell();
         Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);

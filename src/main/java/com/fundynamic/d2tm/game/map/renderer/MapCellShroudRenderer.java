@@ -1,11 +1,11 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapCell;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.Graphics;
 
-public class MapCellShroudRenderer implements Renderer<MapCell> {
+public class MapCellShroudRenderer implements Renderer<Cell> {
 
     private final Shroud shroud;
 
@@ -14,14 +14,14 @@ public class MapCellShroudRenderer implements Renderer<MapCell> {
     }
 
     @Override
-    public void draw(Graphics graphics, MapCell mapCell, int drawX, int drawY) {
+    public void draw(Graphics graphics, Cell mapCell, int drawX, int drawY) {
         ShroudFacing shroudFacing = determineShroudFacing(mapCell);
         if (shroudFacing != null) {
             graphics.drawImage(shroud.getShroudImage(shroudFacing), drawX, drawY);
         }
     }
 
-    protected ShroudFacing determineShroudFacing(MapCell mapCell) {
+    protected ShroudFacing determineShroudFacing(Cell mapCell) {
         if (mapCell.isShrouded()) {
             return ShroudFacing.FULL;
         }
