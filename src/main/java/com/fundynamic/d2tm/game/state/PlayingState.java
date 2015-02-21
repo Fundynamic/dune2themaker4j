@@ -1,13 +1,14 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.entities.units.UnitRepository;
@@ -104,9 +105,10 @@ public class PlayingState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         float deltaInSeconds = delta / 1000f;
 
-        for (Structure structure : map.getStructures()) {
-          structure.update(deltaInSeconds);
+        for (Entity entity : map.getEntities()) {
+            entity.update(deltaInSeconds);
         }
+
         for (Viewport viewport : viewports) {
             viewport.update(deltaInSeconds);
         }

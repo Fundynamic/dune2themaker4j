@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.behaviors.Updateable;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -22,7 +24,7 @@ public class Map {
     private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
-    private Set<Structure> structures;
+    private Set<Entity> entities;
 
     public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -31,7 +33,7 @@ public class Map {
         this.width = width;
         this.heightWithInvisibleBorder = height + 2;
         this.widthWithInvisibleBorder = width + 2;
-        this.structures = new HashSet<>();
+        this.entities = new HashSet<>();
 
         initializeEmptyMap();
     }
@@ -154,14 +156,15 @@ public class Map {
         return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
-    public Set<Structure> getStructures() {
-        return structures;
+    public Set<Entity> getEntities() {
+        return entities;
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
     public void placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
+        entities.add(unit); // TODO: must be within EntityRepository?
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
@@ -177,7 +180,7 @@ public class Map {
             }
         }
 
-        structures.add(structure);
+        entities.add(structure); // TODO: must be within EntityRepository?
     }
 
     public Cell getCell(Vector2D mapCoordinates) {
