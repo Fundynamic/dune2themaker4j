@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 
+//TODO: This class should be under test!
 public class EntityRepository {
 
     public static int TRIKE = 0;
@@ -49,15 +50,19 @@ public class EntityRepository {
             throw new IllegalArgumentException("Unable to find entityData for type " + entityType + " and id " + id + ". Possible entities are:\n" + entityData);
         }
         System.out.println("Placing " + entityKey + " on map at " + topLeft);
-        switch (entityType) {
-            case STRUCTURE:
-                map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height));
-                break;
-            case UNIT:
-                map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
-                break;
-            default:
-                throw new IllegalStateException("Don't know how to place entity type " + entityKey + " on map!");
+        try {
+            switch (entityType) {
+                case STRUCTURE:
+                    map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height));
+                    break;
+                case UNIT:
+                    map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
+                    break;
+                default:
+                    throw new IllegalStateException("Don't know how to place entity type " + entityKey + " on map!");
+            }
+        } catch (IllegalArgumentException ia) {
+            ia.printStackTrace();
         }
     }
 

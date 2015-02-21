@@ -66,7 +66,7 @@ public class Cell {
 
     public void setEntity(Entity entity) {
         if (this.entity != null) {
-            throw new IllegalArgumentException("Cannot place mapEntity (" + entity + ") because mapEntity already exists: " + this.entity);
+            throw new IllegalArgumentException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
         }
         this.entity = entity;
     }
