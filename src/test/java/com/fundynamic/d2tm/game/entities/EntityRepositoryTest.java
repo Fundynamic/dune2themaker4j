@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.map.Map;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,18 +19,20 @@ public class EntityRepositoryTest {
 
     @Mock
     public Map map;
+    private EntityRepository entityRepository;
 
-    @Test
-    public void createUnitCreatesUnitData() throws SlickException {
-        HashMap<String, EntityRepository.EntityData> entitiesData = new HashMap<>();
-
-        EntityRepository entityRepository = new EntityRepository(map, entitiesData) {
+    @Before
+    public void setUp() throws SlickException {
+        entityRepository = new EntityRepository(map, new HashMap<String, EntityRepository.EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {
                 return mock(Image.class);
             }
         };
+    }
 
+    @Test
+    public void createUnitCreatesUnitData() throws SlickException {
         int widthInPixels = 32;
         int heightInPixels = 32;
         int idOfEntity = 1;
@@ -44,15 +47,6 @@ public class EntityRepositoryTest {
 
     @Test
     public void createStructureCreatesStructureData() throws SlickException {
-        HashMap<String, EntityRepository.EntityData> entitiesData = new HashMap<>();
-
-        EntityRepository entityRepository = new EntityRepository(map, entitiesData) {
-            @Override
-            protected Image loadImage(String pathToImage) throws SlickException {
-                return mock(Image.class);
-            }
-        };
-
         int widthInPixels = 64;
         int heightInPixels = 64;
         int idOfEntity = 1;
