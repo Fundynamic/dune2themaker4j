@@ -29,13 +29,6 @@ public class Cell {
         this.entity = null;
     }
 
-    public Cell createCopy() {
-        Cell copy = new Cell(map, terrain, x, y);
-        copy.shrouded = shrouded;
-        copy.entity = entity;
-        return copy;
-    }
-
     public void changeTerrain(Terrain terrain) {
         this.terrain = terrain;
     }
