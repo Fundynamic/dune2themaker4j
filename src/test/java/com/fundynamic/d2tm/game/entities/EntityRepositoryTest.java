@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +15,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
-import java.util.Vector;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,9 +45,9 @@ public class EntityRepositoryTest {
 
         EntityRepository.EntityData data = entityRepository.getEntityData(EntityRepository.EntityType.UNIT, idOfEntity);
 
-        Assert.assertEquals(EntityRepository.EntityType.UNIT, data.type);
-        Assert.assertEquals(widthInPixels, data.width);
-        Assert.assertEquals(heightInPixels, data.height);
+        assertEquals(EntityRepository.EntityType.UNIT, data.type);
+        assertEquals(widthInPixels, data.width);
+        assertEquals(heightInPixels, data.height);
     }
 
     @Test (expected = EntityNotFoundException.class)
@@ -65,9 +64,9 @@ public class EntityRepositoryTest {
 
         EntityRepository.EntityData data = entityRepository.getEntityData(EntityRepository.EntityType.STRUCTURE, idOfEntity);
 
-        Assert.assertEquals(EntityRepository.EntityType.STRUCTURE, data.type);
-        Assert.assertEquals(widthInPixels, data.width);
-        Assert.assertEquals(heightInPixels, data.height);
+        assertEquals(EntityRepository.EntityType.STRUCTURE, data.type);
+        assertEquals(widthInPixels, data.width);
+        assertEquals(heightInPixels, data.height);
     }
 
     @Test (expected = EntityNotFoundException.class)
@@ -85,7 +84,7 @@ public class EntityRepositoryTest {
         Mockito.verify(map).placeUnit(argument.capture());
         Unit unitToPlace = argument.getValue();
 
-        Assert.assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
+        assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
     }
 
     @Test
@@ -98,7 +97,7 @@ public class EntityRepositoryTest {
         Mockito.verify(map).placeStructure(argument.capture());
         Structure structureToPlace = argument.getValue();
 
-        Assert.assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
+        assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
     }
 
 }
