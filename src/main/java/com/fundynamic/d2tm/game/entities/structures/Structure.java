@@ -29,7 +29,7 @@ public class Structure extends Entity implements Selectable {
         super(mapCoordinates, spriteSheet);
         this.fadingSelection = new FadingSelection(width, height);
         widthInCells = (int) Math.ceil(width / TILE_SIZE);
-        heightInCells = (int) Math.ceil(width / TILE_SIZE);
+        heightInCells = (int) Math.ceil(height / TILE_SIZE);
     }
 
     public Image getSprite() {

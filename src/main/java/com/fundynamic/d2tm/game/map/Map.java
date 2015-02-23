@@ -166,12 +166,12 @@ public class Map {
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
+    // TODO: Add test for this method!
     public void placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
-        // TODO: these can be moved up in the stack (TILE_* is evil)
 
-        for (int x = 0; x <= (structure.getWidthInCells() - 1); x++) {
-            for (int y = 0; y <= (structure.getHeightInCells() - 1); y++) {
+        for (int x = 0; x < structure.getWidthInCells(); x++) {
+            for (int y = 0; y < structure.getHeightInCells(); y++) {
                 getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
             }
         }
