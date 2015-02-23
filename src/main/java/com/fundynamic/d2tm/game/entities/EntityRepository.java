@@ -64,29 +64,23 @@ public class EntityRepository {
     }
 
     public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
-        if (tryGetEntityData(EntityType.UNIT, id)) {
-            throw new IllegalArgumentException("Entity of type UNIT already exists with id " + id + ". Known entities are:\n" + entitiesData);
-        }
-        EntityData entityData = createData(pathToImage, widthInPixels, heightInPixels);
-        entityData.type = EntityType.UNIT;
-        entitiesData.put(constructKey(EntityType.UNIT, id), entityData);
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT);
     }
 
     public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
-        if (tryGetEntityData(EntityType.STRUCTURE, id)) {
-            throw new IllegalArgumentException("Entity of type STRUCTURE already exists with id " + id + ". Known entities are:\n" + entitiesData);
-        }
-        EntityData entityData = createData(pathToImage, widthInPixels, heightInPixels);
-        entityData.type = EntityType.STRUCTURE;
-        entitiesData.put(constructKey(EntityType.STRUCTURE, id), entityData);
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE);
     }
 
-    private EntityData createData(String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType) throws SlickException {
+        if (tryGetEntityData(entityType, id)) {
+            throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
+        }
         EntityData entityData = new EntityData();
         entityData.image = loadImage(pathToImage);
         entityData.width = widthInPixels;
         entityData.height = heightInPixels;
-        return entityData;
+        entityData.type = entityType;
+        entitiesData.put(constructKey(entityType, id), entityData);
     }
 
     protected Image loadImage(String pathToImage) throws SlickException {
