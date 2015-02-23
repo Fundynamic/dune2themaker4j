@@ -63,10 +63,13 @@ public class EntityRepository {
         }
     }
 
-    public void createUnit(int ID, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+        if (tryGetEntityData(EntityType.UNIT, id)) {
+            throw new IllegalArgumentException("Entity of type UNIT already exists with id " + id + ". Known entities are:\n" + entitiesData);
+        }
         EntityData entityData = createData(pathToImage, widthInPixels, heightInPixels);
         entityData.type = EntityType.UNIT;
-        entitiesData.put(constructKey(EntityType.UNIT, ID), entityData);
+        entitiesData.put(constructKey(EntityType.UNIT, id), entityData);
     }
 
     public void createStructure(int ID, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
@@ -89,8 +92,17 @@ public class EntityRepository {
 
     protected EntityData getEntityData(EntityType entityType, int id) {
         EntityData entityData = entitiesData.get(constructKey(entityType, id));
-        if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Possible entities are:\n" + entitiesData);
+        if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Known entities are:\n" + entitiesData);
         return entityData;
+    }
+
+    private boolean tryGetEntityData(EntityType entityType, int id) {
+        try {
+            getEntityData(entityType, id);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
+        }
     }
 
     public String constructKey(EntityType entityType, int id) {

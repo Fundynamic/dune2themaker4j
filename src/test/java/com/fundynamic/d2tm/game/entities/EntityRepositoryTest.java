@@ -50,6 +50,13 @@ public class EntityRepositoryTest {
         assertEquals(heightInPixels, data.height);
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
+        int idOfEntity = 1;
+        entityRepository.createUnit(idOfEntity, "quad.png", 32, 32); // success!
+        entityRepository.createUnit(idOfEntity, "this is irrelevant", 32, 32); // boom!
+    }
+
     @Test (expected = EntityNotFoundException.class)
     public void getEntityDataThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
         entityRepository.getEntityData(EntityRepository.EntityType.UNIT, 0);
