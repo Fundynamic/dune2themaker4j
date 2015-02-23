@@ -94,7 +94,9 @@ public class EntityRepository {
     }
 
     protected EntityData getEntityData(EntityType type, int ID) {
-        return entitiesData.get(constructKey(type, ID));
+        EntityData entityData = entitiesData.get(constructKey(type, ID));
+        if (entityData == null) throw new EntityNotFoundException("Entity not found for type " + type + " and ID " + ID);
+        return entityData;
     }
 
     public String constructKey(EntityType type, int ID) {

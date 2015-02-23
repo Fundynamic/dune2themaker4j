@@ -45,6 +45,11 @@ public class EntityRepositoryTest {
         Assert.assertEquals(heightInPixels, data.height);
     }
 
+    @Test (expected = EntityNotFoundException.class)
+    public void throwsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
+        entityRepository.getEntityData(EntityRepository.EntityType.UNIT, 0);
+    }
+
     @Test
     public void createStructureCreatesStructureData() throws SlickException {
         int widthInPixels = 64;
