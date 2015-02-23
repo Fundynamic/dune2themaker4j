@@ -85,6 +85,7 @@ public class EntityRepositoryTest {
         Unit unitToPlace = argument.getValue();
 
         assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
+        assertEquals(1, entityRepository.getEntities().size());
     }
 
     @Test
@@ -98,6 +99,7 @@ public class EntityRepositoryTest {
         Structure structureToPlace = argument.getValue();
 
         assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
+        assertEquals(1, entityRepository.getEntities().size());
     }
 
 }

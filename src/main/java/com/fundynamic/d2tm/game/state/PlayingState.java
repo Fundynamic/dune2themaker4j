@@ -38,6 +38,7 @@ public class PlayingState extends BasicGameState {
     private Mouse mouse;
 
     private List<Viewport> viewports = new ArrayList<>();
+    private EntityRepository entityRepository;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -61,7 +62,7 @@ public class PlayingState extends BasicGameState {
         int mapWidth = 64;
         int mapHeight = 64;
         this.map = Map.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
-        EntityRepository entityRepository = new EntityRepository(map);
+        entityRepository = new EntityRepository(map);
 
         this.mouse = new Mouse();
 
@@ -99,7 +100,7 @@ public class PlayingState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         float deltaInSeconds = delta / 1000f;
 
-        for (Entity entity : map.getEntities()) {
+        for (Entity entity : entityRepository.getEntities()) {
             entity.update(deltaInSeconds);
         }
 

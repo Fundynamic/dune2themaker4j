@@ -22,7 +22,6 @@ public class Map {
     private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
-    private Set<Entity> entities;
 
     public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -31,7 +30,6 @@ public class Map {
         this.width = width;
         this.heightWithInvisibleBorder = height + 2;
         this.widthWithInvisibleBorder = width + 2;
-        this.entities = new HashSet<>();
 
         initializeEmptyMap();
     }
@@ -154,20 +152,16 @@ public class Map {
         return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
-    public Set<Entity> getEntities() {
-        return entities;
-    }
-
     // the reference to StructuresRepository.StructureData is a bit awkward
-    public void placeUnit(Unit unit) {
+    public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
-        entities.add(unit); // TODO: must be within EntityRepository?
+        return unit;
     }
 
     // the reference to StructuresRepository.StructureData is a bit awkward
     // TODO: Add test for this method!
-    public void placeStructure(Structure structure) {
+    public Structure placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
 
         for (int x = 0; x < structure.getWidthInCells(); x++) {
@@ -176,7 +170,7 @@ public class Map {
             }
         }
 
-        entities.add(structure); // TODO: must be within EntityRepository?
+        return structure;
     }
 
     public Cell getCell(Vector2D mapCoordinates) {

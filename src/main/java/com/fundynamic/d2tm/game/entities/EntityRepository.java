@@ -9,6 +9,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EntityRepository {
 
@@ -21,6 +23,8 @@ public class EntityRepository {
     private final Map map;
 
     private HashMap<String, EntityData> entitiesData;
+
+    private Set<Entity> entities;
 
     public EntityRepository(Map map) throws SlickException {
         this(map, new HashMap<String, EntityData>());
@@ -35,6 +39,7 @@ public class EntityRepository {
     public EntityRepository(Map map, HashMap<String, EntityData> entitiesData) throws SlickException {
         this.map = map;
         this.entitiesData = entitiesData;
+        this.entities = new HashSet<>();
     }
 
     public void placeUnitOnMap(Vector2D topLeft, int id) {
@@ -50,10 +55,10 @@ public class EntityRepository {
         System.out.println("Placing " + entityData + " on map at " + topLeft);
         switch (entityType) {
             case STRUCTURE:
-                map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height));
+                entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height)));
                 break;
             case UNIT:
-                map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
+                entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height)));
                 break;
         }
     }
@@ -90,6 +95,10 @@ public class EntityRepository {
 
     public String constructKey(EntityType entityType, int id) {
         return entityType.toString() + "-" + id;
+    }
+
+    public Set<Entity> getEntities() {
+        return entities;
     }
 
     public enum EntityType {
