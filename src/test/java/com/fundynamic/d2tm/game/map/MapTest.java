@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
@@ -149,4 +150,19 @@ public class MapTest {
         Assert.assertNull("structure expanded too far down", map.getCell(Vector2D.create(5, 7)).getEntity()); // 1 too much downwards
     }
 
+    @Test
+    public void placeUnit() {
+        int TILE_SIZE = 32;
+        Unit quad = new Unit(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE);
+        map.placeUnit(quad);
+        
+        Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
+        Assert.assertSame(quad, entity);
+
+        // make sure it does not expand beyond
+        Assert.assertNull(map.getCell(Vector2D.create(6, 5)).getEntity()); // 1 too much to the top right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 5)).getEntity()); // 1 too much to the top left
+        Assert.assertNull(map.getCell(Vector2D.create(6, 6)).getEntity()); // 1 too much to the bottom right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 6)).getEntity()); // 1 too much to the bottom left
+    }
 }
