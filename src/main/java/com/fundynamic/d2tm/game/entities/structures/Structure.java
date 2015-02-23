@@ -33,7 +33,6 @@ public class Structure extends Entity implements Selectable {
     }
 
     public Image getSprite() {
-        // TODO: remove randomization here when we get a proper 'waving flag animation' done
         int animationFrame = (int)animationTimer;
         return spriteSheet.getSprite(0, animationFrame);
     }
