@@ -1,11 +1,14 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Vector2D;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import static org.mockito.Mockito.mock;
@@ -104,6 +108,45 @@ public class MapTest {
 
         Cell cell = map.getCellByAbsolutePixelCoordinates(pixelX, pixelY);
         Assert.assertTrue(cell.getTerrain() instanceof Spice);
+    }
+
+    @Test
+    public void placeStructureOfOneByOneOnMap() {
+        int TILE_SIZE = 32;
+        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE);
+        map.placeStructure(turret);
+        Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
+        Assert.assertSame(turret, entity);
+
+        // make sure it does not expand beyond
+        Assert.assertNull(map.getCell(Vector2D.create(6, 5)).getEntity()); // 1 too much to the top right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 5)).getEntity()); // 1 too much to the top left
+        Assert.assertNull(map.getCell(Vector2D.create(6, 6)).getEntity()); // 1 too much to the bottom right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 6)).getEntity()); // 1 too much to the bottom left
+    }
+
+    @Test
+    public void placeStructureOfThreeByTwoByOneOnMap() {
+        int TILE_SIZE = 32;
+
+        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2);
+        map.placeStructure(refinery);
+
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(5, 5)).getEntity()); // top left
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(6, 5)).getEntity()); // top middle
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(7, 5)).getEntity()); // top right
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(5, 6)).getEntity()); // bottom left
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(6, 6)).getEntity()); // bottom middle
+        Assert.assertSame(refinery, map.getCell(Vector2D.create(7, 6)).getEntity()); // bottom right
+
+        // make sure it does not expand beyond
+        Assert.assertNull(map.getCell(Vector2D.create(8, 5)).getEntity()); // 1 too much to the top right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 5)).getEntity()); // 1 too much to the top left
+        Assert.assertNull(map.getCell(Vector2D.create(8, 6)).getEntity()); // 1 too much to the bottom right
+        Assert.assertNull(map.getCell(Vector2D.create(4, 6)).getEntity()); // 1 too much to the bottom left
+
+        Assert.assertNull("structure expanded too far up", map.getCell(Vector2D.create(5, 4)).getEntity()); // 1 too much upwards
+        Assert.assertNull("structure expanded too far down", map.getCell(Vector2D.create(5, 7)).getEntity()); // 1 too much downwards
     }
 
 }

@@ -10,7 +10,7 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Structure extends Entity implements Selectable {
 
-    public static int TILE_SIZE = 32; // HACK HACK
+    public static int TILE_SIZE = 32; // TODO: remove HACK HACK
 
     // Behaviors
     private FadingSelection fadingSelection;
@@ -21,15 +21,15 @@ public class Structure extends Entity implements Selectable {
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int width, int height) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, width, height), width, height);
+    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels) {
+        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels);
     }
 
-    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height) {
+    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels) {
         super(mapCoordinates, spriteSheet);
-        this.fadingSelection = new FadingSelection(width, height);
-        widthInCells = (int) Math.ceil(width / TILE_SIZE);
-        heightInCells = (int) Math.ceil(height / TILE_SIZE);
+        this.fadingSelection = new FadingSelection(widthInPixels, heightInPixels);
+        widthInCells = (int) Math.ceil(widthInPixels / TILE_SIZE);
+        heightInCells = (int) Math.ceil(heightInPixels / TILE_SIZE);
     }
 
     public Image getSprite() {
