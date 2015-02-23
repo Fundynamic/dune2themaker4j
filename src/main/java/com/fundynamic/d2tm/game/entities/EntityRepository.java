@@ -72,10 +72,13 @@ public class EntityRepository {
         entitiesData.put(constructKey(EntityType.UNIT, id), entityData);
     }
 
-    public void createStructure(int ID, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+        if (tryGetEntityData(EntityType.STRUCTURE, id)) {
+            throw new IllegalArgumentException("Entity of type STRUCTURE already exists with id " + id + ". Known entities are:\n" + entitiesData);
+        }
         EntityData entityData = createData(pathToImage, widthInPixels, heightInPixels);
         entityData.type = EntityType.STRUCTURE;
-        entitiesData.put(constructKey(EntityType.STRUCTURE, ID), entityData);
+        entitiesData.put(constructKey(EntityType.STRUCTURE, id), entityData);
     }
 
     private EntityData createData(String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {

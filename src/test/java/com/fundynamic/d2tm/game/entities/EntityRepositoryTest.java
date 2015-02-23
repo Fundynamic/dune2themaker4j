@@ -76,6 +76,14 @@ public class EntityRepositoryTest {
         assertEquals(heightInPixels, data.height);
     }
 
+
+    @Test (expected = IllegalArgumentException.class)
+    public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
+        int idOfEntity = 1;
+        entityRepository.createStructure(idOfEntity, "constyard.png", 32, 32); // success!
+        entityRepository.createStructure(idOfEntity, "this is irrelevant", 32, 32); // boom!
+    }
+
     @Test (expected = EntityNotFoundException.class)
     public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
         entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
