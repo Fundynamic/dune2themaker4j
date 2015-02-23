@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
@@ -8,9 +7,6 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class Map {
 
