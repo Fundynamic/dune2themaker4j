@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -85,6 +86,19 @@ public class EntityRepositoryTest {
         Unit unitToPlace = argument.getValue();
 
         Assert.assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
+    }
+
+    @Test
+    public void placeOnMapPutsStructureOnMap() throws SlickException {
+        entityRepository.createStructure(0, "constyard.png", 32, 32);
+
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0);
+
+        ArgumentCaptor<Structure> argument = ArgumentCaptor.forClass(Structure.class);
+        Mockito.verify(map).placeStructure(argument.capture());
+        Structure structureToPlace = argument.getValue();
+
+        Assert.assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
     }
 
 }
