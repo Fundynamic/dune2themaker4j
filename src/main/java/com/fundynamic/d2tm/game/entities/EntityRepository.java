@@ -24,15 +24,18 @@ public class EntityRepository {
     private HashMap<String, EntityData> entitiesData;
 
     public EntityRepository(Map map) throws SlickException {
-        this.map = map;
+        this(map, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
-        this.entitiesData = new HashMap<>();
-
         createUnit(QUAD, "units/quad.png", 32, 32);
         createUnit(TRIKE, "units/trike.png", 28, 26);
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64);
+    }
+
+    public EntityRepository(Map map, HashMap<String, EntityData> entitiesData) throws SlickException {
+        this.map = map;
+        this.entitiesData = entitiesData;
     }
 
     public void placeUnitOnMap(Vector2D topLeft, int id) {
@@ -80,10 +83,18 @@ public class EntityRepository {
 
     private EntityData createData(String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
         EntityData entityData = new EntityData();
-        entityData.image = new Image(pathToImage);
+        entityData.image = loadImage(pathToImage);
         entityData.width = widthInPixels;
         entityData.height = heightInPixels;
         return entityData;
+    }
+
+    protected Image loadImage(String pathToImage) throws SlickException {
+        return new Image(pathToImage);
+    }
+
+    protected EntityData getEntityData(EntityType type, int ID) {
+        return entitiesData.get(constructKey(type, ID));
     }
 
     public String constructKey(EntityType type, int ID) {
