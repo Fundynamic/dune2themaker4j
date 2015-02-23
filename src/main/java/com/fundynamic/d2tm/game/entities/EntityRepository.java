@@ -47,12 +47,8 @@ public class EntityRepository {
     }
 
     public void placeOnMap(Vector2D topLeft, EntityType entityType, int id) {
-        String entityKey = constructKey(entityType, id);
-        EntityData entityData = entitiesData.get(entityKey);
-        if (entityData == null) {
-            throw new IllegalArgumentException("Unable to find entityData for type " + entityType + " and id " + id + ". Possible entities are:\n" + entityData);
-        }
-        System.out.println("Placing " + entityKey + " on map at " + topLeft);
+        EntityData entityData = getEntityData(entityType, id);
+        System.out.println("Placing " + entityData + " on map at " + topLeft);
         try {
             switch (entityType) {
                 case STRUCTURE:
@@ -62,7 +58,7 @@ public class EntityRepository {
                     map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
                     break;
                 default:
-                    throw new IllegalStateException("Don't know how to place entity type " + entityKey + " on map!");
+                    throw new IllegalStateException("Don't know how to place entity " + entityData + " on map!");
             }
         } catch (IllegalArgumentException ia) {
             ia.printStackTrace();
@@ -93,14 +89,14 @@ public class EntityRepository {
         return new Image(pathToImage);
     }
 
-    protected EntityData getEntityData(EntityType type, int ID) {
-        EntityData entityData = entitiesData.get(constructKey(type, ID));
-        if (entityData == null) throw new EntityNotFoundException("Entity not found for type " + type + " and ID " + ID);
+    protected EntityData getEntityData(EntityType entityType, int id) {
+        EntityData entityData = entitiesData.get(constructKey(entityType, id));
+        if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Possible entities are:\n" + entitiesData);
         return entityData;
     }
 
-    public String constructKey(EntityType type, int ID) {
-        return type.toString() + "-" + ID;
+    public String constructKey(EntityType entityType, int id) {
+        return entityType.toString() + "-" + id;
     }
 
     public enum EntityType {
@@ -112,5 +108,15 @@ public class EntityRepository {
         public Image image;
         public int width;
         public int height;
+
+        @Override
+        public String toString() {
+            return "EntityData{" +
+                    "type=" + type +
+                    ", image=" + image +
+                    ", width=" + width +
+                    ", height=" + height +
+                    '}';
+        }
     }
 }

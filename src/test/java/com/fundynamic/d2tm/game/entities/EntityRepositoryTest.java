@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.math.Vector2D;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,8 +47,13 @@ public class EntityRepositoryTest {
     }
 
     @Test (expected = EntityNotFoundException.class)
-    public void throwsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
+    public void getEntityDataThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
         entityRepository.getEntityData(EntityRepository.EntityType.UNIT, 0);
+    }
+
+    @Test (expected = EntityNotFoundException.class)
+    public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
+        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
     }
 
     @Test
