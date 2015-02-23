@@ -107,7 +107,6 @@ public class Map {
         return unit;
     }
 
-    // TODO: Add test for this method!
     public Structure placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
 
