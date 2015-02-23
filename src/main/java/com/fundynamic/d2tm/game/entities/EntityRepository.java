@@ -49,19 +49,13 @@ public class EntityRepository {
     public void placeOnMap(Vector2D topLeft, EntityType entityType, int id) {
         EntityData entityData = getEntityData(entityType, id);
         System.out.println("Placing " + entityData + " on map at " + topLeft);
-        try {
-            switch (entityType) {
-                case STRUCTURE:
-                    map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height));
-                    break;
-                case UNIT:
-                    map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
-                    break;
-                default:
-                    throw new IllegalStateException("Don't know how to place entity " + entityData + " on map!");
-            }
-        } catch (IllegalArgumentException ia) {
-            ia.printStackTrace();
+        switch (entityType) {
+            case STRUCTURE:
+                map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height));
+                break;
+            case UNIT:
+                map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height));
+                break;
         }
     }
 
