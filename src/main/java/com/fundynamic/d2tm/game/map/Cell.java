@@ -59,7 +59,7 @@ public class Cell {
 
     public void setEntity(Entity entity) {
         if (this.entity != null) {
-            throw new IllegalArgumentException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
+            throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
         }
         this.entity = entity;
     }

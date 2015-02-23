@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -53,13 +54,17 @@ public class EntityRepository {
     public void placeOnMap(Vector2D topLeft, EntityType entityType, int id) {
         EntityData entityData = getEntityData(entityType, id);
         System.out.println("Placing " + entityData + " on map at " + topLeft);
-        switch (entityType) {
-            case STRUCTURE:
-                entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height)));
-                break;
-            case UNIT:
-                entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height)));
-                break;
+        try {
+            switch (entityType) {
+                case STRUCTURE:
+                    entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height)));
+                    break;
+                case UNIT:
+                    entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height)));
+                    break;
+            }
+        } catch (CellAlreadyOccupiedException e) {
+            e.printStackTrace();
         }
     }
 
