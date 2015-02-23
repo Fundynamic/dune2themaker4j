@@ -51,11 +51,6 @@ public class EntityRepositoryTest {
         entityRepository.getEntityData(EntityRepository.EntityType.UNIT, 0);
     }
 
-    @Test (expected = EntityNotFoundException.class)
-    public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
-        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
-    }
-
     @Test
     public void createStructureCreatesStructureData() throws SlickException {
         int widthInPixels = 64;
@@ -68,6 +63,11 @@ public class EntityRepositoryTest {
         Assert.assertEquals(EntityRepository.EntityType.STRUCTURE, data.type);
         Assert.assertEquals(widthInPixels, data.width);
         Assert.assertEquals(heightInPixels, data.height);
+    }
+
+    @Test (expected = EntityNotFoundException.class)
+    public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
+        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
     }
 
 }
