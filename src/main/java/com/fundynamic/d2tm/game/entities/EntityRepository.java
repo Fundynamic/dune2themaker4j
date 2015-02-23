@@ -10,7 +10,6 @@ import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 
-//TODO: This class should be under test!
 public class EntityRepository {
 
     public static int TRIKE = 0;
