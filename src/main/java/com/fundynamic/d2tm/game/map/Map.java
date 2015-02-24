@@ -98,7 +98,7 @@ public class Map {
     }
 
     public Cell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
-        return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+        return getCellProtected(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
     public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
