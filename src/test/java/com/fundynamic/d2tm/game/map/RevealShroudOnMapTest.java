@@ -143,4 +143,22 @@ public class RevealShroudOnMapTest {
                 "##########\n",  // 10
                 map.getAsciiShroudMap());
     }
+
+    @Test
+    public void revealShroudUsingSightValueOfThreeRevealsOneCell() {
+        int sightRange = 3;
+        map.revealShroudFor(5, 5, sightRange); // this is 0 based, so it is the 6th row!
+        Assert.assertEquals(
+                "##########\n" + // 1
+                "##########\n" + // 2
+                "##########\n" + // 3
+                "####...###\n" + // 4
+                "###.....##\n" + // 5
+                "###.....##\n" + // 6
+                "###.....##\n" + // 7
+                "####...###\n" + // 8
+                "##########\n" + // 9
+                "##########\n",  // 10
+                map.getAsciiShroudMap());
+    }
 }

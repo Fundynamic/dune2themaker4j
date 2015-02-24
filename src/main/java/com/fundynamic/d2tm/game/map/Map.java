@@ -101,6 +101,10 @@ public class Map {
         return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
     }
 
+    public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
+        return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
+    }
+
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
@@ -146,19 +150,31 @@ public class Map {
     public void revealShroudFor(int x, int y, int range) {
         if (range < 1) return;
 
-        if (range == 1) {
-            revealShroudFor(x, y);
-            return;
-        }
 
-        int rangeMinusOne = range - 1;
+        float halfATile = TILE_SIZE / 2;
+        // convert to absolute pixel coordinates
+        Vector2D asPixelsCentered = getCellCoordinatesInAbsolutePixels(x, y).
+                add(Vector2D.create(halfATile, halfATile));
 
-        for (int cell_x = Math.max(x - rangeMinusOne, 0); cell_x <= Math.min(x + rangeMinusOne, width -1); cell_x++) {
-            for (int cell_y = Math.max(y - rangeMinusOne, 0); cell_y <= Math.min(y + rangeMinusOne, height -1); cell_y++) {
-                if (Math.pow(cell_x - x, 1) + Math.pow(cell_y - y, 1) <= Math.pow(rangeMinusOne, 1) + 1) {
-                    revealShroudFor(cell_x, cell_y);
-                }
+        double centerX = asPixelsCentered.getX(), centerY = asPixelsCentered.getY();
+
+        for (int rangeStep=0; rangeStep < range; rangeStep++) { // range 'steps'
+
+            for (int degrees=0; degrees < 360; degrees++) {
+
+                // calculate as if we would draw a circle and remember the coordinates
+                float rangeInPixels = (rangeStep * TILE_SIZE);
+                double radians = Math.toRadians(degrees);
+
+                double circleX = (centerX + (Math.cos(radians) * rangeInPixels));
+                double circleY = (centerY + (Math.sin(radians) * rangeInPixels));
+
+                // convert back the pixel coordinates back to a cell
+                Cell cell = getCellByAbsolutePixelCoordinates((int) Math.ceil(circleX), (int) Math.ceil(circleY));
+
+                cell.setShrouded(false);
             }
         }
     }
+
 }
