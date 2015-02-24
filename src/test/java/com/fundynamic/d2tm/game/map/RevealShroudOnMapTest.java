@@ -37,7 +37,7 @@ public class RevealShroudOnMapTest {
     }
 
     @Test
-    public void newMapIsInitiallyTotallyShrouded() {
+    public void newMapIsInitiallyTotallyShroudedGivesAllHashes() {
         Assert.assertEquals(
                 "##########\n" +
                 "##########\n" +
@@ -49,6 +49,27 @@ public class RevealShroudOnMapTest {
                 "##########\n" +
                 "##########\n" +
                 "##########\n",
+                map.getAsciiShroudMap());
+    }
+
+    @Test
+    public void fullyRevealedMapIsAllDots() {
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                map.revealShroudFor(x, y);
+            }
+        }
+        Assert.assertEquals(
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n" +
+                "..........\n",
                 map.getAsciiShroudMap());
     }
 

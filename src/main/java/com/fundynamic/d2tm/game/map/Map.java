@@ -72,7 +72,7 @@ public class Map {
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
                 Cell cell = new Cell(this, terrainFactory.createEmptyTerrain(), x, y);
-                cell.setShrouded(false);
+                cell.setShrouded(true);
                 cells[x][y] = cell; // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
             }
         }
@@ -128,10 +128,18 @@ public class Map {
         for (int y = 0; y < height; y++) {
             String line = "";
             for (int x = 0; x < width; x++) {
-                line += "#";
+                if (getCell(x, y).isShrouded()) {
+                    line += "#";
+                } else {
+                    line += ".";
+                }
             }
             result += line + "\n";
         }
         return result;
+    }
+
+    public void revealShroudFor(int x, int y) {
+        getCell(x, y).setShrouded(false);
     }
 }
