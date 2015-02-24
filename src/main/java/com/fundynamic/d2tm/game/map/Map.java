@@ -142,4 +142,8 @@ public class Map {
     public void revealShroudFor(int x, int y) {
         getCell(x, y).setShrouded(false);
     }
+
+    public void revealShroudFor(int x, int y, int sightRange) {
+
+    }
 }
