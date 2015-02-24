@@ -33,7 +33,6 @@ public class MapEditor {
             for (int y = 1; y <= map.getHeight(); y++) {
                 final Cell cell = map.getCell(x, y);
                 final Terrain terrain = terrainFactory.create((int) (Math.random() * 7), cell);
-                cell.setShrouded((int) (Math.random() * 2) == 0);
                 cell.changeTerrain(terrain);
             }
         }
