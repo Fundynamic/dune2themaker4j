@@ -143,8 +143,22 @@ public class Map {
         getCell(x, y).setShrouded(false);
     }
 
-    public void revealShroudFor(int x, int y, int sightRange) {
-        if (sightRange < 1) return;
-        revealShroudFor(x, y);
+    public void revealShroudFor(int x, int y, int range) {
+        if (range < 1) return;
+
+        if (range == 1) {
+            revealShroudFor(x, y);
+            return;
+        }
+
+        int rangeMinusOne = range - 1;
+
+        for (int cell_x = Math.max(x - rangeMinusOne, 0); cell_x <= Math.min(x + rangeMinusOne, width -1); cell_x++) {
+            for (int cell_y = Math.max(y - rangeMinusOne, 0); cell_y <= Math.min(y + rangeMinusOne, height -1); cell_y++) {
+                if (Math.pow(cell_x - x, 1) + Math.pow(cell_y - y, 1) <= Math.pow(rangeMinusOne, 1) + 1) {
+                    revealShroudFor(cell_x, cell_y);
+                }
+            }
+        }
     }
 }
