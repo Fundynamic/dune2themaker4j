@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
@@ -108,15 +109,22 @@ public class Map {
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
+        int range = Random.getRandomBetween(2, 5); // TODO: get this from unit!
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range); // TODO: test this
         return unit;
     }
 
     public Structure placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
+        int range = 2; // TODO: get this from structure!
 
         for (int x = 0; x < structure.getWidthInCells(); x++) {
             for (int y = 0; y < structure.getHeightInCells(); y++) {
-                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
+                int cellX = topLeftMapCoordinates.getXAsInt() + x;
+                int cellY = topLeftMapCoordinates.getYAsInt() + y;
+                getCell(cellX, cellY).setEntity(structure);
+
+                revealShroudFor(cellX, cellY, range); // TODO: test this!
             }
         }
 
