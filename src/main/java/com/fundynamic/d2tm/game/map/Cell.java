@@ -29,13 +29,6 @@ public class Cell {
         this.entity = null;
     }
 
-    public Cell createCopy() {
-        Cell copy = new Cell(map, terrain, x, y);
-        copy.shrouded = shrouded;
-        copy.entity = entity;
-        return copy;
-    }
-
     public void changeTerrain(Terrain terrain) {
         this.terrain = terrain;
     }
@@ -66,7 +59,7 @@ public class Cell {
 
     public void setEntity(Entity entity) {
         if (this.entity != null) {
-            throw new IllegalArgumentException("Cannot place mapEntity (" + entity + ") because mapEntity already exists: " + this.entity);
+            throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
         }
         this.entity = entity;
     }

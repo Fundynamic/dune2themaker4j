@@ -2,22 +2,25 @@ package com.fundynamic.d2tm.game.event;
 
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Random;
-import com.fundynamic.d2tm.game.entities.structures.StructureRepository;
 import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
 
     private final Viewport viewport;
     private final Mouse mouse;
-    private final StructureRepository structureRepository;
+    private final EntityRepository entityRepository;
+    private EntityRepository.EntityType entityType;
 
-    public ViewportMovementListener(Viewport viewport, Mouse mouse, StructureRepository structureRepository) {
+    public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository) {
         this.viewport = viewport;
         this.mouse = mouse;
-        this.structureRepository = structureRepository;
+        this.entityRepository = entityRepository;
+        this.entityType = EntityRepository.EntityType.STRUCTURE;
     }
 
     @Override
@@ -32,17 +35,24 @@ public class ViewportMovementListener extends AbstractMouseListener {
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 if (mouse.hoversOverSelectableEntity()) {
-                    mouse.deselectStructure(); // deselect any previously selected structure
-                    mouse.selectStructure();
+                    mouse.deselectEntity();
+                    mouse.selectEntity();
+
+                    // add some fun so we place units/structures depending on what we selected
+                    if (mouse.getLastSelectedEntity() instanceof Structure) {
+                        entityType = EntityRepository.EntityType.STRUCTURE;
+                    } else {
+                        entityType = EntityRepository.EntityType.UNIT;
+                    }
                 }
 
                 // TODO: same goes for this... which basically is 'place structure here'
                 if (!mouse.hasAnyEntitySelected()) {
-                    structureRepository.placeStructureOnMap(mouse.getHoverCellMapVector(), Random.getRandomBetween(0, StructureRepository.MAX_TYPES));
+                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2));
                 }
             }
             if (button == Input.MOUSE_RIGHT_BUTTON) {
-                mouse.deselectStructure();
+                mouse.deselectEntity();
             }
         }
     }

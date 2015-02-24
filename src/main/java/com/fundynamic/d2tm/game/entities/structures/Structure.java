@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.behaviors.SelectableImpl;
+import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -10,25 +10,29 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Structure extends Entity implements Selectable {
 
+    public static int TILE_SIZE = 32; // TODO: remove HACK HACK
+
     // Behaviors
-    private SelectableImpl selectableImpl;
+    private FadingSelection fadingSelection;
 
     // Implementation
+    private final int widthInCells, heightInCells;
     private float animationTimer;
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int width, int height) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, width, height), width, height);
+    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels) {
+        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels);
     }
 
-    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height) {
+    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels) {
         super(mapCoordinates, spriteSheet);
-        this.selectableImpl = new SelectableImpl(width, height);
+        this.fadingSelection = new FadingSelection(widthInPixels, heightInPixels);
+        widthInCells = (int) Math.ceil(widthInPixels / TILE_SIZE);
+        heightInCells = (int) Math.ceil(heightInPixels / TILE_SIZE);
     }
 
     public Image getSprite() {
-        // TODO: remove randomization here when we get a proper 'waving flag animation' done
         int animationFrame = (int)animationTimer;
         return spriteSheet.getSprite(0, animationFrame);
     }
@@ -38,7 +42,7 @@ public class Structure extends Entity implements Selectable {
         float offset = delta * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
-        this.selectableImpl.update(delta);
+        this.fadingSelection.update(delta);
     }
 
     public Vector2D getMapCoordinates() {
@@ -49,27 +53,37 @@ public class Structure extends Entity implements Selectable {
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
-        selectableImpl.render(graphics, x, y);
+        fadingSelection.render(graphics, x, y);
     }
 
     public void select() {
-        selectableImpl.select();
+        fadingSelection.select();
     }
 
     public void deselect() {
-        selectableImpl.deselect();
+        fadingSelection.deselect();
     }
 
     @Override
     public boolean isSelected() {
-        return selectableImpl.isSelected();
+        return fadingSelection.isSelected();
+    }
+
+    public int getHeightInCells() {
+        return heightInCells;
+    }
+
+    public int getWidthInCells() {
+        return widthInCells;
     }
 
     @Override
     public String toString() {
         return "Structure{" +
-                "animationTimer=" + animationTimer +
-                ", selectable=" + selectableImpl +
+                "fadingSelection=" + fadingSelection +
+                ", widthInCells=" + widthInCells +
+                ", heightInCells=" + heightInCells +
+                ", animationTimer=" + animationTimer +
                 '}';
     }
 }

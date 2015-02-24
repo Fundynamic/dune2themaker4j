@@ -1,13 +1,13 @@
 package com.fundynamic.d2tm.game.terrain;
 
-import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapEditor;
 import org.newdawn.slick.Image;
 
 public interface Terrain {
 
     Image getTileImage();
 
-    Terrain setFacing(Map.TerrainFacing terrainFacing);
+    Terrain setFacing(MapEditor.TerrainFacing terrainFacing);
 
     boolean isSame(Terrain terrain);
 

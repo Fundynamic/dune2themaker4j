@@ -4,19 +4,17 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 /**
- * A default implementation of selecting / deselecting something + with drawing effects
+ * An implementation of selecting / deselecting something + with drawing effects
  */
-public class SelectableImpl implements Selectable, Renderable {
+public class FadingSelection extends SimpleSelectLogic implements Renderable, Updateable {
 
     private float selectedIntensity;
     private boolean selectedDarkening;
 
-    private boolean selected;
-
     private final int width;
     private final int height;
 
-    public SelectableImpl(int width, int height) {
+    public FadingSelection(int width, int height) {
         this.width = width;
         this.height = height;
         this.selectedIntensity = 1f;
@@ -44,18 +42,6 @@ public class SelectableImpl implements Selectable, Renderable {
             selectedIntensity = 1f;
             selectedDarkening = true;
         }
-    }
-
-    public void select() {
-        selected = true;
-    }
-
-    public void deselect() {
-        selected = false;
-    }
-
-    public boolean isSelected() {
-        return selected;
     }
 
     @Override
