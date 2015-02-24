@@ -123,4 +123,15 @@ public class Map {
         return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
     }
 
+    public String getAsciiShroudMap() {
+        String result = "";
+        for (int y = 0; y < height; y++) {
+            String line = "";
+            for (int x = 0; x < width; x++) {
+                line += "#";
+            }
+            result += line + "\n";
+        }
+        return result;
+    }
 }
