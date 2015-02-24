@@ -144,6 +144,7 @@ public class Map {
     }
 
     public void revealShroudFor(int x, int y, int sightRange) {
-
+        if (sightRange < 1) return;
+        revealShroudFor(x, y);
     }
 }
