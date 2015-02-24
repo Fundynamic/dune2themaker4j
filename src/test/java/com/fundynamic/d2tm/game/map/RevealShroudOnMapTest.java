@@ -180,5 +180,5 @@ public class RevealShroudOnMapTest {
                 "##########\n",
                 map.getAsciiShroudMap());
     }
-    
+
 }
