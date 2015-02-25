@@ -172,10 +172,8 @@ public class Map {
 
                 // calculate as if we would draw a circle and remember the coordinates
                 float rangeInPixels = (rangeStep * TILE_SIZE);
-                double radians = Math.toRadians(degrees);
-
-                double circleX = (centerX + (Math.cos(radians) * rangeInPixels));
-                double circleY = (centerY + (Math.sin(radians) * rangeInPixels));
+                double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+                double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
                 // convert back the pixel coordinates back to a cell
                 Cell cell = getCellByAbsolutePixelCoordinates((int) Math.ceil(circleX), (int) Math.ceil(circleY));
