@@ -21,12 +21,12 @@ public class Structure extends Entity implements Selectable {
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels);
+    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels, int sight) {
+        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels, sight);
     }
 
-    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels) {
-        super(mapCoordinates, spriteSheet);
+    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels, int sight) {
+        super(mapCoordinates, spriteSheet, sight);
         this.fadingSelection = new FadingSelection(widthInPixels, heightInPixels);
         widthInCells = (int) Math.ceil(widthInPixels / TILE_SIZE);
         heightInCells = (int) Math.ceil(heightInPixels / TILE_SIZE);

@@ -21,6 +21,7 @@ public class Cell {
     public Cell(Map map, Terrain terrain, int x, int y) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         if (map == null) throw new IllegalArgumentException("Map argument may not be null");
+        if (x < 0 || y < 0) throw new OutOfMapBoundsException("x may ot be lower than 0, for given x, y: " + x + "," + y);
         this.terrain = terrain;
         this.map = map;
         this.x = x;

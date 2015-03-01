@@ -114,7 +114,8 @@ public class MapTest {
     @Test
     public void placeStructureOfOneByOneOnMap() {
         int TILE_SIZE = 32;
-        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE);
+        int SIGHT = 2;
+        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT);
         map.placeStructure(turret);
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
         Assert.assertSame(turret, entity);
@@ -129,8 +130,9 @@ public class MapTest {
     @Test
     public void placeStructureOfThreeByTwoByOneOnMap() {
         int TILE_SIZE = 32;
+        int SIGHT = 2;
 
-        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2);
+        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2, SIGHT);
         map.placeStructure(refinery);
 
         Assert.assertSame(refinery, map.getCell(Vector2D.create(5, 5)).getEntity()); // top left
@@ -153,7 +155,8 @@ public class MapTest {
     @Test
     public void placeUnit() {
         int TILE_SIZE = 32;
-        Unit quad = new Unit(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE);
+        int SIGHT = 2;
+        Unit quad = new Unit(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT);
         map.placeUnit(quad);
         
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();

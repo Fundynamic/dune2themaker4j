@@ -79,8 +79,8 @@ public class Viewport implements Renderable {
 
             entityViewportRenderer.render(this.buffer, viewingVector);
 
+            cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
             cellViewportRenderer.render(this.buffer, viewingVector, cellMouseInteractionRenderer);
-//            cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 
             drawBufferToGraphics(graphics, drawingVector);
         } catch (SlickException e) {

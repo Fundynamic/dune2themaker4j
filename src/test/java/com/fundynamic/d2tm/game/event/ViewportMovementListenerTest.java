@@ -218,7 +218,7 @@ public class ViewportMovementListenerTest {
     public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
         int NOT_APPLICABLE = -1;
         Cell cell = makeCell();
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
 
@@ -231,7 +231,7 @@ public class ViewportMovementListenerTest {
     public void rightMouseButtonDeSelectsStructure() {
         int NOT_APPLICABLE = -1;
         Cell cell = makeCell();
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
         mouse.selectEntity();

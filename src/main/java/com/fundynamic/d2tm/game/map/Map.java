@@ -72,7 +72,7 @@ public class Map {
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
                 Cell cell = new Cell(this, terrainFactory.createEmptyTerrain(), x, y);
-                cell.setShrouded(false);
+                cell.setShrouded(true);
                 cells[x][y] = cell; // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
             }
         }
@@ -98,12 +98,17 @@ public class Map {
     }
 
     public Cell getCellByAbsolutePixelCoordinates(int pixelX, int pixelY) {
-        return getCell(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+        return getCellProtected(pixelX / TILE_SIZE, pixelY / TILE_SIZE);
+    }
+
+    public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
+        return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
     }
 
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight());
         return unit;
     }
 
@@ -112,7 +117,11 @@ public class Map {
 
         for (int x = 0; x < structure.getWidthInCells(); x++) {
             for (int y = 0; y < structure.getHeightInCells(); y++) {
-                getCell(topLeftMapCoordinates.getXAsInt() + x, topLeftMapCoordinates.getYAsInt() + y).setEntity(structure);
+                int cellX = topLeftMapCoordinates.getXAsInt() + x;
+                int cellY = topLeftMapCoordinates.getYAsInt() + y;
+                getCell(cellX, cellY).setEntity(structure);
+
+                revealShroudFor(cellX, cellY, structure.getSight());
             }
         }
 
@@ -121,6 +130,54 @@ public class Map {
 
     public Cell getCell(Vector2D mapCoordinates) {
         return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
+    }
+
+    public String getAsciiShroudMap() {
+        String result = "";
+        for (int y = 0; y < height; y++) {
+            String line = "";
+            for (int x = 0; x < width; x++) {
+                if (getCell(x, y).isShrouded()) {
+                    line += "#";
+                } else {
+                    line += ".";
+                }
+            }
+            result += line + "\n";
+        }
+        return result;
+    }
+
+    public void revealShroudFor(int x, int y) {
+        getCell(x, y).setShrouded(false);
+    }
+
+    public void revealShroudFor(int x, int y, int range) {
+        if (range < 1) return;
+
+
+        float halfATile = TILE_SIZE / 2;
+        // convert to absolute pixel coordinates
+        Vector2D asPixelsCentered = getCellCoordinatesInAbsolutePixels(x, y).
+                add(Vector2D.create(halfATile, halfATile));
+
+        double centerX = asPixelsCentered.getX(), centerY = asPixelsCentered.getY();
+
+        for (int rangeStep=0; rangeStep < range; rangeStep++) { // range 'steps'
+
+            for (int degrees=0; degrees < 360; degrees++) {
+
+                // calculate as if we would draw a circle and remember the coordinates
+                float rangeInPixels = (rangeStep * TILE_SIZE);
+                double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+                double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
+
+                // convert back the pixel coordinates back to a cell
+                Cell cell = getCellByAbsolutePixelCoordinates((int) Math.ceil(circleX), (int) Math.ceil(circleY));
+
+                cell.setShrouded(false);
+            }
+        }
     }
 
 }

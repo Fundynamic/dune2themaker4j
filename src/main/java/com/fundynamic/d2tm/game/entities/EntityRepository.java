@@ -31,10 +31,10 @@ public class EntityRepository {
         this(map, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
-        createUnit(QUAD, "units/quad.png", 32, 32);
-        createUnit(TRIKE, "units/trike.png", 28, 26);
-        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64);
-        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64);
+        createUnit(QUAD, "units/quad.png", 32, 32, 4);
+        createUnit(TRIKE, "units/trike.png", 28, 26, 4);
+        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 2);
+        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2);
     }
 
     public EntityRepository(Map map, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -57,10 +57,10 @@ public class EntityRepository {
         try {
             switch (entityType) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height)));
+                    entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height)));
+                    entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {
@@ -68,15 +68,15 @@ public class EntityRepository {
         }
     }
 
-    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT);
+    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight);
     }
 
-    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE);
+    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight);
     }
 
-    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType) throws SlickException {
+    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
@@ -85,6 +85,7 @@ public class EntityRepository {
         entityData.width = widthInPixels;
         entityData.height = heightInPixels;
         entityData.type = entityType;
+        entityData.sight = sight;
         entitiesData.put(constructKey(entityType, id), entityData);
     }
 
@@ -124,6 +125,7 @@ public class EntityRepository {
         public Image image;
         public int width;
         public int height;
+        public int sight;
 
         @Override
         public String toString() {
@@ -132,6 +134,7 @@ public class EntityRepository {
                     ", image=" + image +
                     ", width=" + width +
                     ", height=" + height +
+                    ", sight=" + sight +
                     '}';
         }
     }
