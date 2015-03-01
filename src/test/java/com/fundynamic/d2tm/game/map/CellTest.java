@@ -1,8 +1,10 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertFalse;
@@ -19,7 +21,15 @@ public class CellTest {
         new Cell(map, null, 0, 0);
     }
 
-    // TODO: add more test cases for constructor (out of bounds on map etc)
+    @Test (expected = OutOfMapBoundsException.class)
+    public void throwsOutOfMapBoundsExceptionWhenXIsLowerThanZero() {
+        new Cell(map, Mockito.mock(Terrain.class), -1, 0);
+    }
+
+    @Test (expected = OutOfMapBoundsException.class)
+    public void throwsOutOfMapBoundsExceptionWhenYIsLowerThanZero() {
+        new Cell(map, Mockito.mock(Terrain.class), 0, -1);
+    }
 
     @Test
     public void sameLocation() {
