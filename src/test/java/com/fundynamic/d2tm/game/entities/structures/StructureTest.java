@@ -11,13 +11,13 @@ public class StructureTest {
 
     @Test
     public void constructorCalculatesWidthInCells() {
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2, 2);
         Assert.assertEquals(3, structure.getWidthInCells());
     }
 
     @Test
     public void constructorCalculatesHeightInCells() {
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2, 3);
         Assert.assertEquals(2, structure.getHeightInCells());
     }
 

@@ -10,18 +10,19 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 public class Unit extends Entity implements Selectable {
+
     // Behaviors
     private final FadingSelection fadingSelection;
 
     // Implementation
     private final int facing;
 
-    public Unit(Vector2D mapCoordinates, Image image, int width, int height) {
-        this(mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height));
+    public Unit(Vector2D mapCoordinates, Image image, int width, int height, int sight) {
+        this(mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight);
     }
 
-    public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection) {
-        super(mapCoordinates, spriteSheet);
+    public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight) {
+        super(mapCoordinates, spriteSheet, sight);
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;

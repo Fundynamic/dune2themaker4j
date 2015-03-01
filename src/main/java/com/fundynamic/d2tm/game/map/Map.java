@@ -109,14 +109,12 @@ public class Map {
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
-        int range = Random.getRandomBetween(2, 5); // TODO: get this from unit!
-        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range); // TODO: test this
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight());
         return unit;
     }
 
     public Structure placeStructure(Structure structure) {
         Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
-        int range = 2; // TODO: get this from structure!
 
         for (int x = 0; x < structure.getWidthInCells(); x++) {
             for (int y = 0; y < structure.getHeightInCells(); y++) {
@@ -124,7 +122,7 @@ public class Map {
                 int cellY = topLeftMapCoordinates.getYAsInt() + y;
                 getCell(cellX, cellY).setEntity(structure);
 
-                revealShroudFor(cellX, cellY, range); // TODO: test this!
+                revealShroudFor(cellX, cellY, structure.getSight());
             }
         }
 

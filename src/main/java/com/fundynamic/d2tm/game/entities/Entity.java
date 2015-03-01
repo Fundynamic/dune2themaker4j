@@ -12,10 +12,12 @@ public abstract class Entity implements Renderable, Updateable {
     //       instead of cell x,y coordinates which it is right now.
     protected final Vector2D mapCoordinates;
     protected final SpriteSheet spriteSheet;
+    protected final int sight;
 
-    public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet) {
+    public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight) {
         this.mapCoordinates = mapCoordinates;
         this.spriteSheet = spriteSheet;
+        this.sight = sight;
     }
 
     public Vector2D getMapCoordinates() {
@@ -24,5 +26,9 @@ public abstract class Entity implements Renderable, Updateable {
 
     public boolean isSelectable() {
         return this instanceof Selectable;
+    }
+
+    public int getSight() {
+        return sight;
     }
 }

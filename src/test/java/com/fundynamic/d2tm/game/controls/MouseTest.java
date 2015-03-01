@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
@@ -113,13 +112,13 @@ public class MouseTest {
     }
 
     private Structure makeStructure() {
-        return new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64);
+        return new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
     }
 
     private class NotSelectableEntity extends Entity {
 
         public NotSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet) {
-            super(mapCoordinates, spriteSheet);
+            super(mapCoordinates, spriteSheet, 2);
         }
 
         @Override
