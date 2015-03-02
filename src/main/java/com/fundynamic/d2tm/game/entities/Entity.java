@@ -3,6 +3,8 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
+import com.fundynamic.d2tm.game.rendering.Palette;
+import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
@@ -15,8 +17,9 @@ public abstract class Entity implements Renderable, Updateable {
     protected final int sight;
 
     public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight) {
+        final Palette selectedPalette = Palette.values()[Random.getInt(3)];
         this.mapCoordinates = mapCoordinates;
-        this.spriteSheet = spriteSheet;
+        this.spriteSheet = selectedPalette.recolor(spriteSheet);
         this.sight = sight;
     }
 
