@@ -46,6 +46,20 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkMode>once</forkMode>
+					<argLine>-Djava.library.path=${project.basedir}/target/natives</argLine>
+					<properties>
+						<property>
+							<name>listener</name>
+							<value>com.fundynamic.d2tm.util.Bootstrapper</value>
+						</property>
+					</properties>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>com.googlecode.mavennatives</groupId>
 				<artifactId>maven-nativedependencies-plugin</artifactId>
 				<version>0.0.7</version>
