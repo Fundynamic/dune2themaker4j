@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -61,7 +60,7 @@ public class EntityRepository {
         System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
             Image originalImage = entityData.image;
-            Image recoloredImage = recolorer.recolor(originalImage, player.getColorId());
+            Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
 
             switch (entityType) {
                 case STRUCTURE:

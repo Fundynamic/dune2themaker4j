@@ -40,7 +40,7 @@ public class EntityRepositoryTest {
     @Before
     public void setUp() throws SlickException {
         Image image = mock(Image.class);
-        when(recolorer.recolor(any(Image.class), anyInt())).thenReturn(image);
+        when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
         entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityRepository.EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {

@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -35,7 +36,7 @@ public class RevealShroudOnMapTest {
     @Before
     public void setUp() throws SlickException {
         Mockito.doReturn(mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
-        player = new Player("John Doe", 0);
+        player = new Player("John Doe", Recolorer.FactionColor.RED);
         map = new Map(terrainFactory, shroud, MAP_WIDTH, MAP_HEIGHT);
     }
 

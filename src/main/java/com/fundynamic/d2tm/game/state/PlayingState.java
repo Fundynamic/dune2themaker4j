@@ -65,8 +65,8 @@ public class PlayingState extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        this.human = new Player("Human", Recolorer.RED);
-        this.cpu = new Player("CPU", Recolorer.GREEN);
+        this.human = new Player("Human", Recolorer.FactionColor.RED);
+        this.cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
         int mapWidth = 64;
         int mapHeight = 64;

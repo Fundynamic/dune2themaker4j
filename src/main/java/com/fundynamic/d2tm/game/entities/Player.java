@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.HashMap;
@@ -9,18 +10,18 @@ import java.util.Map;
 public class Player {
 
     private final String name;
-    private final int colorId;
+    private final Recolorer.FactionColor factionColor;
 
     private Map<Vector2D, Boolean> shrouded;
 
-    public Player(String name, int colorId) {
+    public Player(String name, Recolorer.FactionColor factionColor) {
         this.name = name;
-        this.colorId = colorId;
+        this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
     }
 
-    public int getColorId() {
-        return colorId;
+    public Recolorer.FactionColor getFactionColor() {
+        return factionColor;
     }
 
     public boolean isShrouded(Vector2D position) {
@@ -36,7 +37,7 @@ public class Player {
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
-                ", colorId=" + colorId +
+                ", factionColor=" + factionColor +
                 '}';
     }
 
