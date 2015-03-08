@@ -4,7 +4,23 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ImageBuffer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Recolorer {
+
+    private List<Color> redColors;
+
+    public Recolorer() {
+        this.redColors = new ArrayList<>();
+        redColors.add(new Color(214, 0, 0));
+        redColors.add(new Color(182, 0, 0));
+        redColors.add(new Color(153, 0, 0));
+        redColors.add(new Color(125, 0, 0));
+        redColors.add(new Color(89, 0, 0));
+        redColors.add(new Color(60, 0, 0));
+        redColors.add(new Color(32, 0, 0));
+    }
 
     public enum FactionColor {
         RED, GREEN, BLUE
@@ -26,9 +42,7 @@ public class Recolorer {
     }
 
     public Color recolor(Color src, FactionColor factionColor) {
-        // Only recolor when the color is a bright red hue. This assumes that
-        // sprites are always red structures or units.
-        if (src.getRed() < src.getGreen() + src.getBlue()) {
+        if (!redColors.contains(src)) {
           return src;
         }
 
