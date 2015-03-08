@@ -93,7 +93,17 @@ public class PlayingState extends BasicGameState {
             float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
-            Viewport viewport = new Viewport(screenResolution, viewportDrawingPosition, viewingVector, this.map, moveSpeed, tileWidth, tileHeight, mouse);
+
+            Viewport viewport = new Viewport(
+                    screenResolution,
+                    viewportDrawingPosition,
+                    viewingVector,
+                    this.map,
+                    moveSpeed,
+                    tileWidth,
+                    tileHeight,
+                    mouse,
+                    human);
 
             // Add listener for this viewport
             input.addMouseListener(new ViewportMovementListener(viewport, mouse, entityRepository, human));

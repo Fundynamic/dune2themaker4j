@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -42,7 +43,8 @@ public class Viewport implements Renderable {
                     float moveSpeed,
                     int tileWidth,
                     int tileHeight,
-                    Mouse mouse) throws SlickException {
+                    Mouse mouse,
+                    Player player) throws SlickException {
         this.viewportDimensions = viewportDimensions;
         this.map = map;
 
@@ -57,7 +59,7 @@ public class Viewport implements Renderable {
 
         this.cellViewportRenderer = new CellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.cellTerrainRenderer = new CellTerrainRenderer();
-        this.cellShroudRenderer = new CellShroudRenderer(map);
+        this.cellShroudRenderer = new CellShroudRenderer(map, player);
         this.cellMouseInteractionRenderer = new CellMouseInteractionRenderer(mouse);
 
         this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);

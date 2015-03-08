@@ -13,10 +13,11 @@ public class Cell {
     private final int y;
 
     private Terrain terrain;
-    private boolean shrouded;
 
     // TODO: for now the cell has a direct link to an entity, this *will* become obselete and thus removed.
     private Entity entity;
+
+    private Vector2D position;
 
     public Cell(Map map, Terrain terrain, int x, int y) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
@@ -26,8 +27,8 @@ public class Cell {
         this.map = map;
         this.x = x;
         this.y = y;
-        this.shrouded = true;
         this.entity = null;
+        this.position = new Vector2D(x, y);
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -40,18 +41,6 @@ public class Cell {
 
     public Terrain getTerrain() {
         return terrain;
-    }
-
-    public boolean isSameTerrain(Terrain terrain) {
-        return this.terrain.isSame(terrain);
-    }
-
-    public boolean isShrouded() {
-        return shrouded;
-    }
-
-    public void setShrouded(boolean shrouded) {
-        this.shrouded = shrouded;
     }
 
     public Entity getEntity() {
@@ -96,5 +85,9 @@ public class Cell {
     public boolean isAtSameLocationAs(Cell other) {
         if (other == null) return false;
         return this.x == other.getX() && y == other.getY();
+    }
+
+    public Vector2D getPosition() {
+        return position;
     }
 }

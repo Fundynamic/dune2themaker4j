@@ -33,4 +33,8 @@ public abstract class Entity implements Renderable, Updateable {
     public int getSight() {
         return sight;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
 }
