@@ -48,27 +48,27 @@ public class EntityRepository {
         this.entities = new HashSet<>();
     }
 
-    public void placeUnitOnMap(Vector2D topLeft, int id) {
-        placeOnMap(topLeft, EntityType.UNIT, id);
+    public void placeUnitOnMap(Vector2D topLeft, int id, Player player) {
+        placeOnMap(topLeft, EntityType.UNIT, id, player);
     }
 
-    public void placeStructureOnMap(Vector2D topLeft, int id) {
-        placeOnMap(topLeft, EntityType.STRUCTURE, id);
+    public void placeStructureOnMap(Vector2D topLeft, int id, Player player) {
+        placeOnMap(topLeft, EntityType.STRUCTURE, id, player);
     }
 
-    public void placeOnMap(Vector2D topLeft, EntityType entityType, int id) {
+    public void placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        System.out.println("Placing " + entityData + " on map at " + topLeft);
+        System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
             Image originalImage = entityData.image;
-            Image recoloredImage = recolorer.recolor(originalImage, Random.getInt(3));
+            Image recoloredImage = recolorer.recolor(originalImage, player.getColorId());
 
             switch (entityType) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeUnit(new Unit(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {

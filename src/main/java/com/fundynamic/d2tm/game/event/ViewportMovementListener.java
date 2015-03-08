@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
@@ -14,13 +15,15 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Viewport viewport;
     private final Mouse mouse;
     private final EntityRepository entityRepository;
+    private final Player player;
     private EntityRepository.EntityType entityType;
 
-    public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository) {
+    public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository, Player player) {
         this.viewport = viewport;
         this.mouse = mouse;
         this.entityRepository = entityRepository;
         this.entityType = EntityRepository.EntityType.STRUCTURE;
+        this.player = player;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
                 // TODO: same goes for this... which basically is 'place structure here'
                 if (!mouse.hasAnyEntitySelected()) {
-                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2));
+                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2), player);
                 }
             }
             if (button == Input.MOUSE_RIGHT_BUTTON) {

@@ -32,6 +32,9 @@ public class EntityRepositoryTest {
     @Mock
     public Recolorer recolorer;
 
+    @Mock
+    public Player player;
+
     private EntityRepository entityRepository;
 
     @Before
@@ -100,14 +103,14 @@ public class EntityRepositoryTest {
 
     @Test (expected = EntityNotFoundException.class)
     public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
-        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
+        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0, player);
     }
 
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
         entityRepository.createUnit(0, "quad.png", 32, 32, 2);
 
-        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0);
+        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0, player);
 
         ArgumentCaptor<Unit> argument = ArgumentCaptor.forClass(Unit.class);
         Mockito.verify(map).placeUnit(argument.capture());
@@ -121,7 +124,7 @@ public class EntityRepositoryTest {
     public void placeOnMapPutsStructureOnMap() throws SlickException {
         entityRepository.createStructure(0, "constyard.png", 32, 32, 2);
 
-        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0);
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0, player);
 
         ArgumentCaptor<Structure> argument = ArgumentCaptor.forClass(Structure.class);
         Mockito.verify(map).placeStructure(argument.capture());

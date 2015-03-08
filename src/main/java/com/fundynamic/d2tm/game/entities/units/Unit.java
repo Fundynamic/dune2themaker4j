@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -17,12 +18,12 @@ public class Unit extends Entity implements Selectable {
     // Implementation
     private final int facing;
 
-    public Unit(Vector2D mapCoordinates, Image image, int width, int height, int sight) {
-        this(mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight);
+    public Unit(Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
+        this(mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
     }
 
-    public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight) {
-        super(mapCoordinates, spriteSheet, sight);
+    public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, Player player) {
+        super(mapCoordinates, spriteSheet, sight, player);
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;

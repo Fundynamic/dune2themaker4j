@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.rendering;
 
-import com.fundynamic.d2tm.math.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ImageBuffer;

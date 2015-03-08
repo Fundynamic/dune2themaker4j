@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -51,6 +52,9 @@ public class ViewportMovementListenerTest {
     @Mock
     private EntityRepository entityRepository;
 
+    @Mock
+    private Player player;
+
     private Mouse mouse;
 
     @Before
@@ -63,7 +67,7 @@ public class ViewportMovementListenerTest {
         this.mouse = new Mouse();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository);
+        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
@@ -185,7 +189,7 @@ public class ViewportMovementListenerTest {
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository);
+        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
         updateAndRender();
@@ -205,7 +209,7 @@ public class ViewportMovementListenerTest {
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository);
+        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
 
         listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
@@ -218,7 +222,7 @@ public class ViewportMovementListenerTest {
     public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
         int NOT_APPLICABLE = -1;
         Cell cell = makeCell();
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2, player);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
 
@@ -231,7 +235,7 @@ public class ViewportMovementListenerTest {
     public void rightMouseButtonDeSelectsStructure() {
         int NOT_APPLICABLE = -1;
         Cell cell = makeCell();
-        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
+        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2, player);
         cell.setEntity(structure);
         mouse.setHoverCell(cell);
         mouse.selectEntity();
