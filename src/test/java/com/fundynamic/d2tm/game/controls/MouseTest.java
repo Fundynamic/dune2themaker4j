@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
@@ -17,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
 
 public class MouseTest {
 
@@ -106,19 +108,19 @@ public class MouseTest {
 
     @Test
     public void hoversOverSelectableEntityReturnsFalseWhenHoveringOverNonSelectableEntity() {
-        NotSelectableEntity notSelectableEntity = new NotSelectableEntity(Vector2D.zero(), Mockito.mock(SpriteSheet.class));
+        NotSelectableEntity notSelectableEntity = new NotSelectableEntity(Vector2D.zero(), mock(SpriteSheet.class), mock(Player.class));
         defaultHoverCell.setEntity(notSelectableEntity);
         Assert.assertFalse(mouse.hoversOverSelectableEntity());
     }
 
     private Structure makeStructure() {
-        return new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2);
+        return new Structure(Vector2D.zero(), mock(Image.class), 64, 64, 2, mock(Player.class));
     }
 
     private class NotSelectableEntity extends Entity {
 
-        public NotSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet) {
-            super(mapCoordinates, spriteSheet, 2);
+        public NotSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player) {
+            super(mapCoordinates, spriteSheet, 2, player);
         }
 
         @Override

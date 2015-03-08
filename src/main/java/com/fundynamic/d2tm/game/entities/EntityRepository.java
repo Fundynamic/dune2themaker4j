@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -23,12 +24,14 @@ public class EntityRepository {
 
     private final Map map;
 
+    private final Recolorer recolorer;
+
     private HashMap<String, EntityData> entitiesData;
 
     private Set<Entity> entities;
 
-    public EntityRepository(Map map) throws SlickException {
-        this(map, new HashMap<String, EntityData>());
+    public EntityRepository(Map map, Recolorer recolorer) throws SlickException {
+        this(map, recolorer, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         createUnit(QUAD, "units/quad.png", 32, 32, 4);
@@ -37,30 +40,34 @@ public class EntityRepository {
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2);
     }
 
-    public EntityRepository(Map map, HashMap<String, EntityData> entitiesData) throws SlickException {
+    public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
         this.map = map;
+        this.recolorer = recolorer;
         this.entitiesData = entitiesData;
         this.entities = new HashSet<>();
     }
 
-    public void placeUnitOnMap(Vector2D topLeft, int id) {
-        placeOnMap(topLeft, EntityType.UNIT, id);
+    public void placeUnitOnMap(Vector2D topLeft, int id, Player player) {
+        placeOnMap(topLeft, EntityType.UNIT, id, player);
     }
 
-    public void placeStructureOnMap(Vector2D topLeft, int id) {
-        placeOnMap(topLeft, EntityType.STRUCTURE, id);
+    public void placeStructureOnMap(Vector2D topLeft, int id, Player player) {
+        placeOnMap(topLeft, EntityType.STRUCTURE, id, player);
     }
 
-    public void placeOnMap(Vector2D topLeft, EntityType entityType, int id) {
+    public void placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        System.out.println("Placing " + entityData + " on map at " + topLeft);
+        System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
+            Image originalImage = entityData.image;
+            Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
+
             switch (entityType) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeUnit(new Unit(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {

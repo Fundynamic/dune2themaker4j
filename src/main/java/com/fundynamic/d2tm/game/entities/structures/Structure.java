@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -21,12 +22,12 @@ public class Structure extends Entity implements Selectable {
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels, int sight) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels, sight);
+    public Structure(Vector2D mapCoordinates, Image imageOfStructure, int widthInPixels, int heightInPixels, int sight, Player player) {
+        this(mapCoordinates, new SpriteSheet(imageOfStructure, widthInPixels, heightInPixels), widthInPixels, heightInPixels, sight, player);
     }
 
-    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels, int sight) {
-        super(mapCoordinates, spriteSheet, sight);
+    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, int widthInPixels, int heightInPixels, int sight, Player player) {
+        super(mapCoordinates, spriteSheet, sight, player);
         this.fadingSelection = new FadingSelection(widthInPixels, heightInPixels);
         widthInCells = (int) Math.ceil(widthInPixels / TILE_SIZE);
         heightInCells = (int) Math.ceil(heightInPixels / TILE_SIZE);

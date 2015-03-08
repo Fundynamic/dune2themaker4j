@@ -13,11 +13,13 @@ public abstract class Entity implements Renderable, Updateable {
     protected final Vector2D mapCoordinates;
     protected final SpriteSheet spriteSheet;
     protected final int sight;
+    protected final Player player;
 
-    public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight) {
+    public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
         this.mapCoordinates = mapCoordinates;
         this.spriteSheet = spriteSheet;
         this.sight = sight;
+        this.player = player;
     }
 
     public Vector2D getMapCoordinates() {
@@ -30,5 +32,9 @@ public abstract class Entity implements Renderable, Updateable {
 
     public int getSight() {
         return sight;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

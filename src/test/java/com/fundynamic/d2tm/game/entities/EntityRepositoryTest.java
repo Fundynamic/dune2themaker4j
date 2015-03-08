@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,18 +18,30 @@ import org.newdawn.slick.SlickException;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EntityRepositoryTest {
 
     @Mock
     public Map map;
+
+    @Mock
+    public Recolorer recolorer;
+
+    @Mock
+    public Player player;
+
     private EntityRepository entityRepository;
 
     @Before
     public void setUp() throws SlickException {
-        entityRepository = new EntityRepository(map, new HashMap<String, EntityRepository.EntityData>()) {
+        Image image = mock(Image.class);
+        when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityRepository.EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {
                 return mock(Image.class);
@@ -90,14 +103,14 @@ public class EntityRepositoryTest {
 
     @Test (expected = EntityNotFoundException.class)
     public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
-        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0);
+        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0, player);
     }
 
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
         entityRepository.createUnit(0, "quad.png", 32, 32, 2);
 
-        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0);
+        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0, player);
 
         ArgumentCaptor<Unit> argument = ArgumentCaptor.forClass(Unit.class);
         Mockito.verify(map).placeUnit(argument.capture());
@@ -111,7 +124,7 @@ public class EntityRepositoryTest {
     public void placeOnMapPutsStructureOnMap() throws SlickException {
         entityRepository.createStructure(0, "constyard.png", 32, 32, 2);
 
-        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0);
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0, player);
 
         ArgumentCaptor<Structure> argument = ArgumentCaptor.forClass(Structure.class);
         Mockito.verify(map).placeStructure(argument.capture());

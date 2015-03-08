@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -72,7 +73,6 @@ public class Map {
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
                 Cell cell = new Cell(this, terrainFactory.createEmptyTerrain(), x, y);
-                cell.setShrouded(true);
                 cells[x][y] = cell; // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
             }
         }
@@ -108,7 +108,7 @@ public class Map {
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getMapCoordinates();
         getCell(mapCoordinates).setEntity(unit);
-        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight());
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight(), unit.getPlayer());
         return unit;
     }
 
@@ -121,7 +121,7 @@ public class Map {
                 int cellY = topLeftMapCoordinates.getYAsInt() + y;
                 getCell(cellX, cellY).setEntity(structure);
 
-                revealShroudFor(cellX, cellY, structure.getSight());
+                revealShroudFor(cellX, cellY, structure.getSight(), structure.getPlayer());
             }
         }
 
@@ -132,12 +132,12 @@ public class Map {
         return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
     }
 
-    public String getAsciiShroudMap() {
+    public String getAsciiShroudMap(Player player) {
         String result = "";
         for (int y = 0; y < height; y++) {
             String line = "";
             for (int x = 0; x < width; x++) {
-                if (getCell(x, y).isShrouded()) {
+                if (player.isShrouded(getCell(x, y).getPosition())) {
                     line += "#";
                 } else {
                     line += ".";
@@ -148,11 +148,11 @@ public class Map {
         return result;
     }
 
-    public void revealShroudFor(int x, int y) {
-        getCell(x, y).setShrouded(false);
+    public void revealShroudFor(int x, int y, Player player) {
+        player.revealShroudFor(getCell(x, y).getPosition());
     }
 
-    public void revealShroudFor(int x, int y, int range) {
+    public void revealShroudFor(int x, int y, int range, Player player) {
         if (range < 1) return;
 
 
@@ -175,7 +175,7 @@ public class Map {
                 // convert back the pixel coordinates back to a cell
                 Cell cell = getCellByAbsolutePixelCoordinates((int) Math.ceil(circleX), (int) Math.ceil(circleY));
 
-                cell.setShrouded(false);
+                player.revealShroudFor(cell.getPosition());
             }
         }
     }

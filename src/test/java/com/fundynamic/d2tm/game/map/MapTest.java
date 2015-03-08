@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
@@ -33,6 +34,9 @@ public class MapTest {
 
     @Mock
     private Shroud shroud;
+
+    @Mock
+    private Player player;
 
     private Map map;
 
@@ -115,7 +119,7 @@ public class MapTest {
     public void placeStructureOfOneByOneOnMap() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT);
+        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT, player);
         map.placeStructure(turret);
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
         Assert.assertSame(turret, entity);
@@ -132,7 +136,7 @@ public class MapTest {
         int TILE_SIZE = 32;
         int SIGHT = 2;
 
-        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2, SIGHT);
+        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE * 3, TILE_SIZE * 2, SIGHT, player);
         map.placeStructure(refinery);
 
         Assert.assertSame(refinery, map.getCell(Vector2D.create(5, 5)).getEntity()); // top left
@@ -156,7 +160,7 @@ public class MapTest {
     public void placeUnit() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Unit quad = new Unit(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT);
+        Unit quad = new Unit(Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT, player);
         map.placeUnit(quad);
         
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();

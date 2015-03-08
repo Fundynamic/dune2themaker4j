@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.rendering;
 
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -9,28 +10,31 @@ public class CellShroudRenderer implements Renderer<Cell> {
 
     private final Shroud shroud;
 
-    public CellShroudRenderer(Map map) {
+    private final Player player;
+
+    public CellShroudRenderer(Map map, Player player) {
+        this.player = player;
         this.shroud = map.getShroud();
     }
 
     @Override
-    public void draw(Graphics graphics, Cell mapCell, int drawX, int drawY) {
-        ShroudFacing shroudFacing = determineShroudFacing(mapCell);
+    public void draw(Graphics graphics, Cell cell, int drawX, int drawY) {
+        ShroudFacing shroudFacing = determineShroudFacing(cell);
         if (shroudFacing != null) {
             graphics.drawImage(shroud.getShroudImage(shroudFacing), drawX, drawY);
         }
     }
 
-    protected ShroudFacing determineShroudFacing(Cell mapCell) {
-        if (mapCell.isShrouded()) {
+    protected ShroudFacing determineShroudFacing(Cell cell) {
+        if (player.isShrouded(cell.getPosition())) {
             return ShroudFacing.FULL;
         }
 
         return getFacing(
-                mapCell.getCellAbove().isShrouded(),
-                mapCell.getCellRight().isShrouded(),
-                mapCell.getCellBeneath().isShrouded(),
-                mapCell.getCellLeft().isShrouded());
+                player.isShrouded(cell.getCellAbove().getPosition()),
+                player.isShrouded(cell.getCellRight().getPosition()),
+                player.isShrouded(cell.getCellBeneath().getPosition()),
+                player.isShrouded(cell.getCellLeft().getPosition()));
     }
 
     public static ShroudFacing getFacing(boolean isTopShrouded, boolean isRightShrouded, boolean isBottomShrouded, boolean isLeftShrouded) {
