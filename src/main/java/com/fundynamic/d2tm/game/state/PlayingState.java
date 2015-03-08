@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -64,7 +65,7 @@ public class PlayingState extends BasicGameState {
         int mapHeight = 64;
         MapEditor mapEditor = new MapEditor(terrainFactory);
         this.map = mapEditor.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
-        entityRepository = new EntityRepository(map);
+        entityRepository = new EntityRepository(map, new Recolorer());
 
         this.mouse = new Mouse();
 

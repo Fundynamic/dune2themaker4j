@@ -3,15 +3,11 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,31 +18,27 @@ import org.newdawn.slick.SlickException;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EntityRepositoryTest {
 
     @Mock
     public Map map;
+
+    @Mock
+    public Recolorer recolorer;
+
     private EntityRepository entityRepository;
-
-    @BeforeClass
-    public static void setUpClass() throws LWJGLException {
-        Display.setDisplayMode(new DisplayMode(800, 600));
-        Display.setVSyncEnabled(true);
-        Display.setTitle("d2tm unit test");
-        Display.create();
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        Display.destroy();
-    }
 
     @Before
     public void setUp() throws SlickException {
-        entityRepository = new EntityRepository(map, new HashMap<String, EntityRepository.EntityData>()) {
+        Image image = mock(Image.class);
+        when(recolorer.recolor(any(Image.class), anyInt())).thenReturn(image);
+        entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityRepository.EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {
                 return mock(Image.class);
