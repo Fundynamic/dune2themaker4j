@@ -17,9 +17,9 @@ public abstract class Entity implements Renderable, Updateable {
     protected final int sight;
 
     public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight) {
-        final Palette selectedPalette = Palette.values()[Random.getInt(3)];
         this.mapCoordinates = mapCoordinates;
-        this.spriteSheet = selectedPalette.recolor(spriteSheet);
+//        this.spriteSheet = selectedPalette.recolor(spriteSheet);
+        this.spriteSheet = spriteSheet;
         this.sight = sight;
     }
 

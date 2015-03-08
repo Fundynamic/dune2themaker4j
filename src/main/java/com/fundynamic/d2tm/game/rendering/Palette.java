@@ -1,43 +1,43 @@
 package com.fundynamic.d2tm.game.rendering;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.ImageBuffer;
-import org.newdawn.slick.SpriteSheet;
 
 public enum Palette {
     RED,
     GREEN,
     BLUE;
 
-    public SpriteSheet recolor(SpriteSheet spriteSheet) {
-        final int width = spriteSheet.getWidth();
-        final int height = spriteSheet.getHeight();
+    public Image recolor(Image image) {
+        final int width = image.getWidth();
+        final int height = image.getHeight();
 
         ImageBuffer buffer = new ImageBuffer(width, height);
         for (int x = 0; x < buffer.getWidth(); x++) {
             for (int y = 0; y < buffer.getHeight(); y++) {
-                final Color pixel = spriteSheet.getColor(x, y);
+                final Color pixel = image.getColor(x, y);
                 final Color newColor = recolor(pixel);
                 buffer.setRGBA(x, y, newColor.getRed(), newColor.getGreen(), newColor.getBlue(), pixel.getAlpha());
             }
         }
-        return new SpriteSheet(buffer.getImage(), width / spriteSheet.getHorizontalCount(), height / spriteSheet.getVerticalCount());
+        return buffer.getImage();
     }
 
-    public Color recolor(Color color) {
+    public Color recolor(Color src) {
         // Only recolor when the color is a bright red hue. This assumes that
         // sprites are always red structures or units.
-        if (color.getRed() < color.getGreen() + color.getBlue()) {
-          return color;
+        if (src.getRed() < src.getGreen() + src.getBlue()) {
+          return src;
         }
 
         switch (this) {
           case GREEN:
-            return new Color(color.getGreen(), color.getRed(), color.getBlue(), color.getAlpha());
+            return new Color(src.getGreen(), src.getRed(), src.getBlue(), src.getAlpha());
           case BLUE:
-            return new Color(color.getBlue(), color.getGreen(), color.getRed(), color.getAlpha());
+            return new Color(src.getBlue(), src.getGreen(), src.getRed(), src.getAlpha());
           default:
-            return color;
+            return src;
         }
     }
 }

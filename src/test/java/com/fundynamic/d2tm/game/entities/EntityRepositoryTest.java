@@ -4,9 +4,14 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,6 +30,19 @@ public class EntityRepositoryTest {
     @Mock
     public Map map;
     private EntityRepository entityRepository;
+
+    @BeforeClass
+    public static void setUpClass() throws LWJGLException {
+        Display.setDisplayMode(new DisplayMode(800, 600));
+        Display.setVSyncEnabled(true);
+        Display.setTitle("d2tm unit test");
+        Display.create();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        Display.destroy();
+    }
 
     @Before
     public void setUp() throws SlickException {

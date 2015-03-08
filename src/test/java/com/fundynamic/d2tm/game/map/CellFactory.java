@@ -21,16 +21,8 @@ public class CellFactory {
         Terrain terrain = Mockito.mock(Terrain.class);
         Cell cell = new Cell(map, terrain, x, y);
         return cell;
-//
-//        // Ugly leaky abstraction here!
-//        Cell cell = mock(MapCell.class);
-//        EmptyTerrain emptyTerrain = new EmptyTerrain(mock(Image.class));
-//        when(cell.getTerrain()).thenReturn(emptyTerrain);
-//        when(map.getCell(x, y)).thenReturn(cell);
-//
-//        return new MapCell(map, x, y);
     }
-//
+
     public static Cell stubCellForMap(Map map) {
         // Ugly leaky abstraction here!
         Cell cell = mock(Cell.class);

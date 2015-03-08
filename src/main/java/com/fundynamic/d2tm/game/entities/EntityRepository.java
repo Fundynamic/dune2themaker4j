@@ -5,6 +5,8 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.rendering.Palette;
+import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -55,12 +57,17 @@ public class EntityRepository {
         EntityData entityData = getEntityData(entityType, id);
         System.out.println("Placing " + entityData + " on map at " + topLeft);
         try {
+            Image originalImage = entityData.image;
+            int randomColor = Random.getInt(3);
+            final Palette selectedPalette = Palette.values()[randomColor];
+            Image recoloredImage = selectedPalette.recolor(originalImage);
+
             switch (entityType) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(topLeft, entityData.image, entityData.width, entityData.height, entityData.sight)));
+                    entities.add(map.placeUnit(new Unit(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {

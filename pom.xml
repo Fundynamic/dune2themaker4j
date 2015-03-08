@@ -51,12 +51,7 @@
 				<configuration>
 					<forkMode>once</forkMode>
 					<argLine>-Djava.library.path=${project.basedir}/target/natives</argLine>
-					<properties>
-						<property>
-							<name>listener</name>
-							<value>com.fundynamic.d2tm.util.Bootstrapper</value>
-						</property>
-					</properties>
+                    <!-- TODO: Here we will do stuff with integration/unit separation (with profiles) -->
 				</configuration>
 			</plugin>
 			<plugin>
