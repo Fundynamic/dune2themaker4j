@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -93,5 +94,9 @@ public class Cell {
 
     public Vector2D getPosition() {
         return position;
+    }
+
+    public boolean isOccupied(Entity entityWhoWantsToKnow) {
+        return entity != null && entity != entityWhoWantsToKnow;
     }
 }
