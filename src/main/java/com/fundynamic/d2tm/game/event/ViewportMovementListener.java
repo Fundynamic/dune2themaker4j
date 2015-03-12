@@ -37,23 +37,28 @@ public class ViewportMovementListener extends AbstractMouseListener {
         // TODO: this is here for now, but we want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
-                if (mouse.hoversOverSelectableEntity()) {
-                    mouse.deselectEntity();
-                    mouse.selectEntity();
+                if (mouse.isMovingCursor()) {
+                    // move unit...
+                } else {
+                    if (mouse.hoversOverSelectableEntity()) {
+                        mouse.deselectEntity();
+                        mouse.selectEntity();
 
-                    // add some fun so we place units/structures depending on what we selected
-                    if (mouse.getLastSelectedEntity() instanceof Structure) {
-                        entityType = EntityRepository.EntityType.STRUCTURE;
-                    } else {
-                        entityType = EntityRepository.EntityType.UNIT;
+                        // add some fun so we place units/structures depending on what we selected
+                        if (mouse.getLastSelectedEntity() instanceof Structure) {
+                            entityType = EntityRepository.EntityType.STRUCTURE;
+                        } else {
+                            entityType = EntityRepository.EntityType.UNIT;
+                        }
+                    }
+
+                    // TODO: same goes for this... which basically is 'place structure here'
+                    if (!mouse.hasAnyEntitySelected()) {
+                        entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2), player);
                     }
                 }
-
-                // TODO: same goes for this... which basically is 'place structure here'
-                if (!mouse.hasAnyEntitySelected()) {
-                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2), player);
-                }
             }
+
             if (button == Input.MOUSE_RIGHT_BUTTON) {
                 mouse.deselectEntity();
             }

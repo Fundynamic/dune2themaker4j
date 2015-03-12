@@ -14,6 +14,7 @@ public class Mouse {
 
     private Cell hoverCell;
     private Entity lastSelectedEntity;
+    private boolean movingCursor;
 
     public Mouse(){}
 
@@ -45,6 +46,7 @@ public class Mouse {
         if (!entity.isSelectable()) return;
         lastSelectedEntity = entity;
         ((Selectable)lastSelectedEntity).select();
+        movingCursor = true;
     }
 
     public boolean hasAnyEntitySelected() {
@@ -62,6 +64,7 @@ public class Mouse {
             }
         }
         lastSelectedEntity = null;
+        movingCursor = false;
     }
 
     public boolean hoversOverSelectableEntity() {
@@ -70,4 +73,9 @@ public class Mouse {
         return entity.isSelectable();
 
     }
+
+    public boolean isMovingCursor() {
+        return movingCursor;
+    }
+
 }

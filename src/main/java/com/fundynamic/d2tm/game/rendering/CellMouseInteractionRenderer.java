@@ -17,7 +17,12 @@ public class CellMouseInteractionRenderer implements Renderer<Cell> {
     @Override
     public void draw(Graphics graphics, Cell mapCell, int drawX, int drawY) {
         if (mapCell.isAtSameLocationAs(mouse.getHoverCell())) {
-            graphics.setColor(Color.white);
+            if (mouse.isMovingCursor()) {
+                graphics.setColor(Color.green);
+            } else {
+                graphics.setColor(Color.white);
+            }
+
             graphics.setLineWidth(1.1f);
             graphics.drawRect(drawX, drawY, 31, 31);
         }
