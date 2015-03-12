@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -78,4 +79,9 @@ public class Mouse {
         return movingCursor;
     }
 
+    public void moveSelectedEntityToHoverCell() {
+        if (lastSelectedEntity.isMovable()) {
+            ((Moveable)lastSelectedEntity).moveTo(getHoverCellMapVector());
+        }
+    }
 }

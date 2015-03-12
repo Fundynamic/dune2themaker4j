@@ -38,7 +38,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 if (mouse.isMovingCursor()) {
-                    // move unit...
+                    mouse.moveSelectedEntityToHoverCell();
                 } else {
                     if (mouse.hoversOverSelectableEntity()) {
                         mouse.deselectEntity();

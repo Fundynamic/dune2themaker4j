@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Entity;
@@ -10,10 +11,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Unit extends Entity implements Selectable {
+public class Unit extends Entity implements Selectable, Moveable {
 
     // Behaviors
     private final FadingSelection fadingSelection;
+    private Vector2D mapCoordinatesToMoveTo;
 
     // Implementation
     private final int facing;
@@ -27,6 +29,7 @@ public class Unit extends Entity implements Selectable {
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;
+        this.mapCoordinatesToMoveTo = mapCoordinates;
     }
 
     @Override
@@ -36,6 +39,13 @@ public class Unit extends Entity implements Selectable {
         this.fadingSelection.render(graphics, x, y);
     }
 
+    @Override
+    public void update(float deltaInMs) {
+        this.fadingSelection.update(deltaInMs);
+        if (this.mapCoordinatesToMoveTo != mapCoordinates) {
+            this.mapCoordinates = mapCoordinatesToMoveTo;
+        }
+    }
 
     public Image getSprite() {
         return spriteSheet.getSprite(facing, 0);
@@ -64,7 +74,7 @@ public class Unit extends Entity implements Selectable {
     }
 
     @Override
-    public void update(float deltaInMs) {
-        this.fadingSelection.update(deltaInMs);
+    public void moveTo(Vector2D target) {
+        mapCoordinatesToMoveTo = target;
     }
 }
