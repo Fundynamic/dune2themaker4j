@@ -21,11 +21,11 @@ public class Unit extends Entity implements Selectable, Moveable {
     private Vector2D nextCellToMoveTo;
 
     // Implementation
-    private final int facing;
     private final Map map;
 
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
+    private int facing;
 
     public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
         this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
@@ -40,6 +40,16 @@ public class Unit extends Entity implements Selectable, Moveable {
         this.fadingSelection = fadingSelection;
         this.target = mapCoordinates;
         this.nextCellToMoveTo = mapCoordinates;
+    }
+
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
+        super(mapCoordinates, spriteSheet, sight, player);
+        this.offset = offset;
+        this.map = map;
+        this.facing = facing;
+        this.nextCellToMoveTo = nextCellToMoveTo;
+        this.target = target;
+        this.fadingSelection = new FadingSelection(width, height);
     }
 
     @Override
@@ -70,6 +80,7 @@ public class Unit extends Entity implements Selectable, Moveable {
                     this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
                 }
             } else {
+                facing = determineFacingFor(nextCellToMoveTo).getValue();
                 moveToCell(nextCellToMoveTo);
             }
         }
@@ -121,5 +132,23 @@ public class Unit extends Entity implements Selectable, Moveable {
     @Override
     public void moveTo(Vector2D target) {
         this.target = target;
+    }
+
+    public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
+        boolean left = coordinatesToFaceTo.getXAsInt() < mapCoordinates.getXAsInt();
+        boolean right = coordinatesToFaceTo.getXAsInt() > mapCoordinates.getXAsInt();
+        boolean up = coordinatesToFaceTo.getYAsInt() < mapCoordinates.getYAsInt();
+        boolean down = coordinatesToFaceTo.getYAsInt() > mapCoordinates.getYAsInt();
+
+        if (up && left) return UnitFacings.LEFT_UP;
+        if (up && right) return UnitFacings.RIGHT_UP;
+        if (down && left) return UnitFacings.LEFT_DOWN;
+        if (down && right) return UnitFacings.RIGHT_DOWN;
+        if (up) return UnitFacings.UP;
+        if (down) return UnitFacings.DOWN;
+        if (left) return UnitFacings.LEFT;
+        if (right) return UnitFacings.RIGHT;
+
+        return UnitFacings.byId(facing);
     }
 }
