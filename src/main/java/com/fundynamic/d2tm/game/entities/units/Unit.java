@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -15,21 +16,25 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     // Behaviors
     private final FadingSelection fadingSelection;
-    private Vector2D mapCoordinatesToMoveTo;
+    private Vector2D target;
 
     // Implementation
     private final int facing;
+    private final Map map;
 
-    public Unit(Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
-        this(mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
+
+    public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
+        this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
     }
 
-    public Unit(Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, Player player) {
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, Player player) {
         super(mapCoordinates, spriteSheet, sight, player);
+        this.map = map;
+
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;
-        this.mapCoordinatesToMoveTo = mapCoordinates;
+        this.target = mapCoordinates;
     }
 
     @Override
@@ -42,8 +47,11 @@ public class Unit extends Entity implements Selectable, Moveable {
     @Override
     public void update(float deltaInMs) {
         this.fadingSelection.update(deltaInMs);
-        if (this.mapCoordinatesToMoveTo != mapCoordinates) {
-            this.mapCoordinates = mapCoordinatesToMoveTo;
+        if (this.target != mapCoordinates) {
+            map.getCell(mapCoordinates).removeEntity();
+            this.mapCoordinates = target;
+            map.revealShroudFor(mapCoordinates, sight, player);
+            map.getCell(mapCoordinates).setEntity(this);
         }
     }
 
@@ -75,6 +83,6 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void moveTo(Vector2D target) {
-        mapCoordinatesToMoveTo = target;
+        this.target = target;
     }
 }

@@ -47,6 +47,10 @@ public class Cell {
         return entity;
     }
 
+    public void removeEntity() {
+        this.entity = null;
+    }
+
     public void setEntity(Entity entity) {
         if (this.entity != null) {
             throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
