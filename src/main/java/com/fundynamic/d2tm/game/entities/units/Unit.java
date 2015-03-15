@@ -85,21 +85,25 @@ public class Unit extends Entity implements Selectable, Moveable {
         if (nextCellToMoveTo.getXAsInt() > mapCoordinates.getXAsInt()) offsetX += moveSpeed;
         if (nextCellToMoveTo.getYAsInt() < mapCoordinates.getYAsInt()) offsetY -= moveSpeed;
         if (nextCellToMoveTo.getYAsInt() > mapCoordinates.getYAsInt()) offsetY += moveSpeed;
+        Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
             offsetX = 0;
-            moveToCell(mapCoordinates.add(Vector2D.create(1, 0)));
+            vecToAdd = vecToAdd.add(Vector2D.create(1, 0));
         }
         if (offsetX < -31) {
             offsetX = 0;
-            moveToCell(mapCoordinates.add(Vector2D.create(-1, 0)));
+            vecToAdd = vecToAdd.add(Vector2D.create(-1, 0));
         }
         if (offsetY > 31) {
             offsetY = 0;
-            moveToCell(mapCoordinates.add(Vector2D.create(0, 1)));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, 1));
         }
         if (offsetY < -31) {
             offsetY = 0;
-            moveToCell(mapCoordinates.add(Vector2D.create(0, -1)));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, -1));
+        }
+        if (!vecToAdd.equals(Vector2D.zero())) {
+            moveToCell(mapCoordinates.add(vecToAdd));
         }
         offset = Vector2D.create(offsetX, offsetY);
     }
