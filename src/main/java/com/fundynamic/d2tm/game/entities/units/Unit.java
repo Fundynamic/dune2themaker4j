@@ -26,6 +26,7 @@ public class Unit extends Entity implements Selectable, Moveable {
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
     private int facing;
+    private float moveSpeed;
 
     public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
         this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
@@ -40,6 +41,8 @@ public class Unit extends Entity implements Selectable, Moveable {
         this.fadingSelection = fadingSelection;
         this.target = mapCoordinates;
         this.nextCellToMoveTo = mapCoordinates;
+        this.offset = Vector2D.zero();
+        this.moveSpeed = 0.5F + Random.getFloat(3f);
     }
 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
@@ -55,35 +58,71 @@ public class Unit extends Entity implements Selectable, Moveable {
     @Override
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
-        graphics.drawImage(sprite, x, y);
-        this.fadingSelection.render(graphics, x, y);
+        int drawY = y + offset.getYAsInt();
+        int drawX = x + offset.getXAsInt();
+        graphics.drawImage(sprite, drawX, drawY);
+        this.fadingSelection.render(graphics, drawX, drawY);
     }
 
     @Override
     public void update(float deltaInMs) {
         this.fadingSelection.update(deltaInMs);
         if (shouldBeSomewhereElse()) {
-
-            if (nextCellToMoveTo == mapCoordinates) {
-                // figure out the next cell to move to
-                int nextCellX = mapCoordinates.getXAsInt();
-                int nextCellY = mapCoordinates.getYAsInt();
-                if (target.getXAsInt() < mapCoordinates.getXAsInt()) nextCellX--;
-                if (target.getXAsInt() > mapCoordinates.getXAsInt()) nextCellX++;
-                if (target.getYAsInt() < mapCoordinates.getYAsInt()) nextCellY--;
-                if (target.getYAsInt() > mapCoordinates.getYAsInt()) nextCellY++;
-                Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextCellX, nextCellY);
-                Cell intendedCellToMoveTo = map.getCell(intendedMapCoordinatesToMoveTo);
-                if (intendedCellToMoveTo.isOccupied(this)) {
-                    stopMoving();
-                } else {
-                    this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
-                }
+            if (isWaitingForNextCellToDetermine()) {
+                decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
+                // TODO: "make it turn to facing"
                 facing = determineFacingFor(nextCellToMoveTo).getValue();
-                moveToCell(nextCellToMoveTo);
+                moveToNextCellPixelByPixel();
             }
         }
+    }
+
+    private void moveToNextCellPixelByPixel() {
+        float offsetX = offset.getX();
+        float offsetY = offset.getY();
+        if (nextCellToMoveTo.getXAsInt() < mapCoordinates.getXAsInt()) offsetX -= moveSpeed;
+        if (nextCellToMoveTo.getXAsInt() > mapCoordinates.getXAsInt()) offsetX += moveSpeed;
+        if (nextCellToMoveTo.getYAsInt() < mapCoordinates.getYAsInt()) offsetY -= moveSpeed;
+        if (nextCellToMoveTo.getYAsInt() > mapCoordinates.getYAsInt()) offsetY += moveSpeed;
+        if (offsetX > 31) {
+            offsetX = 0;
+            moveToCell(mapCoordinates.add(Vector2D.create(1, 0)));
+        }
+        if (offsetX < -31) {
+            offsetX = 0;
+            moveToCell(mapCoordinates.add(Vector2D.create(-1, 0)));
+        }
+        if (offsetY > 31) {
+            offsetY = 0;
+            moveToCell(mapCoordinates.add(Vector2D.create(0, 1)));
+        }
+        if (offsetY < -31) {
+            offsetY = 0;
+            moveToCell(mapCoordinates.add(Vector2D.create(0, -1)));
+        }
+        offset = Vector2D.create(offsetX, offsetY);
+    }
+
+    private void decideWhatCellToMoveToNextOrStopMovingWhenNotPossible() {
+        int nextCellX = mapCoordinates.getXAsInt();
+        int nextCellY = mapCoordinates.getYAsInt();
+        if (target.getXAsInt() < mapCoordinates.getXAsInt()) nextCellX--;
+        if (target.getXAsInt() > mapCoordinates.getXAsInt()) nextCellX++;
+        if (target.getYAsInt() < mapCoordinates.getYAsInt()) nextCellY--;
+        if (target.getYAsInt() > mapCoordinates.getYAsInt()) nextCellY++;
+        Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextCellX, nextCellY);
+        Cell intendedCellToMoveTo = map.getCell(intendedMapCoordinatesToMoveTo);
+        if (intendedCellToMoveTo.isOccupied(this)) {
+            stopMoving();
+        } else {
+            System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
+            this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
+        }
+    }
+
+    private boolean isWaitingForNextCellToDetermine() {
+        return nextCellToMoveTo == mapCoordinates;
     }
 
     private void stopMoving() {
@@ -93,8 +132,10 @@ public class Unit extends Entity implements Selectable, Moveable {
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
+        System.out.println("Moving to cell " + vectorToMoveTo);
         map.getCell(mapCoordinates).removeEntity();
         this.mapCoordinates = vectorToMoveTo;
+        this.nextCellToMoveTo = vectorToMoveTo;
         map.revealShroudFor(mapCoordinates, sight, player);
         map.getCell(mapCoordinates).setEntity(this);
     }
@@ -131,6 +172,7 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void moveTo(Vector2D target) {
+        stopMoving();
         this.target = target;
     }
 
