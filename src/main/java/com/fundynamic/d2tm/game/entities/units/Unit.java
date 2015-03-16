@@ -130,7 +130,6 @@ public class Unit extends Entity implements Selectable, Moveable {
     }
 
     private void stopMoving() {
-        System.out.println("Stopped moving.");
         this.nextCellToMoveTo = this.mapCoordinates;
         this.target = this.mapCoordinates;
     }
@@ -145,7 +144,7 @@ public class Unit extends Entity implements Selectable, Moveable {
     }
 
     private boolean shouldBeSomewhereElse() {
-        return this.target != mapCoordinates;
+        return !this.target.equals(mapCoordinates);
     }
 
     public Image getSprite() {
@@ -176,7 +175,6 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void moveTo(Vector2D target) {
-        stopMoving();
         this.target = target;
     }
 
