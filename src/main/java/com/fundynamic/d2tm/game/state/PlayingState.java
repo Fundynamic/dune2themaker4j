@@ -74,7 +74,7 @@ public class PlayingState extends BasicGameState {
         this.map = mapEditor.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
         entityRepository = new EntityRepository(map, new Recolorer());
 
-        this.mouse = new Mouse();
+        this.mouse = new Mouse(human);
 
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
         for (int i = 0; i < 50; i++) {

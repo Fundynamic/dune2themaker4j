@@ -64,7 +64,7 @@ public class ViewportMovementListenerTest {
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
         map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
-        this.mouse = new Mouse();
+        this.mouse = new Mouse(player);
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
         listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);

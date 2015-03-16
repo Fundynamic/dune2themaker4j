@@ -2,21 +2,21 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.math.Vector2D;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
@@ -55,6 +55,42 @@ public class MouseTest {
         mouse.selectEntity();
         assertEquals(structure, mouse.getLastSelectedEntity());
         assertTrue(mouse.hasAnyEntitySelected());
+        assertFalse(mouse.isMovingCursor());
+    }
+
+    @Test
+    public void movingCursorIsTrueWhenSelectingMoveableEntityOfPlayer() {
+        Player player = mock(Player.class);
+
+        Mouse mouse = new Mouse(player);
+        mouse.setHoverCell(defaultHoverCell);
+
+        Unit unit = makeUnit(player);
+        defaultHoverCell.setEntity(unit);
+
+        // select entity
+        mouse.selectEntity();
+
+        // expect moving cursor (moveable entity)
+        assertTrue(mouse.isMovingCursor());
+    }
+
+    @Test
+    public void movingCursorIsFalseWhenSelectingMoveableEntityOfOtherPlayer() {
+        Player player = mock(Player.class);
+        Player otherPlayer = mock(Player.class);
+
+        Mouse mouse = new Mouse(player);
+        mouse.setHoverCell(defaultHoverCell);
+
+        Unit unit = makeUnit(otherPlayer);
+        defaultHoverCell.setEntity(unit);
+
+        // select entity
+        mouse.selectEntity();
+
+        // expect moving cursor (moveable entity)
+        assertFalse(mouse.isMovingCursor());
     }
 
     @Test
@@ -88,7 +124,7 @@ public class MouseTest {
 
     @Test
     public void deselectStructureIgnoresNullHoverCell() {
-        mouse = new Mouse(null);
+        mouse = new Mouse((Cell) null);
         mouse.deselectEntity();
         assertNull(mouse.getLastSelectedEntity());
     }
@@ -115,6 +151,10 @@ public class MouseTest {
 
     private Structure makeStructure() {
         return new Structure(Vector2D.zero(), mock(Image.class), 64, 64, 2, mock(Player.class));
+    }
+
+    private Unit makeUnit(Player player) {
+        return new Unit(mock(Map.class), Vector2D.zero(), mock(Image.class), 32, 32, 3, player);
     }
 
     private class NotSelectableEntity extends Entity {
