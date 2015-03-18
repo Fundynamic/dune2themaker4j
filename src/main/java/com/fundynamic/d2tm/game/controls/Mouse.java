@@ -14,18 +14,18 @@ import com.fundynamic.d2tm.math.Vector2D;
  */
 public class Mouse {
 
-    private Player playerControlled;
+    private Player controllingPlayer;
 
     private Cell hoverCell;
     private Entity lastSelectedEntity;
     private boolean movingCursor;
 
-    public Mouse(Player playerControlled) {
-        this.playerControlled = playerControlled;
+    public Mouse(Player controllingPlayer) {
+        this.controllingPlayer = controllingPlayer;
     }
 
     public Mouse(Cell hoverCell) {
-        this.playerControlled = null;
+        this.controllingPlayer = null;
         this.hoverCell = hoverCell;
     }
 
@@ -53,7 +53,7 @@ public class Mouse {
         if (!entity.isSelectable()) return;
         lastSelectedEntity = entity;
         ((Selectable)lastSelectedEntity).select();
-        if (selectedEntityBelongsToPlayerControlled() && selectedEntityIsMovable()) {
+        if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
             movingCursor = true;
         }
     }
@@ -72,16 +72,16 @@ public class Mouse {
                 ((Selectable) lastSelectedEntity).deselect();
             }
         }
-        if (selectedEntityBelongsToPlayerControlled()) {
+        if (selectedEntityBelongsToControllingPlayer()) {
             movingCursor = false;
         }
         lastSelectedEntity = null;
     }
 
-    private boolean selectedEntityBelongsToPlayerControlled() {
+    private boolean selectedEntityBelongsToControllingPlayer() {
         if (lastSelectedEntity == null) return false;
-        if (playerControlled == null) return false;
-        return lastSelectedEntity.getPlayer().equals(playerControlled);
+        if (controllingPlayer == null) return false;
+        return lastSelectedEntity.getPlayer().equals(controllingPlayer);
     }
 
     public boolean hoversOverSelectableEntity() {
@@ -96,7 +96,7 @@ public class Mouse {
     }
 
     public void moveSelectedEntityToHoverCell() {
-        if (selectedEntityBelongsToPlayerControlled() && selectedEntityIsMovable()) {
+        if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
             ((Moveable)lastSelectedEntity).moveTo(getHoverCellMapVector());
         }
     }
