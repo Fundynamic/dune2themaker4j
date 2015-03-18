@@ -28,11 +28,11 @@ public class Unit extends Entity implements Selectable, Moveable {
     private int facing;
     private float moveSpeed;
 
-    public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, Player player) {
-        this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, player);
+    public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, float moveSpeed, Player player) {
+        this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, moveSpeed, player);
     }
 
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, Player player) {
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, float moveSpeed, Player player) {
         super(mapCoordinates, spriteSheet, sight, player);
         this.map = map;
 
@@ -42,7 +42,7 @@ public class Unit extends Entity implements Selectable, Moveable {
         this.target = mapCoordinates;
         this.nextCellToMoveTo = mapCoordinates;
         this.offset = Vector2D.zero();
-        this.moveSpeed = 0.5F + Random.getFloat(3f);
+        this.moveSpeed = moveSpeed;
     }
 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {

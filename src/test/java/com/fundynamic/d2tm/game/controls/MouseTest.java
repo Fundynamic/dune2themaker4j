@@ -154,7 +154,7 @@ public class MouseTest {
     }
 
     private Unit makeUnit(Player player) {
-        return new Unit(mock(Map.class), Vector2D.zero(), mock(Image.class), 32, 32, 3, player);
+        return new Unit(mock(Map.class), Vector2D.zero(), mock(Image.class), 32, 32, 3, 1.0f, player);
     }
 
     private class NotSelectableEntity extends Entity {
