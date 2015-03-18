@@ -175,6 +175,7 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void moveTo(Vector2D target) {
+        System.out.println("Ordered to move to " + target);
         this.target = target;
     }
 

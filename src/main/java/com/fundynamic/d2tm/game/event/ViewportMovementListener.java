@@ -2,9 +2,11 @@ package com.fundynamic.d2tm.game.event;
 
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Random;
@@ -33,32 +35,11 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
-
-        // TODO: this is here for now, but we want to put this in a separate listener!
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
-                if (mouse.hoversOverSelectableEntity()) {
-                    mouse.deselectEntity();
-                    mouse.selectEntity();
-
-                    // add some fun so we place units/structures depending on what we selected
-                    if (mouse.getLastSelectedEntity() instanceof Structure) {
-                        entityType = EntityRepository.EntityType.STRUCTURE;
-                    } else {
-                        entityType = EntityRepository.EntityType.UNIT;
-                    }
-                } else if (mouse.hasAnyEntitySelected()) {
-                    if (mouse.isMovingCursor()) {
-                        mouse.moveSelectedEntityToHoverCell();
-                    }
-                } else {
-                    // TODO: same goes for this... which basically is 'place structure here'
-                    entityRepository.placeOnMap(mouse.getHoverCellMapVector(), entityType, Random.getRandomBetween(0, 2), player);
-                }
-            }
-
-            if (button == Input.MOUSE_RIGHT_BUTTON) {
-                mouse.deselectEntity();
+                mouse.leftClicked();
+            } else if (button == Input.MOUSE_RIGHT_BUTTON) {
+                mouse.rightClicked();
             }
         }
     }
@@ -82,7 +63,8 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
         Map map = viewport.getMap();
 
-        mouse.setHoverCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
+        mouse.mouseMovedToXAndY(newx, newy);
+        mouse.mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
     }
 
     @Override

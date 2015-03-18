@@ -1,107 +1,65 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.behaviors.Moveable;
-import com.fundynamic.d2tm.game.behaviors.Selectable;
+import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.Graphics;
 
-/**
- * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)
- * but about what structure is selected, the type of mouse being rendered (ie moving? attacking? placing structure? or
- * 'normal' ?)
- */
+
 public class Mouse {
 
-    private Player controllingPlayer;
+    private int x, y;
+    private MouseBehavior mouseBehavior;
 
-    private Cell hoverCell;
     private Entity lastSelectedEntity;
-    private boolean movingCursor;
+    private Cell hoverCell;
 
     public Mouse(Player controllingPlayer) {
-        this.controllingPlayer = controllingPlayer;
+        this.mouseBehavior = new NormalMouse(controllingPlayer, this);
+        this.hoverCell = null;
     }
 
-    public Mouse(Cell hoverCell) {
-        this.controllingPlayer = null;
-        this.hoverCell = hoverCell;
+    public void leftClicked() {
+        mouseBehavior.leftClicked();
     }
 
-    public void setHoverCell(Cell cell) {
-        if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
-        this.hoverCell = cell;
+    public void rightClicked() {
+        mouseBehavior.rightClicked();
     }
 
-    public Cell getHoverCell() {
-        return hoverCell;
+    public void mouseMovedToXAndY(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public Vector2D getHoverCellMapVector() {
-        return hoverCell.getCoordinatesAsVector2D();
+    public void mouseMovedToCell(Cell cell) {
+        mouseBehavior.mouseMovedToCell(cell);
     }
 
-    /**
-     * When a structure is bound to a cell, this method makes sure that is the only selected structure.
-     * If there is no structure bound to the cell then this automatically deselects the structure.
-     */
-    public void selectEntity() {
-        if (hoverCell == null) return;
-        Entity entity = hoverCell.getEntity();
-        if (entity == null) return;
-        if (!entity.isSelectable()) return;
-        lastSelectedEntity = entity;
-        ((Selectable)lastSelectedEntity).select();
-        if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-            movingCursor = true;
-        }
+    public void setMouseBehavior(MouseBehavior mouseBehavior) {
+        if (mouseBehavior == null) throw new IllegalArgumentException("MouseBehavior argument may not be null!");
+        System.out.println("Mouse behavior changed into " + mouseBehavior);
+        this.mouseBehavior = mouseBehavior;
     }
 
-    public boolean hasAnyEntitySelected() {
-        return this.lastSelectedEntity != null;
+    public void render(Graphics graphics) {
+        mouseBehavior.render(graphics, x, y);
     }
 
     public Entity getLastSelectedEntity() {
         return lastSelectedEntity;
     }
 
-    public void deselectEntity() {
-        if (lastSelectedEntity != null) {
-            if (lastSelectedEntity.isSelectable()) {
-                ((Selectable) lastSelectedEntity).deselect();
-            }
-        }
-        if (selectedEntityBelongsToControllingPlayer()) {
-            movingCursor = false;
-        }
-        lastSelectedEntity = null;
+    public void setLastSelectedEntity(Entity lastSelectedEntity) {
+        this.lastSelectedEntity = lastSelectedEntity;
     }
 
-    private boolean selectedEntityBelongsToControllingPlayer() {
-        if (lastSelectedEntity == null) return false;
-        if (controllingPlayer == null) return false;
-        return lastSelectedEntity.getPlayer().equals(controllingPlayer);
+    public Cell getHoverCell() {
+        return hoverCell;
     }
 
-    public boolean hoversOverSelectableEntity() {
-        Entity entity = hoverCell.getEntity();
-        if (entity == null) return false;
-        return entity.isSelectable();
-
-    }
-
-    public boolean isMovingCursor() {
-        return movingCursor;
-    }
-
-    public void moveSelectedEntityToHoverCell() {
-        if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-            ((Moveable)lastSelectedEntity).moveTo(getHoverCellMapVector());
-        }
-    }
-
-    private boolean selectedEntityIsMovable() {
-        return lastSelectedEntity.isMovable();
+    public void setHoverCell(Cell hoverCell) {
+        this.hoverCell = hoverCell;
     }
 }

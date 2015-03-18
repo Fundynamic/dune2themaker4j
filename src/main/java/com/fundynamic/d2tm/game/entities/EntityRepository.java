@@ -57,12 +57,16 @@ public class EntityRepository {
 
     public void placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
+        placeOnMap(topLeft, entityData, player);
+    }
+
+    public void placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
         System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
             Image originalImage = entityData.image;
             Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
 
-            switch (entityType) {
+            switch (entityData.type) {
                 case STRUCTURE:
                     entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
@@ -101,7 +105,7 @@ public class EntityRepository {
         return new Image(pathToImage);
     }
 
-    protected EntityData getEntityData(EntityType entityType, int id) {
+    public EntityData getEntityData(EntityType entityType, int id) {
         EntityData entityData = entitiesData.get(constructKey(entityType, id));
         if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Known entities are:\n" + entitiesData);
         return entityData;
@@ -146,6 +150,10 @@ public class EntityRepository {
                     ", sight=" + sight +
                     ", moveSpeed=" + moveSpeed +
                     '}';
+        }
+
+        public Image getFirstImage() {
+            return image.getSubImage(0, 0, width, height);
         }
     }
 }

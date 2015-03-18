@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
@@ -63,8 +64,6 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        input.addKeyListener(new QuitGameKeyListener(gameContainer));
-
         this.human = new Player("Human", Recolorer.FactionColor.RED);
         this.cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
@@ -85,7 +84,6 @@ public class PlayingState extends BasicGameState {
             } else {
                 entityRepository.placeUnitOnMap(randomCell, Random.getInt(2), cpu);
             }
-
         }
 
 
@@ -112,6 +110,9 @@ public class PlayingState extends BasicGameState {
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }
+
+        input.addKeyListener(new QuitGameKeyListener(gameContainer));
+        input.addKeyListener(new DebugKeysListener(mouse, human, entityRepository));
     }
 
     @Override
