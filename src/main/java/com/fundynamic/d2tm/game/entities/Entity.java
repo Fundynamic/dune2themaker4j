@@ -16,7 +16,7 @@ public abstract class Entity implements Renderable, Updateable {
 
     // TODO: these might need to be absolute pixel coordinates to make smooth movements possible
     //       instead of cell x,y coordinates which it is right now.
-    protected  Vector2D mapCoordinates;
+    protected Vector2D mapCoordinates;
 
     public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
         this.mapCoordinates = mapCoordinates;
@@ -44,4 +44,5 @@ public abstract class Entity implements Renderable, Updateable {
     public Player getPlayer() {
         return player;
     }
+
 }

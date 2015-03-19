@@ -3,14 +3,13 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 public class MovableSelectedMouse extends NormalMouse {
 
-    public MovableSelectedMouse(Player controllingPlayer, Mouse mouse) {
-        super(controllingPlayer, mouse);
+    public MovableSelectedMouse(Mouse mouse) {
+        super(mouse);
     }
 
     @Override
@@ -21,7 +20,7 @@ public class MovableSelectedMouse extends NormalMouse {
             selectEntity(entity);
         } else {
             if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-                ((Moveable) mouse.getLastSelectedEntity()).moveTo(hoverCell.getCoordinatesAsVector2D());
+                ((Moveable) mouse.getLastSelectedEntity()).moveTo(mouse.getHoverCell().getCoordinatesAsVector2D());
             }
         }
     }

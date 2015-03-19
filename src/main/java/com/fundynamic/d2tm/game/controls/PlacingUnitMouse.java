@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.controls;
 
 
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Random;
 import org.newdawn.slick.Color;
@@ -13,8 +12,8 @@ public class PlacingUnitMouse extends AbstractMouseBehavior {
     private final EntityRepository entityRepository;
     private EntityRepository.EntityData entityToPlace;
 
-    public PlacingUnitMouse(Player controllingPlayer, Mouse mouse, EntityRepository entityRepository) {
-        super(controllingPlayer, mouse);
+    public PlacingUnitMouse(Mouse mouse, EntityRepository entityRepository) {
+        super(mouse);
         this.entityRepository = entityRepository;
         selectRandomlySomethingToPlace();
     }
@@ -22,13 +21,13 @@ public class PlacingUnitMouse extends AbstractMouseBehavior {
     @Override
     public void leftClicked() {
         Cell hoverCell = mouse.getHoverCell();
-        entityRepository.placeOnMap(hoverCell.getCoordinatesAsVector2D(), entityToPlace, controllingPlayer);
+        entityRepository.placeOnMap(hoverCell.getCoordinatesAsVector2D(), entityToPlace, mouse.getControllingPlayer());
         selectRandomlySomethingToPlace();
     }
 
     @Override
     public void rightClicked() {
-        mouse.setMouseBehavior(new NormalMouse(controllingPlayer, mouse));
+        mouse.setMouseBehavior(new NormalMouse(mouse));
     }
 
     @Override

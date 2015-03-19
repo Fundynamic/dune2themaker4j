@@ -112,7 +112,7 @@ public class PlayingState extends BasicGameState {
         }
 
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
-        input.addKeyListener(new DebugKeysListener(mouse, human, entityRepository));
+        input.addKeyListener(new DebugKeysListener(mouse, entityRepository));
     }
 
     @Override

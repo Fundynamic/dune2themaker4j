@@ -9,15 +9,8 @@ import com.fundynamic.d2tm.game.map.Cell;
 
 public class NormalMouse extends AbstractMouseBehavior {
 
-    protected Cell hoverCell;
-
-    public NormalMouse(Player controllingPlayer, Mouse mouse) {
-        super(controllingPlayer, mouse);
-    }
-
-    public NormalMouse(Cell hoverCell, Mouse mouse) {
-        this((Player) null, mouse);
-        this.hoverCell = hoverCell;
+    public NormalMouse(Mouse mouse) {
+        super(mouse);
     }
 
     @Override
@@ -28,7 +21,7 @@ public class NormalMouse extends AbstractMouseBehavior {
         selectEntity(entity);
 
         if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-            mouse.setMouseBehavior(new MovableSelectedMouse(controllingPlayer, mouse));
+            mouse.setMouseBehavior(new MovableSelectedMouse(mouse));
         }
     }
 
@@ -39,6 +32,7 @@ public class NormalMouse extends AbstractMouseBehavior {
     }
 
     protected Entity hoveringOverSelectableEntity() {
+        Cell hoverCell = mouse.getHoverCell();
         if (hoverCell == null) return null;
         Entity entity = hoverCell.getEntity();
         if (entity == null) return null;
@@ -50,7 +44,7 @@ public class NormalMouse extends AbstractMouseBehavior {
     public void rightClicked() {
         deselectCurrentlySelectedEntity();
         if (selectedEntityBelongsToControllingPlayer()) {
-            mouse.setMouseBehavior(new NormalMouse(controllingPlayer, mouse));
+            mouse.setMouseBehavior(new NormalMouse(mouse));
         }
         mouse.setLastSelectedEntity(null);
     }
@@ -67,12 +61,13 @@ public class NormalMouse extends AbstractMouseBehavior {
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
-        this.hoverCell = cell;
+        mouse.setHoverCell(cell);
     }
 
     protected boolean selectedEntityBelongsToControllingPlayer() {
         Entity lastSelectedEntity = mouse.getLastSelectedEntity();
         if (lastSelectedEntity == null) return false;
+        Player controllingPlayer = mouse.getControllingPlayer();
         if (controllingPlayer == null) return false;
         return lastSelectedEntity.getPlayer().equals(controllingPlayer);
     }

@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -9,6 +8,8 @@ import org.newdawn.slick.Graphics;
 
 public class Mouse {
 
+    private final Player controllingPlayer;
+
     private int x, y;
     private MouseBehavior mouseBehavior;
 
@@ -16,7 +17,8 @@ public class Mouse {
     private Cell hoverCell;
 
     public Mouse(Player controllingPlayer) {
-        this.mouseBehavior = new NormalMouse(controllingPlayer, this);
+        this.controllingPlayer = controllingPlayer;
+        this.mouseBehavior = new NormalMouse(this);
         this.hoverCell = null;
     }
 
@@ -62,4 +64,9 @@ public class Mouse {
     public void setHoverCell(Cell hoverCell) {
         this.hoverCell = hoverCell;
     }
+
+    public Player getControllingPlayer() {
+        return controllingPlayer;
+    }
+
 }

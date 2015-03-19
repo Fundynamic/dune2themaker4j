@@ -27,6 +27,8 @@ public class Viewport implements Renderable {
     private final CellTerrainRenderer cellTerrainRenderer;
     private final CellShroudRenderer cellShroudRenderer;
     private final CellViewportRenderer cellViewportRenderer;
+    private final CellDebugInfoRenderer cellDebugInfoRenderer;
+
 
     private Vector2D velocity;
     private float moveSpeed;
@@ -60,6 +62,7 @@ public class Viewport implements Renderable {
         this.cellViewportRenderer = new CellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(map, player);
+        this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
         this.mouse = mouse;
 
         this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
@@ -82,6 +85,7 @@ public class Viewport implements Renderable {
             entityViewportRenderer.render(this.buffer, viewingVector);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
+            cellViewportRenderer.render(this.buffer, viewingVector, cellDebugInfoRenderer);
 
             mouse.render(this.buffer.getGraphics());
 
