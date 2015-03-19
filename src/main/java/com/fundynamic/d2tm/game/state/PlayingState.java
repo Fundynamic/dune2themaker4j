@@ -15,10 +15,7 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -112,12 +109,12 @@ public class PlayingState extends BasicGameState {
             input.addMouseListener(new ViewportMovementListener(viewport, mouse, entityRepository, human));
 
             viewports.add(viewport);
+
+            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }
-
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
-        input.addKeyListener(new DebugKeysListener(mouse, entityRepository));
     }
 
     @Override

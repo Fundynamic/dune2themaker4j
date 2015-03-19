@@ -29,6 +29,7 @@ public class Viewport implements Renderable {
     private final CellViewportRenderer cellViewportRenderer;
     private final CellDebugInfoRenderer cellDebugInfoRenderer;
 
+    private boolean drawDebugInfo = true;
 
     private Vector2D velocity;
     private float moveSpeed;
@@ -85,8 +86,10 @@ public class Viewport implements Renderable {
             entityViewportRenderer.render(this.buffer, viewingVector);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
-            cellViewportRenderer.render(this.buffer, viewingVector, cellDebugInfoRenderer);
 
+            if (drawDebugInfo) {
+                cellViewportRenderer.render(this.buffer, viewingVector, cellDebugInfoRenderer);
+            }
 
             drawBufferToGraphics(graphics, drawingVector);
         } catch (SlickException e) {
@@ -173,4 +176,7 @@ public class Viewport implements Renderable {
         return yPositionOnScreen + (int) viewingVector.getY();
     }
 
+    public void toggleDrawDebugMode() {
+        drawDebugInfo = !drawDebugInfo;
+    }
 }
