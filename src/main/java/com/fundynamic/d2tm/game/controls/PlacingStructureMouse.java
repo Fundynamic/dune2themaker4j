@@ -35,16 +35,15 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
         mouse.setHoverCell(cell);
     }
 
-    @Override
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.green);
         graphics.setLineWidth(1.1f);
-        entityToPlace.getFirstImage().draw(x, y);
         graphics.drawRect(x, y, entityToPlace.width, entityToPlace.height);
     }
 
     private void selectRandomlySomethingToPlace() {
         entityToPlace = entityRepository.getEntityData(EntityRepository.EntityType.STRUCTURE, Random.getRandomBetween(0, 2));
+        mouse.setMouseImage(entityToPlace.getFirstImage(), 16, 16);
     }
 
 }

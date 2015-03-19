@@ -63,7 +63,6 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
         Map map = viewport.getMap();
 
-        mouse.mouseMovedToXAndY(newx, newy);
         mouse.mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
     }
 

@@ -11,6 +11,7 @@ public class NormalMouse extends AbstractMouseBehavior {
 
     public NormalMouse(Mouse mouse) {
         super(mouse);
+        mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
     }
 
     @Override
@@ -56,12 +57,19 @@ public class NormalMouse extends AbstractMouseBehavior {
                 ((Selectable) lastSelectedEntity).deselect();
             }
         }
+        mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
     }
 
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
         mouse.setHoverCell(cell);
+        Entity entity = hoveringOverSelectableEntity();
+        if (entity != null && entity.belongsToPlayer(mouse.getControllingPlayer())) {
+            mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
+        } else {
+            mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
+        }
     }
 
     protected boolean selectedEntityBelongsToControllingPlayer() {

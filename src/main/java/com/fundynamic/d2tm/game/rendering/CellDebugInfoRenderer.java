@@ -2,6 +2,8 @@ package com.fundynamic.d2tm.game.rendering;
 
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.controls.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -32,9 +34,15 @@ public class CellDebugInfoRenderer implements Renderer<Cell> {
         }
 
         if (mapCell.isAtSameLocationAs(mouse.getHoverCell())) {
-            graphics.setColor(Color.white);
-            graphics.setLineWidth(1.1f);
-            graphics.drawRect(drawX, drawY, 31, 31);
+
+            MouseBehavior mouseBehavior = mouse.getMouseBehavior();
+            if (mouseBehavior instanceof PlacingStructureMouse) {
+                ((PlacingStructureMouse) mouseBehavior).render(graphics, drawX, drawY);
+            } else {
+                graphics.setColor(Color.white);
+                graphics.setLineWidth(1.1f);
+                graphics.drawRect(drawX, drawY, 31, 31);
+            }
         }
     }
 

@@ -3,13 +3,13 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
+import com.fundynamic.d2tm.game.map.Cell;
 
 public class MovableSelectedMouse extends NormalMouse {
 
     public MovableSelectedMouse(Mouse mouse) {
         super(mouse);
+        mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
     }
 
     @Override
@@ -26,14 +26,23 @@ public class MovableSelectedMouse extends NormalMouse {
     }
 
     @Override
-    public void rightClicked() {
-        super.rightClicked();
+    public void mouseMovedToCell(Cell cell) {
+        if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
+        mouse.setHoverCell(cell);
+        Entity entity = hoveringOverSelectableEntity();
+        if (entity == null) {
+            mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+            return;
+        }
+        if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
+            mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
+        } else {
+            mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+        }
     }
 
     @Override
-    public void render(Graphics graphics, int x, int y) {
-        graphics.setColor(Color.green);
-        graphics.setLineWidth(1.1f);
-        graphics.drawRect(x, y, 31, 31);
+    public void rightClicked() {
+        super.rightClicked();
     }
 }

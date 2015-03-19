@@ -17,10 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
@@ -64,7 +61,7 @@ public class ViewportMovementListenerTest {
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
         map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
-        this.mouse = new Mouse(player);
+        this.mouse = new Mouse(player, mock(GameContainer.class));
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
         listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);

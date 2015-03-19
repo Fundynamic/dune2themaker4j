@@ -45,4 +45,7 @@ public abstract class Entity implements Renderable, Updateable {
         return player;
     }
 
+    public boolean belongsToPlayer(Player other) {
+        return player.equals(other);
+    }
 }

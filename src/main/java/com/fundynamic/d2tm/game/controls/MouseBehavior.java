@@ -1,10 +1,9 @@
 package com.fundynamic.d2tm.game.controls;
 
 
-import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.map.Cell;
 
-public interface MouseBehavior extends Renderable {
+public interface MouseBehavior {
 
     void leftClicked();
 

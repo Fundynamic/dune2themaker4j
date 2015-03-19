@@ -73,7 +73,12 @@ public class PlayingState extends BasicGameState {
         this.map = mapEditor.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
         entityRepository = new EntityRepository(map, new Recolorer());
 
-        this.mouse = new Mouse(human);
+        this.mouse = new Mouse(human, gameContainer);
+        this.mouse.addMouseImage(Mouse.MouseImages.NORMAL, new Image("mouse/mouse_normal.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, new Image("mouse/mouse_pick.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.MOVE, new Image("mouse/mouse_move.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.ATTACK, new Image("mouse/mouse_attack.png"));
+        this.mouse.init();
 
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
         for (int i = 0; i < 50; i++) {
