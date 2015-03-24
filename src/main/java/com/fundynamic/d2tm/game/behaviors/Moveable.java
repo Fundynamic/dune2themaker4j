@@ -4,6 +4,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 
 public interface Moveable {
 
-    public void moveTo(Vector2D target);
+    void moveTo(Vector2D target);
 
 }
