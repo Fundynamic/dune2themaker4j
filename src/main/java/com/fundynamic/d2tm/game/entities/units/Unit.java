@@ -122,6 +122,7 @@ public class Unit extends Entity implements Selectable, Moveable {
         } else {
             System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
             this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
+            intendedCellToMoveTo.setEntity(this); // claim this cell so we make sure nobody else can move here/take it.
         }
     }
 
