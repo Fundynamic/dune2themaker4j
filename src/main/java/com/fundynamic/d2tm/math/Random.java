@@ -20,4 +20,7 @@ public class Random {
         return (int) (Math.random() * max);
     }
 
+    public static float getFloat(float max) {
+        return (float) (Math.random() * max);
+    }
 }

@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
 import com.fundynamic.d2tm.game.map.Map;
@@ -14,10 +15,7 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -63,8 +61,6 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        input.addKeyListener(new QuitGameKeyListener(gameContainer));
-
         this.human = new Player("Human", Recolorer.FactionColor.RED);
         this.cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
@@ -74,7 +70,12 @@ public class PlayingState extends BasicGameState {
         this.map = mapEditor.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
         entityRepository = new EntityRepository(map, new Recolorer());
 
-        this.mouse = new Mouse();
+        this.mouse = new Mouse(human, gameContainer);
+        this.mouse.addMouseImage(Mouse.MouseImages.NORMAL, new Image("mouse/mouse_normal.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, new Image("mouse/mouse_pick.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.MOVE, new Image("mouse/mouse_move.png"));
+        this.mouse.addMouseImage(Mouse.MouseImages.ATTACK, new Image("mouse/mouse_attack.png"));
+        this.mouse.init();
 
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
         for (int i = 0; i < 50; i++) {
@@ -85,7 +86,6 @@ public class PlayingState extends BasicGameState {
             } else {
                 entityRepository.placeUnitOnMap(randomCell, Random.getInt(2), cpu);
             }
-
         }
 
 
@@ -109,9 +109,12 @@ public class PlayingState extends BasicGameState {
             input.addMouseListener(new ViewportMovementListener(viewport, mouse, entityRepository, human));
 
             viewports.add(viewport);
+
+            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }
+        input.addKeyListener(new QuitGameKeyListener(gameContainer));
     }
 
     @Override

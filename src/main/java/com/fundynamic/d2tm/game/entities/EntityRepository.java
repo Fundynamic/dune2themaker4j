@@ -34,8 +34,8 @@ public class EntityRepository {
         this(map, recolorer, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
-        createUnit(QUAD, "units/quad.png", 32, 32, 4);
-        createUnit(TRIKE, "units/trike.png", 28, 26, 4);
+        createUnit(QUAD, "units/quad.png", 32, 32, 4, 1.0F);
+        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.0F);
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 2);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2);
     }
@@ -57,17 +57,21 @@ public class EntityRepository {
 
     public void placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
+        placeOnMap(topLeft, entityData, player);
+    }
+
+    public void placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
         System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
             Image originalImage = entityData.image;
             Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
 
-            switch (entityType) {
+            switch (entityData.type) {
                 case STRUCTURE:
                     entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
+                    entities.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, entityData.moveSpeed, player)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {
@@ -75,15 +79,15 @@ public class EntityRepository {
         }
     }
 
-    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight);
+    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed);
     }
 
     public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight);
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F);
     }
 
-    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight) throws SlickException {
+    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
@@ -93,6 +97,7 @@ public class EntityRepository {
         entityData.height = heightInPixels;
         entityData.type = entityType;
         entityData.sight = sight;
+        entityData.moveSpeed = moveSpeed;
         entitiesData.put(constructKey(entityType, id), entityData);
     }
 
@@ -100,7 +105,7 @@ public class EntityRepository {
         return new Image(pathToImage);
     }
 
-    protected EntityData getEntityData(EntityType entityType, int id) {
+    public EntityData getEntityData(EntityType entityType, int id) {
         EntityData entityData = entitiesData.get(constructKey(entityType, id));
         if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Known entities are:\n" + entitiesData);
         return entityData;
@@ -133,6 +138,7 @@ public class EntityRepository {
         public int width;
         public int height;
         public int sight;
+        public float moveSpeed;
 
         @Override
         public String toString() {
@@ -142,7 +148,12 @@ public class EntityRepository {
                     ", width=" + width +
                     ", height=" + height +
                     ", sight=" + sight +
+                    ", moveSpeed=" + moveSpeed +
                     '}';
+        }
+
+        public Image getFirstImage() {
+            return image.getSubImage(0, 0, width, height);
         }
     }
 }

@@ -55,7 +55,8 @@ public class EntityRepositoryTest {
         int heightInPixels = 32;
         int idOfEntity = 1;
         int sight = 2;
-        entityRepository.createUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight);
+        float moveSpeed = 1.0F;
+        entityRepository.createUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed);
 
         EntityRepository.EntityData data = entityRepository.getEntityData(EntityRepository.EntityType.UNIT, idOfEntity);
 
@@ -68,8 +69,8 @@ public class EntityRepositoryTest {
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         int idOfEntity = 1;
-        entityRepository.createUnit(idOfEntity, "quad.png", 32, 32, 2); // success!
-        entityRepository.createUnit(idOfEntity, "this is irrelevant", 32, 32, 3); // boom!
+        entityRepository.createUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F); // success!
+        entityRepository.createUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)
@@ -108,7 +109,7 @@ public class EntityRepositoryTest {
 
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
-        entityRepository.createUnit(0, "quad.png", 32, 32, 2);
+        entityRepository.createUnit(0, "quad.png", 32, 32, 2, 1.0F);
 
         entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0, player);
 

@@ -1,73 +1,108 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
-/**
- * This class represents the state of the mouse. This is not about coordinates (we can get these via Slick listeners)
- * but about what structure is selected, the type of mouse being rendered (ie moving? attacking? placing structure? or
- * 'normal' ?)
- */
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class Mouse {
 
-    private Cell hoverCell;
+    public enum MouseImages {
+        NORMAL, HOVER_OVER_SELECTABLE_ENTITY, MOVE, ATTACK, CUSTOM
+    }
+
+    private final Player controllingPlayer;
+    private final GameContainer gameContainer;
+
+    private MouseBehavior mouseBehavior;
     private Entity lastSelectedEntity;
+    private Cell hoverCell;
+    private MouseImages currentImage = null;
 
-    public Mouse(){}
+    private Map<MouseImages, Image> mouseImages;
 
-    public Mouse(Cell hoverCell) {
-        this.hoverCell = hoverCell;
+    public Mouse(Player controllingPlayer, GameContainer gameContainer) {
+        this.controllingPlayer = controllingPlayer;
+        this.mouseBehavior = null;
+        this.hoverCell = null;
+        this.gameContainer = gameContainer;
+        this.mouseImages = new HashMap<>();
     }
 
-    public void setHoverCell(Cell cell) {
-        if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
-        this.hoverCell = cell;
+    public void init() {
+        this.mouseBehavior = new NormalMouse(this);
+        this.hoverCell = null;
     }
 
-    public Cell getHoverCell() {
-        return hoverCell;
+    public void leftClicked() {
+        mouseBehavior.leftClicked();
     }
 
-    public Vector2D getHoverCellMapVector() {
-        return hoverCell.getCoordinatesAsVector2D();
+    public void rightClicked() {
+        mouseBehavior.rightClicked();
     }
 
-    /**
-     * When a structure is bound to a cell, this method makes sure that is the only selected structure.
-     * If there is no structure bound to the cell then this automatically deselects the structure.
-     */
-    public void selectEntity() {
-        if (hoverCell == null) return;
-        Entity entity = hoverCell.getEntity();
-        if (entity == null) return;
-        if (!entity.isSelectable()) return;
-        lastSelectedEntity = entity;
-        ((Selectable)lastSelectedEntity).select();
+    public void mouseMovedToCell(Cell cell) {
+        mouseBehavior.mouseMovedToCell(cell);
     }
 
-    public boolean hasAnyEntitySelected() {
-        return this.lastSelectedEntity != null;
+    public void setMouseBehavior(MouseBehavior mouseBehavior) {
+        if (mouseBehavior == null) throw new IllegalArgumentException("MouseBehavior argument may not be null!");
+        System.out.println("Mouse behavior changed into " + mouseBehavior);
+        this.mouseBehavior = mouseBehavior;
     }
 
     public Entity getLastSelectedEntity() {
         return lastSelectedEntity;
     }
 
-    public void deselectEntity() {
-        if (lastSelectedEntity != null) {
-            if (lastSelectedEntity.isSelectable()) {
-                ((Selectable) lastSelectedEntity).deselect();
-            }
+    public void setLastSelectedEntity(Entity lastSelectedEntity) {
+        this.lastSelectedEntity = lastSelectedEntity;
+    }
+
+    public Cell getHoverCell() {
+        return hoverCell;
+    }
+
+    public void setHoverCell(Cell hoverCell) {
+        this.hoverCell = hoverCell;
+    }
+
+    public Player getControllingPlayer() {
+        return controllingPlayer;
+    }
+
+    public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
+        if (image == null) throw new IllegalArgumentException("Image to set for mouse cursor may not be null!");
+        if (!mouseImages.containsValue(image)) {
+            this.currentImage = MouseImages.CUSTOM;
         }
-        lastSelectedEntity = null;
+        try {
+            gameContainer.setMouseCursor(image, hotSpotX, hotSpotY);
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
     }
 
-    public boolean hoversOverSelectableEntity() {
-        Entity entity = hoverCell.getEntity();
-        if (entity == null) return false;
-        return entity.isSelectable();
-
+    public void setMouseImage(MouseImages key, int hotSpotX, int hotSpotY) {
+        if (key.equals(this.currentImage)) return;
+        this.currentImage = key;
+        setMouseImage(mouseImages.get(key), hotSpotX, hotSpotY);
     }
+
+    public void addMouseImage(MouseImages key, Image image) {
+        if (image == null) throw new IllegalArgumentException("Image for mouse images cannot be null!");
+        this.mouseImages.put(key, image);
+    }
+
+    public MouseBehavior getMouseBehavior() {
+        return this.mouseBehavior;
+    }
+
 }

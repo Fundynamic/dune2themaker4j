@@ -26,13 +26,16 @@ public class Viewport implements Renderable {
 
     private final CellTerrainRenderer cellTerrainRenderer;
     private final CellShroudRenderer cellShroudRenderer;
-    private final CellMouseInteractionRenderer cellMouseInteractionRenderer;
     private final CellViewportRenderer cellViewportRenderer;
+    private final CellDebugInfoRenderer cellDebugInfoRenderer;
+
+    private boolean drawDebugInfo = true;
 
     private Vector2D velocity;
     private float moveSpeed;
 
     private Vector2D viewingVector;
+    private final Mouse mouse;
 
     private Map map;
 
@@ -60,7 +63,8 @@ public class Viewport implements Renderable {
         this.cellViewportRenderer = new CellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(map, player);
-        this.cellMouseInteractionRenderer = new CellMouseInteractionRenderer(mouse);
+        this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
+        this.mouse = mouse;
 
         this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }
@@ -82,7 +86,10 @@ public class Viewport implements Renderable {
             entityViewportRenderer.render(this.buffer, viewingVector);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
-            cellViewportRenderer.render(this.buffer, viewingVector, cellMouseInteractionRenderer);
+
+            if (drawDebugInfo) {
+                cellViewportRenderer.render(this.buffer, viewingVector, cellDebugInfoRenderer);
+            }
 
             drawBufferToGraphics(graphics, drawingVector);
         } catch (SlickException e) {
@@ -169,4 +176,7 @@ public class Viewport implements Renderable {
         return yPositionOnScreen + (int) viewingVector.getY();
     }
 
+    public void toggleDrawDebugMode() {
+        drawDebugInfo = !drawDebugInfo;
+    }
 }

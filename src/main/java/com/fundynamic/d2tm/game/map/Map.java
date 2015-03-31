@@ -180,4 +180,7 @@ public class Map {
         }
     }
 
+    public void revealShroudFor(Vector2D mapCoordinates, int range, Player player) {
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range, player);
+    }
 }
