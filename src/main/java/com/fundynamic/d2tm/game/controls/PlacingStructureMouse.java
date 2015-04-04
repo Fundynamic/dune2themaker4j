@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -33,6 +34,16 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
     @Override
     public void mouseMovedToCell(Cell cell) {
         mouse.setHoverCell(cell);
+    }
+
+    @Override
+    public void draggedToCoordinates(Vector2D coordinates) {
+        // DO NOTHING
+    }
+
+    @Override
+    public void leftButtonReleased() {
+        // DO NOTHING
     }
 
     public void render(Graphics graphics, int x, int y) {

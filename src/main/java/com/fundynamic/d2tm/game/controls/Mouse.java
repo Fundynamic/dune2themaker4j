@@ -3,7 +3,9 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -38,6 +40,10 @@ public class Mouse {
     public void init() {
         this.mouseBehavior = new NormalMouse(this);
         this.hoverCell = null;
+    }
+
+    public void render(Graphics graphics) {
+        mouseBehavior.render(graphics);
     }
 
     public void leftClicked() {
@@ -76,6 +82,14 @@ public class Mouse {
 
     public Player getControllingPlayer() {
         return controllingPlayer;
+    }
+
+    public void leftButtonReleased() {
+        mouseBehavior.leftButtonReleased();
+    }
+
+    public void draggedToCoordinates(int newX, int newY) {
+        mouseBehavior.draggedToCoordinates(Vector2D.create(newX, newY));
     }
 
     public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {

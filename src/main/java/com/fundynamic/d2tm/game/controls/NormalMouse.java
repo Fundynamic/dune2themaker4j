@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.math.Vector2D;
 
 
 public class NormalMouse extends AbstractMouseBehavior {
@@ -70,6 +71,16 @@ public class NormalMouse extends AbstractMouseBehavior {
         } else {
             mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
         }
+    }
+
+    @Override
+    public void draggedToCoordinates(Vector2D coordinates) {
+        mouse.setMouseBehavior(new DraggingSelectionBoxMouse(mouse, coordinates));
+    }
+
+    @Override
+    public void leftButtonReleased() {
+        // DO NOTHING
     }
 
     protected boolean selectedEntityBelongsToControllingPlayer() {
