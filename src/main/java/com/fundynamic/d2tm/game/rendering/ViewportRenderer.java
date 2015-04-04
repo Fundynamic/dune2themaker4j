@@ -20,6 +20,6 @@ import org.newdawn.slick.SlickException;
  */
 public interface ViewportRenderer<T> {
 
-    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<T> renderer) throws SlickException;
+    void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<T> renderer) throws SlickException;
 
 }
