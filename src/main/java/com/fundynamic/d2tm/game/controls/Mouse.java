@@ -133,7 +133,6 @@ public class Mouse {
     }
 
     public void setViewport(Viewport viewport) {
-        if (this.viewport != null) throw new IllegalArgumentException("Cannot set viewport (for now), because it is already set!");
         this.viewport = viewport;
     }
 
