@@ -136,4 +136,15 @@ public class Mouse {
         this.viewport = viewport;
     }
 
+    public void movedTo(Vector2D position) {
+        viewport.tellAboutNewMousePositions(position.getXAsInt(), position.getYAsInt());
+
+        com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
+
+        mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(
+                viewport.translateScreenToAbsoluteMapPixels(position)
+        ));
+
+    }
+
 }

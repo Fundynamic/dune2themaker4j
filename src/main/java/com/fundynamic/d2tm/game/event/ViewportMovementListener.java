@@ -55,13 +55,7 @@ public class ViewportMovementListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        viewport.tellAboutNewMousePositions(newx, newy);
-
-        Map map = viewport.getMap();
-
-        mouse.mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(
-                viewport.translateScreenToAbsoluteMapPixels(Vector2D.create(newx, newy))
-        ));
+        mouse.movedTo(Vector2D.create(newx, newy));
     }
 
     @Override
