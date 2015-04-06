@@ -29,6 +29,12 @@ public abstract class Entity implements Renderable, Updateable {
         return mapCoordinates;
     }
 
+    public Vector2D getAbsoluteMapPixelCoordinates() {
+        float absX = mapCoordinates.getX() * 32.0F;
+        float absY = mapCoordinates.getY() * 32.0F;
+        return Vector2D.create(absX, absY);
+    }
+
     public boolean isMovable() {
         return this instanceof Moveable;
     }

@@ -3,8 +3,6 @@ package com.fundynamic.d2tm.game.event;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.Terrain;
@@ -61,7 +59,7 @@ public class ViewportMovementListenerTest {
         Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
         map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
-        this.mouse = new Mouse(player, mock(GameContainer.class)) {
+        this.mouse = new Mouse(player, mock(GameContainer.class), entityRepository) {
             @Override
             public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
                 // do nothing.

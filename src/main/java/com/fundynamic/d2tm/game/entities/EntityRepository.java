@@ -10,9 +10,8 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class EntityRepository {
 
@@ -126,6 +125,16 @@ public class EntityRepository {
 
     public Set<Entity> getEntities() {
         return entities;
+    }
+
+    public List<Entity> find(Predicate<Entity> predicate) {
+        List<Entity> result = new LinkedList<>();
+        for (Entity entity : entities) {
+            if (predicate.test(entity)) {
+                result.add(entity);
+            }
+        }
+        return result;
     }
 
     public enum EntityType {

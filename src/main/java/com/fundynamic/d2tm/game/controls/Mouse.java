@@ -1,8 +1,10 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -21,6 +23,8 @@ public class Mouse {
 
     private final Player controllingPlayer;
     private final GameContainer gameContainer;
+    private final EntityRepository entityRepository;
+    private Viewport viewport;
 
     private MouseBehavior mouseBehavior;
     private Entity lastSelectedEntity;
@@ -29,8 +33,9 @@ public class Mouse {
 
     private Map<MouseImages, Image> mouseImages;
 
-    public Mouse(Player controllingPlayer, GameContainer gameContainer) {
+    public Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
         this.controllingPlayer = controllingPlayer;
+        this.entityRepository = entityRepository;
         this.mouseBehavior = null;
         this.hoverCell = null;
         this.gameContainer = gameContainer;
@@ -117,6 +122,19 @@ public class Mouse {
 
     public MouseBehavior getMouseBehavior() {
         return this.mouseBehavior;
+    }
+
+    public EntityRepository getEntityRepository() {
+        return entityRepository;
+    }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
+
+    public void setViewport(Viewport viewport) {
+        if (this.viewport != null) throw new IllegalArgumentException("Cannot set viewport (for now), because it is already set!");
+        this.viewport = viewport;
     }
 
 }
