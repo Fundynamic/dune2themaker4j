@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.Rectangle;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -46,18 +47,12 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     @Override
     public void leftButtonReleased() {
-        int dragX = dragCoordinates.getXAsInt();
-        int dragY = dragCoordinates.getYAsInt();
-        int startingX = startingCoordinates.getXAsInt();
-        int startingY = startingCoordinates.getYAsInt();
-
         final Viewport viewport = mouse.getViewport();
-        final int absDragX = viewport.getAbsoluteX(dragX);
-        final int absDragY = viewport.getAbsoluteX(dragY);
-        final int absStartingX = viewport.getAbsoluteX(startingX);
-        final int absStartingY = viewport.getAbsoluteX(startingY);
+        Vector2D absDragVec = viewport.translateScreenToAbsoluteMapPixels(dragCoordinates);
+        Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
+        final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
 
-        System.out.println("map start x,y " + absStartingX + "," + absStartingY + " till " + absDragX + "," + absDragY);
+        System.out.println("Rectangle dragged " + rectangle);
 
         EntityRepository entityRepository = mouse.getEntityRepository();
         List<Entity> entities = entityRepository.find(new Predicate<Entity>() {
@@ -71,9 +66,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
                 ((Selectable) entity).deselect();
 
                 Vector2D mapCoordinates = entity.getAbsoluteMapPixelCoordinates();
-                int entityAbsX = mapCoordinates.getXAsInt();
-                int entityAbsY = mapCoordinates.getYAsInt();
-                return entityAbsX >= absStartingX && entityAbsX <= absDragX && entityAbsY >= absStartingY && entityAbsY <= absDragY;
+                return rectangle.isWithin(mapCoordinates);
             }
         });
 

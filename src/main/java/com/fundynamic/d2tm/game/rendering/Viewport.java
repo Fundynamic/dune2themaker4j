@@ -166,18 +166,8 @@ public class Viewport implements Renderable {
         }
     }
 
-    /**
-     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
-     */
-    public int getAbsoluteX(int xPositionOnScreen) {
-        return xPositionOnScreen + (int) viewingVector.getX();
-    }
-
-    /**
-     * Takes screen pixel coordinate and translates that into an absolute pixel coordinate on the map
-     */
-    public int getAbsoluteY(int yPositionOnScreen) {
-        return yPositionOnScreen + (int) viewingVector.getY();
+    public Vector2D translateScreenToAbsoluteMapPixels(Vector2D positionOnScreen) {
+        return positionOnScreen.add(viewingVector);
     }
 
     public void toggleDrawDebugMode() {

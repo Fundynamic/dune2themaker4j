@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Input;
 
 public class ViewportMovementListener extends AbstractMouseListener {
@@ -56,12 +57,11 @@ public class ViewportMovementListener extends AbstractMouseListener {
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
         viewport.tellAboutNewMousePositions(newx, newy);
 
-        int absoluteX = viewport.getAbsoluteX(newx);
-        int absoluteY = viewport.getAbsoluteY(newy);
-
         Map map = viewport.getMap();
 
-        mouse.mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(absoluteX, absoluteY));
+        mouse.mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(
+                viewport.translateScreenToAbsoluteMapPixels(Vector2D.create(newx, newy))
+        ));
     }
 
     @Override

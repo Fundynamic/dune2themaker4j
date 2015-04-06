@@ -88,14 +88,14 @@ public class MapTest {
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapTopLeftOfCell() {
-        Cell cell = map.getCellByAbsolutePixelCoordinates(0, 0);
+        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(0, 0));
         Assert.assertTrue(cell.getTerrain() instanceof Sand);
     }
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapMiddleOfCell() {
         int TILE_SIZE = 32;
-        Cell cell = map.getCellByAbsolutePixelCoordinates(TILE_SIZE / 2, TILE_SIZE / 2);
+        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2));
         Assert.assertTrue(cell.getTerrain() instanceof Sand);
     }
 
@@ -111,7 +111,7 @@ public class MapTest {
         pixelX += (TILE_SIZE - 1);
         pixelY += (TILE_SIZE - 1);
 
-        Cell cell = map.getCellByAbsolutePixelCoordinates(pixelX, pixelY);
+        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(pixelX, pixelY));
         Assert.assertTrue(cell.getTerrain() instanceof Spice);
     }
 
