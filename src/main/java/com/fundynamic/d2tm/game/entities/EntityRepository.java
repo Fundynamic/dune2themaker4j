@@ -11,7 +11,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class EntityRepository {
 

@@ -183,4 +183,5 @@ public class Viewport implements Renderable {
     public void toggleDrawDebugMode() {
         drawDebugInfo = !drawDebugInfo;
     }
+
 }

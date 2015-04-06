@@ -4,15 +4,14 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
