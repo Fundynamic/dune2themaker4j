@@ -36,16 +36,6 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
         mouse.setHoverCell(cell);
     }
 
-    @Override
-    public void draggedToCoordinates(Vector2D coordinates) {
-        // DO NOTHING
-    }
-
-    @Override
-    public void leftButtonReleased() {
-        // DO NOTHING
-    }
-
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.green);
         graphics.setLineWidth(1.1f);

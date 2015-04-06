@@ -78,11 +78,6 @@ public class NormalMouse extends AbstractMouseBehavior {
         mouse.setMouseBehavior(new DraggingSelectionBoxMouse(mouse, coordinates));
     }
 
-    @Override
-    public void leftButtonReleased() {
-        // DO NOTHING
-    }
-
     protected boolean selectedEntityBelongsToControllingPlayer() {
         Entity lastSelectedEntity = mouse.getLastSelectedEntity();
         if (lastSelectedEntity == null) return false;
