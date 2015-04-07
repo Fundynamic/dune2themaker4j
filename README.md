@@ -1,8 +1,6 @@
 # Dune 2 - The Maker [![Build Status](https://travis-ci.org/stefanhendriks/dune2themaker4j.svg?branch=feature%2Ftravis-ci-integration)](https://travis-ci.org/stefanhendriks/dune2themaker4j)
 
-There was a time when the RTS genre was born and everyone was happy with the point, click and destroy mechanics.
-
-Today this project aims to deliver a complex `Real Time Simulation Role Playing Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
+This project aims to deliver a complex `Real Time Simulation Role Playing Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
 
 ## Getting started
 This project is set up using [slick2d-maven](https://github.com/nguillaumin/slick2d-maven). This means you need to
