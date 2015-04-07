@@ -4,8 +4,12 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
+
+import java.util.Set;
 
 
 public class NormalMouse extends AbstractMouseBehavior {
@@ -45,13 +49,21 @@ public class NormalMouse extends AbstractMouseBehavior {
     @Override
     public void rightClicked() {
         deselectCurrentlySelectedEntity();
-        if (selectedEntityBelongsToControllingPlayer()) {
-            mouse.setMouseBehavior(new NormalMouse(mouse));
-        }
+        mouse.setMouseBehavior(new NormalMouse(mouse));
         mouse.setLastSelectedEntity(null);
     }
 
     protected void deselectCurrentlySelectedEntity() {
+        Set<Entity> entities = mouse.getEntityRepository().filter(
+                Predicate.builder().
+                        forPlayer(mouse.getControllingPlayer()).
+                        isSelected().
+                        build());
+        for (Entity entity : entities) {
+            ((Selectable) entity).deselect();
+        }
+
+        // here for old stuff
         Entity lastSelectedEntity = mouse.getLastSelectedEntity();
         if (lastSelectedEntity != null) {
             if (lastSelectedEntity.isSelectable()) {

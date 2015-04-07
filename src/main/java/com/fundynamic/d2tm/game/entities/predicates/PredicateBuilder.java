@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
 
+import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
@@ -49,6 +50,21 @@ public class PredicateBuilder {
             @Override
             public boolean test(Entity entity) {
                 return entity.isUpdateable();
+            }
+
+        });
+        return this;
+    }
+
+    public PredicateBuilder isSelected() {
+        predicates.add(new Predicate<Entity>() {
+
+            @Override
+            public boolean test(Entity entity) {
+                if (entity.isSelectable()) {
+                    return ((Selectable) entity).isSelected();
+                }
+                return false;
             }
 
         });
