@@ -118,7 +118,7 @@ public class Unit extends Entity implements Selectable, Moveable {
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextCellX, nextCellY);
         Cell intendedCellToMoveTo = map.getCell(intendedMapCoordinatesToMoveTo);
         if (intendedCellToMoveTo.isOccupied(this)) {
-            stopMoving();
+            // Do nothing, which effectively means it 'waits' and will try again next tick.
         } else {
             System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
             this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
