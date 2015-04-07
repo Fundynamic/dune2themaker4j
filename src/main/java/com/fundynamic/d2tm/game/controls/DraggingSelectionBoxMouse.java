@@ -47,21 +47,11 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     @Override
     public void leftButtonReleased() {
-        final Viewport viewport = mouse.getViewport();
-        Vector2D absDragVec = viewport.translateScreenToAbsoluteMapPixels(dragCoordinates);
-        Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
-        final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
-
-        System.out.println("Rectangle dragged " + rectangle);
-
         EntityRepository entityRepository = mouse.getEntityRepository();
 
-        Set<Entity> entities = entityRepository.filter(
-                Predicate.builder().
-                        isSelectable().
-                        forPlayer(mouse.getControllingPlayer()).
-                        withinArea(rectangle).build()
-        );
+        deselectEverything();
+
+        Set<Entity> entities = getEntitiesWithinDraggedRectangle(entityRepository);
 
         for (Entity entity : entities) {
             ((Selectable) entity).select();
@@ -72,6 +62,36 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
             return;
         }
         mouse.setMouseBehavior(new NormalMouse(mouse));
+    }
+
+    private Set<Entity> getEntitiesWithinDraggedRectangle(EntityRepository entityRepository) {
+        final Viewport viewport = mouse.getViewport();
+        Vector2D absDragVec = viewport.translateScreenToAbsoluteMapPixels(dragCoordinates);
+        Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
+        final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
+
+
+        return entityRepository.filter(
+                Predicate.builder().
+                        isSelectable().
+                        isMovable().
+                        forPlayer(mouse.getControllingPlayer()).
+                        withinArea(rectangle).build()
+        );
+    }
+
+    private void deselectEverything() {
+        EntityRepository entityRepository = mouse.getEntityRepository();
+        Set<Entity> entitiesToDeselect = entityRepository.filter(
+                Predicate.builder().
+                        isSelectable().
+                        isMovable().
+                        forPlayer(mouse.getControllingPlayer()).
+                        build()
+        );
+        for (Entity entity : entitiesToDeselect) {
+            ((Selectable) entity).deselect();
+        }
     }
 
     @Override
@@ -90,7 +110,6 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
         int width = Math.abs(startingX - dragX);
         int height = Math.abs(startingY - dragY);
-
 
         g.drawRect(startX, startY, width, height);
     }
