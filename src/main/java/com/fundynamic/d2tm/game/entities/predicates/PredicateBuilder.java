@@ -70,4 +70,16 @@ public class PredicateBuilder {
         });
         return this;
     }
+
+    public PredicateBuilder isMovable() {
+        predicates.add(new Predicate<Entity>() {
+
+            @Override
+            public boolean test(Entity entity) {
+                return entity.isMovable();
+            }
+
+        });
+        return this;
+    }
 }

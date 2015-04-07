@@ -3,7 +3,10 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
+
+import java.util.Set;
 
 public class MovableSelectedMouse extends NormalMouse {
 
@@ -14,13 +17,21 @@ public class MovableSelectedMouse extends NormalMouse {
 
     @Override
     public void leftClicked() {
-        Entity entity = hoveringOverSelectableEntity();
-        if (entity != null) {
+        Entity hoveringOverEntity = hoveringOverSelectableEntity();
+        if (hoveringOverEntity != null) {
             deselectCurrentlySelectedEntity();
-            selectEntity(entity);
+            selectEntity(hoveringOverEntity);
         } else {
-            if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-                ((Moveable) mouse.getLastSelectedEntity()).moveTo(mouse.getHoverCell().getCoordinatesAsVector2D());
+            Set<Entity> selectedMovableEntities = mouse.getEntityRepository().filter(
+                    Predicate.builder().
+                            isSelected().
+                            forPlayer(mouse.getControllingPlayer()).
+                            isMovable().
+                            build()
+            );
+
+            for (Entity entity : selectedMovableEntities) {
+                ((Moveable) entity).moveTo(mouse.getHoverCell().getCoordinatesAsVector2D());
             }
         }
     }
