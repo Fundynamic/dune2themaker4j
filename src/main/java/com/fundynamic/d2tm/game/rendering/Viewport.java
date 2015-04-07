@@ -88,7 +88,6 @@ public class Viewport implements Renderable {
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 
-
             mouse.render(this.buffer.getGraphics());
 
             if (drawDebugInfo) {

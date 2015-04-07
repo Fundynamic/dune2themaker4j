@@ -126,8 +126,8 @@ public class EntityRepository {
         return entities;
     }
 
-    public List<Entity> find(Predicate<Entity> predicate) {
-        List<Entity> result = new LinkedList<>();
+    public Set<Entity> filter(Predicate<Entity> predicate) {
+        Set<Entity> result = new HashSet<>();
         for (Entity entity : entities) {
             if (predicate.test(entity)) {
                 result.add(entity);

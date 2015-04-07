@@ -4,6 +4,8 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
@@ -128,7 +130,8 @@ public class PlayingState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         float deltaInSeconds = delta / 1000f;
 
-        for (Entity entity : entityRepository.getEntities()) {
+        Predicate updatableEntities = Predicate.builder().isUpdateable().build();
+        for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
 

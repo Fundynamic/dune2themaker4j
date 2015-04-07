@@ -12,7 +12,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-import java.util.List;
+import java.util.Set;
 
 public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
@@ -55,20 +55,13 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         System.out.println("Rectangle dragged " + rectangle);
 
         EntityRepository entityRepository = mouse.getEntityRepository();
-        List<Entity> entities = entityRepository.find(new Predicate<Entity>() {
-            @Override
-            public boolean test(Entity entity) {
-                if (!entity.isSelectable()) return false;
-                if (!entity.isMovable()) return false;
-                if (!entity.getPlayer().equals(mouse.getControllingPlayer())) return false;
 
-                // deselect always
-                ((Selectable) entity).deselect();
-
-                Vector2D mapCoordinates = entity.getAbsoluteMapPixelCoordinates();
-                return rectangle.isWithin(mapCoordinates);
-            }
-        });
+        Set<Entity> entities = entityRepository.filter(
+                Predicate.builder().
+                        isSelectable().
+                        forPlayer(mouse.getControllingPlayer()).
+                        withinArea(rectangle).build()
+        );
 
         for (Entity entity : entities) {
             ((Selectable) entity).select();

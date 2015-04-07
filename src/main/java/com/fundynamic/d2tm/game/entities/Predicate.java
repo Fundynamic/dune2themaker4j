@@ -1,7 +1,13 @@
 package com.fundynamic.d2tm.game.entities;
 
-public interface Predicate<T> {
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 
-    boolean test(T t);
+public abstract class Predicate<T> {
+
+    public abstract boolean test(T t);
+
+    public static PredicateBuilder builder() {
+        return new PredicateBuilder();
+    }
 
 }
