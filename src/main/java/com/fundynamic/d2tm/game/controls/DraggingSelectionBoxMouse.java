@@ -84,7 +84,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         EntityRepository entityRepository = mouse.getEntityRepository();
         Set<Entity> entitiesToDeselect = entityRepository.filter(
                 Predicate.builder().
-                        isSelectable().
+                        isSelected().
                         isMovable().
                         forPlayer(mouse.getControllingPlayer()).
                         build()
