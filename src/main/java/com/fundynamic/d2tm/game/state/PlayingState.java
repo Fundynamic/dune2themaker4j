@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
-import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.ViewportMovementListener;
@@ -45,6 +44,8 @@ public class PlayingState extends BasicGameState {
 
     private List<Viewport> viewports = new ArrayList<>();
     private EntityRepository entityRepository;
+
+    private Predicate updatableEntities;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -130,7 +131,7 @@ public class PlayingState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         float deltaInSeconds = delta / 1000f;
 
-        Predicate updatableEntities = Predicate.builder().isUpdateable().build();
+        Predicate updatableEntities = updatableEntitiesPredicate();
         for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
@@ -138,5 +139,12 @@ public class PlayingState extends BasicGameState {
         for (Viewport viewport : viewports) {
             viewport.update(deltaInSeconds);
         }
+    }
+
+    private Predicate updatableEntitiesPredicate() {
+        if (this.updatableEntities == null) {
+            this.updatableEntities = Predicate.builder().isUpdateable().build();
+        }
+        return this.updatableEntities;
     }
 }

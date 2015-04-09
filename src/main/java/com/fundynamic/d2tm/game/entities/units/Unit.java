@@ -120,7 +120,7 @@ public class Unit extends Entity implements Selectable, Moveable {
         if (intendedCellToMoveTo.isOccupied(this)) {
             // Do nothing, which effectively means it 'waits' and will try again next tick.
         } else {
-            System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
+//            System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
             this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
             intendedCellToMoveTo.setEntity(this); // claim this cell so we make sure nobody else can move here/take it.
         }
@@ -136,7 +136,7 @@ public class Unit extends Entity implements Selectable, Moveable {
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
-        System.out.println("Moving to cell " + vectorToMoveTo);
+//        System.out.println("Moving to cell " + vectorToMoveTo);
         map.getCell(mapCoordinates).removeEntity();
         this.mapCoordinates = vectorToMoveTo;
         this.nextCellToMoveTo = vectorToMoveTo;
@@ -154,9 +154,11 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public String toString() {
-        return "Unit{" +
-                "facing=" + facing +
-                '}';
+        return "Unit [" +
+                "sight=" + super.sight +
+                ", player=" + super.player +
+                ", facing=" + facing +
+                "]\n";
     }
 
     @Override
@@ -176,7 +178,6 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void moveTo(Vector2D target) {
-        System.out.println("Ordered to move to " + target);
         this.target = target;
     }
 

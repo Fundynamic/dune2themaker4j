@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
-import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 
@@ -104,4 +103,8 @@ public class NormalMouse extends AbstractMouseBehavior {
         return lastSelectedEntity.isMovable();
     }
 
+    @Override
+    public String toString() {
+        return "NormalMouse";
+    }
 }

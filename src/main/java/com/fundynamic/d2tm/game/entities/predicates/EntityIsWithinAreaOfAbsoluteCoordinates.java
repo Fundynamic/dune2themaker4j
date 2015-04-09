@@ -18,4 +18,9 @@ public class EntityIsWithinAreaOfAbsoluteCoordinates extends Predicate<Entity> {
         return rectangle.isWithin(entity.getAbsoluteMapPixelCoordinates());
     }
 
+    @Override
+    public String toString() {
+        return "EntityIsWithinArea{" + rectangle + '}';
+    }
+
 }

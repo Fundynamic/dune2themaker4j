@@ -4,7 +4,6 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Random;
-import com.fundynamic.d2tm.math.Vector2D;
 
 public class PlacingUnitMouse extends AbstractMouseBehavior {
 
@@ -39,4 +38,10 @@ public class PlacingUnitMouse extends AbstractMouseBehavior {
         mouse.setMouseImage(entityToPlace.getFirstImage(), 0, 0);
     }
 
+    @Override
+    public String toString() {
+        return "PlacingUnitMouse{" +
+                "entityToPlace=" + entityToPlace +
+                '}';
+    }
 }

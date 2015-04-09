@@ -73,10 +73,8 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
         return entityRepository.filter(
                 Predicate.builder().
-                        isSelectable().
-                        isMovable().
-                        forPlayer(mouse.getControllingPlayer()).
-                        withinArea(rectangle).build()
+                        selectableMovableForPlayer(mouse.getControllingPlayer()).
+                        withinArea(rectangle)
         );
     }
 
@@ -84,10 +82,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         EntityRepository entityRepository = mouse.getEntityRepository();
         Set<Entity> entitiesToDeselect = entityRepository.filter(
                 Predicate.builder().
-                        isSelected().
-                        isMovable().
-                        forPlayer(mouse.getControllingPlayer()).
-                        build()
+                        selectedMovableForPlayer(mouse.getControllingPlayer())
         );
         for (Entity entity : entitiesToDeselect) {
             ((Selectable) entity).deselect();
@@ -112,5 +107,13 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         int height = Math.abs(startingY - dragY);
 
         g.drawRect(startX, startY, width, height);
+    }
+
+    @Override
+    public String toString() {
+        return "DraggingSelectionBoxMouse{" +
+                "startingCoordinates=" + startingCoordinates +
+                ", dragCoordinates=" + dragCoordinates +
+                '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
@@ -124,6 +125,13 @@ public class EntityRepository {
 
     public Set<Entity> getEntities() {
         return entities;
+    }
+
+    public Set<Entity> filter(PredicateBuilder predicateBuilder) {
+        Predicate predicate = predicateBuilder.build();
+        Set<Entity> results = filter(predicate);
+        System.out.println("Filter with predicate " + predicate + " - yields " + results.size() + " results: \n" + results);
+        return results;
     }
 
     public Set<Entity> filter(Predicate<Entity> predicate) {

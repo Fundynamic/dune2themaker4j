@@ -31,4 +31,11 @@ public class AndPredicate extends Predicate<Entity> {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "AndPredicate{" +
+                "predicates=" + predicates +
+                '}';
+    }
 }

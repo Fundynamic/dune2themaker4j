@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
 
-import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
@@ -10,6 +9,12 @@ import com.fundynamic.d2tm.game.entities.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Builder to construct queries by using predicates.
+ *
+ * TODO: Make this smart enough so it won't create new predicates when it knows it has created this collection of
+ * predicates before...
+ */
 public class PredicateBuilder {
 
     private List<Predicate<Entity>> predicates;
@@ -19,7 +24,7 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder forPlayer(Player player) {
-        predicates.add(new EntityBelongsToPlayer(player));
+        predicates.add(new BelongsToPlayer(player));
         return this;
     }
 
@@ -33,53 +38,34 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder isSelectable() {
-        predicates.add(new Predicate<Entity>() {
-
-            @Override
-            public boolean test(Entity entity) {
-                return entity.isSelectable();
-            }
-
-        });
+        predicates.add(IsSelectable.instance);
         return this;
     }
 
     public PredicateBuilder isUpdateable() {
-        predicates.add(new Predicate<Entity>() {
-
-            @Override
-            public boolean test(Entity entity) {
-                return entity.isUpdateable();
-            }
-
-        });
+        predicates.add(IsUpdateable.instance);
         return this;
     }
 
     public PredicateBuilder isSelected() {
-        predicates.add(new Predicate<Entity>() {
-
-            @Override
-            public boolean test(Entity entity) {
-                if (entity.isSelectable()) {
-                    return ((Selectable) entity).isSelected();
-                }
-                return false;
-            }
-
-        });
+        predicates.add(IsSelected.instance);
         return this;
     }
 
     public PredicateBuilder isMovable() {
-        predicates.add(new Predicate<Entity>() {
-
-            @Override
-            public boolean test(Entity entity) {
-                return entity.isMovable();
-            }
-
-        });
+        predicates.add(IsMovable.instance);
         return this;
+    }
+
+    public PredicateBuilder selectableMovableForPlayer(Player player) {
+        return isSelectable().
+                forPlayer(player).
+                isMovable();
+    }
+
+    public PredicateBuilder selectedMovableForPlayer(Player player) {
+        return isSelected().
+               forPlayer(player).
+               isMovable();
     }
 }
