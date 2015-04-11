@@ -10,9 +10,7 @@ public class HitPointBasedDestructibility implements Destructible {
 
     @Override
     public void takeDamage(int hitPoints) {
-        // do nothing!?
         this.hitPoints -= hitPoints;
-        System.out.println("I took " + hitPoints + " damage. I now have left: " + this.hitPoints + " hitpoints.");
     }
 
     @Override
@@ -25,5 +23,9 @@ public class HitPointBasedDestructibility implements Destructible {
         return "HitPointBasedDestructibility{" +
                 "hitPoints=" + hitPoints +
                 '}';
+    }
+
+    public int getHitPoints() {
+        return hitPoints;
     }
 }
