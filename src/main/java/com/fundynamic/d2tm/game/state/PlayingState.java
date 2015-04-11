@@ -82,6 +82,11 @@ public class PlayingState extends BasicGameState {
         this.mouse.init();
 
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
+        entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
+
+        entityRepository.placeStructureOnMap(Vector2D.create(50, 50), EntityRepository.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(53, 53), EntityRepository.CONSTRUCTION_YARD, cpu);
+
         for (int i = 0; i < 50; i++) {
             Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
             if (map.getCell(randomCell).getEntity() != null) continue;

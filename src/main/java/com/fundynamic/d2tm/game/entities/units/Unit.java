@@ -16,7 +16,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Behaviors
     private final FadingSelection fadingSelection;
-    private int hitPoints;
+    private final HitPointBasedDestructibility hitPointBasedDestructibility;
     private Vector2D target;
     private Vector2D nextCellToMoveTo;
 
@@ -35,23 +35,24 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 mapCoordinates,
                 new SpriteSheet(image, entityData.width, entityData.height),
                 new FadingSelection(entityData.width, entityData.height),
+                new HitPointBasedDestructibility(entityData.hitPoints),
                 player,
                 entityData
         );
     }
 
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, Player player, EntityData entityData) {
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
         super(mapCoordinates, spriteSheet, entityData.sight, player);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;
+        this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = mapCoordinates;
         this.nextCellToMoveTo = mapCoordinates;
         this.offset = Vector2D.zero();
         this.moveSpeed = entityData.moveSpeed;
-        this.hitPoints = entityData.hitPoints;
     }
 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
@@ -62,6 +63,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.nextCellToMoveTo = nextCellToMoveTo;
         this.target = target;
         this.fadingSelection = new FadingSelection(width, height);
+        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
     }
 
     @Override
@@ -171,7 +173,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 "sight=" + super.sight +
                 ", player=" + super.player +
                 ", facing=" + facing +
-                ", hitPoints=" + hitPoints +
+                ", hitPoints=" + hitPointBasedDestructibility +
                 "]\n";
     }
 
@@ -215,14 +217,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void takeDamage(int hitPoints) {
-        // do nothing!?
-        this.hitPoints -= hitPoints;
-        System.out.println("I took " + hitPoints + " damage. I now have left: " + this.hitPoints + " hitpoints.");
+        hitPointBasedDestructibility.takeDamage(hitPoints);
     }
 
     @Override
     public boolean isDestroyed() {
-        return hitPoints < 1;
+        return hitPointBasedDestructibility.isDestroyed();
     }
 
     @Override

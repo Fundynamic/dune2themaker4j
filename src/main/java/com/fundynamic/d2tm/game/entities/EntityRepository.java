@@ -93,8 +93,9 @@ public class EntityRepository {
         if (entitiesToRemove.size() == 0) return;
         System.out.println("Size of all entities: " + entities.size());
         System.out.println("Removing following entities: " + entitiesToRemove);
+
         for (Entity entity : entitiesToRemove) {
-            map.getCell(entity.getMapCoordinates()).setEntity(null);
+            map.removeEntity(entity);
             entities.remove(entity);
         }
 

@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -98,7 +99,7 @@ public class Map {
     }
 
     public Cell getCellByAbsolutePixelCoordinates(Vector2D coordinates) {
-        return getCellProtected((int)(coordinates.getX() / TILE_SIZE), (int)(coordinates.getY() / TILE_SIZE));
+        return getCellProtected((int) (coordinates.getX() / TILE_SIZE), (int) (coordinates.getY() / TILE_SIZE));
     }
 
     public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
@@ -119,6 +120,7 @@ public class Map {
             for (int y = 0; y < structure.getHeightInCells(); y++) {
                 int cellX = topLeftMapCoordinates.getXAsInt() + x;
                 int cellY = topLeftMapCoordinates.getYAsInt() + y;
+
                 getCell(cellX, cellY).setEntity(structure);
 
                 revealShroudFor(cellX, cellY, structure.getSight(), structure.getPlayer());
@@ -126,6 +128,23 @@ public class Map {
         }
 
         return structure;
+    }
+
+    public void removeEntity(Entity entity) {
+        Vector2D topLeftMapCoordinates = entity.getMapCoordinates();
+        getCell(topLeftMapCoordinates).setEntity(null);
+
+        if (entity instanceof Structure) {
+            Structure structure = (Structure) entity;
+            for (int x = 0; x < structure.getWidthInCells(); x++) {
+                for (int y = 0; y < structure.getHeightInCells(); y++) {
+                    int cellX = topLeftMapCoordinates.getXAsInt() + x;
+                    int cellY = topLeftMapCoordinates.getYAsInt() + y;
+
+                    getCell(cellX, cellY).setEntity(null);
+                }
+            }
+        }
     }
 
     public Cell getCell(Vector2D mapCoordinates) {

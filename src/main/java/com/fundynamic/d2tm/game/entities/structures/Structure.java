@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
@@ -10,12 +12,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends Entity implements Selectable {
+public class Structure extends Entity implements Selectable, Destructible {
 
     public static int TILE_SIZE = 32; // TODO: remove HACK HACK
 
     // Behaviors
-    private FadingSelection fadingSelection;
+    private final FadingSelection fadingSelection;
+    private final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     // Implementation
     private final int widthInCells, heightInCells;
@@ -30,6 +33,7 @@ public class Structure extends Entity implements Selectable {
     public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData) {
         super(mapCoordinates, spriteSheet, entityData.sight, player);
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
+        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints);
         widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);
         heightInCells = (int) Math.ceil(entityData.height / TILE_SIZE);
     }
@@ -40,6 +44,10 @@ public class Structure extends Entity implements Selectable {
     }
 
     public void update(float delta) {
+        if (this.isDestroyed()) {
+            System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
+            return;
+        }
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
         float offset = delta * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
@@ -86,6 +94,17 @@ public class Structure extends Entity implements Selectable {
                 ", widthInCells=" + widthInCells +
                 ", heightInCells=" + heightInCells +
                 ", animationTimer=" + animationTimer +
+                ", hitPoints=" + hitPointBasedDestructibility +
                 '}';
+    }
+
+    @Override
+    public void takeDamage(int hitPoints) {
+        hitPointBasedDestructibility.takeDamage(hitPoints);
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return hitPointBasedDestructibility.isDestroyed();
     }
 }
