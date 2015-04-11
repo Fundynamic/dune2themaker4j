@@ -41,7 +41,7 @@ public class EntityRepositoryTest {
     public void setUp() throws SlickException {
         Image image = mock(Image.class);
         when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
-        entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityRepository.EntityData>()) {
+        entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {
                 return mock(Image.class);
@@ -53,65 +53,69 @@ public class EntityRepositoryTest {
     public void createUnitCreatesUnitData() throws SlickException {
         int widthInPixels = 32;
         int heightInPixels = 32;
+        int hitPoints = 150;
         int idOfEntity = 1;
         int sight = 2;
         float moveSpeed = 1.0F;
-        entityRepository.createUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed);
+        entityRepository.createUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, hitPoints);
 
-        EntityRepository.EntityData data = entityRepository.getEntityData(EntityRepository.EntityType.UNIT, idOfEntity);
+        EntityData data = entityRepository.getEntityData(EntityType.UNIT, idOfEntity);
 
-        assertEquals(EntityRepository.EntityType.UNIT, data.type);
+        assertEquals(EntityType.UNIT, data.type);
         assertEquals(widthInPixels, data.width);
         assertEquals(heightInPixels, data.height);
         assertEquals(sight, data.sight);
+        assertEquals(hitPoints, data.hitPoints);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         int idOfEntity = 1;
-        entityRepository.createUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F); // success!
-        entityRepository.createUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F); // boom!
+        entityRepository.createUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F, 100); // success!
+        entityRepository.createUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F, 100); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)
     public void getEntityDataThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
-        entityRepository.getEntityData(EntityRepository.EntityType.UNIT, 0);
+        entityRepository.getEntityData(EntityType.UNIT, 0);
     }
 
     @Test
     public void createStructureCreatesStructureData() throws SlickException {
         int widthInPixels = 64;
         int heightInPixels = 64;
+        int hitPoints = 1000;
         int idOfEntity = 1;
         int sight = 3;
-        entityRepository.createStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight);
+        entityRepository.createStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000);
 
-        EntityRepository.EntityData data = entityRepository.getEntityData(EntityRepository.EntityType.STRUCTURE, idOfEntity);
+        EntityData data = entityRepository.getEntityData(EntityType.STRUCTURE, idOfEntity);
 
-        assertEquals(EntityRepository.EntityType.STRUCTURE, data.type);
+        assertEquals(EntityType.STRUCTURE, data.type);
         assertEquals(widthInPixels, data.width);
         assertEquals(heightInPixels, data.height);
         assertEquals(sight, data.sight);
+        assertEquals(hitPoints, data.hitPoints);
     }
 
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         int idOfEntity = 1;
-        entityRepository.createStructure(idOfEntity, "constyard.png", 32, 32, 2); // success!
-        entityRepository.createStructure(idOfEntity, "this is irrelevant", 32, 32, 3); // boom!
+        entityRepository.createStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000); // success!
+        entityRepository.createStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)
     public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
-        entityRepository.placeOnMap(Vector2D.zero(), EntityRepository.EntityType.UNIT, 0, player);
+        entityRepository.placeOnMap(Vector2D.zero(), EntityType.UNIT, 0, player);
     }
 
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
-        entityRepository.createUnit(0, "quad.png", 32, 32, 2, 1.0F);
+        entityRepository.createUnit(0, "quad.png", 32, 32, 2, 1.0F, 200);
 
-        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityRepository.EntityType.UNIT, 0, player);
+        entityRepository.placeOnMap(Vector2D.create(10, 11), EntityType.UNIT, 0, player);
 
         ArgumentCaptor<Unit> argument = ArgumentCaptor.forClass(Unit.class);
         Mockito.verify(map).placeUnit(argument.capture());
@@ -123,9 +127,9 @@ public class EntityRepositoryTest {
 
     @Test
     public void placeOnMapPutsStructureOnMap() throws SlickException {
-        entityRepository.createStructure(0, "constyard.png", 32, 32, 2);
+        entityRepository.createStructure(0, "constyard.png", 32, 32, 2, 1000);
 
-        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityRepository.EntityType.STRUCTURE, 0, player);
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.STRUCTURE, 0, player);
 
         ArgumentCaptor<Structure> argument = ArgumentCaptor.forClass(Structure.class);
         Mockito.verify(map).placeStructure(argument.capture());

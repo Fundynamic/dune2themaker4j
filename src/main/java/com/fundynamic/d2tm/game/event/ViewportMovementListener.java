@@ -3,8 +3,8 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Input;
@@ -15,13 +15,13 @@ public class ViewportMovementListener extends AbstractMouseListener {
     private final Mouse mouse;
     private final EntityRepository entityRepository;
     private final Player player;
-    private EntityRepository.EntityType entityType;
+    private EntityType entityType;
 
     public ViewportMovementListener(Viewport viewport, Mouse mouse, EntityRepository entityRepository, Player player) {
         this.viewport = viewport;
         this.mouse = mouse;
         this.entityRepository = entityRepository;
-        this.entityType = EntityRepository.EntityType.STRUCTURE;
+        this.entityType = EntityType.STRUCTURE;
         this.player = player;
     }
 

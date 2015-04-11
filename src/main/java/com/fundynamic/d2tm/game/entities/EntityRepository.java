@@ -11,7 +11,9 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EntityRepository {
 
@@ -33,10 +35,10 @@ public class EntityRepository {
         this(map, recolorer, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
-        createUnit(QUAD, "units/quad.png", 32, 32, 4, 1.0F);
-        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.0F);
-        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 2);
-        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2);
+        createUnit(QUAD, "units/quad.png", 32, 32, 4, 1.0F, 200);
+        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.0F, 150);
+        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 2, 1000);
+        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2, 1500);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -67,7 +69,7 @@ public class EntityRepository {
 
             switch (entityData.type) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, player)));
+                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, player, entityData)));
                     break;
                 case UNIT:
                     entities.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, entityData.moveSpeed, player)));
@@ -78,12 +80,12 @@ public class EntityRepository {
         }
     }
 
-    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed);
+    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
     }
 
-    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F);
+    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
     }
 
     public void removeEntities(Predicate predicate) {
@@ -98,7 +100,7 @@ public class EntityRepository {
 
     }
 
-    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed) throws SlickException {
+    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
@@ -109,6 +111,7 @@ public class EntityRepository {
         entityData.type = entityType;
         entityData.sight = sight;
         entityData.moveSpeed = moveSpeed;
+        entityData.hitPoints = hitPoints;
         entitiesData.put(constructKey(entityType, id), entityData);
     }
 
@@ -156,32 +159,5 @@ public class EntityRepository {
         return result;
     }
 
-    public enum EntityType {
-        STRUCTURE, UNIT
-    }
 
-    public class EntityData {
-        public EntityType type;
-        public Image image;
-        public int width;
-        public int height;
-        public int sight;
-        public float moveSpeed;
-
-        @Override
-        public String toString() {
-            return "EntityData{" +
-                    "type=" + type +
-                    ", image=" + image +
-                    ", width=" + width +
-                    ", height=" + height +
-                    ", sight=" + sight +
-                    ", moveSpeed=" + moveSpeed +
-                    '}';
-        }
-
-        public Image getFirstImage() {
-            return image.getSubImage(0, 0, width, height);
-        }
-    }
 }

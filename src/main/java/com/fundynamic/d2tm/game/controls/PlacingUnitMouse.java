@@ -1,14 +1,16 @@
 package com.fundynamic.d2tm.game.controls;
 
 
+import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Random;
 
 public class PlacingUnitMouse extends AbstractMouseBehavior {
 
     private final EntityRepository entityRepository;
-    private EntityRepository.EntityData entityToPlace;
+    private EntityData entityToPlace;
 
     public PlacingUnitMouse(Mouse mouse, EntityRepository entityRepository) {
         super(mouse);
@@ -34,7 +36,7 @@ public class PlacingUnitMouse extends AbstractMouseBehavior {
     }
 
     private void selectRandomlySomethingToPlace() {
-        entityToPlace = entityRepository.getEntityData(EntityRepository.EntityType.UNIT, Random.getRandomBetween(0, 2));
+        entityToPlace = entityRepository.getEntityData(EntityType.UNIT, Random.getRandomBetween(0, 2));
         mouse.setMouseImage(entityToPlace.getFirstImage(), 0, 0);
     }
 
