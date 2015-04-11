@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -28,12 +29,19 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int facing;
     private float moveSpeed;
 
-    public Unit(Map map, Vector2D mapCoordinates, Image image, int width, int height, int sight, float moveSpeed, Player player) {
-        this(map, mapCoordinates, new SpriteSheet(image, width, height), new FadingSelection(width, height), sight, moveSpeed, player);
+    public Unit(Map map, Vector2D mapCoordinates, Image image, Player player, EntityData entityData) {
+        this(
+                map,
+                mapCoordinates,
+                new SpriteSheet(image, entityData.width, entityData.height),
+                new FadingSelection(entityData.width, entityData.height),
+                player,
+                entityData
+        );
     }
 
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, int sight, float moveSpeed, Player player) {
-        super(mapCoordinates, spriteSheet, sight, player);
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, Player player, EntityData entityData) {
+        super(mapCoordinates, spriteSheet, entityData.sight, player);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -42,8 +50,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = mapCoordinates;
         this.nextCellToMoveTo = mapCoordinates;
         this.offset = Vector2D.zero();
-        this.moveSpeed = moveSpeed;
-        this.hitPoints = 150;
+        this.moveSpeed = entityData.moveSpeed;
+        this.hitPoints = entityData.hitPoints;
     }
 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
@@ -208,8 +216,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void takeDamage(int hitPoints) {
         // do nothing!?
-        System.out.println("I (" + this.toString() + ") take damage! - " + hitPoints);
         this.hitPoints -= hitPoints;
+        System.out.println("I took " + hitPoints + " damage. I now have left: " + this.hitPoints + " hitpoints.");
     }
 
     @Override
@@ -224,6 +232,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return;
         }
         Destructible destructible = (Destructible) entity;
-        destructible.takeDamage(100);
+        destructible.takeDamage(Random.getRandomBetween(50, 150));
     }
 }

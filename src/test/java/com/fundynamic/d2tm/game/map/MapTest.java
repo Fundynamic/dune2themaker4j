@@ -161,7 +161,7 @@ public class MapTest {
     public void placeUnit() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Unit quad = new Unit(map, Vector2D.create(5, 5), mock(Image.class), TILE_SIZE, TILE_SIZE, SIGHT, 1.0f, player);
+        Unit quad = new Unit(map, Vector2D.create(5, 5), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT, 1.0f));
         map.placeUnit(quad);
         
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();

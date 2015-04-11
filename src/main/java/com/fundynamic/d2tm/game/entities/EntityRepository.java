@@ -72,7 +72,7 @@ public class EntityRepository {
                     entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, player, entityData)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, entityData.width, entityData.height, entityData.sight, entityData.moveSpeed, player)));
+                    entities.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, player, entityData)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {

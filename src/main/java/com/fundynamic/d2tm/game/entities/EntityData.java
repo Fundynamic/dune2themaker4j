@@ -20,6 +20,11 @@ public class EntityData {
         this.sight = sight;
     }
 
+    public EntityData(int width, int height, int sight, float moveSpeed) {
+        this(width, height, sight);
+        this.moveSpeed = moveSpeed;
+    }
+
     @Override
     public String toString() {
         return "EntityData{" +
