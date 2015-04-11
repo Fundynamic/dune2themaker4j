@@ -2,10 +2,10 @@ package com.fundynamic.d2tm.game.controls;
 
 
 import com.fundynamic.d2tm.game.behaviors.Attackable;
-import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 
@@ -13,26 +13,29 @@ import java.util.Set;
 
 public class MovableSelectedMouse extends NormalMouse {
 
-    private EntityRepository entityRepository;
+    private final EntityRepository entityRepository;
+    private final Player player;
 
     public MovableSelectedMouse(Mouse mouse) {
         super(mouse);
         mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
         this.entityRepository = mouse.getEntityRepository();
+        player = mouse.getControllingPlayer();
     }
 
     @Override
     public void leftClicked() {
         Entity hoveringOverEntity = hoveringOverSelectableEntity();
-        if (hoveringOverEntity != null) {
-            if (hoveringOverEntity.belongsToPlayer(mouse.getControllingPlayer())) {
+
+        if (hoveringOverEntity != null && mouse.getHoverCell().isVisibleFor(player)) {
+            if (hoveringOverEntity.belongsToPlayer(player)) {
                 deselectCurrentlySelectedEntity();
                 selectEntity(hoveringOverEntity);
             } else {
                 if (hoveringOverEntity.isDestructible()) {
                     Set<Entity> selectedAttackableEntities = entityRepository.filter(
                             Predicate.builder().
-                                    selectedAttackableForPlayer(mouse.getControllingPlayer())
+                                    selectedAttackableForPlayer(player)
                     );
 
                     for (Entity entity : selectedAttackableEntities) {
@@ -43,7 +46,7 @@ public class MovableSelectedMouse extends NormalMouse {
         } else {
             Set<Entity> selectedMovableEntities = entityRepository.filter(
                     Predicate.builder().
-                            selectedMovableForPlayer(mouse.getControllingPlayer())
+                            selectedMovableForPlayer(player)
             );
 
             for (Entity entity : selectedMovableEntities) {
@@ -63,7 +66,7 @@ public class MovableSelectedMouse extends NormalMouse {
         }
         if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
             mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
-        } else {
+        } else if(cell.isVisibleFor(player)) {
             mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
         }
     }
