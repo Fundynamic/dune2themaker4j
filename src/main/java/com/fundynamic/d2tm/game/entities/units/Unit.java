@@ -1,8 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.game.behaviors.Moveable;
-import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -13,15 +11,17 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Unit extends Entity implements Selectable, Moveable {
+public class Unit extends Entity implements Selectable, Moveable, Destructible, Attackable {
 
     // Behaviors
     private final FadingSelection fadingSelection;
+    private int hitPoints;
     private Vector2D target;
     private Vector2D nextCellToMoveTo;
 
     // Implementation
     private final Map map;
+
 
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
@@ -43,6 +43,7 @@ public class Unit extends Entity implements Selectable, Moveable {
         this.nextCellToMoveTo = mapCoordinates;
         this.offset = Vector2D.zero();
         this.moveSpeed = moveSpeed;
+        this.hitPoints = 150;
     }
 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
@@ -66,6 +67,10 @@ public class Unit extends Entity implements Selectable, Moveable {
 
     @Override
     public void update(float deltaInMs) {
+        if (this.isDestroyed()) {
+            System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
+            return;
+        }
         this.fadingSelection.update(deltaInMs);
         if (shouldBeSomewhereElse()) {
             if (isWaitingForNextCellToDetermine()) {
@@ -158,6 +163,7 @@ public class Unit extends Entity implements Selectable, Moveable {
                 "sight=" + super.sight +
                 ", player=" + super.player +
                 ", facing=" + facing +
+                ", hitPoints=" + hitPoints +
                 "]\n";
     }
 
@@ -197,5 +203,27 @@ public class Unit extends Entity implements Selectable, Moveable {
         if (right) return UnitFacings.RIGHT;
 
         return UnitFacings.byId(facing);
+    }
+
+    @Override
+    public void takeDamage(int hitPoints) {
+        // do nothing!?
+        System.out.println("I (" + this.toString() + ") take damage! - " + hitPoints);
+        this.hitPoints -= hitPoints;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return hitPoints < 1;
+    }
+
+    @Override
+    public void attack(Entity entity) {
+        if (!entity.isDestructible()) {
+            System.out.println("I (" + this.toString() + ") attack an entity that is not destructible -> " + entity);
+            return;
+        }
+        Destructible destructible = (Destructible) entity;
+        destructible.takeDamage(100);
     }
 }

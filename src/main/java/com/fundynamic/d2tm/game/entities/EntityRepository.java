@@ -86,6 +86,18 @@ public class EntityRepository {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F);
     }
 
+    public void removeEntities(Predicate predicate) {
+        Set<Entity> entitiesToRemove = filter(predicate);
+        if (entitiesToRemove.size() == 0) return;
+        System.out.println("Size of all entities: " + entities.size());
+        System.out.println("Removing following entities: " + entitiesToRemove);
+        for (Entity entity : entitiesToRemove) {
+            map.getCell(entity.getMapCoordinates()).setEntity(null);
+            entities.remove(entity);
+        }
+
+    }
+
     private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);

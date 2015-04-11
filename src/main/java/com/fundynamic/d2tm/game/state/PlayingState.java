@@ -45,7 +45,8 @@ public class PlayingState extends BasicGameState {
     private List<Viewport> viewports = new ArrayList<>();
     private EntityRepository entityRepository;
 
-    private Predicate updatableEntities;
+    private Predicate updatableEntitiesPredicate;
+    private Predicate destroyedEntitiesPredicate;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -136,15 +137,24 @@ public class PlayingState extends BasicGameState {
             entity.update(deltaInSeconds);
         }
 
+        entityRepository.removeEntities(destroyedEntitiesPredicate());
+
         for (Viewport viewport : viewports) {
             viewport.update(deltaInSeconds);
         }
     }
 
     private Predicate updatableEntitiesPredicate() {
-        if (this.updatableEntities == null) {
-            this.updatableEntities = Predicate.builder().isUpdateable().build();
+        if (this.updatableEntitiesPredicate == null) {
+            this.updatableEntitiesPredicate = Predicate.builder().isUpdateable().build();
         }
-        return this.updatableEntities;
+        return this.updatableEntitiesPredicate;
+    }
+
+    private Predicate destroyedEntitiesPredicate() {
+        if (this.destroyedEntitiesPredicate == null) {
+            this.destroyedEntitiesPredicate = Predicate.builder().isDestroyed().build();
+        }
+        return this.destroyedEntitiesPredicate;
     }
 }

@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -53,7 +52,7 @@ public class Cell {
     }
 
     public void setEntity(Entity entity) {
-        if (this.entity != null && this.entity != entity) {
+        if (this.entity != null && this.entity != entity && entity != null) {
             throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
         }
         this.entity = entity;

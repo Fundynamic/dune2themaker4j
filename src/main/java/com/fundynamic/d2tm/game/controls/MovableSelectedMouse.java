@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.controls;
 
 
+import com.fundynamic.d2tm.game.behaviors.Attackable;
+import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -27,13 +29,15 @@ public class MovableSelectedMouse extends NormalMouse {
                 deselectCurrentlySelectedEntity();
                 selectEntity(hoveringOverEntity);
             } else {
-                Set<Entity> selectedMovableEntities = entityRepository.filter(
-                        Predicate.builder().
-                                selectedMovableForPlayer(mouse.getControllingPlayer())
-                );
+                if (hoveringOverEntity.isDestructible()) {
+                    Set<Entity> selectedAttackableEntities = entityRepository.filter(
+                            Predicate.builder().
+                                    selectedAttackableForPlayer(mouse.getControllingPlayer())
+                    );
 
-                for (Entity entity : selectedMovableEntities) {
-                    ((Moveable) entity).moveTo(mouse.getHoverCell().getCoordinatesAsVector2D());
+                    for (Entity entity : selectedAttackableEntities) {
+                        ((Attackable) entity).attack(hoveringOverEntity);
+                    }
                 }
             }
         } else {

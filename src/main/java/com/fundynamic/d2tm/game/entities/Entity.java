@@ -1,9 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.behaviors.Moveable;
-import com.fundynamic.d2tm.game.behaviors.Renderable;
-import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.behaviors.Updateable;
+import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
@@ -35,14 +32,6 @@ public abstract class Entity implements Renderable, Updateable {
         return Vector2D.create(absX, absY);
     }
 
-    public boolean isMovable() {
-        return this instanceof Moveable;
-    }
-
-    public boolean isSelectable() {
-        return this instanceof Selectable;
-    }
-
     public int getSight() {
         return sight;
     }
@@ -55,7 +44,24 @@ public abstract class Entity implements Renderable, Updateable {
         return player.equals(other);
     }
 
+    public boolean isMovable() {
+        return this instanceof Moveable;
+    }
+
+    public boolean isSelectable() {
+        return this instanceof Selectable;
+    }
+
     public boolean isUpdateable() {
         return this instanceof Updateable;
     }
+
+    public boolean isDestructible() {
+        return this instanceof Destructible;
+    }
+
+    public boolean isAttackable() {
+        return this instanceof Attackable;
+    }
+
 }
