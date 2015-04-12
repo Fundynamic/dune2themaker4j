@@ -1,4 +1,4 @@
-# Dune 2 - The Maker | [![Build Status](https://travis-ci.org/stefanhendriks/dune2themaker4j.svg?branch=master)](https://travis-ci.org/stefanhendriks/dune2themaker4j)
+# Dune 2 - The Maker [![Build Status](https://travis-ci.org/stefanhendriks/dune2themaker4j.svg?branch=master)](https://travis-ci.org/stefanhendriks/dune2themaker4j)
 
 This project aims to deliver a complex `Real Time Simulation Role Playing Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
 
