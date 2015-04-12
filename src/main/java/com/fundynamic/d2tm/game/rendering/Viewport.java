@@ -29,7 +29,7 @@ public class Viewport implements Renderable {
     private final CellViewportRenderer cellViewportRenderer;
     private final CellDebugInfoRenderer cellDebugInfoRenderer;
 
-    private boolean drawDebugInfo = true;
+    private boolean drawDebugInfo = false;
 
     private Vector2D velocity;
     private float moveSpeed;
