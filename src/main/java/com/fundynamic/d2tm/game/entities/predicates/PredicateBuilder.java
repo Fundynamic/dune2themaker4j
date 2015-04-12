@@ -84,4 +84,8 @@ public class PredicateBuilder {
         predicates.add(IsAttackable.instance);
         return this;
     }
+
+    public PredicateBuilder isNotDestroyed() {
+        return null;
+    }
 }

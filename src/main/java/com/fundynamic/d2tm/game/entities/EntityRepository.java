@@ -29,7 +29,7 @@ public class EntityRepository {
 
     private HashMap<String, EntityData> entitiesData;
 
-    private Set<Entity> entities;
+    private Entities entities;
 
     public EntityRepository(Map map, Recolorer recolorer) throws SlickException {
         this(map, recolorer, new HashMap<String, EntityData>());
@@ -45,7 +45,7 @@ public class EntityRepository {
         this.map = map;
         this.recolorer = recolorer;
         this.entitiesData = entitiesData;
-        this.entities = new HashSet<>();
+        this.entities = new Entities();
     }
 
     public void placeUnitOnMap(Vector2D topLeft, int id, Player player) {
@@ -144,20 +144,11 @@ public class EntityRepository {
     }
 
     public Set<Entity> filter(PredicateBuilder predicateBuilder) {
-        Predicate predicate = predicateBuilder.build();
-        Set<Entity> results = filter(predicate);
-        System.out.println("Filter with predicate " + predicate + " - yields " + results.size() + " results: \n" + results);
-        return results;
+        return entities.filter(predicateBuilder);
     }
 
     public Set<Entity> filter(Predicate<Entity> predicate) {
-        Set<Entity> result = new HashSet<>();
-        for (Entity entity : entities) {
-            if (predicate.test(entity)) {
-                result.add(entity);
-            }
-        }
-        return result;
+        return entities.filter(predicate);
     }
 
 
