@@ -12,6 +12,11 @@ You need `git` and `maven` installed. Also you need to have `java` version 1.7.
 - run `mvn clean package`
 - in the `target/d2tm-<version>-SNAPSHOT-release` run `game.sh` (or `game.bat` depending on your OS)
 
+## Progress
+For every feature or improvement a small tech demo is created and posted at youtube. These demos are grouped by milestone:
+
+- [Alpha 1 Demos @ YouTube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW2_Ue06RVQewDQBF8nkW_dE)
+
 ## Development
 Import the project using your favorite IDE.
 
