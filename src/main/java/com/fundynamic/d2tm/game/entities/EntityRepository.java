@@ -34,10 +34,10 @@ public class EntityRepository {
         this(map, recolorer, new HashMap<String, EntityData>());
 
         // TODO: read this data from an external (XML/JSON/YML/INI) file
-        createUnit(QUAD, "units/quad.png", 32, 32, 4, 1.0F, 200);
-        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.0F, 150);
-        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 2, 1000);
-        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 2, 1500);
+        createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200);
+        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150);
+        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
+        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {

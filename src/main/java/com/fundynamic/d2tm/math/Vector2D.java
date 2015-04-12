@@ -23,7 +23,21 @@ public class Vector2D {
      * @return new Vector instance
      */
     public static Vector2D random(int maxX, int maxY) {
-        return Vector2D.create(Random.getRandomBetween(0, maxX), Random.getRandomBetween(0, maxY));
+        return random(0, maxX, 0, maxY);
+    }
+
+    /**
+     * Generate a vector with random (int) coordinates. Where X will be between minX and given maxX and Y will be between
+     * minY and maxY.
+     *
+     * @param minX
+     * @param maxX
+     * @param minY
+     * @param maxY
+     * @return new Vector instance
+     */
+    public static Vector2D random(int minX, int maxX, int minY, int maxY) {
+        return Vector2D.create(Random.getRandomBetween(minX, maxX), Random.getRandomBetween(minY, maxY));
     }
 
     public Vector2D(float x, float y) {

@@ -83,20 +83,17 @@ public class PlayingState extends BasicGameState {
 
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
         entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(10, 10), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(11, 11), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(14, 10), 1, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(15, 11), 1, human);
 
-        entityRepository.placeStructureOnMap(Vector2D.create(50, 50), EntityRepository.REFINERY, cpu);
-        entityRepository.placeStructureOnMap(Vector2D.create(53, 53), EntityRepository.CONSTRUCTION_YARD, cpu);
-
-        for (int i = 0; i < 10; i++) {
-            Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
-            if (map.getCell(randomCell).getEntity() != null) continue;
-            if (Random.getInt(10) < 5) {
-                entityRepository.placeUnitOnMap(randomCell, Random.getInt(2), human);
-            } else {
-                entityRepository.placeUnitOnMap(randomCell, Random.getInt(2), cpu);
-            }
-        }
-
+        entityRepository.placeStructureOnMap(Vector2D.create(55, 55), EntityRepository.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(57, 57), EntityRepository.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(50, 50), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(49, 49), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(52, 52), 1, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(53, 53), 1, cpu);
 
         try {
             float moveSpeed = 30 * tileWidth;
@@ -119,7 +116,7 @@ public class PlayingState extends BasicGameState {
 
             viewports.add(viewport);
 
-            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository));
+            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository, human));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }

@@ -1,9 +1,13 @@
 package com.fundynamic.d2tm.game.map;
 
 
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
 public class MapEditor {
@@ -31,11 +35,78 @@ public class MapEditor {
         System.out.println("Putting terrain on map");
         for (int x = 1; x <= map.getWidth(); x++) {
             for (int y = 1; y <= map.getHeight(); y++) {
-                final Cell cell = map.getCell(x, y);
-                final Terrain terrain = terrainFactory.create((int) (Math.random() * 7), cell);
-                cell.changeTerrain(terrain);
+                setTerrainOnCell(map, x, y, DuneTerrain.TERRAIN_SAND);
             }
         }
+
+        createCircularField(map, Vector2D.create(0, 0), DuneTerrain.TERRAIN_ROCK, 20);
+        createCircularField(map, Vector2D.create(map.getWidth(), map.getHeight()), DuneTerrain.TERRAIN_ROCK, 20);
+
+        for (int f = 0; f < 5; f++) {
+            Vector2D randomVec = Vector2D.random(15, 45, 15, 45);
+            createCircularField(map, randomVec, DuneTerrain.TERRAIN_SPICE, 6);
+            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE, 200);
+            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE_HILL, 50);
+        }
+
+        for (int f = 0; f < 5; f++) {
+            Vector2D randomVec = Vector2D.random(15, 45, 15, 45);
+            createCircularField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 6);
+            createField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 100);
+            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, 25);
+        }
+
+    }
+
+    private void setTerrainOnCell(Map map, int x, int y, int terrainType) {
+        final Cell cell = map.getCell(x, y);
+        final Terrain terrain = terrainFactory.create(terrainType, cell);
+        cell.changeTerrain(terrain);
+    }
+
+    public void createCircularField(Map map, Vector2D vec, int terrainType, int size) {
+        if (size < 1) return;
+
+        int TILE_SIZE = 32;
+        float halfATile = TILE_SIZE / 2;
+        // convert to absolute pixel coordinates
+        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(vec.getXAsInt(), vec.getYAsInt()).
+                add(Vector2D.create(halfATile, halfATile));
+
+        double centerX = asPixelsCentered.getX(), centerY = asPixelsCentered.getY();
+
+        for (int rangeStep=0; rangeStep < size; rangeStep++) { // range 'steps'
+
+            for (int degrees=0; degrees < 360; degrees++) {
+
+                // calculate as if we would draw a circle and remember the coordinates
+                float rangeInPixels = (rangeStep * TILE_SIZE);
+                double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+                double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
+
+                // convert back the pixel coordinates back to a cell
+                Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
+
+                setTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
+            }
+        }
+
+    }
+
+    public void createField(Map map, Vector2D startVector, int terrainType, int size) {
+        Vector2D position = startVector;
+
+        for (int i = 0; i < size; i++) {
+            setTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
+
+            position = position.add(Vector2D.create(-1 + Random.getInt(3), -1 + Random.getInt(3)));
+
+            Cell cellProtected = map.getCellProtected(position.getXAsInt(), position.getYAsInt());
+            if (!cellProtected.getCoordinatesAsVector2D().equals(position)) {
+                position = cellProtected.getCoordinatesAsVector2D();
+            }
+        }
+
     }
 
     public void smooth(Map map) {
