@@ -33,7 +33,7 @@ public class UnitTest {
         unit = makeUnit(UnitFacings.RIGHT);
     }
 
-    private Unit makeUnit(UnitFacings facing) {
+    public Unit makeUnit(UnitFacings facing) {
         return new Unit(map, unitMapCoordinates, spriteSheet, 32, 32, player, 10, facing.getValue(), unitMapCoordinates, unitMapCoordinates, Vector2D.zero());
     }
 

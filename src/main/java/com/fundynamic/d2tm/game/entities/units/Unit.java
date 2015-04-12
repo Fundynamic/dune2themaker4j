@@ -174,6 +174,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 ", player=" + super.player +
                 ", facing=" + facing +
                 ", hitPoints=" + hitPointBasedDestructibility +
+                ", mapCoordinates=" + super.mapCoordinates +
+                ", absoluteMapPixelCoordinates=" + getAbsoluteMapPixelCoordinates() +
                 "]\n";
     }
 

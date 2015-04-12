@@ -6,6 +6,8 @@ import org.newdawn.slick.SpriteSheet;
 
 public abstract class Entity implements Renderable, Updateable {
 
+    private static final float TILE_SIZE = 32.0f;
+
     // Final properties of unit
     protected final SpriteSheet spriteSheet;
     protected final int sight;
@@ -28,8 +30,8 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public Vector2D getAbsoluteMapPixelCoordinates() {
-        float absX = mapCoordinates.getX() * 32.0F;
-        float absY = mapCoordinates.getY() * 32.0F;
+        float absX = mapCoordinates.getX() * TILE_SIZE;
+        float absY = mapCoordinates.getY() * TILE_SIZE;
         return Vector2D.create(absX, absY);
     }
 

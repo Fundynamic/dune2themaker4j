@@ -1,7 +1,9 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.entities.units.UnitFactory;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -67,15 +69,12 @@ public class PlayerTest {
     }
 
     private Structure makeStructure(int hitPoints) {
-        EntityData entityData = new EntityData(32, 32, 2);
-        entityData.hitPoints = hitPoints;
-        return new Structure(Vector2D.zero(), mock(Image.class), player, entityData);
+        return StructureFactory.makeStructure(player, hitPoints);
     }
 
+
     private Unit makeUnit(int hitPoints) {
-        EntityData entityData = new EntityData(32, 32, 2);
-        entityData.hitPoints = hitPoints;
-        return new Unit(mock(Map.class), Vector2D.zero(), mock(Image.class), player, entityData);
+        return UnitFactory.makeUnit(player, hitPoints);
     }
 
 }

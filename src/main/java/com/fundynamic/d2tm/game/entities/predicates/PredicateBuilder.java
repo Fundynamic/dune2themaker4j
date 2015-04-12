@@ -28,6 +28,13 @@ public class PredicateBuilder {
         return this;
     }
 
+    /**
+     * Shorthand for creating new EntityIsWithinAreaOfAbsoluteCoordinates
+     *
+     * @param rectangle
+     * @return
+     * @see com.fundynamic.d2tm.game.entities.predicates.EntityIsWithinAreaOfAbsoluteCoordinates
+     */
     public PredicateBuilder withinArea(Rectangle rectangle) {
         predicates.add(new EntityIsWithinAreaOfAbsoluteCoordinates(rectangle));
         return this;

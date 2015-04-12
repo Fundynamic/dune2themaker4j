@@ -23,22 +23,22 @@ public class RectangleTest {
     @Test
     public void isWithinReturnsFalseWhenOutside() {
         Rectangle rec = Rectangle.create(Vector2D.create(0, 0), Vector2D.create(10, 15));
-        Assert.assertFalse(rec.isWithin(Vector2D.create(-1, -1)));
-        Assert.assertFalse(rec.isWithin(Vector2D.create(-1, 14)));
-        Assert.assertFalse(rec.isWithin(Vector2D.create(10, 15)));
-        Assert.assertFalse(rec.isWithin(Vector2D.create(11, 15)));
+        Assert.assertFalse(rec.isVectorWithin(Vector2D.create(-1, -1)));
+        Assert.assertFalse(rec.isVectorWithin(Vector2D.create(-1, 14)));
+        Assert.assertFalse(rec.isVectorWithin(Vector2D.create(10, 15)));
+        Assert.assertFalse(rec.isVectorWithin(Vector2D.create(11, 15)));
     }
 
     @Test
     public void isWithinReturnsTrueWithTopLeftToBottomRight() {
         Rectangle rec = Rectangle.create(Vector2D.create(0, 0), Vector2D.create(10, 15));
-        Assert.assertTrue(rec.isWithin(Vector2D.create(0, 0)));
+        Assert.assertTrue(rec.isVectorWithin(Vector2D.create(0, 0)));
     }
 
     @Test
     public void isWithinReturnsTrueWithBottomRightToTopLeft() {
         Rectangle rec = Rectangle.create(Vector2D.create(10, 15), Vector2D.create(0, 0));
-        Assert.assertTrue(rec.isWithin(Vector2D.create(0, 0)));
+        Assert.assertTrue(rec.isVectorWithin(Vector2D.create(0, 0)));
     }
 
 }
