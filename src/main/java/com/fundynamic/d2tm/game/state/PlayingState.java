@@ -133,7 +133,11 @@ public class PlayingState extends BasicGameState {
         g.getFont().drawString(540, 40, "Enemy entity count: " + cpu.aliveEntities(), Color.green);
 
         if (cpu.aliveEntities() < 1) {
-            container.getGraphics().getFont().drawString(10, 220, "Enemy player has been destroyed. You have won the game for now!", Color.green);
+            container.getGraphics().getFont().drawString(10, 220, "Enemy player has been destroyed. You have won the game.", Color.green);
+        }
+
+        if (human.aliveEntities() < 1) {
+            container.getGraphics().getFont().drawString(10, 220, "All your units and structures are destroyed. You have lost the game.", Color.red);
         }
     }
 
