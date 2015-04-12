@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Entities extends HashSet<Entity> {
+public class EntitiesSet extends HashSet<Entity> {
 
     public Set<Entity> filter(Predicate<Entity> predicate) {
         Set<Entity> result = new HashSet<>();

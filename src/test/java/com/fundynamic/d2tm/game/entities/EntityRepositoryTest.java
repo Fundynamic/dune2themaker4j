@@ -19,7 +19,6 @@ import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +121,7 @@ public class EntityRepositoryTest {
         Unit unitToPlace = argument.getValue();
 
         assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
-        assertEquals(1, entityRepository.getEntities().size());
+        assertEquals(1, entityRepository.getEntitiesSet().size());
     }
 
     @Test
@@ -136,7 +135,7 @@ public class EntityRepositoryTest {
         Structure structureToPlace = argument.getValue();
 
         assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
-        assertEquals(1, entityRepository.getEntities().size());
+        assertEquals(1, entityRepository.getEntitiesSet().size());
     }
 
 }

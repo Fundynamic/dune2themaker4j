@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.entities.predicates.IsNotDestroyed;
-import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
+import com.fundynamic.d2tm.game.entities.predicates.*;
 
 public abstract class Predicate<T> {
 
@@ -13,5 +12,25 @@ public abstract class Predicate<T> {
 
     public static Predicate<Entity> isNotDestroyed() {
         return IsNotDestroyed.instance;
+    }
+
+    public static Predicate<Entity> isAttackable() {
+        return IsAttackable.instance;
+    }
+
+    public static Predicate<Entity> isDestroyed() {
+        return IsDestroyed.instance;
+    }
+
+    public static Predicate<Entity> isSelected() {
+        return IsSelected.instance;
+    }
+
+    public static Predicate<Entity> isUpdateable() {
+        return IsUpdateable.instance;
+    }
+
+    public static Predicate<Entity> isSelectable() {
+        return IsSelectable.instance;
     }
 }

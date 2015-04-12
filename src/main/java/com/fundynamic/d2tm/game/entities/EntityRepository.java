@@ -12,7 +12,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class EntityRepository {
@@ -29,7 +28,7 @@ public class EntityRepository {
 
     private HashMap<String, EntityData> entitiesData;
 
-    private Entities entities;
+    private EntitiesSet entitiesSet;
 
     public EntityRepository(Map map, Recolorer recolorer) throws SlickException {
         this(map, recolorer, new HashMap<String, EntityData>());
@@ -45,7 +44,7 @@ public class EntityRepository {
         this.map = map;
         this.recolorer = recolorer;
         this.entitiesData = entitiesData;
-        this.entities = new Entities();
+        this.entitiesSet = new EntitiesSet();
     }
 
     public void placeUnitOnMap(Vector2D topLeft, int id, Player player) {
@@ -69,10 +68,10 @@ public class EntityRepository {
 
             switch (entityData.type) {
                 case STRUCTURE:
-                    entities.add(map.placeStructure(new Structure(topLeft, recoloredImage, player, entityData)));
+                    entitiesSet.add(map.placeStructure(new Structure(topLeft, recoloredImage, player, entityData)));
                     break;
                 case UNIT:
-                    entities.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, player, entityData)));
+                    entitiesSet.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, player, entityData)));
                     break;
             }
         } catch (CellAlreadyOccupiedException e) {
@@ -91,12 +90,12 @@ public class EntityRepository {
     public void removeEntities(Predicate predicate) {
         Set<Entity> entitiesToRemove = filter(predicate);
         if (entitiesToRemove.size() == 0) return;
-        System.out.println("Size of all entities: " + entities.size());
+        System.out.println("Size of all entities: " + entitiesSet.size());
         System.out.println("Removing following entities: " + entitiesToRemove);
 
         for (Entity entity : entitiesToRemove) {
             map.removeEntity(entity);
-            entities.remove(entity);
+            entitiesSet.remove(entity);
         }
 
     }
@@ -139,16 +138,16 @@ public class EntityRepository {
         return entityType.toString() + "-" + id;
     }
 
-    public Set<Entity> getEntities() {
-        return entities;
+    public Set<Entity> getEntitiesSet() {
+        return entitiesSet;
     }
 
     public Set<Entity> filter(PredicateBuilder predicateBuilder) {
-        return entities.filter(predicateBuilder);
+        return entitiesSet.filter(predicateBuilder);
     }
 
     public Set<Entity> filter(Predicate<Entity> predicate) {
-        return entities.filter(predicate);
+        return entitiesSet.filter(predicate);
     }
 
 

@@ -13,13 +13,13 @@ public class Player {
     private final Recolorer.FactionColor factionColor;
 
     private Map<Vector2D, Boolean> shrouded;
-    private Entities entities; // short-hand to player owned entities
+    private EntitiesSet entitiesSet; // short-hand to player owned entities
 
     public Player(String name, Recolorer.FactionColor factionColor) {
         this.name = name;
         this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
-        this.entities = new Entities();
+        this.entitiesSet = new EntitiesSet();
     }
 
     public Recolorer.FactionColor getFactionColor() {
@@ -36,15 +36,15 @@ public class Player {
     }
 
     public void addEntity(Entity entity) {
-        entities.add(entity);
+        entitiesSet.add(entity);
     }
 
     public void removeEntity(Entity entity) {
-        entities.remove(entity);
+        entitiesSet.remove(entity);
     }
 
     public boolean hasAliveEntities() {
-        return entities.filter(Predicate.isNotDestroyed()).size() > 0;
+        return entitiesSet.filter(Predicate.isNotDestroyed()).size() > 0;
     }
 
     @Override

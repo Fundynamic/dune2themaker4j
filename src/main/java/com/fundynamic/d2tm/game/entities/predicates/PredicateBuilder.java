@@ -38,17 +38,17 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder isSelectable() {
-        predicates.add(IsSelectable.instance);
+        predicates.add(Predicate.isSelectable());
         return this;
     }
 
     public PredicateBuilder isUpdateable() {
-        predicates.add(IsUpdateable.instance);
+        predicates.add(Predicate.isUpdateable());
         return this;
     }
 
     public PredicateBuilder isSelected() {
-        predicates.add(IsSelected.instance);
+        predicates.add(Predicate.isSelected());
         return this;
     }
 
@@ -76,16 +76,17 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder isDestroyed() {
-        predicates.add(IsDestroyed.instance);
+        predicates.add(Predicate.isDestroyed());
         return this;
     }
 
     public PredicateBuilder isAttackable() {
-        predicates.add(IsAttackable.instance);
+        predicates.add(Predicate.isAttackable());
         return this;
     }
 
     public PredicateBuilder isNotDestroyed() {
-        return null;
+        predicates.add(Predicate.isNotDestroyed());
+        return this;
     }
 }
