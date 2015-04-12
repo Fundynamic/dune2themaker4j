@@ -43,8 +43,8 @@ public class Player {
         entitiesSet.remove(entity);
     }
 
-    public boolean hasAliveEntities() {
-        return entitiesSet.filter(Predicate.isNotDestroyed()).size() > 0;
+    public int aliveEntities() {
+        return entitiesSet.filter(Predicate.isNotDestroyed()).size();
     }
 
     @Override

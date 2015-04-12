@@ -20,6 +20,7 @@ public abstract class Entity implements Renderable, Updateable {
         this.spriteSheet = spriteSheet;
         this.sight = sight;
         this.player = player;
+        player.addEntity(this);
     }
 
     public Vector2D getMapCoordinates() {

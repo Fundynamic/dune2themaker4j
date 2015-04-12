@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Image;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -25,35 +26,35 @@ public class PlayerTest {
 
     @Test
     public void hasNoAliveEntitiesAtDefault() {
-        assertFalse(player.hasAliveEntities());
+        assertEquals(0, player.aliveEntities());
     }
 
     @Test
     public void hasAliveEntitiesWhenAddingStructureWithEnoughHitPoints() {
         player.addEntity(makeStructure(100));
 
-        assertTrue(player.hasAliveEntities());
+        assertEquals(1, player.aliveEntities());
     }
 
     @Test
     public void hasNoAliveEntitiesWhenAddingStructureWithNotEnoughHitPoints() {
         player.addEntity(makeStructure(0));
 
-        assertFalse(player.hasAliveEntities());
+        assertEquals(0, player.aliveEntities());
     }
 
     @Test
     public void hasAliveEntitiesWhenAddingUnitWithEnoughHitPoints() {
         player.addEntity(makeUnit(100));
 
-        assertTrue(player.hasAliveEntities());
+        assertEquals(1, player.aliveEntities());
     }
 
     @Test
     public void hasNoAliveEntitiesWhenAddingUnitWithNotEnoughHitPoints() {
         player.addEntity(makeUnit(0));
 
-        assertFalse(player.hasAliveEntities());
+        assertEquals(0, player.aliveEntities());
     }
 
     @Test
@@ -62,7 +63,7 @@ public class PlayerTest {
         player.addEntity(entity);
         player.removeEntity(entity);
 
-        assertFalse(player.hasAliveEntities());
+        assertEquals(0, player.aliveEntities());
     }
 
     private Structure makeStructure(int hitPoints) {

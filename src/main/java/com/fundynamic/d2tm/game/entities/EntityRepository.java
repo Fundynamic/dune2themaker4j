@@ -95,6 +95,7 @@ public class EntityRepository {
 
         for (Entity entity : entitiesToRemove) {
             map.removeEntity(entity);
+            entity.getPlayer().removeEntity(entity);
             entitiesSet.remove(entity);
         }
 

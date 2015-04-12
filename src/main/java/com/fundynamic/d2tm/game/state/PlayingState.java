@@ -87,7 +87,7 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeStructureOnMap(Vector2D.create(50, 50), EntityRepository.REFINERY, cpu);
         entityRepository.placeStructureOnMap(Vector2D.create(53, 53), EntityRepository.CONSTRUCTION_YARD, cpu);
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             Vector2D randomCell = Vector2D.random(mapWidth, mapHeight);
             if (map.getCell(randomCell).getEntity() != null) continue;
             if (Random.getInt(10) < 5) {
@@ -130,6 +130,13 @@ public class PlayingState extends BasicGameState {
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         for (Viewport viewport : viewports) {
             viewport.render(g);
+        }
+
+        g.getFont().drawString(540, 20, "Human entity count: " + human.aliveEntities(), Color.red);
+        g.getFont().drawString(540, 40, "Enemy entity count: " + cpu.aliveEntities(), Color.green);
+
+        if (cpu.aliveEntities() < 1) {
+            container.getGraphics().getFont().drawString(10, 220, "Enemy player has been destroyed. You have won the game for now!", Color.green);
         }
     }
 
