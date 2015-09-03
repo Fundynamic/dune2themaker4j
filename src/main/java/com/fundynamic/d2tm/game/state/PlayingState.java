@@ -145,7 +145,7 @@ public class PlayingState extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         float deltaInSeconds = delta / 1000f;
 
-        Predicate updatableEntities = updatableEntitiesPredicate();
+        Predicate<Entity> updatableEntities = updatableEntitiesPredicate();
         for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
@@ -157,14 +157,14 @@ public class PlayingState extends BasicGameState {
         }
     }
 
-    private Predicate updatableEntitiesPredicate() {
+    private Predicate<Entity> updatableEntitiesPredicate() {
         if (this.updatableEntitiesPredicate == null) {
             this.updatableEntitiesPredicate = Predicate.builder().isUpdateable().build();
         }
         return this.updatableEntitiesPredicate;
     }
 
-    private Predicate destroyedEntitiesPredicate() {
+    private Predicate<Entity> destroyedEntitiesPredicate() {
         if (this.destroyedEntitiesPredicate == null) {
             this.destroyedEntitiesPredicate = Predicate.builder().isDestroyed().build();
         }
