@@ -14,7 +14,6 @@ import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
-import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -71,7 +70,7 @@ public class PlayingState extends BasicGameState {
         int mapWidth = 64;
         int mapHeight = 64;
         MapEditor mapEditor = new MapEditor(terrainFactory);
-        this.map = mapEditor.generateRandom(terrainFactory, shroud, mapWidth, mapHeight);
+        this.map = mapEditor.generateRandom(shroud, mapWidth, mapHeight);
         entityRepository = new EntityRepository(map, new Recolorer());
 
         this.mouse = new Mouse(human, gameContainer, entityRepository);

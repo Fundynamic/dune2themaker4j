@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
 
-import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
@@ -18,11 +17,11 @@ public class MapEditor {
         this.terrainFactory = terrainFactory;
     }
 
-    public Map generateRandom(TerrainFactory terrainFactory, Shroud shroud, int width, int height) {
+    public Map generateRandom(Shroud shroud, int width, int height) {
         try {
             System.out.println("Generating random map sized " + width + "x" + height);
             Map map = new Map(terrainFactory, shroud, width, height);
-            putTerrainOnMap(map);
+            fillMapWithRandomTerrainTypeFields(map);
             smooth(map);
             return map;
         } catch (SlickException e) {
@@ -31,13 +30,21 @@ public class MapEditor {
         }
     }
 
-    public void putTerrainOnMap(Map map) {
-        System.out.println("Putting terrain on map");
-        for (int x = 1; x <= map.getWidth(); x++) {
-            for (int y = 1; y <= map.getHeight(); y++) {
-                setTerrainOnCell(map, x, y, DuneTerrain.TERRAIN_SAND);
-            }
+    public Map create(Shroud shroud, int width, int height, int terrainType) {
+        try {
+            System.out.println("Generating random map sized " + width + "x" + height);
+            Map map = new Map(terrainFactory, shroud, width, height);
+            fillMapWithTerrain(map, terrainType);
+            return map;
+        } catch (SlickException e) {
+            System.err.println("Exception while creating map with terrainFactory: " + terrainFactory + ", width: " + width + ", height: " + height + ". --> " + e);
+            return null;
         }
+    }
+
+    private void fillMapWithRandomTerrainTypeFields(Map map) {
+        System.out.println("Putting terrain on map");
+        fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
 
         createCircularField(map, Vector2D.create(0, 0), DuneTerrain.TERRAIN_ROCK, 20);
         createCircularField(map, Vector2D.create(map.getWidth(), map.getHeight()), DuneTerrain.TERRAIN_ROCK, 20);
@@ -56,6 +63,14 @@ public class MapEditor {
             createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, 25);
         }
 
+    }
+
+    public void fillMapWithTerrain(Map map, int terrainType) {
+        for (int x = 1; x <= map.getWidth(); x++) {
+            for (int y = 1; y <= map.getHeight(); y++) {
+                setTerrainOnCell(map, x, y, terrainType);
+            }
+        }
     }
 
     private void setTerrainOnCell(Map map, int x, int y, int terrainType) {

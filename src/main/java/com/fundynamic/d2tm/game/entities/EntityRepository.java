@@ -151,5 +151,4 @@ public class EntityRepository {
         return entitiesSet.filter(predicate);
     }
 
-
 }
