@@ -88,6 +88,7 @@ public class Viewport implements Renderable {
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 
+            // TODO make mouse implement Renderable interface?
             mouse.render(this.buffer.getGraphics());
 
             if (drawDebugInfo) {

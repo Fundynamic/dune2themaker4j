@@ -38,6 +38,8 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
                 int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);
                 int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getYAsInt() % tileHeight);
 
+                // TODO: 2 responsibilities happening here, one is culling, one is drawing
+                // it is better to separate the two
                 renderer.draw(imageToDrawOn.getGraphics(), map.getCell(x, y), drawX, drawY);
             }
         }

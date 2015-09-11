@@ -41,6 +41,6 @@ public abstract class DuneTerrain implements Terrain {
     }
 
     private Image makeTileImage(MapEditor.TerrainFacing terrainFacing) {
-        return theme.getTileImage(getTerrainType(), terrainFacing);
+        return theme.getFacingTile(getTerrainType(), terrainFacing);
     }
 }
