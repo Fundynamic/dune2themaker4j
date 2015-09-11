@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.terrain.impl;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Harvestable;
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.Theme;
 
 public class SpiceHill extends DuneTerrain implements Harvestable {

@@ -54,8 +54,45 @@ public class MapEditorTest {
 
         assertThat(map.getTerrainMap(), is(
                 "RRR\n" +
-                        "RMR\n" +
-                        "RRR\n"
+                "RMR\n" +
+                "RRR\n"
+        ));
+
+        mapEditor.smooth(map);
+
+        assertThat(map.getTerrainFacing(2, 2), is(MapEditor.TerrainFacing.SINGLE));
+
+        // full rock facing entirely
+
+        // left side
+        assertThat(map.getTerrainFacing(1, 1), is(MapEditor.TerrainFacing.FULL));
+        assertThat(map.getTerrainFacing(1, 2), is(MapEditor.TerrainFacing.FULL));
+        assertThat(map.getTerrainFacing(1, 3), is(MapEditor.TerrainFacing.FULL));
+
+        // top and bottom
+        assertThat(map.getTerrainFacing(2, 1), is(MapEditor.TerrainFacing.FULL));
+        assertThat(map.getTerrainFacing(2, 3), is(MapEditor.TerrainFacing.FULL));
+
+        // right side
+        assertThat(map.getTerrainFacing(3, 1), is(MapEditor.TerrainFacing.FULL));
+        assertThat(map.getTerrainFacing(3, 2), is(MapEditor.TerrainFacing.FULL));
+        assertThat(map.getTerrainFacing(3, 3), is(MapEditor.TerrainFacing.FULL));
+    }
+
+    @Test
+    public void spiceHillInCenterOf3By3MapHasFullSpiceCellsAroundIt() {
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
+
+        Shroud shroud = new Shroud();
+        MapEditor mapEditor = new MapEditor(terrainFactory);
+        Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_SPICE);
+
+        mapEditor.putTerrainOnCell(map, 2, 2, DuneTerrain.TERRAIN_SPICE_HILL);
+
+        assertThat(map.getTerrainMap(), is(
+                "###\n" +
+                "#H#\n" +
+                "###\n"
         ));
 
         mapEditor.smooth(map);

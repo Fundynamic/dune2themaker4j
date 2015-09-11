@@ -188,6 +188,12 @@ public class Map {
                     case DuneTerrain.TERRAIN_MOUNTAIN:
                         line += "M";
                         break;
+                    case DuneTerrain.TERRAIN_SPICE:
+                        line += "#";
+                        break;
+                    case DuneTerrain.TERRAIN_SPICE_HILL:
+                        line += "H";
+                        break;
                     default:
                         line += "?";
                         break;
