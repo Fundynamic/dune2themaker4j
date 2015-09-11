@@ -9,7 +9,7 @@ public class Mountain extends DuneTerrain {
     }
 
     @Override
-    protected int getTerrainType() {
+    public int getTerrainType() {
         return TERRAIN_MOUNTAIN;
     }
 }

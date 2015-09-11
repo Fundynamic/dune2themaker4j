@@ -68,12 +68,12 @@ public class MapEditor {
     public void fillMapWithTerrain(Map map, int terrainType) {
         for (int x = 1; x <= map.getWidth(); x++) {
             for (int y = 1; y <= map.getHeight(); y++) {
-                setTerrainOnCell(map, x, y, terrainType);
+                putTerrainOnCell(map, x, y, terrainType);
             }
         }
     }
 
-    private void setTerrainOnCell(Map map, int x, int y, int terrainType) {
+    public void putTerrainOnCell(Map map, int x, int y, int terrainType) {
         final Cell cell = map.getCell(x, y);
         final Terrain terrain = terrainFactory.create(terrainType, cell);
         cell.changeTerrain(terrain);
@@ -102,7 +102,7 @@ public class MapEditor {
                 // convert back the pixel coordinates back to a cell
                 Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
-                setTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
+                putTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
             }
         }
 
@@ -112,7 +112,7 @@ public class MapEditor {
         Vector2D position = startVector;
 
         for (int i = 0; i < size; i++) {
-            setTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
+            putTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
 
             position = position.add(Vector2D.create(-1 + Random.getInt(3), -1 + Random.getInt(3)));
 
@@ -149,7 +149,7 @@ public class MapEditor {
     private static final int BIT_MASK_LEFT = 0x0001;
 
     private static final TerrainFacing[] FACINGS = {
-            TerrainFacing.MIDDLE,               // 0x0000
+            TerrainFacing.SINGLE,               // 0x0000
             TerrainFacing.TOP_RIGHT_BOTTOM,     // 0x0001
             TerrainFacing.TOP_RIGHT_LEFT,       // 0x0010
             TerrainFacing.TOP_RIGHT,            // 0x0011
@@ -189,8 +189,8 @@ public class MapEditor {
      * The second tile (one to the right), is a tile with sand on the left, rock on the top, right, bottom.
      * (we go clockwise), so the enum is TOP_RIGHT_BOTTOM
      */
-    public static enum TerrainFacing {
-        FULL,
+    public enum TerrainFacing {
+        FULL, // completely surrounded
         LEFT,
         RIGHT,
         TOP,
@@ -199,7 +199,7 @@ public class MapEditor {
         RIGHT_BOTTOM,
         TOP_RIGHT,
         BOTTOM_LEFT,
-        MIDDLE,
+        SINGLE, // no neighbours of same 'type'
         TOP_BOTTOM,
         TOP_RIGHT_BOTTOM,
         TOP_BOTTOM_LEFT,

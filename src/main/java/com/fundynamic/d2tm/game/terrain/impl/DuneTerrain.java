@@ -27,8 +27,6 @@ public abstract class DuneTerrain implements Terrain {
         this.terrainFacing = MapEditor.TerrainFacing.FULL;
     }
 
-    protected abstract int getTerrainType();
-
     public DuneTerrain setFacing(MapEditor.TerrainFacing terrainFacing) {
         this.terrainFacing = terrainFacing;
         this.produceTileImage = true;
@@ -41,6 +39,10 @@ public abstract class DuneTerrain implements Terrain {
             this.produceTileImage = false;
         }
         return tileImage;
+    }
+
+    public MapEditor.TerrainFacing getTerrainFacing() {
+        return terrainFacing;
     }
 
     public boolean isSame(Terrain terrain) {

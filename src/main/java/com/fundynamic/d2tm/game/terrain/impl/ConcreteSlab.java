@@ -11,7 +11,7 @@ public class ConcreteSlab extends DuneTerrain implements ConstructionGround, Des
     }
 
     @Override
-    protected int getTerrainType() {
+    public int getTerrainType() {
         return DuneTerrain.CONCRETE;
     }
 

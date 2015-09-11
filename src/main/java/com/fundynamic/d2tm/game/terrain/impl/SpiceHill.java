@@ -18,7 +18,7 @@ public class SpiceHill extends DuneTerrain implements Harvestable {
     }
 
     @Override
-    protected int getTerrainType() {
+    public int getTerrainType() {
         return TERRAIN_SPICE_HILL;
     }
 

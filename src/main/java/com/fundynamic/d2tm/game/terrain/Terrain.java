@@ -11,4 +11,8 @@ public interface Terrain {
 
     boolean isSame(Terrain terrain);
 
+    int getTerrainType();
+
+    MapEditor.TerrainFacing getTerrainFacing();
+
 }

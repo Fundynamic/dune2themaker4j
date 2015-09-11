@@ -13,7 +13,7 @@ public class Sand extends DuneTerrain {
     }
 
     @Override
-    protected int getTerrainType() {
+    public int getTerrainType() {
         return TERRAIN_SAND;
     }
 }

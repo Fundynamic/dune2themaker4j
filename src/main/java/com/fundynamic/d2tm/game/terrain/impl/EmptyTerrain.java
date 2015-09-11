@@ -48,4 +48,14 @@ public class EmptyTerrain implements Terrain {
         return true;
     }
 
+    @Override
+    public int getTerrainType() {
+        return -1;
+    }
+
+    @Override
+    public MapEditor.TerrainFacing getTerrainFacing() {
+        return MapEditor.TerrainFacing.FULL;
+    }
+
 }

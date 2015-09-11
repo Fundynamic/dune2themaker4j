@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -68,6 +69,10 @@ public class Map {
                     "Width: 0 to (not on or over!) " + widthWithInvisibleBorder + "\n" +
                     "Height: 0 to (not on or over!) " + heightWithInvisibleBorder);
         }
+    }
+
+    public MapEditor.TerrainFacing getTerrainFacing(int x, int y) {
+        return getCell(x, y).getTerrain().getTerrainFacing();
     }
 
     public Cell getCellProtected(int x, int y) {
@@ -161,6 +166,31 @@ public class Map {
                     line += "#";
                 } else {
                     line += ".";
+                }
+            }
+            result += line + "\n";
+        }
+        return result;
+    }
+
+    public String getTerrainMap() {
+        String result = "";
+        for (int y = 1; y < (height + 1); y++) {
+            String line = "";
+            for (int x = 1; x < (width + 1); x++) {
+                switch (getCell(x, y).getTerrain().getTerrainType()) {
+                    case DuneTerrain.TERRAIN_SAND:
+                        line += "S";
+                        break;
+                    case DuneTerrain.TERRAIN_ROCK:
+                        line += "R";
+                        break;
+                    case DuneTerrain.TERRAIN_MOUNTAIN:
+                        line += "M";
+                        break;
+                    default:
+                        line += "?";
+                        break;
                 }
             }
             result += line + "\n";

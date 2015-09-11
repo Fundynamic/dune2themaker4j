@@ -9,7 +9,7 @@ public class SandHill extends DuneTerrain {
     }
 
     @Override
-    protected int getTerrainType() {
+    public int getTerrainType() {
         return TERRAIN_SAND_HILL;
     }
 
