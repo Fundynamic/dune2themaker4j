@@ -20,7 +20,7 @@ public class MapEditor {
     public Map generateRandom(Shroud shroud, int width, int height) {
         try {
             System.out.println("Generating random map sized " + width + "x" + height);
-            Map map = new Map(terrainFactory, shroud, width, height);
+            Map map = new Map(shroud, width, height);
             fillMapWithRandomTerrainTypeFields(map);
             smooth(map);
             return map;
@@ -33,7 +33,7 @@ public class MapEditor {
     public Map create(Shroud shroud, int width, int height, int terrainType) {
         try {
             System.out.println("Generating random map sized " + width + "x" + height);
-            Map map = new Map(terrainFactory, shroud, width, height);
+            Map map = new Map(shroud, width, height);
             fillMapWithTerrain(map, terrainType);
             return map;
         } catch (SlickException e) {

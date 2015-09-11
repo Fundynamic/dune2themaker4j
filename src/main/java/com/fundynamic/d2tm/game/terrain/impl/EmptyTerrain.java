@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.newdawn.slick.Color;
@@ -10,10 +9,22 @@ import org.newdawn.slick.SlickException;
 
 public class EmptyTerrain implements Terrain {
 
-    private final Image image;
+    private Image image;
+    private int tileWidth;
+    private int tileHeight;
     private static Image blackImage = null;
 
     public EmptyTerrain(int tileWidth, int tileHeight) {
+        this.tileHeight = tileHeight;
+        this.tileWidth = tileWidth;
+    }
+
+    // Used for testing
+    public EmptyTerrain(Image image) {
+        this.image = image;
+    }
+
+    public Image getTileImage() {
         try {
             if (blackImage == null) {
                 blackImage = new Image(tileWidth, tileHeight);
@@ -24,13 +35,6 @@ public class EmptyTerrain implements Terrain {
         } catch (SlickException e) {
             throw new IllegalStateException("Cannot create empty image of 32x32");
         }
-    }
-
-    public EmptyTerrain(Image image) {
-        this.image = image;
-    }
-
-    public Image getTileImage() {
         return image;
     }
 
@@ -44,23 +48,4 @@ public class EmptyTerrain implements Terrain {
         return true;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-    public static class Builder {
-        private EmptyTerrain instance;
-
-        public Builder() {
-            instance = new EmptyTerrain(null);
-        }
-
-        public EmptyTerrain setFacing(MapEditor.TerrainFacing terrainFacing) {
-            instance.setFacing(terrainFacing);
-            return instance;
-        }
-
-        public EmptyTerrain getInstance() {
-            return instance;
-        }
-    }
 }

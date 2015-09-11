@@ -4,7 +4,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
@@ -19,22 +19,27 @@ public class Map {
 
     private static final int TILE_SIZE = 32; // If possible, get rid of this!
 
-    private final TerrainFactory terrainFactory;
     private Shroud shroud;
     private final int height, width;
     private final int heightWithInvisibleBorder, widthWithInvisibleBorder;
 
     private Cell[][] cells;
 
-    public Map(TerrainFactory terrainFactory, Shroud shroud, int width, int height) throws SlickException {
-        this.terrainFactory = terrainFactory;
+    public Map(Shroud shroud, int width, int height) throws SlickException {
         this.shroud = shroud;
         this.height = height;
         this.width = width;
         this.heightWithInvisibleBorder = height + 2;
         this.widthWithInvisibleBorder = width + 2;
 
-        initializeEmptyMap();
+        this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
+        for (int x = 0; x < widthWithInvisibleBorder; x++) {
+            for (int y = 0; y < heightWithInvisibleBorder; y++) {
+                Cell cell = new Cell(this, new EmptyTerrain(TILE_SIZE, TILE_SIZE), x, y);
+                // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
+                cells[x][y] = cell;
+            }
+        }
     }
 
     public int getWidth() {
@@ -73,16 +78,6 @@ public class Map {
         if (correctedY < 0) correctedY = 0;
         if (correctedY >= heightWithInvisibleBorder) correctedY = heightWithInvisibleBorder - 1;
         return getCell(correctedX, correctedY);
-    }
-
-    private void initializeEmptyMap() {
-        this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
-        for (int x = 0; x < widthWithInvisibleBorder; x++) {
-            for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                Cell cell = new Cell(this, terrainFactory.createEmptyTerrain(), x, y);
-                cells[x][y] = cell; // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
-            }
-        }
     }
 
     public int getWidthInPixels(int tileWidth) {

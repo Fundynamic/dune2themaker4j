@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -8,27 +9,25 @@ import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.newdawn.slick.Image;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 
 public class MapEditorTest {
 
-
-    // TODO: given a map full of rcok
-    // place a mountain on it. The rock should be a full-rock still!
     @Test
-    @Ignore // this makes painly clear how aweful the architecture is now. The rendering is tightly coupled to the map data
     public void createMapOfCorrectDimensions() {
         TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
-        Theme theme = new Theme(Mockito.mock(Image.class), 32, 32);
-        Rock rock = new Rock(theme);
-        when(terrainFactory.createEmptyTerrain()).thenReturn(rock);
+//        Theme theme = new Theme(Mockito.mock(Image.class), 32, 32);
+//        stub(theme.getFacingTile(anyInt(), any(MapEditor.TerrainFacing.class))).toReturn(Mockito.mock(Image.class));
+
+        Rock rock = new Rock(Mockito.mock(Theme.class));
+        when(terrainFactory.create(anyInt(), any(Cell.class))).thenReturn(rock);
 
         Shroud shroud = Mockito.mock(Shroud.class);
         MapEditor mapEditor = new MapEditor(terrainFactory);

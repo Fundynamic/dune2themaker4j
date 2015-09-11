@@ -9,13 +9,13 @@ public class EmptyTerrainTest {
 
     @Test
     public void isSameReturnsTrueWithAnyArgument() {
-        final EmptyTerrain emptyTerrain = EmptyTerrain.builder().getInstance();
+        final EmptyTerrain emptyTerrain = new EmptyTerrain(null);
         Assert.assertTrue(emptyTerrain.isSame(Mockito.mock(Terrain.class)));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void isSameThrowsIllegalArgumentExceptionWhenArgumentIsNull() {
-        final EmptyTerrain emptyTerrain = EmptyTerrain.builder().getInstance();
+        final EmptyTerrain emptyTerrain = new EmptyTerrain(null);
         emptyTerrain.isSame(null);
     }
 }

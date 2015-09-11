@@ -5,8 +5,6 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
-import com.fundynamic.d2tm.game.terrain.Terrain;
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -15,12 +13,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
-import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
-import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,10 +52,8 @@ public class ViewportMovementListenerTest {
 
     @Before
     public void setUp() throws SlickException {
-        TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
         Shroud shroud = Mockito.mock(Shroud.class);
-        Mockito.doReturn(Mockito.mock(Terrain.class)).when(terrainFactory).createEmptyTerrain();
-        map = new Map(terrainFactory, shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
+        map = new Map(shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
         this.mouse = new Mouse(player, mock(GameContainer.class), entityRepository) {
             @Override

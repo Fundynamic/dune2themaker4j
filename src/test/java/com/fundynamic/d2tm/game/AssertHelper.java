@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 public class AssertHelper {
 
@@ -9,6 +9,6 @@ public class AssertHelper {
     }
 
     public static void assertFloatEquals(String message, float expected, float actual) {
-        Assert.assertEquals(message, expected, actual, 0.0001F);
+        assertEquals(message, expected, actual, 0.0001F);
     }
 }

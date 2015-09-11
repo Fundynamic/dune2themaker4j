@@ -7,7 +7,6 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
@@ -15,7 +14,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
-import static junit.framework.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;

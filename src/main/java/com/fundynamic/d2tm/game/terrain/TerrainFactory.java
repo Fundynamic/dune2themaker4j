@@ -6,5 +6,4 @@ public interface TerrainFactory {
 
     Terrain create(int terrainType, Cell cell);
 
-    Terrain createEmptyTerrain();
 }

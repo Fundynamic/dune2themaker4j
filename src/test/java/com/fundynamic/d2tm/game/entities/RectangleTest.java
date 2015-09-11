@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.math.Vector2D;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class RectangleTest {

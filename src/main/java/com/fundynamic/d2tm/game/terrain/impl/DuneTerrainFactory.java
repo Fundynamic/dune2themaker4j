@@ -38,7 +38,4 @@ public class DuneTerrainFactory implements TerrainFactory {
         }
     }
 
-    public Terrain createEmptyTerrain() {
-        return new EmptyTerrain(tileWidth, tileHeight);
-    }
 }

@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.math.Vector2D;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.newdawn.slick.Image;
 
