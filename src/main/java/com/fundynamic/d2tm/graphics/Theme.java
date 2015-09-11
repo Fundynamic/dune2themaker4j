@@ -13,7 +13,7 @@ public class Theme {
         this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
     }
 
-    public Image getTileImage(int row, MapEditor.TerrainFacing facing) {
+    public Image getFacingTile(int row, MapEditor.TerrainFacing facing) {
         int column = facing.ordinal();
         return this.spriteSheet.getSprite(column, row);
     }
