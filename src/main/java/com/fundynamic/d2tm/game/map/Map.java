@@ -9,6 +9,12 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
+/**
+ *
+ * This class represents the game map data.
+ *
+ *
+ */
 public class Map {
 
     private static final int TILE_SIZE = 32; // If possible, get rid of this!

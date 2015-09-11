@@ -43,6 +43,7 @@ public class EntityViewportRenderer {
 
                 // TODO: try to find entity without the use of map (from cell), but rather from a 'list' of entities, which
                 // TODO: we smartly query. Also, take order by z-order so we draw stuff over each other correctly
+                // TODO: - use quadtree for fast lookup based on coordinates?
                 Vector2D mapCoordinates = entity.getMapCoordinates();
 
                 int drawX = ((mapCoordinates.getXAsInt() - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);

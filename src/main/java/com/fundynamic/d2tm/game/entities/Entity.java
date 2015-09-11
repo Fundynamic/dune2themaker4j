@@ -55,7 +55,7 @@ public abstract class Entity implements Renderable, Updateable {
         return this instanceof Selectable;
     }
 
-    public boolean isUpdateable() {
+    public boolean isUpdatable() {
         return this instanceof Updateable;
     }
 

@@ -47,6 +47,7 @@ public class Mouse {
         this.hoverCell = null;
     }
 
+    // TODO make mouse implement Renderable interface?
     public void render(Graphics graphics) {
         mouseBehavior.render(graphics);
     }

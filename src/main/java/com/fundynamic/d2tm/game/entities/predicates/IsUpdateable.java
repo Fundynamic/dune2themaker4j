@@ -10,7 +10,7 @@ public class IsUpdateable extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return entity.isUpdateable();
+        return entity.isUpdatable();
     }
 
     @Override
