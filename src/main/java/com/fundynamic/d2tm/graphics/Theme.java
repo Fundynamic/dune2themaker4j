@@ -7,13 +7,27 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Theme {
 
-    private final SpriteSheet spriteSheet;
+    private SpriteSheet spriteSheet;
+
+    // needed for spriteSheet
+    private final Image image;
+    private int tileWidth;
+    private int tileHeight;
+
+    public Theme() {
+        this.image = null;
+    }
 
     public Theme(Image image, int tileWidth, int tileHeight) {
-        this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
+        this.image = image;
+        this.tileHeight = tileHeight;
+        this.tileWidth = tileWidth;
     }
 
     public Image getFacingTile(int row, MapEditor.TerrainFacing facing) {
+        if (spriteSheet == null) {
+            this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
+        }
         int column = facing.ordinal();
         return this.spriteSheet.getSprite(column, row);
     }

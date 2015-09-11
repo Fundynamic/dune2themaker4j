@@ -24,10 +24,8 @@ public class CellFactory {
     }
 
     public static Cell stubCellForMap(Map map) {
-        // Ugly leaky abstraction here!
         Cell cell = mock(Cell.class);
-        EmptyTerrain emptyTerrain = new EmptyTerrain(mock(Image.class));
-        when(cell.getTerrain()).thenReturn(emptyTerrain);
+        when(cell.getTerrain()).thenReturn(new EmptyTerrain(null));
         when(map.getCell(anyInt(), anyInt())).thenReturn(cell);
         return cell;
     }

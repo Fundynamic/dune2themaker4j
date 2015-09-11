@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
@@ -29,23 +28,17 @@ public class MapTest {
     private static int MAP_HEIGHT = 20;
 
     @Mock
-    private TerrainFactory terrainFactory;
-
-    @Mock
-    private Shroud shroud;
-
-    @Mock
     private Player player;
 
     private Map map;
 
     @Before
     public void setUp() throws Exception {
-        map = new Map(shroud, MAP_WIDTH, MAP_HEIGHT);
+        map = new Map(new Shroud(), MAP_WIDTH, MAP_HEIGHT);
 
-        map.getCell(0, 0).changeTerrain(mock(Sand.class));
-        map.getCell(5, 5).changeTerrain(mock(Spice.class));
-        map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(mock(Rock.class)); // because of the invisible border
+        map.getCell(0, 0).changeTerrain(new Sand());
+        map.getCell(5, 5).changeTerrain(new Spice());
+        map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(new Rock()); // because of the invisible border
     }
 
     @Test

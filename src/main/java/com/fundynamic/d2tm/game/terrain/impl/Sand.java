@@ -8,6 +8,10 @@ public class Sand extends DuneTerrain {
         super(theme);
     }
 
+    public Sand() {
+        super(null);
+    }
+
     @Override
     protected int getTerrainType() {
         return TERRAIN_SAND;

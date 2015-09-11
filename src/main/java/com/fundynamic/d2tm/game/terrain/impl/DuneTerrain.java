@@ -9,6 +9,8 @@ public abstract class DuneTerrain implements Terrain {
 
     private final Theme theme;
     private Image tileImage;
+    private MapEditor.TerrainFacing terrainFacing;
+    private boolean produceTileImage = true;
 
     public static final int TERRAIN_SAND = 0;
     public static final int TERRAIN_SAND_HILL = 2;
@@ -21,17 +23,23 @@ public abstract class DuneTerrain implements Terrain {
 
     public DuneTerrain(Theme theme) {
         this.theme = theme;
-        this.tileImage = makeTileImage(MapEditor.TerrainFacing.FULL);
+        this.tileImage = null;
+        this.terrainFacing = MapEditor.TerrainFacing.FULL;
     }
 
     protected abstract int getTerrainType();
 
     public DuneTerrain setFacing(MapEditor.TerrainFacing terrainFacing) {
-        this.tileImage = makeTileImage(terrainFacing);
+        this.terrainFacing = terrainFacing;
+        this.produceTileImage = true;
         return this;
     }
 
     public Image getTileImage() {
+        if (produceTileImage) {
+            this.tileImage = makeTileImage(terrainFacing);
+            this.produceTileImage = false;
+        }
         return tileImage;
     }
 

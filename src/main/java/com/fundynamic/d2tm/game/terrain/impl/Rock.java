@@ -9,6 +9,10 @@ public class Rock extends DuneTerrain implements ConstructionGround {
         super(theme);
     }
 
+    public Rock() {
+        super(null);
+    }
+
     @Override
     protected int getTerrainType() {
         return TERRAIN_ROCK;

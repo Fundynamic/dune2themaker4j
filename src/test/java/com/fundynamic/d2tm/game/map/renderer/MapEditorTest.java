@@ -23,13 +23,11 @@ public class MapEditorTest {
     @Test
     public void createMapOfCorrectDimensions() {
         TerrainFactory terrainFactory = Mockito.mock(TerrainFactory.class);
-//        Theme theme = new Theme(Mockito.mock(Image.class), 32, 32);
-//        stub(theme.getFacingTile(anyInt(), any(MapEditor.TerrainFacing.class))).toReturn(Mockito.mock(Image.class));
 
-        Rock rock = new Rock(Mockito.mock(Theme.class));
+        Rock rock = new Rock(new Theme());
         when(terrainFactory.create(anyInt(), any(Cell.class))).thenReturn(rock);
 
-        Shroud shroud = Mockito.mock(Shroud.class);
+        Shroud shroud = new Shroud();
         MapEditor mapEditor = new MapEditor(terrainFactory);
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_ROCK);
 

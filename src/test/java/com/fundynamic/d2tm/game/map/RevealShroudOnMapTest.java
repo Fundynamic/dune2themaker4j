@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,19 +19,13 @@ public class RevealShroudOnMapTest {
     public static int MAP_HEIGHT = 10;
 
 
-    @Mock
-    private TerrainFactory terrainFactory;
-
-    @Mock
-    private Shroud shroud;
-
     private Map map;
     private Player player;
 
     @Before
     public void setUp() throws SlickException {
         player = new Player("John Doe", Recolorer.FactionColor.RED);
-        map = new Map(shroud, MAP_WIDTH, MAP_HEIGHT);
+        map = new Map(new Shroud(), MAP_WIDTH, MAP_HEIGHT);
     }
 
     @Test

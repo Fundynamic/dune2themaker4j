@@ -17,6 +17,11 @@ public class Spice extends DuneTerrain implements Harvestable {
         this.spice = spice;
     }
 
+    public Spice() {
+        super(null);
+        this.theme = null;
+    }
+
     @Override
     protected int getTerrainType() {
         return TERRAIN_SPICE;
