@@ -1,4 +1,4 @@
-# Dune 2 - The Maker [![Build Status](https://travis-ci.org/Fundynamic/dune2themaker4j.svg)](https://travis-ci.org/Fundynamic/dune2themaker4j)
+# Dune 2 - The Maker [![Build Status](https://travis-ci.org/Fundynamic/dune2themaker4j.svg)](https://travis-ci.org/Fundynamic/dune2themaker4j) [![Coverage Status](https://coveralls.io/repos/Fundynamic/dune2themaker4j/badge.svg?branch=master&service=github)](https://coveralls.io/github/Fundynamic/dune2themaker4j?branch=master)
 
 This project aims to deliver a complex `Real Time Simulation Role Playing Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
 
