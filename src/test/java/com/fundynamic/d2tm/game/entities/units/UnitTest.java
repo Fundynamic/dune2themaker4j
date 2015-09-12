@@ -7,10 +7,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UnitTest {
@@ -34,7 +39,11 @@ public class UnitTest {
     }
 
     public Unit makeUnit(UnitFacings facing) {
-        return new Unit(map, unitMapCoordinates, spriteSheet, 32, 32, player, 10, facing.getValue(), unitMapCoordinates, unitMapCoordinates, Vector2D.zero());
+        return makeUnit(facing, Vector2D.zero());
+    }
+
+    public Unit makeUnit(UnitFacings facing, Vector2D offset) {
+        return new Unit(map, unitMapCoordinates, spriteSheet, 32, 32, player, 10, facing.getValue(), unitMapCoordinates, unitMapCoordinates, offset);
     }
 
     @Test
@@ -89,6 +98,25 @@ public class UnitTest {
         unit = makeUnit(UnitFacings.LEFT);
         Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(1, 0));
         assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(coordinatesToFaceTo));
+    }
+
+    @Test
+    public void rendersUnitOnExpectedCoordinates() {
+        int offsetX = 5;
+        int offsetY = 6;
+        Vector2D offset = Vector2D.create(offsetX, offsetY);
+
+        Unit unit = makeUnit(UnitFacings.DOWN, offset);
+        Graphics graphics = Mockito.mock(Graphics.class);
+
+        // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
+        // but isn't that basically the unit coordinates * tile size!?
+        int drawX = 10;
+        int drawY = 12;
+
+        unit.render(graphics, drawX, drawY);
+
+        Mockito.verify(graphics).drawImage((Image) anyObject(), eq((float)drawX + offsetX), eq((float)drawY + offsetY));
     }
 
 }

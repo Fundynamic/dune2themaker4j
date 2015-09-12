@@ -41,6 +41,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         );
     }
 
+    // TODO: Simplify constructor
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
         super(mapCoordinates, spriteSheet, entityData.sight, player);
         this.map = map;
@@ -55,7 +56,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.moveSpeed = entityData.moveSpeed;
     }
 
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int width, int height, Player player, int sight, int facing, Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
+    // TODO: Simplify constructor
+    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
+                int width, int height, Player player, int sight, int facing,
+                Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
         super(mapCoordinates, spriteSheet, sight, player);
         this.offset = offset;
         this.map = map;
