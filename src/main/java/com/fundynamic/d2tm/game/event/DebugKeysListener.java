@@ -42,7 +42,7 @@ public class DebugKeysListener extends AbstractKeyListener {
         if (key == Input.KEY_R) {
             System.out.println("Revealing all shroud for player: " + player);
             Map map = viewport.getMap();
-            map.revealShroudFor(map.getWidth() / 2, map.getHeight() / 2, map.getWidth() + map.getHeight(), player);
+            map.revealAllShroudFor(player);
         }
     }
 

@@ -239,4 +239,12 @@ public class Map {
     public void revealShroudFor(Vector2D mapCoordinates, int range, Player player) {
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range, player);
     }
+
+    public void revealAllShroudFor(Player player) {
+        for (Cell[] cellsRow : cells) {
+            for (Cell cell : cellsRow) {
+                player.revealShroudFor(cell.getPosition());
+            }
+        }
+    }
 }

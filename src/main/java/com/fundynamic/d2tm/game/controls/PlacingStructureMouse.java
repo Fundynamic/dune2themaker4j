@@ -45,7 +45,9 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
 
     private void selectRandomlySomethingToPlace() {
         entityToPlace = entityRepository.getEntityData(EntityType.STRUCTURE, Random.getRandomBetween(0, 2));
-        mouse.setMouseImage(entityToPlace.getFirstImage(), 16, 16);
+        if (entityToPlace != null) {
+            mouse.setMouseImage(entityToPlace.getFirstImage(), 16, 16);
+        }
     }
 
     @Override
