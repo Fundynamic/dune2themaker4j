@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -20,9 +19,7 @@ import org.newdawn.slick.SpriteSheet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UnitTest {
