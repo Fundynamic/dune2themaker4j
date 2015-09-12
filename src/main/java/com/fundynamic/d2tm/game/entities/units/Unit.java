@@ -58,16 +58,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // TODO: Simplify constructor
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
-                int width, int height, Player player, int sight, int facing,
-                Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset) {
+                Player player, int sight, int facing,
+                Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset,
+                int hitPoints, FadingSelection fadingSelection) {
         super(mapCoordinates, spriteSheet, sight, player);
         this.offset = offset;
+        this.moveSpeed = 1.0F;
         this.map = map;
         this.facing = facing;
         this.nextCellToMoveTo = nextCellToMoveTo;
         this.target = target;
-        this.fadingSelection = new FadingSelection(width, height);
-        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
+        this.fadingSelection = fadingSelection;
+        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(hitPoints);
     }
 
     @Override
@@ -147,11 +149,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private boolean isWaitingForNextCellToDetermine() {
         return nextCellToMoveTo == mapCoordinates;
-    }
-
-    private void stopMoving() {
-        this.nextCellToMoveTo = this.mapCoordinates;
-        this.target = this.mapCoordinates;
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
@@ -239,5 +236,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
         Destructible destructible = (Destructible) entity;
         destructible.takeDamage(Random.getRandomBetween(50, 150));
+    }
+
+    public Vector2D getOffset() {
+        return offset;
     }
 }
