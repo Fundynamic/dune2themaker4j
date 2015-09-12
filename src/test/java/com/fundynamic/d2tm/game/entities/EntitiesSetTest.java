@@ -1,10 +1,10 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
 import com.fundynamic.d2tm.game.entities.units.UnitFactory;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
@@ -12,6 +12,8 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class EntitiesSetTest {
@@ -26,6 +28,7 @@ public class EntitiesSetTest {
     private int playerOneStructureCount;
     private int playerOneBareEntitiesCount;
     private int selectableEntities;
+    private int destroyers;
 
     @Before
     public void setUp() {
@@ -40,6 +43,7 @@ public class EntitiesSetTest {
         entitiesSet.add(UnitFactory.makeUnit(playerOne, 300, Vector2D.create(10, 12)));
         entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(30, 30)));
         playerOneUnitCount = 4;
+        destroyers = 4;
 
         entitiesSet.add(StructureFactory.makeStructure(playerOne, 200));
         entitiesSet.add(StructureFactory.makeStructure(playerOne, 200));
@@ -49,6 +53,7 @@ public class EntitiesSetTest {
         entitiesSet.add(UnitFactory.makeUnit(playerTwo, 100));
         entitiesSet.add(UnitFactory.makeUnit(playerTwo, 200));
         entitiesSet.add(UnitFactory.makeUnit(playerTwo, 300));
+        destroyers += 3;
 
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
@@ -57,20 +62,39 @@ public class EntitiesSetTest {
         selectableEntities = 12; // all 12 above are selectable
 
         // Bare entities (with no behavior at all) - to test filtering
-        entitiesSet.add(new UnSelectableEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne));
+        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne));
         playerOneBareEntitiesCount = 1;
     }
 
     @Test
     public void filtersForPlayer() {
         Set<Entity> result = entitiesSet.filter(Predicate.builder().forPlayer(playerOne));
-        Assert.assertEquals(playerOneStructureCount + playerOneUnitCount + playerOneBareEntitiesCount, result.size());
+        assertEquals(playerOneStructureCount + playerOneUnitCount + playerOneBareEntitiesCount, result.size());
     }
 
     @Test
     public void filtersSelectable() {
-        Set<Entity> result = entitiesSet.filter(Predicate.builder().isSelectable());
-        Assert.assertEquals(entitiesSet.size() - playerOneBareEntitiesCount, result.size());
+        Set<Entity> result = entitiesSet.filter(Predicate.isSelectable());
+        assertEquals(entitiesSet.size() - playerOneBareEntitiesCount, result.size());
+    }
+
+    @Test
+    public void filtersUpdatable() {
+        Set<Entity> result = entitiesSet.filter(Predicate.isUpdateable());
+        assertEquals(entitiesSet.size() - playerOneBareEntitiesCount, result.size());
+    }
+
+    @Test
+    public void filtersDestroyers() {
+        Set<Entity> result = entitiesSet.filter(Predicate.isDestroyer());
+        // only the units are capable of destroying stuff
+        assertEquals(destroyers, result.size());
+    }
+
+    @Test
+    public void filtersDestroyable() {
+        Set<Entity> result = entitiesSet.filter(Predicate.isDestroyed());
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -80,12 +104,12 @@ public class EntitiesSetTest {
                         Rectangle.create(Vector2D.create(9 * TILE_SIZE, 9 * TILE_SIZE), Vector2D.create(13 * TILE_SIZE, 13 * TILE_SIZE))
                 )
         );
-        Assert.assertEquals(3, result.size());
+        assertEquals(3, result.size());
     }
 
-    class UnSelectableEntity extends Entity {
+    class DestroyedEntity extends Entity implements Destructible {
 
-        public UnSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
+        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
             super(mapCoordinates, spriteSheet, sight, player);
         }
 
@@ -97,6 +121,41 @@ public class EntitiesSetTest {
         @Override
         public void update(float deltaInMs) {
 
+        }
+
+        @Override
+        public boolean isSelectable() {
+            return false;
+        }
+
+        @Override
+        public boolean isMovable() {
+            return false;
+        }
+
+        @Override
+        public boolean isUpdatable() {
+            return false;
+        }
+
+        @Override
+        public boolean isDestructible() {
+            return true;
+        }
+
+        @Override
+        public boolean isDestroyer() {
+            return false;
+        }
+
+        @Override
+        public void takeDamage(int hitPoints) {
+
+        }
+
+        @Override
+        public boolean isDestroyed() {
+            return true;
         }
     }
 }

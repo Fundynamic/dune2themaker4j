@@ -14,8 +14,8 @@ public abstract class Predicate<T> {
         return IsNotDestroyed.instance;
     }
 
-    public static Predicate<Entity> isAttackable() {
-        return IsAttackable.instance;
+    public static Predicate<Entity> isDestroyer() {
+        return IsDestroyer.instance;
     }
 
     public static Predicate<Entity> isDestroyed() {

@@ -63,8 +63,8 @@ public abstract class Entity implements Renderable, Updateable {
         return this instanceof Destructible;
     }
 
-    public boolean isAttackable() {
-        return this instanceof Attackable;
+    public boolean isDestroyer() {
+        return this instanceof Destroyer;
     }
 
 }

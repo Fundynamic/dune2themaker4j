@@ -12,7 +12,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Unit extends Entity implements Selectable, Moveable, Destructible, Attackable {
+public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
 
     // Behaviors
     private final FadingSelection fadingSelection;

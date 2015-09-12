@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.controls;
 
 
-import com.fundynamic.d2tm.game.behaviors.Attackable;
+import com.fundynamic.d2tm.game.behaviors.Destroyer;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -39,7 +39,7 @@ public class MovableSelectedMouse extends NormalMouse {
                     );
 
                     for (Entity entity : selectedAttackableEntities) {
-                        ((Attackable) entity).attack(hoveringOverEntity);
+                        ((Destroyer) entity).attack(hoveringOverEntity);
                     }
                 }
             }

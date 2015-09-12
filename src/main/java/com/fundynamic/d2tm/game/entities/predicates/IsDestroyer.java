@@ -3,18 +3,18 @@ package com.fundynamic.d2tm.game.entities.predicates;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Predicate;
 
-public class IsAttackable extends Predicate<Entity> {
+public class IsDestroyer extends Predicate<Entity> {
 
-    public static IsAttackable instance = new IsAttackable();
+    public static IsDestroyer instance = new IsDestroyer();
 
     @Override
     public boolean test(Entity entity) {
-        return entity.isAttackable();
+        return entity.isDestroyer();
     }
 
     @Override
     public String toString() {
-        return "IsAttackable";
+        return "IsDestroyer";
     }
 
 }

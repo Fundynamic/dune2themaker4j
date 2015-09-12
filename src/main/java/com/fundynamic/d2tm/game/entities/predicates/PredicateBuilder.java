@@ -88,7 +88,7 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder isAttackable() {
-        predicates.add(Predicate.isAttackable());
+        predicates.add(Predicate.isDestroyer());
         return this;
     }
 
