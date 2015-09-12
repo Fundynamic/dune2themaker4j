@@ -13,13 +13,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ViewportMovementListenerTest {
@@ -48,6 +48,7 @@ public class ViewportMovementListenerTest {
     @Mock
     private Player player;
 
+    @Mock
     private Mouse mouse;
 
     @Before
@@ -215,32 +216,76 @@ public class ViewportMovementListenerTest {
         assertFloatEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX());
     }
 
-//    @Test
-//    public void leftMouseButtonSelectsStructureWhenHoveredOverCellWithStructure() {
-//        int NOT_APPLICABLE = -1;
-//        Cell cell = makeCell();
-//        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2, player);
-//        cell.setEntity(structure);
-//        mouse.mouseMovedToCell(cell);
-//
-//        listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
-//
-//        assertSame(structure, mouse.getLastSelectedEntity());
-//    }
-//
-//    @Test
-//    public void rightMouseButtonDeSelectsStructure() {
-//        int NOT_APPLICABLE = -1;
-//        Cell cell = makeCell();
-//        Structure structure = new Structure(Vector2D.zero(), Mockito.mock(Image.class), 64, 64, 2, player);
-//        cell.setEntity(structure);
-//        mouse.mouseMovedToCell(cell);
-//        mouse.selectEntity();
-//
-//        listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, NOT_APPLICABLE, NOT_APPLICABLE, 1);
-//
-//        assertEquals(null, mouse.getLastSelectedEntity());
-//    }
+    @Test
+    public void whenLeftMouseButtonClickedOnceExecuteLogicInMouseClass() {
+        Mouse mouse = Mockito.mock(Mouse.class);
+        listener.setMouse(mouse);
+
+        int clickCount = 1;
+
+        listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, 0, 0, clickCount);
+
+        verify(mouse).leftClicked();
+    }
+
+    @Test
+    public void whenRightMouseButtonClickedOnceExecuteLogicInMouseClass() {
+        Mouse mouse = Mockito.mock(Mouse.class);
+        listener.setMouse(mouse);
+
+        int clickCount = 1;
+
+        listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, 0, 0, clickCount);
+
+        verify(mouse).rightClicked();
+    }
+
+    @Test
+    public void whenLeftMouseButtonIsReleasedPropagateToMouseClass() {
+        Mouse mouse = Mockito.mock(Mouse.class);
+        listener.setMouse(mouse);
+
+        listener.mouseReleased(Input.MOUSE_LEFT_BUTTON, 0, 0);
+
+        verify(mouse).leftButtonReleased();
+    }
+
+    @Test
+    public void propagateDragging() {
+        Mouse mouse = Mockito.mock(Mouse.class);
+        listener.setMouse(mouse);
+
+        int oldX = 0;
+        int oldY = 0;
+        int newX = 1;
+        int newY = 1;
+
+        listener.mouseDragged(oldX, oldY, newX, newY);
+
+        verify(mouse).draggedToCoordinates(newX, newY);
+    }
+
+    @Test
+    public void whenRightMouseButtonIsReleasedNothingHappens() {
+        Mouse mouse = Mockito.mock(Mouse.class);
+        listener.setMouse(mouse);
+
+        listener.mouseReleased(Input.MOUSE_RIGHT_BUTTON, 0, 0);
+
+        verifyZeroInteractions(mouse);
+    }
+
+    @Test
+    public void whenLeftMouseButtonClickedTwiceNothingShouldHappen() {
+        int clickCount = 2;
+        listener.mouseClicked(Input.MOUSE_LEFT_BUTTON, 0, 0, clickCount);
+    }
+
+    @Test
+    public void whenRightMouseButtonClickedTwiceNothingShouldHappen() {
+        int clickCount = 2;
+        listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, 0, 0, clickCount);
+    }
 
     private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {
         updateAndRender();

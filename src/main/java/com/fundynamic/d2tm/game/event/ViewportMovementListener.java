@@ -12,7 +12,7 @@ import org.newdawn.slick.Input;
 public class ViewportMovementListener extends AbstractMouseListener {
 
     private final Viewport viewport;
-    private final Mouse mouse;
+    private Mouse mouse;
     private final EntityRepository entityRepository;
     private final Player player;
     private EntityType entityType;
@@ -61,5 +61,9 @@ public class ViewportMovementListener extends AbstractMouseListener {
     @Override
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
         mouse.draggedToCoordinates(newx, newy);
+    }
+
+    public void setMouse(Mouse mouse) {
+        this.mouse = mouse;
     }
 }
