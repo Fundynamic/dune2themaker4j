@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 public class DebugKeysListenerTest {
 
     public static final char ANY_CHAR = '#';
+    public static final int ANY_KEY = Input.KEY_COLON;
 
     @Mock private Mouse mouse;
     @Mock private Viewport viewport;
@@ -77,7 +78,15 @@ public class DebugKeysListenerTest {
 
     @Test
     public void anyOtherKeyDoesNothing() {
-        debugKeysListener.keyPressed(Input.KEY_Z, ANY_CHAR);
+        debugKeysListener.keyPressed(ANY_KEY, ANY_CHAR);
+        verifyZeroInteractions(mouse);
+        verifyZeroInteractions(viewport);
+        verifyZeroInteractions(entityRepository);
+    }
+
+    @Test
+    public void keyReleaseDoesNothing() {
+        debugKeysListener.keyReleased(ANY_KEY, ANY_CHAR);
         verifyZeroInteractions(mouse);
         verifyZeroInteractions(viewport);
         verifyZeroInteractions(entityRepository);
