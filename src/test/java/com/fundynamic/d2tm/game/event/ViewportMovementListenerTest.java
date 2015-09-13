@@ -16,10 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ViewportMovementListenerTest {
@@ -69,13 +66,15 @@ public class ViewportMovementListenerTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player) {
+        Viewport viewport = new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player) {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {
                 return Mockito.mock(Image.class);
             }
         };
+        viewport.init(); // initialize graphical stuff here
+        return viewport;
     }
 
     @Test

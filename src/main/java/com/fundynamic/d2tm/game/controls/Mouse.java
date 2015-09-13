@@ -42,6 +42,16 @@ public class Mouse {
         this.mouseImages = new HashMap<>();
     }
 
+    public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository) throws SlickException {
+        Mouse mouse = new Mouse(player, gameContainer, entityRepository);
+        mouse.addMouseImage(Mouse.MouseImages.NORMAL, new Image("mouse/mouse_normal.png"));
+        mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, new Image("mouse/mouse_pick.png"));
+        mouse.addMouseImage(Mouse.MouseImages.MOVE, new Image("mouse/mouse_move.png"));
+        mouse.addMouseImage(Mouse.MouseImages.ATTACK, new Image("mouse/mouse_attack.png"));
+        mouse.init();
+        return mouse;
+    }
+
     public void init() {
         this.mouseBehavior = new NormalMouse(this);
         this.hoverCell = null;

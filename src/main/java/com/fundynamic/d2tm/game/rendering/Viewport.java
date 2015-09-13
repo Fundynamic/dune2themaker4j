@@ -16,7 +16,7 @@ public class Viewport implements Renderable {
 
     private final Vector2D viewportDimensions;
 
-    private final Image buffer;
+    private Image buffer;
 
     private final Vector2D drawingVector;
 
@@ -52,7 +52,7 @@ public class Viewport implements Renderable {
         this.map = map;
 
         this.drawingVector = drawingVector;
-        this.buffer = constructImage(viewportDimensions);
+        this.buffer = null;
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
@@ -68,6 +68,10 @@ public class Viewport implements Renderable {
         this.mouse.setViewport(this);
 
         this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+    }
+
+    public void init() throws SlickException {
+        this.buffer = constructImage(viewportDimensions);
     }
 
     public void render(Graphics graphics) {

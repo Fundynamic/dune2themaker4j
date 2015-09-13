@@ -67,32 +67,14 @@ public class PlayingState extends BasicGameState {
         this.human = new Player("Human", Recolorer.FactionColor.RED);
         this.cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
+        MapEditor mapEditor = new MapEditor(terrainFactory);
         int mapWidth = 64;
         int mapHeight = 64;
-        MapEditor mapEditor = new MapEditor(terrainFactory);
         this.map = mapEditor.generateRandom(shroud, mapWidth, mapHeight);
-        entityRepository = new EntityRepository(map, new Recolorer());
 
-        this.mouse = new Mouse(human, gameContainer, entityRepository);
-        this.mouse.addMouseImage(Mouse.MouseImages.NORMAL, new Image("mouse/mouse_normal.png"));
-        this.mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, new Image("mouse/mouse_pick.png"));
-        this.mouse.addMouseImage(Mouse.MouseImages.MOVE, new Image("mouse/mouse_move.png"));
-        this.mouse.addMouseImage(Mouse.MouseImages.ATTACK, new Image("mouse/mouse_attack.png"));
-        this.mouse.init();
+        this.entityRepository = new EntityRepository(map, new Recolorer());
 
-        entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
-        entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(10, 10), 0, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(11, 11), 0, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(14, 10), 1, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(15, 11), 1, human);
-
-        entityRepository.placeStructureOnMap(Vector2D.create(55, 55), EntityRepository.REFINERY, cpu);
-        entityRepository.placeStructureOnMap(Vector2D.create(57, 57), EntityRepository.CONSTRUCTION_YARD, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(50, 50), 0, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(49, 49), 0, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(52, 52), 1, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(53, 53), 1, cpu);
+        this.mouse = Mouse.create(human, gameContainer, entityRepository);
 
         try {
             float moveSpeed = 30 * tileWidth;
@@ -103,7 +85,7 @@ public class PlayingState extends BasicGameState {
                     screenResolution,
                     viewportDrawingPosition,
                     viewingVector,
-                    this.map,
+                    map,
                     moveSpeed,
                     tileWidth,
                     tileHeight,
@@ -120,6 +102,28 @@ public class PlayingState extends BasicGameState {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
+
+        initInitialGame(entityRepository, map, human, cpu);
+    }
+
+    public void initInitialGame(EntityRepository entityRepository, Map map, Player human, Player cpu) throws SlickException {
+        entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
+        entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(10, 10), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(11, 11), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(14, 10), 1, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(15, 11), 1, human);
+
+        entityRepository.placeStructureOnMap(Vector2D.create(55, 55), EntityRepository.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(57, 57), EntityRepository.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(50, 50), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(49, 49), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(52, 52), 1, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(53, 53), 1, cpu);
+
+        for (Viewport viewport : viewports) {
+            viewport.init();
+        }
     }
 
     @Override
