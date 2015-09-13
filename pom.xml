@@ -6,7 +6,7 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>A Slick2d game</name>
+	<name>Dune 2 - The Maker</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
