@@ -1,11 +1,11 @@
 package com.fundynamic.d2tm.game.rendering;
 
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class EntityViewportRenderer {
         cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
     }
 
-    public void render(Image imageToDrawOn, Vector2D viewingVector) throws SlickException {
+    public void render(Graphics graphics, Vector2D viewingVector) throws SlickException {
         int startCellX = viewingVector.getXAsInt() / tileWidth;
         int startCellY = viewingVector.getYAsInt() / tileHeight;
 
@@ -54,7 +54,7 @@ public class EntityViewportRenderer {
         }
 
         for (EntityToDraw entityToDraw : entitiesToDraw) {
-            entityToDraw.entity.render(imageToDrawOn.getGraphics(), entityToDraw.drawX, entityToDraw.drawY);
+            entityToDraw.entity.render(graphics, entityToDraw.drawX, entityToDraw.drawY);
         }
     }
 

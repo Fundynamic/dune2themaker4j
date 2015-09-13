@@ -74,6 +74,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void render(Graphics graphics, int x, int y) {
+        if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();

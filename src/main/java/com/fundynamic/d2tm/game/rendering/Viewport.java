@@ -101,7 +101,7 @@ public class Viewport implements Renderable {
             // TODO: Merge the culling into this viewport class(?)
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
 
-            entityViewportRenderer.render(this.buffer, viewingVector);
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 
