@@ -13,6 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.controls.MouseTest.makeMouse;
+import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
+import static com.fundynamic.d2tm.game.map.MapTest.makeMap;
 import static com.fundynamic.d2tm.game.rendering.EntityViewportRendererTest.makeUnit;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -27,8 +30,8 @@ public class MovableSelectedMouseTest {
     @Before
     public void setUp() throws SlickException {
         player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-        map = MapTest.makeMap();
-        mouse = MouseTest.makeMouse(map, player);
+        map = makeMap();
+        mouse = makeMouse(map, player);
     }
 
     @Test
@@ -51,7 +54,7 @@ public class MovableSelectedMouseTest {
         Cell cell = new Cell(map, mock(Terrain.class), 13, 13);
         mouse.setHoverCell(cell);
 
-        Unit unit = EntityRepositoryTest.createUnit(mouse.getEntityRepository(), Vector2D.create(1, 1), player);
+        Unit unit = createUnit(mouse.getEntityRepository(), Vector2D.create(1, 1), player);
         unit.select();
 
         assertEquals(unit.getNextCellToMoveTo(), Vector2D.create(1, 1));

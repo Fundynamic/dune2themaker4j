@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.controls.DraggingSelectionBoxMouseTest;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -92,6 +93,13 @@ public class EntityViewportRendererTest {
         verify(graphics, times(1)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }
 
+    /**
+     * Replace with {@link com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player)} ?
+     * @param map
+     * @param player
+     * @param mapCoordinates
+     * @return
+     */
     public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) {
         FadingSelection fadingSelection = new FadingSelection(32, 32);
         HitPointBasedDestructibility hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
