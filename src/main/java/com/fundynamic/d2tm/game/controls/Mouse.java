@@ -116,7 +116,7 @@ public class Mouse {
         try {
             gameContainer.setMouseCursor(image, hotSpotX, hotSpotY);
         } catch (SlickException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

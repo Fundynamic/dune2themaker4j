@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.rendering;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -38,6 +39,18 @@ public class Viewport implements Renderable {
     private final Mouse mouse;
 
     private Map map;
+
+    public Viewport(Map map, Mouse mouse, Player player) throws SlickException {
+        this(Vector2D.create(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT),
+                Vector2D.zero(),
+                Vector2D.zero(),
+                map,
+                (float)Game.TILE_HEIGHT * 30,
+                Game.TILE_WIDTH,
+                Game.TILE_HEIGHT,
+                mouse,
+                player);
+    }
 
     public Viewport(Vector2D viewportDimensions,
                     Vector2D drawingVector,

@@ -70,12 +70,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
         final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
 
-
-        return entityRepository.filter(
-                Predicate.builder().
-                        selectableMovableForPlayer(mouse.getControllingPlayer()).
-                        withinArea(rectangle)
-        );
+        return entityRepository.findMovableWithinRectangleForPlayer(mouse.getControllingPlayer(), rectangle);
     }
 
     private void deselectEverything() {

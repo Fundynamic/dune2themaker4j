@@ -13,11 +13,11 @@ import org.newdawn.slick.util.Bootstrap;
 
 public class Game extends StateBasedGame {
 
-    private static final int SCREEN_WIDTH = 800;
-    private static final int SCREEN_HEIGHT = 600;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 600;
 
-    private static final int TILE_WIDTH = 32;
-    private static final int TILE_HEIGHT = 32;
+    public static final int TILE_WIDTH = 32;
+    public static final int TILE_HEIGHT = 32;
 
     public Game(String title) {
         super(title);

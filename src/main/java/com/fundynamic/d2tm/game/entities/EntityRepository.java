@@ -151,4 +151,11 @@ public class EntityRepository {
         return entitiesSet.filter(predicate);
     }
 
+    public Set<Entity> findMovableWithinRectangleForPlayer(Player player, Rectangle rectangle) {
+        return filter(
+                Predicate.builder().
+                        selectableMovableForPlayer(player).
+                        withinArea(rectangle)
+        );
+    }
 }
