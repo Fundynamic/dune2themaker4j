@@ -58,7 +58,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
         }
 
         if (entities.size() > 0) {
-            mouse.setMouseBehavior(new MovableSelectedMouse(mouse));
+            mouse.setMouseBehavior(new MovableSelectedMouse(mouse, mouse.getEntityRepository()));
             return;
         }
         mouse.setMouseBehavior(new NormalMouse(mouse));

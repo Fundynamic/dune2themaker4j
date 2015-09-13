@@ -55,27 +55,31 @@ public class EntityRepository {
         placeOnMap(topLeft, EntityType.STRUCTURE, id, player);
     }
 
-    public void placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
+    public Entity placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        placeOnMap(topLeft, entityData, player);
+        return placeOnMap(topLeft, entityData, player);
     }
 
-    public void placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
+    public Entity placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
         System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
+            Entity createdEntity = null;
             Image originalImage = entityData.image;
             Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
 
             switch (entityData.type) {
                 case STRUCTURE:
-                    entitiesSet.add(map.placeStructure(new Structure(topLeft, recoloredImage, player, entityData)));
+                    createdEntity = new Structure(topLeft, recoloredImage, player, entityData);
+                    entitiesSet.add(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
-                    entitiesSet.add(map.placeUnit(new Unit(map, topLeft, recoloredImage, player, entityData)));
+                    createdEntity = new Unit(map, topLeft, recoloredImage, player, entityData);
+                    entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
             }
+            return createdEntity;
         } catch (CellAlreadyOccupiedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

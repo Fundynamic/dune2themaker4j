@@ -1,17 +1,9 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.Before;
-import org.junit.Test;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
 import static org.junit.Assert.assertFalse;
@@ -171,4 +163,11 @@ public class MouseTest {
 //
 //        }
 //    }
+
+    public static Mouse makeMouse(Map map, Player player) throws SlickException {
+        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+        GameContainer gameContainer = mock(GameContainer.class);
+        return new TestableMouse(player, gameContainer, entityRepository);
+    }
+
 }

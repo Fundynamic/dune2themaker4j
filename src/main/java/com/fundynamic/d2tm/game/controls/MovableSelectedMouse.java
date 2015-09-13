@@ -11,15 +11,20 @@ import com.fundynamic.d2tm.game.map.Cell;
 
 import java.util.Set;
 
+/**
+ *
+ * The MovableSelectedMouse behavior orders units to attack or move to the cell the mouse hovers on.
+ *
+ */
 public class MovableSelectedMouse extends NormalMouse {
 
     private final EntityRepository entityRepository;
     private final Player player;
 
-    public MovableSelectedMouse(Mouse mouse) {
+    public MovableSelectedMouse(Mouse mouse, EntityRepository entityRepository) {
         super(mouse);
         mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
-        this.entityRepository = mouse.getEntityRepository();
+        this.entityRepository = entityRepository;
         player = mouse.getControllingPlayer();
     }
 
@@ -27,18 +32,21 @@ public class MovableSelectedMouse extends NormalMouse {
     public void leftClicked() {
         Entity hoveringOverEntity = hoveringOverSelectableEntity();
 
+        // hovering over an entity and visible for player
         if (hoveringOverEntity != null && mouse.getHoverCell().isVisibleFor(player)) {
+            // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
                 deselectCurrentlySelectedEntity();
                 selectEntity(hoveringOverEntity);
             } else {
+                // does not belong to player; that can only mean 'attack'!
                 if (hoveringOverEntity.isDestructible()) {
-                    Set<Entity> selectedAttackableEntities = entityRepository.filter(
+                    Set<Entity> selectedDestroyersEntities = entityRepository.filter(
                             Predicate.builder().
-                                    selectedAttackableForPlayer(player)
+                                    selectedDestroyersForPlayer(player)
                     );
 
-                    for (Entity entity : selectedAttackableEntities) {
+                    for (Entity entity : selectedDestroyersEntities) {
                         ((Destroyer) entity).attack(hoveringOverEntity);
                     }
                 }

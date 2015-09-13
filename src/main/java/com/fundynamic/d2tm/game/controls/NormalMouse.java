@@ -26,7 +26,7 @@ public class NormalMouse extends AbstractMouseBehavior {
         selectEntity(entity);
 
         if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
-            mouse.setMouseBehavior(new MovableSelectedMouse(mouse));
+            mouse.setMouseBehavior(new MovableSelectedMouse(mouse, mouse.getEntityRepository()));
         }
     }
 

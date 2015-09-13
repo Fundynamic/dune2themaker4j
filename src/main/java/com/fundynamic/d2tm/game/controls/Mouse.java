@@ -62,14 +62,25 @@ public class Mouse {
         mouseBehavior.render(graphics);
     }
 
+    /**
+     * When a left click (== press and release) has been detected, this method is called.
+     */
     public void leftClicked() {
         mouseBehavior.leftClicked();
     }
 
+    /**
+     * When a right click (== press and release) has been detected, this method is called.
+     */
     public void rightClicked() {
         mouseBehavior.rightClicked();
     }
 
+    /**
+     * This method is called to update the mouse (and its associated behavior) state. Notifying that
+     * the mouse has been moved to the given cell.
+     * @param cell
+     */
     public void mouseMovedToCell(Cell cell) {
         mouseBehavior.mouseMovedToCell(cell);
     }

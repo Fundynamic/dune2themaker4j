@@ -13,7 +13,6 @@ import org.newdawn.slick.SpriteSheet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class EntitiesSetTest {
@@ -29,6 +28,7 @@ public class EntitiesSetTest {
     private int playerOneBareEntitiesCount;
     private int selectableEntities;
     private int destroyers;
+    private int moveableUnitsOfPlayerOne;
 
     @Before
     public void setUp() {
@@ -43,6 +43,7 @@ public class EntitiesSetTest {
         entitiesSet.add(UnitFactory.makeUnit(playerOne, 300, Vector2D.create(10, 12)));
         entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(30, 30)));
         playerOneUnitCount = 4;
+        moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
 
         entitiesSet.add(StructureFactory.makeStructure(playerOne, 200));
@@ -76,6 +77,12 @@ public class EntitiesSetTest {
     public void filtersSelectable() {
         Set<Entity> result = entitiesSet.filter(Predicate.isSelectable());
         assertEquals(entitiesSet.size() - playerOneBareEntitiesCount, result.size());
+    }
+
+    @Test
+    public void filtersMovable() {
+        Set<Entity> result = entitiesSet.filter(Predicate.builder().selectableMovableForPlayer(playerOne));
+        assertEquals(moveableUnitsOfPlayerOne, result.size());
     }
 
     @Test

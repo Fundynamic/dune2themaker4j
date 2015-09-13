@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -163,4 +164,9 @@ public class MapTest {
         assertNull(map.getCell(Vector2D.create(6, 6)).getEntity()); // 1 too much to the bottom right
         assertNull(map.getCell(Vector2D.create(4, 6)).getEntity()); // 1 too much to the bottom left
     }
+
+    public static Map makeMap() throws SlickException {
+        return new Map(new Shroud(null, Game.TILE_WIDTH, Game.TILE_HEIGHT), 64, 64);
+    }
+
 }

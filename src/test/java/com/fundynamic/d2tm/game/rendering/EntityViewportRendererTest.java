@@ -3,13 +3,13 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.controls.DraggingSelectionBoxMouseTest;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.game.map.MapTest;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -19,8 +19,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.math.Vector2D.create;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyInt;
@@ -32,7 +30,7 @@ public class EntityViewportRendererTest {
 
     @Test
     public void rendersEntityInView() throws SlickException {
-        Map map = makeMap();
+        Map map = MapTest.makeMap();
         Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
 
         int viewportWidthInTiles = 10;
@@ -62,7 +60,7 @@ public class EntityViewportRendererTest {
 
     @Test
     public void rendersEntityOnceWhenOccupyingMultipleCellsDueMovement() throws SlickException {
-        Map map = makeMap();
+        Map map = MapTest.makeMap();
         Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
 
         int viewportWidthInTiles = 10;
@@ -94,11 +92,7 @@ public class EntityViewportRendererTest {
         verify(graphics, times(1)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }
 
-    public Map makeMap() throws SlickException {
-        return new Map(new Shroud(null, Game.TILE_WIDTH, Game.TILE_HEIGHT), 64, 64);
-    }
-
-    public Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) {
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) {
         FadingSelection fadingSelection = new FadingSelection(32, 32);
         HitPointBasedDestructibility hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
         EntityData entityData = new EntityData(32, 32, 9);
@@ -107,7 +101,7 @@ public class EntityViewportRendererTest {
         return unit;
     }
 
-    public SpriteSheet makeSpriteSheet() {
+    public static SpriteSheet makeSpriteSheet() {
         SpriteSheet spriteSheet = mock(SpriteSheet.class);
         Image image = Mockito.mock(Image.class);
 

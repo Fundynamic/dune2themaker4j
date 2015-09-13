@@ -7,9 +7,15 @@ import org.mockito.Mockito;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.HashMap;
+
 public class TestableEntityRepository extends EntityRepository {
 
     private Image imageToReturn;
+
+    public TestableEntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
+        super(map, recolorer, entitiesData);
+    }
 
     public TestableEntityRepository(Map map, Recolorer recolorer) throws SlickException {
         super(map, recolorer);

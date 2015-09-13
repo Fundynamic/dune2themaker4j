@@ -29,23 +29,13 @@ public class EntityRepositoryTest {
     public Map map;
 
     @Mock
-    public Recolorer recolorer;
-
-    @Mock
     public Player player;
 
     private EntityRepository entityRepository;
 
     @Before
     public void setUp() throws SlickException {
-        Image image = mock(Image.class);
-        when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
-        entityRepository = new EntityRepository(map, recolorer, new HashMap<String, EntityData>()) {
-            @Override
-            protected Image loadImage(String pathToImage) throws SlickException {
-                return mock(Image.class);
-            }
-        };
+        entityRepository = makeEmptyTestableEntityRepository(map);
     }
 
     @Test
@@ -136,6 +126,31 @@ public class EntityRepositoryTest {
 
         assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
         assertEquals(1, entityRepository.getEntitiesSet().size());
+    }
+
+    public static Unit createUnit(EntityRepository entityRepository, Vector2D mapCoordinates, Player player) throws SlickException {
+        return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, 1, player);
+    }
+
+    public static EntityRepository makeTestableEntityRepository(Map map) throws SlickException {
+        TestableEntityRepository entityRepository = makeEmptyTestableEntityRepository(map);
+
+        entityRepository.createStructure(0, "constyard.png", 32, 32, 2, 1000);
+        entityRepository.createUnit(1, "quad.png", 32, 32, 2, 1.0F, 100);
+
+        return entityRepository;
+    }
+
+    public static TestableEntityRepository makeEmptyTestableEntityRepository(final Map map) throws SlickException {
+        Image image = mock(Image.class);
+        Recolorer recolorer = Mockito.mock(Recolorer.class);
+        when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        return new TestableEntityRepository(map, recolorer, new HashMap<String, EntityData>()) {
+            @Override
+            protected Image loadImage(String pathToImage) throws SlickException {
+                return mock(Image.class);
+            }
+        };
     }
 
 }

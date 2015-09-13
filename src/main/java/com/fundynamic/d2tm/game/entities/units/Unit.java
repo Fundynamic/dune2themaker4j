@@ -4,6 +4,8 @@ import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
@@ -181,6 +183,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 "]\n";
     }
 
+    /**
+     * Unit is marked as selected. To get all selected units for player, use the {@link com.fundynamic.d2tm.game.entities.EntityRepository#filter(Predicate)} and
+     * along with a {@link PredicateBuilder#isSelected()}
+     */
     @Override
     public void select() {
         fadingSelection.select();
@@ -241,5 +247,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Vector2D getOffset() {
         return offset;
+    }
+
+    public Vector2D getNextCellToMoveTo() {
+        return nextCellToMoveTo;
     }
 }

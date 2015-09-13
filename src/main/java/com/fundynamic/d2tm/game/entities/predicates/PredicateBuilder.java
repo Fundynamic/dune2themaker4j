@@ -76,10 +76,10 @@ public class PredicateBuilder {
                isMovable();
     }
 
-    public PredicateBuilder selectedAttackableForPlayer(Player player) {
+    public PredicateBuilder selectedDestroyersForPlayer(Player player) {
         return isSelected().
                 forPlayer(player).
-                isAttackable();
+                isDestroyer();
     }
 
     public PredicateBuilder isDestroyed() {
@@ -87,7 +87,7 @@ public class PredicateBuilder {
         return this;
     }
 
-    public PredicateBuilder isAttackable() {
+    public PredicateBuilder isDestroyer() {
         predicates.add(Predicate.isDestroyer());
         return this;
     }
