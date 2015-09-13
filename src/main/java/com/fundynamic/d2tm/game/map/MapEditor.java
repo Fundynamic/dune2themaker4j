@@ -79,13 +79,13 @@ public class MapEditor {
         cell.changeTerrain(terrain);
     }
 
-    public void createCircularField(Map map, Vector2D vec, int terrainType, int size) {
+    public void createCircularField(Map map, Vector2D centerPosition, int terrainType, int size) {
         if (size < 1) return;
 
         int TILE_SIZE = 32;
         float halfATile = TILE_SIZE / 2;
         // convert to absolute pixel coordinates
-        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(vec.getXAsInt(), vec.getYAsInt()).
+        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(centerPosition.getXAsInt(), centerPosition.getYAsInt()).
                 add(Vector2D.create(halfATile, halfATile));
 
         double centerX = asPixelsCentered.getX(), centerY = asPixelsCentered.getY();
@@ -112,14 +112,14 @@ public class MapEditor {
         Vector2D position = startVector;
 
         for (int i = 0; i < size; i++) {
-            putTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
-
             position = position.add(Vector2D.create(-1 + Random.getInt(3), -1 + Random.getInt(3)));
 
             Cell cellProtected = map.getCellProtected(position.getXAsInt(), position.getYAsInt());
             if (!cellProtected.getCoordinatesAsVector2D().equals(position)) {
                 position = cellProtected.getCoordinatesAsVector2D();
             }
+
+            putTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
         }
 
     }

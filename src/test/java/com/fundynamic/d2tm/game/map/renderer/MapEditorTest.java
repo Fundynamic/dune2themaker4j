@@ -7,20 +7,29 @@ import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
 
 public class MapEditorTest {
 
+    private TerrainFactory terrainFactory;
+    private Shroud shroud;
+    private MapEditor mapEditor;
+
+    @Before
+    public void setUp() {
+        terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
+        shroud = new Shroud();
+        mapEditor = new MapEditor(terrainFactory);
+    }
+
     @Test
     public void createMapOfCorrectDimensions() {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
-
-        Shroud shroud = new Shroud();
-        MapEditor mapEditor = new MapEditor(terrainFactory);
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_ROCK);
 
         assertThat(map.getHeight(), is(3));
@@ -29,10 +38,6 @@ public class MapEditorTest {
 
     @Test
     public void createMapWithExpectedTerrain() {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
-
-        Shroud shroud = new Shroud();
-        MapEditor mapEditor = new MapEditor(terrainFactory);
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_ROCK);
 
         assertThat(map.getTerrainMap(), is(
@@ -44,10 +49,6 @@ public class MapEditorTest {
 
     @Test
     public void mountainInCenterOf3By3MapHasFullRockCellsAroundIt() {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
-
-        Shroud shroud = new Shroud();
-        MapEditor mapEditor = new MapEditor(terrainFactory);
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_ROCK);
 
         mapEditor.putTerrainOnCell(map, 2, 2, DuneTerrain.TERRAIN_MOUNTAIN);
@@ -81,10 +82,6 @@ public class MapEditorTest {
 
     @Test
     public void spiceHillInCenterOf3By3MapHasFullSpiceCellsAroundIt() {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
-
-        Shroud shroud = new Shroud();
-        MapEditor mapEditor = new MapEditor(terrainFactory);
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_SPICE);
 
         mapEditor.putTerrainOnCell(map, 2, 2, DuneTerrain.TERRAIN_SPICE_HILL);
@@ -116,6 +113,14 @@ public class MapEditorTest {
         assertThat(map.getTerrainFacing(3, 3), is(MapEditor.TerrainFacing.FULL));
     }
 
+    @Test
+    public void canGenerateRandomMap() {
+        int width = 33;
+        int height = 63;
+        Map map = mapEditor.generateRandom(shroud, width, height);
+        assertThat(map.getWidth(), is(width));
+        assertThat(map.getHeight(), is(height));
+    }
 
     @Test
     public void returnsMiddleWhenNoSameTypeOfNeighbours() throws Exception {
