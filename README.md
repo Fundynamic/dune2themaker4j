@@ -1,5 +1,8 @@
-# Dune 2 - The Maker [![Build Status](https://travis-ci.org/Fundynamic/dune2themaker4j.svg)](https://travis-ci.org/Fundynamic/dune2themaker4j) [![Coverage Status](https://coveralls.io/repos/Fundynamic/dune2themaker4j/badge.svg?branch=master&service=github)](https://coveralls.io/github/Fundynamic/dune2themaker4j?branch=master) [![Dependency Status](https://www.versioneye.com/user/projects/55f7caf43ed894001e000657/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55f7caf43ed894001e000657) [![Codacy Badge](https://api.codacy.com/project/badge/dea23d73a0e04bffb72cda91ba0ef73c)](https://www.codacy.com/app/stefanhendriks/dune2themaker4j)
+# Dune 2 - The Maker
 
+[![Build Status](https://travis-ci.org/Fundynamic/dune2themaker4j.svg)](https://travis-ci.org/Fundynamic/dune2themaker4j) [![Coverage Status](https://coveralls.io/repos/Fundynamic/dune2themaker4j/badge.svg?branch=master&service=github)](https://coveralls.io/github/Fundynamic/dune2themaker4j?branch=master) [![Dependency Status](https://www.versioneye.com/user/projects/55f7caf43ed894001e000657/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55f7caf43ed894001e000657) [![Codacy Badge](https://api.codacy.com/project/badge/dea23d73a0e04bffb72cda91ba0ef73c)](https://www.codacy.com/app/stefanhendriks/dune2themaker4j)
+
+## Goal
 This project aims to deliver a complex `Real Time Simulation Role Playing Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
 
 ## Getting started
