@@ -13,17 +13,15 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
 
 public class MapEditorTest {
 
-    private TerrainFactory terrainFactory;
     private Shroud shroud;
     private MapEditor mapEditor;
 
     @Before
     public void setUp() {
-        terrainFactory = new DuneTerrainFactory(new Theme(), 32, 32);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme());
         shroud = new Shroud();
         mapEditor = new MapEditor(terrainFactory);
     }

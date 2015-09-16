@@ -25,7 +25,7 @@ public class PlayingStateTest {
         int tileHeight = 32;
 
         GameContainer gameContainer = Mockito.mock(GameContainer.class);
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight), tileWidth, tileHeight);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight));
         Shroud shroud = new Shroud(Mockito.mock(Image.class), tileWidth, tileHeight);
 
         new PlayingState(gameContainer, terrainFactory, shroud, tileWidth, tileHeight);
@@ -38,7 +38,7 @@ public class PlayingStateTest {
         int tileHeight = 32;
 
         GameContainer gameContainer = Mockito.mock(GameContainer.class);
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight), tileWidth, tileHeight);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight));
         Shroud shroud = new Shroud(Mockito.mock(Image.class), tileWidth, tileHeight);
 
         PlayingState playingState = new PlayingState(gameContainer, terrainFactory, shroud, tileWidth, tileHeight);
@@ -54,7 +54,7 @@ public class PlayingStateTest {
         int tileHeight = 32;
 
         GameContainer gameContainer = Mockito.mock(GameContainer.class);
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight), tileWidth, tileHeight);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(Mockito.mock(Image.class), tileWidth, tileHeight));
         Shroud shroud = new Shroud(Mockito.mock(Image.class), tileWidth, tileHeight);
 
         PlayingState playingState = new PlayingState(gameContainer, terrainFactory, shroud, tileWidth, tileHeight);

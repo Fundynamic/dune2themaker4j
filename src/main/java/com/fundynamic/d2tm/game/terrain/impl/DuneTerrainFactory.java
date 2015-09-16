@@ -8,13 +8,9 @@ import com.fundynamic.d2tm.graphics.Theme;
 public class DuneTerrainFactory implements TerrainFactory {
 
     private final Theme theme;
-    private final int tileWidth;
-    private final int tileHeight;
 
-    public DuneTerrainFactory(Theme theme, int tileWidth, int tileHeight) {
+    public DuneTerrainFactory(Theme theme) {
         this.theme = theme;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
     }
 
     public Terrain create(int terrainType, Cell cell) {

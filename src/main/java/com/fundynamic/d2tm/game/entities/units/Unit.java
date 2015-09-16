@@ -141,10 +141,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (target.getYAsInt() > mapCoordinates.getYAsInt()) nextCellY++;
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextCellX, nextCellY);
         Cell intendedCellToMoveTo = map.getCell(intendedMapCoordinatesToMoveTo);
-        if (intendedCellToMoveTo.isOccupied(this)) {
-            // Do nothing, which effectively means it 'waits' and will try again next tick.
-        } else {
-//            System.out.println("Next cell to move to is " + intendedMapCoordinatesToMoveTo);
+
+        if (!intendedCellToMoveTo.isOccupied(this)) {
             this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
             intendedCellToMoveTo.setEntity(this); // claim this cell so we make sure nobody else can move here/take it.
         }

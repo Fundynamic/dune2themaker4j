@@ -30,9 +30,7 @@ public class Game extends StateBasedGame {
                         new Image("sheet_terrain.png"),
                         TILE_WIDTH,
                         TILE_HEIGHT
-                ),
-                TILE_WIDTH,
-                TILE_HEIGHT
+                )
         );
 
         container.setVSync(true);

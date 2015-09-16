@@ -1,19 +1,16 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.map.CellFactory.makeCell;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 public class MouseTest {
 
-    private Cell defaultHoverCell;
-    private Mouse mouse;
 
 //    @Before
 //    public void setUp() {

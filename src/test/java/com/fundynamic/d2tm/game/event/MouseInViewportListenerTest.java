@@ -19,7 +19,7 @@ import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ViewportMovementListenerTest {
+public class MouseInViewportListenerTest {
     public static final float MOVE_SPEED = 2.0F;
 
     private static final int TILE_WIDTH = 32;
@@ -34,7 +34,7 @@ public class ViewportMovementListenerTest {
     public static int WIDTH_OF_MAP = 46;
 
     private Viewport viewport;
-    private ViewportMovementListener listener;
+    private MouseInViewportListener listener;
 
     private Vector2D screenResolution;
     private Map map;
@@ -62,7 +62,7 @@ public class ViewportMovementListenerTest {
         this.mouse.init();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
+        listener = new MouseInViewportListener(mouse);
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
@@ -186,7 +186,7 @@ public class ViewportMovementListenerTest {
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
+        listener = new MouseInViewportListener(mouse);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
         updateAndRender();
@@ -206,7 +206,7 @@ public class ViewportMovementListenerTest {
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new ViewportMovementListener(viewport, mouse, entityRepository, player);
+        listener = new MouseInViewportListener(mouse);
 
         listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();

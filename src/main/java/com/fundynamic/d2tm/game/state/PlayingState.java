@@ -7,7 +7,7 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
-import com.fundynamic.d2tm.game.event.ViewportMovementListener;
+import com.fundynamic.d2tm.game.event.MouseInViewportListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
@@ -34,10 +34,6 @@ public class PlayingState extends BasicGameState {
     private final int tileWidth;
     private final int tileHeight;
 
-    private Map map;
-    private Graphics graphics;
-    private Mouse mouse;
-
     private Player human;
     private Player cpu;
 
@@ -52,7 +48,6 @@ public class PlayingState extends BasicGameState {
         this.shroud = shroud;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
-        this.graphics = gameContainer.getGraphics();
         this.input = gameContainer.getInput();
         this.screenResolution = new Vector2D(gameContainer.getWidth(), gameContainer.getHeight());
     }
@@ -70,11 +65,11 @@ public class PlayingState extends BasicGameState {
         MapEditor mapEditor = new MapEditor(terrainFactory);
         int mapWidth = 64;
         int mapHeight = 64;
-        this.map = mapEditor.generateRandom(shroud, mapWidth, mapHeight);
+        Map map = mapEditor.generateRandom(shroud, mapWidth, mapHeight);
 
         this.entityRepository = new EntityRepository(map, new Recolorer());
 
-        this.mouse = Mouse.create(human, gameContainer, entityRepository);
+        Mouse mouse = Mouse.create(human, gameContainer, entityRepository);
 
         try {
             float moveSpeed = 30 * tileWidth;
@@ -93,7 +88,7 @@ public class PlayingState extends BasicGameState {
                     human);
 
             // Add listener for this viewport
-            input.addMouseListener(new ViewportMovementListener(viewport, mouse, entityRepository, human));
+            input.addMouseListener(new MouseInViewportListener(mouse));
 
             viewports.add(viewport);
 

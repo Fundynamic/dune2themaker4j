@@ -21,12 +21,10 @@ public class EntitiesSetTest {
     private EntitiesSet entitiesSet;
 
     private Player playerOne;
-    private Player playerTwo;
 
     private int playerOneUnitCount;
     private int playerOneStructureCount;
     private int playerOneBareEntitiesCount;
-    private int selectableEntities;
     private int destroyers;
     private int moveableUnitsOfPlayerOne;
 
@@ -35,7 +33,7 @@ public class EntitiesSetTest {
         entitiesSet = new EntitiesSet();
 
         playerOne = new Player("Player one", Recolorer.FactionColor.GREEN);
-        playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
+        Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
         entitiesSet.add(UnitFactory.makeUnit(playerOne, 100, Vector2D.create(10, 10)));
@@ -59,8 +57,6 @@ public class EntitiesSetTest {
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
-
-        selectableEntities = 12; // all 12 above are selectable
 
         // Bare entities (with no behavior at all) - to test filtering
         entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne));
