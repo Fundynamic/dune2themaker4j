@@ -59,7 +59,7 @@ public class EntityViewportRenderer {
     }
 
     private class EntityToDraw {
-        private Entity entity;
+        private final Entity entity;
         private int drawX, drawY;
 
         public EntityToDraw(Entity entity, int drawX, int drawY) {
@@ -77,9 +77,12 @@ public class EntityViewportRenderer {
 
             if (drawX != that.drawX) return false;
             if (drawY != that.drawY) return false;
-            if (entity != null ? !entity.equals(that.entity) : false) return false;
 
-            return true;
+            if (entity != null) {
+                return entity.equals(that.entity);
+            } else {
+                return false;
+            }
         }
 
         @Override

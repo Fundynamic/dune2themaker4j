@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
@@ -50,7 +49,7 @@ public class MouseInViewportListenerTest {
 
     @Before
     public void setUp() throws SlickException {
-        Shroud shroud = Mockito.mock(Shroud.class);
+        Shroud shroud = mock(Shroud.class);
         map = new Map(shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
         this.mouse = new Mouse(player, mock(GameContainer.class), entityRepository) {
@@ -70,7 +69,7 @@ public class MouseInViewportListenerTest {
             // ugly seam in the code, but I'd rather do this than create a Spy
             @Override
             protected Image constructImage(Vector2D screenResolution) throws SlickException {
-                return Mockito.mock(Image.class);
+                return mock(Image.class);
             }
         };
         viewport.init(); // initialize graphical stuff here
@@ -217,7 +216,7 @@ public class MouseInViewportListenerTest {
 
     @Test
     public void whenLeftMouseButtonClickedOnceExecuteLogicInMouseClass() {
-        Mouse mouse = Mockito.mock(Mouse.class);
+        Mouse mouse = mock(Mouse.class);
         listener.setMouse(mouse);
 
         int clickCount = 1;
@@ -229,7 +228,7 @@ public class MouseInViewportListenerTest {
 
     @Test
     public void whenRightMouseButtonClickedOnceExecuteLogicInMouseClass() {
-        Mouse mouse = Mockito.mock(Mouse.class);
+        Mouse mouse = mock(Mouse.class);
         listener.setMouse(mouse);
 
         int clickCount = 1;
@@ -241,7 +240,7 @@ public class MouseInViewportListenerTest {
 
     @Test
     public void whenLeftMouseButtonIsReleasedPropagateToMouseClass() {
-        Mouse mouse = Mockito.mock(Mouse.class);
+        Mouse mouse = mock(Mouse.class);
         listener.setMouse(mouse);
 
         listener.mouseReleased(Input.MOUSE_LEFT_BUTTON, 0, 0);
@@ -251,7 +250,7 @@ public class MouseInViewportListenerTest {
 
     @Test
     public void propagateDragging() {
-        Mouse mouse = Mockito.mock(Mouse.class);
+        Mouse mouse = mock(Mouse.class);
         listener.setMouse(mouse);
 
         int oldX = 0;
@@ -266,7 +265,7 @@ public class MouseInViewportListenerTest {
 
     @Test
     public void whenRightMouseButtonIsReleasedNothingHappens() {
-        Mouse mouse = Mockito.mock(Mouse.class);
+        Mouse mouse = mock(Mouse.class);
         listener.setMouse(mouse);
 
         listener.mouseReleased(Input.MOUSE_RIGHT_BUTTON, 0, 0);

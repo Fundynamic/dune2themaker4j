@@ -99,9 +99,7 @@ public class Vector2D {
 
         Vector2D vector2D = (Vector2D) o;
 
-        if (vec != null ? !vec.equals(vector2D.vec) : vector2D.vec != null) return false;
-
-        return true;
+        return vec.equals(vector2D.vec);
     }
 
     @Override

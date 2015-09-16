@@ -43,7 +43,7 @@ public class UnitTest {
         int TILE_SIZE = 32;
         int mapWidth = 64;
         int mapHeight = 64;
-        map = new Map(new Shroud(Mockito.mock(Image.class), TILE_SIZE, TILE_SIZE), mapWidth, mapHeight);
+        map = new Map(new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE), mapWidth, mapHeight);
         unitMapCoordinates = Vector2D.create(10, 10);
         unit = makeUnit(UnitFacings.RIGHT);
     }
@@ -121,7 +121,7 @@ public class UnitTest {
         Vector2D offset = Vector2D.create(offsetX, offsetY);
 
         Unit unit = makeUnit(UnitFacings.DOWN, offset, 100);
-        Graphics graphics = Mockito.mock(Graphics.class);
+        Graphics graphics = mock(Graphics.class);
 
         // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
         // but isn't that basically the unit coordinates * tile size!?

@@ -3,8 +3,6 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
-import org.mockito.Mockito;
-import org.newdawn.slick.Image;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -17,8 +15,8 @@ public class CellFactory {
     }
 
     public static Cell makeCell(int x, int y) {
-        Map map = Mockito.mock(Map.class);
-        Terrain terrain = Mockito.mock(Terrain.class);
+        Map map = mock(Map.class);
+        Terrain terrain = mock(Terrain.class);
         Cell cell = new Cell(map, terrain, x, y);
         return cell;
     }

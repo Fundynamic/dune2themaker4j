@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.game.controls.DraggingSelectionBoxMouse;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.controls.PlacingUnitMouse;
@@ -9,18 +8,14 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.rendering.Viewport;
-import com.fundynamic.d2tm.graphics.Shroud;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 

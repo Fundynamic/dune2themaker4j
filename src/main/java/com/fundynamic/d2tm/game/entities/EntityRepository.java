@@ -81,7 +81,7 @@ public class EntityRepository {
             }
             return createdEntity;
         } catch (CellAlreadyOccupiedException e) {
-            throw new RuntimeException(e);
+            throw new UnableToPlaceEntityOnMapException(e);
         }
     }
 
