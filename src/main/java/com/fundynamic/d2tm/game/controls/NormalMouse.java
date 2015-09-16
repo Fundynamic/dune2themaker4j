@@ -64,10 +64,8 @@ public class NormalMouse extends AbstractMouseBehavior {
 
         // here for old stuff
         Entity lastSelectedEntity = mouse.getLastSelectedEntity();
-        if (lastSelectedEntity != null) {
-            if (lastSelectedEntity.isSelectable()) {
-                ((Selectable) lastSelectedEntity).deselect();
-            }
+        if (lastSelectedEntity != null && lastSelectedEntity.isSelectable()) {
+            ((Selectable) lastSelectedEntity).deselect();
         }
         mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
     }

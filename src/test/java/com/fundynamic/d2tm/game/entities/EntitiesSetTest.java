@@ -118,12 +118,12 @@ public class EntitiesSetTest {
 
         @Override
         public void render(Graphics graphics, int x, int y) {
-
+            // leave empty so that we don't need openGL logic in our tests.
         }
 
         @Override
         public void update(float deltaInMs) {
-
+            // leave empty, there is no update logic required for this simple entity
         }
 
         @Override
@@ -153,7 +153,7 @@ public class EntitiesSetTest {
 
         @Override
         public void takeDamage(int hitPoints) {
-
+            // leave empty because we don't need to test damage taking logic
         }
 
         @Override

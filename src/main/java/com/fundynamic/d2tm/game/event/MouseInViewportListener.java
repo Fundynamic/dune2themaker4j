@@ -31,7 +31,7 @@ public class MouseInViewportListener extends AbstractMouseListener {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-
+        // no logic yet
     }
 
     @Override

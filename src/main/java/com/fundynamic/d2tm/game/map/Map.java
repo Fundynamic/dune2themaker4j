@@ -217,7 +217,8 @@ public class Map {
         Vector2D asPixelsCentered = getCellCoordinatesInAbsolutePixels(x, y).
                 add(Vector2D.create(halfATile, halfATile));
 
-        double centerX = asPixelsCentered.getX(), centerY = asPixelsCentered.getY();
+        double centerX = asPixelsCentered.getX();
+        double centerY = asPixelsCentered.getY();
 
         for (int rangeStep=0; rangeStep < range; rangeStep++) { // range 'steps'
 

@@ -20,6 +20,7 @@ public class ConcreteSlab extends DuneTerrain implements ConstructionGround, Des
     }
 
     public void doDamage(int hitPoints) {
+        // nothing happens yet when damage is taken
     }
 
 }

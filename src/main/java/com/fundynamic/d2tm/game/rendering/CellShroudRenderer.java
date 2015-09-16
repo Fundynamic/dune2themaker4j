@@ -67,7 +67,7 @@ public class CellShroudRenderer implements Renderer<Cell> {
      * The second tile (one to the right), is a tile with shroud in the top left corner.
      * We go clockwise so the enum is TOP_LEFT
      */
-    public static enum ShroudFacing {
+    public enum ShroudFacing {
         FULL,
         TOP_LEFT,
         TOP,

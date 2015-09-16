@@ -48,6 +48,7 @@ public class DebugKeysListener extends AbstractKeyListener {
 
     @Override
     public void keyReleased(int key, char c) {
+        // no logic yet
     }
 
 }
