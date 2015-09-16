@@ -77,7 +77,7 @@ public class EntityRepository {
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
                 default:
-                    throw new IllegalArgumentException("Unknown type!")
+                    throw new IllegalArgumentException("Unknown type!");
             }
             return createdEntity;
         } catch (CellAlreadyOccupiedException e) {
