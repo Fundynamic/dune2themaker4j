@@ -63,7 +63,7 @@ public class EntityRepository {
     public Entity placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
         System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
         try {
-            Entity createdEntity = null;
+            Entity createdEntity;
             Image originalImage = entityData.image;
             Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
 
@@ -76,6 +76,8 @@ public class EntityRepository {
                     createdEntity = new Unit(map, topLeft, recoloredImage, player, entityData);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
+                default:
+                    throw new IllegalArgumentException("Unknown type!")
             }
             return createdEntity;
         } catch (CellAlreadyOccupiedException e) {

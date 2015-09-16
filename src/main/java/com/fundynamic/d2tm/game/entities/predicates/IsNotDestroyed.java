@@ -10,7 +10,7 @@ public class IsNotDestroyed extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return entity.isDestructible() && ((Destructible) entity).isDestroyed() == false;
+        return entity.isDestructible() && !((Destructible) entity).isDestroyed();
     }
 
     @Override

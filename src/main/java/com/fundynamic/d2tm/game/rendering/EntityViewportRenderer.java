@@ -77,7 +77,7 @@ public class EntityViewportRenderer {
 
             if (drawX != that.drawX) return false;
             if (drawY != that.drawY) return false;
-            if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
+            if (entity != null ? !entity.equals(that.entity) : false) return false;
 
             return true;
         }
