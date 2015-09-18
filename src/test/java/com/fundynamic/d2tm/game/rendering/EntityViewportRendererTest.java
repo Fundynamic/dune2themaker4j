@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -12,7 +11,6 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapTest;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -93,7 +91,7 @@ public class EntityViewportRendererTest {
     }
 
     /**
-     * Replace with {@link com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player)} ?
+     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
      * @param map
      * @param player
      * @param mapCoordinates
@@ -110,7 +108,7 @@ public class EntityViewportRendererTest {
 
     public static SpriteSheet makeSpriteSheet() {
         SpriteSheet spriteSheet = mock(SpriteSheet.class);
-        Image image = Mockito.mock(Image.class);
+        Image image = mock(Image.class);
 
         when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
         return spriteSheet;
