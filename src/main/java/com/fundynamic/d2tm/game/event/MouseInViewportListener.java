@@ -15,7 +15,7 @@ public class MouseInViewportListener extends AbstractMouseListener {
 
     @Override
     public void mouseWheelMoved(int change) {
-
+        // DO NOTHING
     }
 
     @Override

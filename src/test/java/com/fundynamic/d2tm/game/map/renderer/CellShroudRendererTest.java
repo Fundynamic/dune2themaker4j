@@ -15,7 +15,7 @@ public class CellShroudRendererTest {
     }
 
     @Test
-    public void top_left() throws Exception {
+    public void topLeft() throws Exception {
         assertEquals(TOP_LEFT, getFacing(true, false, false, true));
     }
 
@@ -25,7 +25,7 @@ public class CellShroudRendererTest {
     }
 
     @Test
-    public void top_right() throws Exception {
+    public void topRight() throws Exception {
         assertEquals(TOP_RIGHT, getFacing(true, true, false, false));
     }
 
@@ -35,7 +35,7 @@ public class CellShroudRendererTest {
     }
 
     @Test
-    public void right_bottom() throws Exception {
+    public void rightBottom() throws Exception {
         assertEquals(RIGHT_BOTTOM, getFacing(false, true, true, false));
     }
 
@@ -45,7 +45,7 @@ public class CellShroudRendererTest {
     }
 
     @Test
-    public void bottom_left() throws Exception {
+    public void bottomLeft() throws Exception {
         assertEquals(BOTTOM_LEFT, getFacing(false, false, true, true));
     }
 
@@ -55,32 +55,32 @@ public class CellShroudRendererTest {
     }
 
     @Test
-    public void top_bottom_left() throws Exception {
+    public void topBottomLeft() throws Exception {
         assertEquals(TOP_BOTTOM_LEFT, getFacing(true, false, true, true));
     }
 
     @Test
-    public void top_right_left() throws Exception {
+    public void topRightLeft() throws Exception {
         assertEquals(TOP_RIGHT_LEFT, getFacing(true, true, false, true));
     }
 
     @Test
-    public void top_right_bottom() throws Exception {
+    public void topRightBottom() throws Exception {
         assertEquals(TOP_RIGHT_BOTTOM, getFacing(true, true, true, false));
     }
 
     @Test
-    public void right_bottom_left() throws Exception {
+    public void rightBottomLeft() throws Exception {
         assertEquals(RIGHT_BOTTOM_LEFT, getFacing(false, true, true, true));
     }
 
     @Test
-    public void top_bottom() throws Exception {
+    public void topBottom() throws Exception {
         assertEquals(TOP_BOTTOM, getFacing(true, false, true, false));
     }
 
     @Test
-    public void right_left() throws Exception {
+    public void rightLeft() throws Exception {
         assertEquals(RIGHT_LEFT, getFacing(false, true, false, true));
     }
 

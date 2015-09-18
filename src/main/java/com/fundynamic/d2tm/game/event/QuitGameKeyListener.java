@@ -21,6 +21,6 @@ public class QuitGameKeyListener extends AbstractKeyListener {
 
     @Override
     public void keyReleased(int i, char c) {
-
+        // DO NOTHING
     }
 }

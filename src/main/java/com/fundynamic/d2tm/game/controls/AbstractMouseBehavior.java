@@ -19,6 +19,7 @@ public abstract class AbstractMouseBehavior implements MouseBehavior {
     public abstract void mouseMovedToCell(Cell cell);
 
     public void render(Graphics g) {
+        // DO NOTHING
     }
 
     public void draggedToCoordinates(Vector2D coordinates) {
