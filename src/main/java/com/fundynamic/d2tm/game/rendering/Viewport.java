@@ -78,7 +78,7 @@ public class Viewport implements Renderable {
         this.cellShroudRenderer = new CellShroudRenderer(map, player);
         this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
         this.mouse = mouse;
-        this.mouse.setViewport(this);
+        this.mouse.setViewport(this); // <-- THIS IS BAD!
 
         this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
     }

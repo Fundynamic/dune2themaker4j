@@ -7,7 +7,7 @@ import org.newdawn.slick.Input;
 
 public class MouseInViewportListener extends AbstractMouseListener {
 
-    private Mouse mouse;
+    private final Mouse mouse;
 
     public MouseInViewportListener(Mouse mouse) {
         this.mouse = mouse;
@@ -51,7 +51,4 @@ public class MouseInViewportListener extends AbstractMouseListener {
         mouse.draggedToCoordinates(newx, newy);
     }
 
-    public void setMouse(Mouse mouse) {
-        this.mouse = mouse;
-    }
 }

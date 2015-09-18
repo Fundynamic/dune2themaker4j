@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.*;
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -49,7 +51,7 @@ public class PlayingState extends BasicGameState {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.input = gameContainer.getInput();
-        this.screenResolution = new Vector2D(gameContainer.getWidth(), gameContainer.getHeight());
+        this.screenResolution = com.fundynamic.d2tm.Game.getResolution();
     }
 
     @Override
@@ -59,8 +61,8 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        this.human = new Player("Human", Recolorer.FactionColor.RED);
-        this.cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
+        Player human = new Player("Human", Recolorer.FactionColor.RED);
+        Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
         MapEditor mapEditor = new MapEditor(terrainFactory);
         int mapWidth = 64;
@@ -75,6 +77,7 @@ public class PlayingState extends BasicGameState {
             float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
+//            Vector2D half = screenResolution.min(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
 
             Viewport viewport = new Viewport(
                     screenResolution,
@@ -87,7 +90,22 @@ public class PlayingState extends BasicGameState {
                     mouse,
                     human);
 
+            // here we can create a new viewport
+//            Vector2D viewportDrawingPosition2 = viewportDrawingPosition.add(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
+//
+//            Viewport viewport2 = new Viewport(
+//                    half,
+//                    viewportDrawingPosition2,
+//                    viewingVector,
+//                    map,
+//                    moveSpeed,
+//                    tileWidth,
+//                    tileHeight,
+//                    mouse,
+//                    human);
+
             // Add listener for this viewport
+            // THIS WON'T WORK, BECAUSE FOR NOW WE GET VIEWPORT FROM MOUSE IN MOUSE/VIEWPORT LOGIC!
             input.addMouseListener(new MouseInViewportListener(mouse));
 
             viewports.add(viewport);
@@ -98,10 +116,13 @@ public class PlayingState extends BasicGameState {
         }
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
-        initInitialGame(entityRepository, map, human, cpu);
+        initializeMap(entityRepository, human, cpu);
     }
 
-    public void initInitialGame(EntityRepository entityRepository, Map map, Player human, Player cpu) throws SlickException {
+    public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
+        this.human = human;
+        this.cpu = cpu;
+
         entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
         entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
         entityRepository.placeUnitOnMap(Vector2D.create(10, 10), 0, human);
@@ -122,20 +143,23 @@ public class PlayingState extends BasicGameState {
     }
 
     @Override
-    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+    public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
         for (Viewport viewport : viewports) {
-            viewport.render(g);
+            viewport.render(graphics);
         }
 
-        g.getFont().drawString(540, 20, "Human entity count: " + human.aliveEntities(), Color.red);
-        g.getFont().drawString(540, 40, "Enemy entity count: " + cpu.aliveEntities(), Color.green);
+        Font font = graphics.getFont();
+
+        font.drawString(540, 20, "Human entity count: " + human.aliveEntities(), Color.red);
+        font.drawString(540, 40, "Enemy entity count: " + cpu.aliveEntities(), Color.green);
 
         if (cpu.aliveEntities() < 1) {
-            container.getGraphics().getFont().drawString(10, 220, "Enemy player has been destroyed. You have won the game.", Color.green);
+            // why like this!?
+            font.drawString(10, 220, "Enemy player has been destroyed. You have won the game.", Color.green);
         }
 
         if (human.aliveEntities() < 1) {
-            container.getGraphics().getFont().drawString(10, 220, "All your units and structures are destroyed. You have lost the game.", Color.red);
+            font.drawString(10, 220, "All your units and structures are destroyed. You have lost the game.", Color.red);
         }
     }
 

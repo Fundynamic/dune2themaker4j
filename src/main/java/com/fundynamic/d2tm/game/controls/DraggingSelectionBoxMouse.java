@@ -17,12 +17,15 @@ import java.util.Set;
 public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     private final Vector2D startingCoordinates;
+    private final Viewport viewport;
+
     private Vector2D dragCoordinates;
 
     public DraggingSelectionBoxMouse(Mouse mouse, Vector2D startingCoordinates) {
         super(mouse);
         this.startingCoordinates = startingCoordinates;
         this.dragCoordinates = startingCoordinates;
+        this.viewport = mouse.getViewport();
     }
 
     @Override
@@ -65,7 +68,6 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
     }
 
     private Set<Entity> getEntitiesWithinDraggedRectangle(EntityRepository entityRepository) {
-        final Viewport viewport = mouse.getViewport();
         Vector2D absDragVec = viewport.translateScreenToAbsoluteMapPixels(dragCoordinates);
         Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
         final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);

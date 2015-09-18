@@ -44,7 +44,6 @@ public class MouseInViewportListenerTest {
     @Mock
     private Player player;
 
-    @Mock
     private Mouse mouse;
 
     @Before
@@ -217,7 +216,7 @@ public class MouseInViewportListenerTest {
     @Test
     public void whenLeftMouseButtonClickedOnceExecuteLogicInMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener.setMouse(mouse);
+        listener = new MouseInViewportListener(mouse);
 
         int clickCount = 1;
 
@@ -229,7 +228,7 @@ public class MouseInViewportListenerTest {
     @Test
     public void whenRightMouseButtonClickedOnceExecuteLogicInMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener.setMouse(mouse);
+        listener = new MouseInViewportListener(mouse);
 
         int clickCount = 1;
 
@@ -241,7 +240,7 @@ public class MouseInViewportListenerTest {
     @Test
     public void whenLeftMouseButtonIsReleasedPropagateToMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener.setMouse(mouse);
+        listener = new MouseInViewportListener(mouse);
 
         listener.mouseReleased(Input.MOUSE_LEFT_BUTTON, 0, 0);
 
@@ -251,7 +250,7 @@ public class MouseInViewportListenerTest {
     @Test
     public void propagateDragging() {
         Mouse mouse = mock(Mouse.class);
-        listener.setMouse(mouse);
+        listener = new MouseInViewportListener(mouse);
 
         int oldX = 0;
         int oldY = 0;
@@ -266,7 +265,7 @@ public class MouseInViewportListenerTest {
     @Test
     public void whenRightMouseButtonIsReleasedNothingHappens() {
         Mouse mouse = mock(Mouse.class);
-        listener.setMouse(mouse);
+        listener = new MouseInViewportListener(mouse);
 
         listener.mouseReleased(Input.MOUSE_RIGHT_BUTTON, 0, 0);
 
