@@ -76,10 +76,23 @@ public class PlayingState extends BasicGameState {
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
 
-            Viewport viewport = new Viewport(
-                    screenResolution,
+            Vector2D half = new Vector2D(gameContainer.getWidth() / 2, gameContainer.getHeight());
+
+            Viewport viewportLeft = new Viewport(
+                    half,
                     viewportDrawingPosition,
                     viewingVector,
+                    map,
+                    moveSpeed,
+                    tileWidth,
+                    tileHeight,
+                    mouse,
+                    human);
+
+            Viewport viewportRight = new Viewport(
+                    half,
+                    viewportDrawingPosition.add(Vector2D.create(gameContainer.getWidth() / 2, 0)),
+                    half,
                     map,
                     moveSpeed,
                     tileWidth,
@@ -90,9 +103,11 @@ public class PlayingState extends BasicGameState {
             // Add listener for this viewport
             input.addMouseListener(new MouseInViewportListener(mouse));
 
-            viewports.add(viewport);
+            viewports.add(viewportLeft);
+//            viewports.add(viewportRight);
 
-            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository, human));
+            input.addKeyListener(new DebugKeysListener(mouse, viewportLeft, entityRepository, human));
+//            input.addKeyListener(new DebugKeysListener(mouse, viewportRight, entityRepository, human));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }
