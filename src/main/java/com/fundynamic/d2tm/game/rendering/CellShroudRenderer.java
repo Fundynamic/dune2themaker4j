@@ -13,6 +13,7 @@ public class CellShroudRenderer implements Renderer<Cell> {
     private final Player player;
 
     public CellShroudRenderer(Map map, Player player) {
+        if (player == null) throw new IllegalArgumentException("Player cannot be null");
         this.player = player;
         this.shroud = map.getShroud();
     }
