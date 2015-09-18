@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.*;
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -49,7 +51,7 @@ public class PlayingState extends BasicGameState {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.input = gameContainer.getInput();
-        this.screenResolution = new Vector2D(gameContainer.getWidth(), gameContainer.getHeight());
+        this.screenResolution = com.fundynamic.d2tm.Game.getResolution();
     }
 
     @Override
@@ -75,11 +77,10 @@ public class PlayingState extends BasicGameState {
             float moveSpeed = 30 * tileWidth;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
+//            Vector2D half = screenResolution.min(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
 
-            Vector2D half = new Vector2D(gameContainer.getWidth() / 2, gameContainer.getHeight());
-
-            Viewport viewportLeft = new Viewport(
-                    half,
+            Viewport viewport = new Viewport(
+                    screenResolution,
                     viewportDrawingPosition,
                     viewingVector,
                     map,
@@ -89,25 +90,27 @@ public class PlayingState extends BasicGameState {
                     mouse,
                     human);
 
-            Viewport viewportRight = new Viewport(
-                    half,
-                    viewportDrawingPosition.add(Vector2D.create(gameContainer.getWidth() / 2, 0)),
-                    half,
-                    map,
-                    moveSpeed,
-                    tileWidth,
-                    tileHeight,
-                    mouse,
-                    human);
+            // here we can create a new viewport
+//            Vector2D viewportDrawingPosition2 = viewportDrawingPosition.add(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
+//
+//            Viewport viewport2 = new Viewport(
+//                    half,
+//                    viewportDrawingPosition2,
+//                    viewingVector,
+//                    map,
+//                    moveSpeed,
+//                    tileWidth,
+//                    tileHeight,
+//                    mouse,
+//                    human);
 
             // Add listener for this viewport
+            // THIS WON'T WORK, BECAUSE FOR NOW WE GET VIEWPORT FROM MOUSE IN MOUSE/VIEWPORT LOGIC!
             input.addMouseListener(new MouseInViewportListener(mouse));
 
-            viewports.add(viewportLeft);
-//            viewports.add(viewportRight);
+            viewports.add(viewport);
 
-            input.addKeyListener(new DebugKeysListener(mouse, viewportLeft, entityRepository, human));
-//            input.addKeyListener(new DebugKeysListener(mouse, viewportRight, entityRepository, human));
+            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository, human));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new viewport!", e);
         }

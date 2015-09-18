@@ -74,6 +74,10 @@ public class Vector2D {
         return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
     }
 
+    public Vector2D min(Vector2D vecToSubstract) {
+        return new Vector2D(vec.getX() - vecToSubstract.getX(), vec.getY() - vecToSubstract.getY());
+    }
+
     public int getXAsInt() {
         return (int) vec.getX();
     }

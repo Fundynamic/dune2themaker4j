@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -18,6 +19,10 @@ public class Game extends StateBasedGame {
 
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
+
+    public static Vector2D getResolution() {
+        return new Vector2D(SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
 
     public Game(String title) {
         super(title);
