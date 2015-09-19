@@ -23,22 +23,19 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PlayingStateTest {
 
-    int tileWidth = 32;
-    int tileHeight = 32;
+    private static int TILE_WIDTH = 32;
+    private static int TILE_HEIGHT = 32;
     private PlayingState playingState;
-
-    private Shroud shroud;
-    private TerrainFactory terrainFactory;
 
     @Mock
     private GameContainer gameContainer;
 
     @Before
     public void setUp() throws SlickException {
-        terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), tileWidth, tileHeight));
-        shroud = new Shroud(mock(Image.class), tileWidth, tileHeight);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_WIDTH, TILE_HEIGHT));
+        Shroud shroud = new Shroud(mock(Image.class), TILE_WIDTH, TILE_HEIGHT);
 
-        playingState = new PlayingState(gameContainer, terrainFactory, shroud, tileWidth, tileHeight);
+        playingState = new PlayingState(gameContainer, terrainFactory, shroud, TILE_WIDTH, TILE_HEIGHT);
     }
 
     @Test

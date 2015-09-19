@@ -1,15 +1,13 @@
 package com.fundynamic.d2tm.game.state;
 
-import com.fundynamic.d2tm.*;
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
-import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.event.MouseInViewportListener;
+import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
@@ -23,6 +21,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fundynamic.d2tm.Game.getResolution;
 
 public class PlayingState extends BasicGameState {
 
@@ -51,7 +51,7 @@ public class PlayingState extends BasicGameState {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.input = gameContainer.getInput();
-        this.screenResolution = com.fundynamic.d2tm.Game.getResolution();
+        this.screenResolution = getResolution();
     }
 
     @Override
