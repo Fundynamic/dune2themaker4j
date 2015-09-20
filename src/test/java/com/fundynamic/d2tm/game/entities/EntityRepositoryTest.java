@@ -144,7 +144,7 @@ public class EntityRepositoryTest {
     public static TestableEntityRepository makeEmptyTestableEntityRepository(final Map map) throws SlickException {
         Image image = mock(Image.class);
         Recolorer recolorer = mock(Recolorer.class);
-        when(recolorer.recolor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        when(recolorer.recolorToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
         return new TestableEntityRepository(map, recolorer, new HashMap<String, EntityData>()) {
             @Override
             protected Image loadImage(String pathToImage) throws SlickException {

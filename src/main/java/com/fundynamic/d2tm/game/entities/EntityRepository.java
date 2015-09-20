@@ -65,7 +65,7 @@ public class EntityRepository {
         try {
             Entity createdEntity;
             Image originalImage = entityData.image;
-            Image recoloredImage = recolorer.recolor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
 
             switch (entityData.type) {
                 case STRUCTURE:
