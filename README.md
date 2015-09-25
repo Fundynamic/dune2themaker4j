@@ -35,7 +35,7 @@ For every feature or improvement a small tech demo is created and posted at yout
 ## Development
 Import the project using your favorite IDE.
 
-You can `run` or `debug` the project by executing the `Game` class.
+You can `run` or `debug` the project by executing the [Game](https://github.com/Fundynamic/dune2themaker4j/blob/master/src/main/java/com/fundynamic/d2tm/Game.java) class.
 
 ## Linking to native binaries
 If you run into a `java.lang.UnsatifsiedLinkError`, you need to add the following VM Arguments to your run configuration: `-Djava.library.path=target/natives`
