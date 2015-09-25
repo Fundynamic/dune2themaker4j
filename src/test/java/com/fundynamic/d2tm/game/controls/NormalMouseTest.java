@@ -11,7 +11,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.controls.MouseTest.makeMouse;
+import static com.fundynamic.d2tm.game.controls.MouseTest.makeTestableMouse;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.makeTestableEntityRepository;
 import static com.fundynamic.d2tm.game.map.MapTest.makeMap;
@@ -27,7 +27,7 @@ public class NormalMouseTest {
     public void leftClickSelectsEntityOnHoverCell() throws SlickException {
         Map map = makeMap();
         Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-        Mouse mouse = makeMouse(map, player);
+        Mouse mouse = makeTestableMouse(map, player);
 
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         mouse.setHoverCell(cell);

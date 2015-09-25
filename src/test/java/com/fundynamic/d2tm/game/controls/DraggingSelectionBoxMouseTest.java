@@ -20,7 +20,7 @@ public class DraggingSelectionBoxMouseTest {
         Map map = MapTest.makeMap();
         Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
 
-        Mouse mouse = MouseTest.makeMouse(map, player);
+        Mouse mouse = MouseTest.makeTestableMouse(map, player);
 
         Viewport viewport = new Viewport(map, mouse, player);
 

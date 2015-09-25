@@ -132,6 +132,10 @@ public class EntityRepositoryTest {
         return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, 1, player);
     }
 
+    public static EntityRepository makeTestableEntityRepositoryWithMockedMap() throws SlickException {
+        return makeTestableEntityRepository(mock(Map.class));
+    }
+
     public static EntityRepository makeTestableEntityRepository(Map map) throws SlickException {
         TestableEntityRepository entityRepository = makeEmptyTestableEntityRepository(map);
 

@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -24,6 +25,8 @@ public class Mouse {
     private final Player controllingPlayer;
     private final GameContainer gameContainer;
     private final EntityRepository entityRepository;
+    private final ImageRepository imageRepository;
+
     private Viewport viewport;
 
     private MouseBehavior mouseBehavior;
@@ -33,21 +36,22 @@ public class Mouse {
 
     private Map<MouseImages, Image> mouseImages;
 
-    public Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
+    Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) {
         this.controllingPlayer = controllingPlayer;
         this.entityRepository = entityRepository;
+        this.imageRepository = imageRepository;
         this.mouseBehavior = null;
         this.hoverCell = null;
         this.gameContainer = gameContainer;
         this.mouseImages = new HashMap<>();
     }
 
-    public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository) throws SlickException {
-        Mouse mouse = new Mouse(player, gameContainer, entityRepository);
-        mouse.addMouseImage(Mouse.MouseImages.NORMAL, new Image("mouse/mouse_normal.png"));
-        mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, new Image("mouse/mouse_pick.png"));
-        mouse.addMouseImage(Mouse.MouseImages.MOVE, new Image("mouse/mouse_move.png"));
-        mouse.addMouseImage(Mouse.MouseImages.ATTACK, new Image("mouse/mouse_attack.png"));
+    public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) throws SlickException {
+        Mouse mouse = new Mouse(player, gameContainer, entityRepository, imageRepository);
+        mouse.addMouseImage(Mouse.MouseImages.NORMAL, imageRepository.loadAndCache("mouse/mouse_normal.png"));
+        mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, imageRepository.loadAndCache("mouse/mouse_pick.png"));
+        mouse.addMouseImage(Mouse.MouseImages.MOVE, imageRepository.loadAndCache("mouse/mouse_move.png"));
+        mouse.addMouseImage(Mouse.MouseImages.ATTACK, imageRepository.loadAndCache("mouse/mouse_attack.png"));
         mouse.init();
         return mouse;
     }

@@ -13,6 +13,7 @@ import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
@@ -41,17 +42,19 @@ public class PlayingState extends BasicGameState {
 
     private List<Viewport> viewports = new ArrayList<>();
     private EntityRepository entityRepository;
+    private ImageRepository imageRepository;
 
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.input = gameContainer.getInput();
         this.screenResolution = getResolution();
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class PlayingState extends BasicGameState {
 
         this.entityRepository = new EntityRepository(map, new Recolorer());
 
-        Mouse mouse = Mouse.create(human, gameContainer, entityRepository);
+        Mouse mouse = Mouse.create(human, gameContainer, entityRepository, imageRepository);
 
         try {
             float moveSpeed = 30 * tileWidth;

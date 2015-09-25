@@ -2,6 +2,7 @@ package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -30,9 +31,10 @@ public class Game extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
+        ImageRepository imageRepository = new ImageRepository();
         DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
                 new Theme(
-                        new Image("sheet_terrain.png"),
+                        imageRepository.loadAndCache("sheet_terrain.png"),
                         TILE_WIDTH,
                         TILE_HEIGHT
                 )
@@ -43,8 +45,9 @@ public class Game extends StateBasedGame {
         PlayingState playingState = new PlayingState(
                 container,
                 terrainFactory,
+                imageRepository,
                 new Shroud(
-                    new Image("shroud_edges.png"),
+                    imageRepository.loadAndCache("shroud_edges.png"),
                     TILE_WIDTH,
                     TILE_HEIGHT
                 ),

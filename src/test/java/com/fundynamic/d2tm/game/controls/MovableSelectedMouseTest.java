@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.controls.MouseTest.makeMouse;
+import static com.fundynamic.d2tm.game.controls.MouseTest.makeTestableMouse;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static com.fundynamic.d2tm.game.map.MapTest.makeMap;
 import static com.fundynamic.d2tm.game.rendering.EntityViewportRendererTest.makeUnit;
@@ -29,7 +29,7 @@ public class MovableSelectedMouseTest {
     public void setUp() throws SlickException {
         player = new Player("Stefan", Recolorer.FactionColor.BLUE);
         map = makeMap();
-        mouse = makeMouse(map, player);
+        mouse = makeTestableMouse(map, player);
     }
 
     @Test

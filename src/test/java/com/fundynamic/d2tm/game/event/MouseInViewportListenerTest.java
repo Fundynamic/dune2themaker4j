@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.controls.MouseTest;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -42,6 +44,9 @@ public class MouseInViewportListenerTest {
     private EntityRepository entityRepository;
 
     @Mock
+    private ImageRepository imageRepository;
+
+    @Mock
     private Player player;
 
     private Mouse mouse;
@@ -51,12 +56,7 @@ public class MouseInViewportListenerTest {
         Shroud shroud = mock(Shroud.class);
         map = new Map(shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
         screenResolution = new Vector2D(800, 600);
-        this.mouse = new Mouse(player, mock(GameContainer.class), entityRepository) {
-            @Override
-            public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
-                // do nothing.
-            }
-        };
+        this.mouse = MouseTest.makeTestableMouse(map, player);
         this.mouse.init();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
