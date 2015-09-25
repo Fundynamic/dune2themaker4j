@@ -35,7 +35,7 @@ For every feature or improvement a small tech demo is created and posted at yout
 ## Development
 Import the project using your favorite IDE.
 
-If you want to `run` or `debug` the project (you need to execute `Game`)
+You can `run` or `debug` the project by executing the `Game` class.
 
 ## Linking to native binaries
 If you run into a `java.lang.UnsatifsiedLinkError`, you need to add the following VM Arguments to your run configuration: `-Djava.library.path=target/natives`
