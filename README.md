@@ -15,17 +15,45 @@ You need `git` and `maven` installed. Also you need to have `java` version 1.7.
 - run `mvn clean package`
 - in the `target/d2tm-<version>-SNAPSHOT-release` run `game.sh` (or `game.bat` depending on your OS)
 
+## Running with test coverage report
+This project uses [jacoco](https://github.com/jacoco/jacoco) to generate test coverage reports, which are also reported to [coveralls](https://coveralls.io/github/Fundynamic/dune2themaker4j).
+ 
+If you want to generate a local report, just run:
+
+```
+mvn clean test jacoco:report
+```
+
+Then to view the test report, just open `target/site/jacoco/index.html`
+
 ## Progress
 For every feature or improvement a small tech demo is created and posted at youtube. These demos are grouped by milestone:
 
-- [Alpha 1 Demos @ YouTube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW2_Ue06RVQewDQBF8nkW_dE)
+- [Alpha 1 (v0.0.1) Demos @ YouTube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW2_Ue06RVQewDQBF8nkW_dE)
+- Alpha 2 (v0.0.2) tbd
 
 ## Development
 Import the project using your favorite IDE.
 
-If you want to `run` or `debug` the project (you need to execute `Game`), then you probably run into a `java.lang.UnsatifsiedLinkError`.
+If you want to `run` or `debug` the project (you need to execute `Game`)
 
-To fix that you need to add the following VM Arguments to your run configuration: `-Djava.library.path=target/natives`
+## Linking to native binaries
+If you run into a `java.lang.UnsatifsiedLinkError`, you need to add the following VM Arguments to your run configuration: `-Djava.library.path=target/natives`
 
-## Contributing
-Fork and create a pull request. Please mention issue nr if applicable.
+## Contributing / Helping out
+Not sure how you can help? There are tons of ways:
+
+### Spread the word
+The more people know about this project, the more people can help out and send feedback. I'd love to hear feedback about the game.
+That could be technical feedback, or about game mechanics, game ideas, etc.
+
+### Code changes
+Want to help out coding? Great! By looking at the [milestones]() you get a general idea about priority, or you can just
+fix a [bug from the buglist](https://github.com/Fundynamic/dune2themaker4j/issues). Whatever floats your boat.
+
+Fork this project, create Pull Request and submit it.
+
+### Found a bug?
+Make sure it is not listed [here](https://github.com/Fundynamic/dune2themaker4j/issues). If not, feel free to create one.
+
+
