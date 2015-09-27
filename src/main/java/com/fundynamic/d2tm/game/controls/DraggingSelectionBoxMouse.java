@@ -20,12 +20,14 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
     private final Viewport viewport;
 
     private Vector2D dragCoordinates;
+    private final EntityRepository entityRepository;
 
     public DraggingSelectionBoxMouse(Mouse mouse, Vector2D startingCoordinates) {
         super(mouse);
         this.startingCoordinates = startingCoordinates;
         this.dragCoordinates = startingCoordinates;
         this.viewport = mouse.getViewport();
+        this.entityRepository = mouse.getEntityRepository();
     }
 
     @Override
@@ -50,7 +52,6 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     @Override
     public void leftButtonReleased() {
-        EntityRepository entityRepository = mouse.getEntityRepository();
 
         deselectEverything();
 

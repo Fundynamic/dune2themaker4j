@@ -47,21 +47,21 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public void placeUnitOnMap(Vector2D topLeft, int id, Player player) {
-        placeOnMap(topLeft, EntityType.UNIT, id, player);
+    public void placeUnitOnMap(Vector2D mapCoordinate, int id, Player player) {
+        placeOnMap(mapCoordinate, EntityType.UNIT, id, player);
     }
 
-    public void placeStructureOnMap(Vector2D topLeft, int id, Player player) {
-        placeOnMap(topLeft, EntityType.STRUCTURE, id, player);
+    public void placeStructureOnMap(Vector2D topLeftMapCoordinate, int id, Player player) {
+        placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
     }
 
-    public Entity placeOnMap(Vector2D topLeft, EntityType entityType, int id, Player player) {
+    public Entity placeOnMap(Vector2D topLeftMapCoordinate, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        return placeOnMap(topLeft, entityData, player);
+        return placeOnMap(topLeftMapCoordinate, entityData, player);
     }
 
-    public Entity placeOnMap(Vector2D topLeft, EntityData entityData, Player player) {
-        System.out.println("Placing " + entityData + " on map at " + topLeft + " for " + player);
+    public Entity placeOnMap(Vector2D mapCoordinate, EntityData entityData, Player player) {
+        System.out.println("Placing " + entityData + " on map at " + mapCoordinate + " for " + player);
         try {
             Entity createdEntity;
             Image originalImage = entityData.image;
@@ -69,11 +69,11 @@ public class EntityRepository {
 
             switch (entityData.type) {
                 case STRUCTURE:
-                    createdEntity = new Structure(topLeft, recoloredImage, player, entityData);
+                    createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData);
                     entitiesSet.add(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
-                    createdEntity = new Unit(map, topLeft, recoloredImage, player, entityData);
+                    createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
                 default:

@@ -29,6 +29,9 @@ public abstract class Entity implements Renderable, Updateable {
         return mapCoordinates;
     }
 
+    /**
+     * TODO: Get rid of this, and make all coordinates pixel based. So no translation is required.
+     */
     public Vector2D getAbsoluteMapPixelCoordinates() {
         float absX = mapCoordinates.getX() * TILE_SIZE;
         float absY = mapCoordinates.getY() * TILE_SIZE;

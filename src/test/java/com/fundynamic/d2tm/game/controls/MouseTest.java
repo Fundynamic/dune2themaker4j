@@ -181,6 +181,14 @@ public class MouseTest {
 //        }
 //    }
 
+    /**
+     * Creates mouse with TestableEntityRepository and TestableImageRepository
+     *
+     * @param map - used in TestableEntityRepository
+     * @param player - used in TestableMouse
+     * @return
+     * @throws SlickException
+     */
     public static Mouse makeTestableMouse(Map map, Player player) throws SlickException {
         EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
         ImageRepository imageRepository = ImageRepositoryTest.makeTestableImageRepository();

@@ -25,6 +25,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EntityRepositoryTest {
 
+    public static final int UNIT_ID = 1;
+    public static final int STRUCTURE_ID = 0;
+
     @Mock
     public Map map;
 
@@ -139,8 +142,8 @@ public class EntityRepositoryTest {
     public static EntityRepository makeTestableEntityRepository(Map map) throws SlickException {
         TestableEntityRepository entityRepository = makeEmptyTestableEntityRepository(map);
 
-        entityRepository.createStructure(0, "constyard.png", 32, 32, 2, 1000);
-        entityRepository.createUnit(1, "quad.png", 32, 32, 2, 1.0F, 100);
+        entityRepository.createStructure(STRUCTURE_ID, "constyard.png", 32, 32, 2, 1000);
+        entityRepository.createUnit(UNIT_ID, "quad.png", 32, 32, 2, 1.0F, 100);
 
         return entityRepository;
     }
