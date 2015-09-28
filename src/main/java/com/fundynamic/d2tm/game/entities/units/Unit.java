@@ -1,9 +1,7 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.*;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -18,8 +16,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // Behaviors
     private final FadingSelection fadingSelection;
     private final HitPointBasedDestructibility hitPointBasedDestructibility;
+
     private Vector2D target;
-    private Vector2D nextCellToMoveTo;
+    private Vector2D nextTargetToMoveTo;
 
     // Implementation
     private final Map map;
@@ -52,7 +51,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = mapCoordinates;
-        this.nextCellToMoveTo = mapCoordinates;
+        this.nextTargetToMoveTo = mapCoordinates;
         this.offset = Vector2D.zero();
         this.moveSpeed = entityData.moveSpeed;
     }
@@ -60,14 +59,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // TODO: Simplify constructor
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
                 Player player, int sight, int facing,
-                Vector2D target, Vector2D nextCellToMoveTo, Vector2D offset,
+                Vector2D target, Vector2D nextTargetToMoveTo, Vector2D offset,
                 int hitPoints, FadingSelection fadingSelection) {
         super(mapCoordinates, spriteSheet, sight, player);
         this.offset = offset;
         this.moveSpeed = 1.0F;
         this.map = map;
         this.facing = facing;
-        this.nextCellToMoveTo = nextCellToMoveTo;
+        this.nextTargetToMoveTo = nextTargetToMoveTo;
         this.target = target;
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(hitPoints);
@@ -77,6 +76,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
+        // todo: GET RID OF OFFSET
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
         graphics.drawImage(sprite, drawX, drawY);
@@ -95,7 +95,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
                 // TODO: "make it turn to facing"
-                facing = determineFacingFor(nextCellToMoveTo).getValue();
+                facing = determineFacingFor(nextTargetToMoveTo).getValue();
                 moveToNextCellPixelByPixel();
             }
         }
@@ -104,64 +104,71 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private void moveToNextCellPixelByPixel() {
         float offsetX = offset.getX();
         float offsetY = offset.getY();
-        if (nextCellToMoveTo.getXAsInt() < mapCoordinates.getXAsInt()) offsetX -= moveSpeed;
-        if (nextCellToMoveTo.getXAsInt() > mapCoordinates.getXAsInt()) offsetX += moveSpeed;
-        if (nextCellToMoveTo.getYAsInt() < mapCoordinates.getYAsInt()) offsetY -= moveSpeed;
-        if (nextCellToMoveTo.getYAsInt() > mapCoordinates.getYAsInt()) offsetY += moveSpeed;
+        if (nextTargetToMoveTo.getXAsInt() < absoluteMapCoordinates.getXAsInt()) offsetX -= moveSpeed;
+        if (nextTargetToMoveTo.getXAsInt() > absoluteMapCoordinates.getXAsInt()) offsetX += moveSpeed;
+        if (nextTargetToMoveTo.getYAsInt() < absoluteMapCoordinates.getYAsInt()) offsetY -= moveSpeed;
+        if (nextTargetToMoveTo.getYAsInt() > absoluteMapCoordinates.getYAsInt()) offsetY += moveSpeed;
         Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
             offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(1, 0));
+            vecToAdd = vecToAdd.add(Vector2D.create(32, 0));
         }
         if (offsetX < -31) {
             offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(-1, 0));
+            vecToAdd = vecToAdd.add(Vector2D.create(-32, 0));
         }
         if (offsetY > 31) {
             offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, 1));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, 32));
         }
         if (offsetY < -31) {
             offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, -1));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, -32));
         }
+
+        // Arrived at intended next target cell
         if (!vecToAdd.equals(Vector2D.zero())) {
-            moveToCell(mapCoordinates.add(vecToAdd));
+            moveToCell(absoluteMapCoordinates.add(vecToAdd));
         }
         offset = Vector2D.create(offsetX, offsetY);
     }
 
     private void decideWhatCellToMoveToNextOrStopMovingWhenNotPossible() {
-        int nextCellX = mapCoordinates.getXAsInt();
-        int nextCellY = mapCoordinates.getYAsInt();
-        if (target.getXAsInt() < mapCoordinates.getXAsInt()) nextCellX--;
-        if (target.getXAsInt() > mapCoordinates.getXAsInt()) nextCellX++;
-        if (target.getYAsInt() < mapCoordinates.getYAsInt()) nextCellY--;
-        if (target.getYAsInt() > mapCoordinates.getYAsInt()) nextCellY++;
-        Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextCellX, nextCellY);
-        Cell intendedCellToMoveTo = map.getCell(intendedMapCoordinatesToMoveTo);
+        int nextXCoordinate = absoluteMapCoordinates.getXAsInt();
+        int nextYCoordinate = absoluteMapCoordinates.getYAsInt();
+        if (target.getXAsInt() < absoluteMapCoordinates.getXAsInt()) nextXCoordinate -= 32F;
+        if (target.getXAsInt() > absoluteMapCoordinates.getXAsInt()) nextXCoordinate += 32F;
+        if (target.getYAsInt() < absoluteMapCoordinates.getYAsInt()) nextYCoordinate -= 32F;
+        if (target.getYAsInt() > absoluteMapCoordinates.getYAsInt()) nextYCoordinate += 32F;
+
+        Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
+        Cell intendedCellToMoveTo = map.getCellByAbsolutePixelCoordinates(intendedMapCoordinatesToMoveTo);
 
         if (!intendedCellToMoveTo.isOccupied(this)) {
-            this.nextCellToMoveTo = intendedMapCoordinatesToMoveTo;
+            this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
             intendedCellToMoveTo.setEntity(this); // claim this cell so we make sure nobody else can move here/take it.
         }
     }
 
     private boolean isWaitingForNextCellToDetermine() {
-        return nextCellToMoveTo == mapCoordinates;
+        return nextTargetToMoveTo == absoluteMapCoordinates;
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
-//        System.out.println("Moving to cell " + vectorToMoveTo);
-        map.getCell(mapCoordinates).removeEntity();
-        this.mapCoordinates = vectorToMoveTo;
-        this.nextCellToMoveTo = vectorToMoveTo;
-        map.revealShroudFor(mapCoordinates, sight, player);
-        map.getCell(mapCoordinates).setEntity(this);
+        Cell mapCell = map.getCellByAbsolutePixelCoordinates(absoluteMapCoordinates);
+        mapCell.removeEntity();
+
+        this.absoluteMapCoordinates = vectorToMoveTo;
+        this.nextTargetToMoveTo = vectorToMoveTo;
+
+        map.revealShroudFor(absoluteMapCoordinates, sight, player);
+
+        mapCell = map.getCellByAbsolutePixelCoordinates(absoluteMapCoordinates);
+        mapCell.setEntity(this);
     }
 
     private boolean shouldBeSomewhereElse() {
-        return !this.target.equals(mapCoordinates);
+        return !this.target.equals(absoluteMapCoordinates);
     }
 
     public Image getSprite() {
@@ -175,8 +182,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 ", player=" + super.player +
                 ", facing=" + facing +
                 ", hitPoints=" + hitPointBasedDestructibility +
-                ", mapCoordinates=" + super.mapCoordinates +
-                ", absoluteMapPixelCoordinates=" + getAbsoluteMapPixelCoordinates() +
+                ", absoluteMapCoordinates=" + super.absoluteMapCoordinates +
                 "]\n";
     }
 
@@ -205,10 +211,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-        boolean left = coordinatesToFaceTo.getXAsInt() < mapCoordinates.getXAsInt();
-        boolean right = coordinatesToFaceTo.getXAsInt() > mapCoordinates.getXAsInt();
-        boolean up = coordinatesToFaceTo.getYAsInt() < mapCoordinates.getYAsInt();
-        boolean down = coordinatesToFaceTo.getYAsInt() > mapCoordinates.getYAsInt();
+        boolean left = coordinatesToFaceTo.getXAsInt() < absoluteMapCoordinates.getXAsInt();
+        boolean right = coordinatesToFaceTo.getXAsInt() > absoluteMapCoordinates.getXAsInt();
+        boolean up = coordinatesToFaceTo.getYAsInt() < absoluteMapCoordinates.getYAsInt();
+        boolean down = coordinatesToFaceTo.getYAsInt() > absoluteMapCoordinates.getYAsInt();
 
         if (up && left) return UnitFacings.LEFT_UP;
         if (up && right) return UnitFacings.RIGHT_UP;
@@ -238,6 +244,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             System.out.println("I (" + this.toString() + ") attack an entity that is not destructible -> " + entity);
             return;
         }
+
+        // spawn projectile from this cell , to another cell.
+//        entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, 0, player);
+
         Destructible destructible = (Destructible) entity;
         destructible.takeDamage(Random.getRandomBetween(50, 150));
     }
@@ -246,7 +256,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return offset;
     }
 
-    public Vector2D getNextCellToMoveTo() {
-        return nextCellToMoveTo;
+    public Vector2D getNextTargetToMoveTo() {
+        return nextTargetToMoveTo;
     }
 }

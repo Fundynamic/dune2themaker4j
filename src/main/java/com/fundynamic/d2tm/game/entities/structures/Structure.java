@@ -55,8 +55,8 @@ public class Structure extends Entity implements Selectable, Destructible {
         this.fadingSelection.update(delta);
     }
 
-    public Vector2D getMapCoordinates() {
-        return mapCoordinates;
+    public Vector2D getAbsoluteMapCoordinates() {
+        return absoluteMapCoordinates;
     }
 
     @Override

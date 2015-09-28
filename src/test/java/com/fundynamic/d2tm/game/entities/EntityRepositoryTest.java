@@ -113,7 +113,7 @@ public class EntityRepositoryTest {
         Mockito.verify(map).placeUnit(argument.capture());
         Unit unitToPlace = argument.getValue();
 
-        assertEquals(Vector2D.create(10, 11), unitToPlace.getMapCoordinates());
+        assertEquals(Vector2D.create(10, 11), unitToPlace.getAbsoluteMapCoordinates());
         assertEquals(1, entityRepository.getEntitiesSet().size());
     }
 
@@ -127,7 +127,7 @@ public class EntityRepositoryTest {
         Mockito.verify(map).placeStructure(argument.capture());
         Structure structureToPlace = argument.getValue();
 
-        assertEquals(Vector2D.create(21, 23), structureToPlace.getMapCoordinates());
+        assertEquals(Vector2D.create(21, 23), structureToPlace.getAbsoluteMapCoordinates());
         assertEquals(1, entityRepository.getEntitiesSet().size());
     }
 

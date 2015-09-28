@@ -71,13 +71,13 @@ public class EntityViewportRendererTest {
         Unit unit = makeUnit(map, player, create(1, 1));
 
         // it moves down-right, and it will occupy 2 cells by that logic
-        Vector2D vectorToMoveTo = unit.getMapCoordinates().add(create(1, 1));
+        Vector2D vectorToMoveTo = unit.getAbsoluteMapCoordinates().add(create(1, 1));
         unit.moveTo(vectorToMoveTo);
         unit.update(1);
         unit.update(1);
 
         // assert that the cell has been occupied
-        Cell unitCell = map.getCell(unit.getMapCoordinates());
+        Cell unitCell = map.getCell(unit.getAbsoluteMapCoordinates());
         Cell unitCellToMoveTo = map.getCell(vectorToMoveTo);
         assertTrue(unitCell.getEntity().equals(unit));
         assertTrue(unitCellToMoveTo.getEntity().equals(unit));

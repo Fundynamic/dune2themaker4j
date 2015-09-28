@@ -6,36 +6,23 @@ import org.newdawn.slick.SpriteSheet;
 
 public abstract class Entity implements Renderable, Updateable {
 
-    private static final float TILE_SIZE = 32.0f;
-
     // Final properties of unit
     protected final SpriteSheet spriteSheet;
     protected final int sight;
     protected final Player player;
 
-    // TODO: these might need to be absolute pixel coordinates to make smooth movements possible
-    //       instead of cell x,y coordinates which it is right now.
-    protected Vector2D mapCoordinates;
+    protected Vector2D absoluteMapCoordinates;
 
-    public Entity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
-        this.mapCoordinates = mapCoordinates;
+    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
+        this.absoluteMapCoordinates = absoluteMapCoordinates;
         this.spriteSheet = spriteSheet;
         this.sight = sight;
         this.player = player;
         player.addEntity(this);
     }
 
-    public Vector2D getMapCoordinates() {
-        return mapCoordinates;
-    }
-
-    /**
-     * TODO: Get rid of this, and make all coordinates pixel based. So no translation is required.
-     */
-    public Vector2D getAbsoluteMapPixelCoordinates() {
-        float absX = mapCoordinates.getX() * TILE_SIZE;
-        float absY = mapCoordinates.getY() * TILE_SIZE;
-        return Vector2D.create(absX, absY);
+    public Vector2D getAbsoluteMapCoordinates() {
+        return absoluteMapCoordinates;
     }
 
     public int getSight() {

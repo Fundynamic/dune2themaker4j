@@ -55,7 +55,7 @@ public class MovableSelectedMouseTest {
         Unit unit = createUnit(mouse.getEntityRepository(), Vector2D.create(1, 1), player);
         unit.select();
 
-        assertEquals(unit.getNextCellToMoveTo(), Vector2D.create(1, 1));
+        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(1, 1));
 
         MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, mouse.getEntityRepository());
 
@@ -63,7 +63,7 @@ public class MovableSelectedMouseTest {
 
         unit.update(1);
 
-        assertEquals(unit.getNextCellToMoveTo(), Vector2D.create(2, 2));
+        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(2, 2));
     }
 
 }

@@ -61,7 +61,7 @@ public class UnitTest {
 
     @Test
     public void returnsCurrentFacingWhenNothingChanged() {
-        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getMapCoordinates()));
+        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getAbsoluteMapCoordinates()));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class UnitTest {
 
         unit.moveTo(Vector2D.create(11, 11)); // move to right-down
 
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(10, 10));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
@@ -172,13 +172,13 @@ public class UnitTest {
         }
 
         // the unit is about to move, so do not expect it has been moved yet
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(10, 10));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
         assertEquals(unit.getOffset(), Vector2D.create(31, 31));
 
         // one more time
         unit.update(1);
 
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(11, 11));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(11, 11));
         assertEquals(unit.getOffset(), Vector2D.create(0, 0));
     }
 
@@ -188,7 +188,7 @@ public class UnitTest {
 
         unit.moveTo(Vector2D.create(9, 9)); // move to left-up
 
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(10, 10));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
@@ -196,13 +196,13 @@ public class UnitTest {
         }
 
         // the unit is about to move, so do not expect it has been moved yet
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(10, 10));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
         assertEquals(unit.getOffset(), Vector2D.create(-31, -31));
 
         // one more time
         unit.update(1);
 
-        assertEquals(unit.getMapCoordinates(), Vector2D.create(9, 9));
+        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(9, 9));
         assertEquals(unit.getOffset(), Vector2D.create(0, 0));
     }
 }

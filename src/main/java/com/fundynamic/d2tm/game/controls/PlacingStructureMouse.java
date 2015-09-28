@@ -23,7 +23,7 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
     @Override
     public void leftClicked() {
         Cell hoverCell = mouse.getHoverCell();
-        entityRepository.placeOnMap(hoverCell.getCoordinatesAsVector2D(), entityToPlace, mouse.getControllingPlayer());
+        entityRepository.placeOnMap(hoverCell.getCoordinatesAsAbsoluteVector2D(), entityToPlace, mouse.getControllingPlayer());
         selectRandomlySomethingToPlace();
     }
 

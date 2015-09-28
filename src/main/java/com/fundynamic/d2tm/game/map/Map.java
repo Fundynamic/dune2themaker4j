@@ -113,14 +113,18 @@ public class Map {
     }
 
     public Unit placeUnit(Unit unit) {
-        Vector2D mapCoordinates = unit.getMapCoordinates();
+        Vector2D mapCoordinates = unit.getAbsoluteMapCoordinates();
+        mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
         getCell(mapCoordinates).setEntity(unit);
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight(), unit.getPlayer());
         return unit;
     }
 
     public Structure placeStructure(Structure structure) {
-        Vector2D topLeftMapCoordinates = structure.getMapCoordinates();
+        Vector2D topLeftMapCoordinates = structure.getAbsoluteMapCoordinates();
+
+        // translate from absolute pixels to map coordinates
+        topLeftMapCoordinates = topLeftMapCoordinates.div(TILE_SIZE);
 
         for (int x = 0; x < structure.getWidthInCells(); x++) {
             for (int y = 0; y < structure.getHeightInCells(); y++) {
@@ -137,7 +141,7 @@ public class Map {
     }
 
     public void removeEntity(Entity entity) {
-        Vector2D topLeftMapCoordinates = entity.getMapCoordinates();
+        Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates();
         getCell(topLeftMapCoordinates).setEntity(null);
 
         if (entity instanceof Structure) {
@@ -237,7 +241,8 @@ public class Map {
         }
     }
 
-    public void revealShroudFor(Vector2D mapCoordinates, int range, Player player) {
+    public void revealShroudFor(Vector2D absoluteCoordinates, int range, Player player) {
+        Vector2D mapCoordinates = absoluteCoordinates.div(32F);
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range, player);
     }
 
