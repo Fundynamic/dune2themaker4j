@@ -141,7 +141,7 @@ public class Map {
     }
 
     public void removeEntity(Entity entity) {
-        Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates();
+        Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates().div(TILE_SIZE);
         getCell(topLeftMapCoordinates).setEntity(null);
 
         if (entity instanceof Structure) {

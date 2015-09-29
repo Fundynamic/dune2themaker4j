@@ -111,6 +111,27 @@ public class MapTest {
     public void placeStructureOfOneByOneOnMap() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
+
+        Vector2D mapCoordinate = Vector2D.create(5, 5);
+        Structure refinery = new Structure(mapCoordinate.scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT));
+        map.placeStructure(refinery);
+
+        Entity entity = map.getCell(mapCoordinate).getEntity();
+        assertSame(refinery, entity);
+
+        map.removeEntity(refinery);
+
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                assertNull(map.getCell(x, y).getEntity());
+            }
+        }
+    }
+
+    @Test
+    public void removesEntity() {
+        int TILE_SIZE = 32;
+        int SIGHT = 2;
         Structure turret = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT));
         map.placeStructure(turret);
 
