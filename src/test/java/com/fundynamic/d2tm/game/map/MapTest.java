@@ -80,14 +80,14 @@ public class MapTest {
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapTopLeftOfCell() {
-        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(0, 0));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(0, 0));
         assertTrue(cell.getTerrain() instanceof Sand);
     }
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapMiddleOfCell() {
         int TILE_SIZE = 32;
-        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2));
         assertTrue(cell.getTerrain() instanceof Sand);
     }
 
@@ -103,7 +103,7 @@ public class MapTest {
         pixelX += (TILE_SIZE - 1);
         pixelY += (TILE_SIZE - 1);
 
-        Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create(pixelX, pixelY));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(pixelX, pixelY));
         assertTrue(cell.getTerrain() instanceof Spice);
     }
 
@@ -111,8 +111,9 @@ public class MapTest {
     public void placeStructureOfOneByOneOnMap() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Structure turret = new Structure(Vector2D.create(5, 5), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT));
+        Structure turret = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT));
         map.placeStructure(turret);
+
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
         assertSame(turret, entity);
 
@@ -128,7 +129,7 @@ public class MapTest {
         int TILE_SIZE = 32;
         int SIGHT = 2;
 
-        Structure refinery = new Structure(Vector2D.create(5, 5), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT));
+        Structure refinery = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT));
         map.placeStructure(refinery);
 
         assertSame(refinery, map.getCell(Vector2D.create(5, 5)).getEntity()); // top left
@@ -152,7 +153,7 @@ public class MapTest {
     public void placeUnit() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Unit quad = new Unit(map, Vector2D.create(5, 5), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT, 1.0f));
+        Unit quad = new Unit(map, Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT, 1.0f));
         map.placeUnit(quad);
         
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();

@@ -167,7 +167,7 @@ public class Mouse {
 
         com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
         Vector2D coordinates = viewport.translateScreenToAbsoluteMapPixels(position);
-        mouseMovedToCell(map.getCellByAbsolutePixelCoordinates(coordinates));
+        mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(coordinates));
     }
 
 }

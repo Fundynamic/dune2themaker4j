@@ -29,10 +29,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int facing;
     private float moveSpeed;
 
-    public Unit(Map map, Vector2D mapCoordinates, Image image, Player player, EntityData entityData) {
+    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData) {
         this(
                 map,
-                mapCoordinates,
+                absoluteMapCoordinates,
                 new SpriteSheet(image, entityData.width, entityData.height),
                 new FadingSelection(entityData.width, entityData.height),
                 new HitPointBasedDestructibility(entityData.hitPoints),
@@ -42,16 +42,16 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     // TODO: Simplify constructor
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
-        super(mapCoordinates, spriteSheet, entityData.sight, player);
+    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
+        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
-        this.target = mapCoordinates;
-        this.nextTargetToMoveTo = mapCoordinates;
+        this.target = absoluteMapCoordinates;
+        this.nextTargetToMoveTo = absoluteMapCoordinates;
         this.offset = Vector2D.zero();
         this.moveSpeed = entityData.moveSpeed;
     }
@@ -142,7 +142,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (target.getYAsInt() > absoluteMapCoordinates.getYAsInt()) nextYCoordinate += 32F;
 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
-        Cell intendedCellToMoveTo = map.getCellByAbsolutePixelCoordinates(intendedMapCoordinatesToMoveTo);
+        Cell intendedCellToMoveTo = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
 
         if (!intendedCellToMoveTo.isOccupied(this)) {
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
@@ -155,7 +155,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
-        Cell mapCell = map.getCellByAbsolutePixelCoordinates(absoluteMapCoordinates);
+        Cell mapCell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
         mapCell.removeEntity();
 
         this.absoluteMapCoordinates = vectorToMoveTo;
@@ -163,7 +163,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         map.revealShroudFor(absoluteMapCoordinates, sight, player);
 
-        mapCell = map.getCellByAbsolutePixelCoordinates(absoluteMapCoordinates);
+        mapCell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
         mapCell.setEntity(this);
     }
 
@@ -206,8 +206,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
-    public void moveTo(Vector2D target) {
-        this.target = target;
+    public void moveTo(Vector2D absoluteMapCoordinates) {
+        this.target = absoluteMapCoordinates;
     }
 
     public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {

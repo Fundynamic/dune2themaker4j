@@ -104,7 +104,7 @@ public class Map {
         return shroud;
     }
 
-    public Cell getCellByAbsolutePixelCoordinates(Vector2D coordinates) {
+    public Cell getCellByAbsoluteMapCoordinates(Vector2D coordinates) {
         return getCellProtected((int) (coordinates.getX() / TILE_SIZE), (int) (coordinates.getY() / TILE_SIZE));
     }
 
@@ -234,7 +234,7 @@ public class Map {
                 double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
                 // convert back the pixel coordinates back to a cell
-                Cell cell = getCellByAbsolutePixelCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
+                Cell cell = getCellByAbsoluteMapCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
                 player.revealShroudFor(cell.getPosition());
             }

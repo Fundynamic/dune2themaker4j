@@ -15,7 +15,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -35,7 +37,7 @@ public class UnitTest {
     private FadingSelection fadingSelection;
 
     private Unit unit;
-    private Vector2D unitMapCoordinates;
+    private Vector2D unitAbsoluteMapCoordinates;
 
     @Before
     public void setUp() throws SlickException {
@@ -43,7 +45,7 @@ public class UnitTest {
         int mapWidth = 64;
         int mapHeight = 64;
         map = new Map(new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE), mapWidth, mapHeight);
-        unitMapCoordinates = Vector2D.create(10, 10);
+        unitAbsoluteMapCoordinates = Vector2D.create(10, 10).scale(TILE_SIZE);
         unit = makeUnit(UnitFacings.RIGHT);
     }
 
@@ -56,7 +58,7 @@ public class UnitTest {
     }
 
     public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints) {
-        return new Unit(map, unitMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitMapCoordinates, unitMapCoordinates, offset, hitPoints, fadingSelection);
+        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection);
     }
 
     @Test
@@ -66,50 +68,50 @@ public class UnitTest {
 
     @Test
     public void determinesFacingRightDown() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(1, 1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 1));
         assertEquals(UnitFacings.RIGHT_DOWN, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingLeftDown() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(-1, 1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, 1));
         assertEquals(UnitFacings.LEFT_DOWN, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingRightUp() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(1, -1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, -1));
         assertEquals(UnitFacings.RIGHT_UP, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingLeftUp() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(-1, -1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, -1));
         assertEquals(UnitFacings.LEFT_UP, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingUp() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(0, -1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(0, -1));
         assertEquals(UnitFacings.UP, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingDown() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(0, 1));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(0, 1));
         assertEquals(UnitFacings.DOWN, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingLeft() {
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(-1, 0));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, 0));
         assertEquals(UnitFacings.LEFT, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
     @Test
     public void determinesFacingRight() {
         unit = makeUnit(UnitFacings.LEFT);
-        Vector2D coordinatesToFaceTo = unitMapCoordinates.add(Vector2D.create(1, 0));
+        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 0));
         assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(coordinatesToFaceTo));
     }
 
@@ -162,33 +164,35 @@ public class UnitTest {
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
         Unit unit = makeUnit(UnitFacings.DOWN);
 
-        unit.moveTo(Vector2D.create(11, 11)); // move to right-down
+        Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down
+        unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
 
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
+        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
             unit.update(1);
         }
 
-        // the unit is about to move, so do not expect it has been moved yet
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
-        assertEquals(unit.getOffset(), Vector2D.create(31, 31));
+        // the unit is about to fully move onto new cell
+        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getOffset(), is(Vector2D.create(31, 31)));
 
         // one more time
         unit.update(1);
 
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(11, 11));
-        assertEquals(unit.getOffset(), Vector2D.create(0, 0));
+        assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
         Unit unit = makeUnit(UnitFacings.DOWN);
 
-        unit.moveTo(Vector2D.create(9, 9)); // move to left-up
+        Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
+        unit.moveTo(mapCoordinateToMoveTo); // move to left-up
 
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
+        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
@@ -196,13 +200,13 @@ public class UnitTest {
         }
 
         // the unit is about to move, so do not expect it has been moved yet
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(10, 10));
-        assertEquals(unit.getOffset(), Vector2D.create(-31, -31));
+        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getOffset(), is(Vector2D.create(-31, -31)));
 
         // one more time
         unit.update(1);
 
-        assertEquals(unit.getAbsoluteMapCoordinates(), Vector2D.create(9, 9));
-        assertEquals(unit.getOffset(), Vector2D.create(0, 0));
+        assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 }

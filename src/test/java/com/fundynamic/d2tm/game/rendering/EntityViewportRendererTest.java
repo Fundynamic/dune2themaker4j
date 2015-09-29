@@ -38,16 +38,16 @@ public class EntityViewportRendererTest {
         EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
-        makeUnit(map, player, create(1, 1));
+        makeUnit(map, player, create(1, 1).scale(32));
 
         // this one should be rendered because it just outside view, and the renderer takes width + 1 cell into account
-        makeUnit(map, player, create(viewportWidthInTiles + 1, viewportHeightInTiles + 1));
+        makeUnit(map, player, create(viewportWidthInTiles + 1, viewportHeightInTiles + 1).scale(32));
 
         // this one should NOT be rendered because it is outside view (+1) (vertically)
-        makeUnit(map, player, create(viewportWidthInTiles + 1, viewportHeightInTiles + 2));
+        makeUnit(map, player, create(viewportWidthInTiles + 1, viewportHeightInTiles + 2).scale(32));
 
         // this one should NOT be rendered because it is outside view (+1) (horizontally)
-        makeUnit(map, player, create(viewportWidthInTiles + 2, viewportHeightInTiles + 1));
+        makeUnit(map, player, create(viewportWidthInTiles + 2, viewportHeightInTiles + 1).scale(32));
 
         Graphics graphics = mock(Graphics.class);
 
@@ -68,17 +68,17 @@ public class EntityViewportRendererTest {
         EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
-        Unit unit = makeUnit(map, player, create(1, 1));
+        Unit unit = makeUnit(map, player, create(1, 1).scale(32));
 
         // it moves down-right, and it will occupy 2 cells by that logic
-        Vector2D vectorToMoveTo = unit.getAbsoluteMapCoordinates().add(create(1, 1));
+        Vector2D vectorToMoveTo = unit.getAbsoluteMapCoordinates().add(create(1, 1).scale(32));
         unit.moveTo(vectorToMoveTo);
         unit.update(1);
         unit.update(1);
 
         // assert that the cell has been occupied
-        Cell unitCell = map.getCell(unit.getAbsoluteMapCoordinates());
-        Cell unitCellToMoveTo = map.getCell(vectorToMoveTo);
+        Cell unitCell = map.getCellByAbsoluteMapCoordinates(unit.getAbsoluteMapCoordinates());
+        Cell unitCellToMoveTo = map.getCellByAbsoluteMapCoordinates(vectorToMoveTo);
         assertTrue(unitCell.getEntity().equals(unit));
         assertTrue(unitCellToMoveTo.getEntity().equals(unit));
 

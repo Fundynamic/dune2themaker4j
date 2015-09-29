@@ -49,13 +49,15 @@ public class MovableSelectedMouseTest {
 
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
-        Cell cell = new Cell(map, mock(Terrain.class), 13, 13);
+        Cell cell = new Cell(map, mock(Terrain.class), 2, 2);
         mouse.setHoverCell(cell);
 
-        Unit unit = createUnit(mouse.getEntityRepository(), Vector2D.create(1, 1), player);
+        Vector2D mapCoordinates = Vector2D.create(1, 1);
+        Unit unit = createUnit(mouse.getEntityRepository(), mapCoordinates.scale(32F), player);
         unit.select();
 
-        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(1, 1));
+        // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
+        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(32, 32));
 
         MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, mouse.getEntityRepository());
 
@@ -63,7 +65,7 @@ public class MovableSelectedMouseTest {
 
         unit.update(1);
 
-        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(2, 2));
+        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(64, 64));
     }
 
 }
