@@ -166,8 +166,8 @@ public class MouseTest {
 //
 //    private class NotSelectableEntity extends Entity {
 //
-//        public NotSelectableEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player) {
-//            super(mapCoordinates, spriteSheet, 2, player);
+//        public NotSelectableEntity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player) {
+//            super(absoluteMapCoordinates, spriteSheet, 2, player);
 //        }
 //
 //        @Override

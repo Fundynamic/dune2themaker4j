@@ -23,6 +23,8 @@ import org.newdawn.slick.state.StateBasedGame;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fundynamic.d2tm.Game.TILE_HEIGHT;
+import static com.fundynamic.d2tm.Game.TILE_WIDTH;
 import static com.fundynamic.d2tm.Game.getResolution;
 
 public class PlayingState extends BasicGameState {
@@ -126,19 +128,23 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
-        entityRepository.placeStructureOnMap(Vector2D.create(5, 5), EntityRepository.REFINERY, human);
-        entityRepository.placeStructureOnMap(Vector2D.create(3, 3), EntityRepository.CONSTRUCTION_YARD, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(10, 10), 0, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(11, 11), 0, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(14, 10), 1, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(15, 11), 1, human);
+        // human entities
+        entityRepository.placeStructureOnMap(Vector2D.create(5 * TILE_WIDTH, 5 * TILE_HEIGHT), EntityRepository.REFINERY, human);
+        entityRepository.placeStructureOnMap(Vector2D.create(3 * TILE_WIDTH, 3 * TILE_HEIGHT), EntityRepository.CONSTRUCTION_YARD, human);
 
-        entityRepository.placeStructureOnMap(Vector2D.create(55, 55), EntityRepository.REFINERY, cpu);
-        entityRepository.placeStructureOnMap(Vector2D.create(57, 57), EntityRepository.CONSTRUCTION_YARD, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(50, 50), 0, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(49, 49), 0, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(52, 52), 1, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(53, 53), 1, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(10 * TILE_WIDTH, 10 * TILE_HEIGHT), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(11 * TILE_WIDTH, 11 * TILE_HEIGHT), 0, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(14 * TILE_WIDTH, 10 * TILE_HEIGHT), 1, human);
+        entityRepository.placeUnitOnMap(Vector2D.create(15 * TILE_WIDTH, 11 * TILE_HEIGHT), 1, human);
+
+        // cpu entities
+        entityRepository.placeStructureOnMap(Vector2D.create(55 * TILE_WIDTH, 55 * TILE_HEIGHT), EntityRepository.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(57 * TILE_WIDTH, 57 * TILE_HEIGHT), EntityRepository.CONSTRUCTION_YARD, cpu);
+
+        entityRepository.placeUnitOnMap(Vector2D.create(50 * TILE_WIDTH, 50 * TILE_HEIGHT), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(49 * TILE_WIDTH, 49 * TILE_HEIGHT), 0, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(52 * TILE_WIDTH, 52 * TILE_HEIGHT), 1, cpu);
+        entityRepository.placeUnitOnMap(Vector2D.create(53 * TILE_WIDTH, 53 * TILE_HEIGHT), 1, cpu);
 
         for (Viewport viewport : viewports) {
             viewport.init();

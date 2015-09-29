@@ -36,10 +36,10 @@ public class EntitiesSetTest {
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 100, Vector2D.create(10, 10)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(12, 10)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 300, Vector2D.create(10, 12)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(30, 30)));
+        entitiesSet.add(UnitFactory.makeUnit(playerOne, 100, Vector2D.create(320, 320)));
+        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(384, 320)));
+        entitiesSet.add(UnitFactory.makeUnit(playerOne, 300, Vector2D.create(320, 384)));
+        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(960, 960)));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
@@ -104,7 +104,10 @@ public class EntitiesSetTest {
     public void returnsThreeUnitsOfPlayerOneWithinRectangle() {
         Set<Entity> result = entitiesSet.filter(
                 Predicate.builder().withinArea(
-                        Rectangle.create(Vector2D.create(9 * TILE_SIZE, 9 * TILE_SIZE), Vector2D.create(13 * TILE_SIZE, 13 * TILE_SIZE))
+                        Rectangle.create(
+                                Vector2D.create(319, 319),
+                                Vector2D.create(385, 385)
+                        )
                 )
         );
         assertEquals(3, result.size());

@@ -13,12 +13,21 @@ public class Vector2DTest {
         Assert.assertEquals(10F, moved.getX(), 0.0001F);
         Assert.assertEquals(11F, moved.getY(), 0.0001F);
     }
+
     @Test
     public void movesVector() {
         Vector2D vec = new Vector2D(0F, 1F);
         Vector2D moved = vec.move(10F, 10F);
         Assert.assertEquals(10F, moved.getX(), 0.0001F);
         Assert.assertEquals(11F, moved.getY(), 0.0001F);
+    }
+
+    @Test
+    public void dividesVector() {
+        Vector2D vec = new Vector2D(64F, 128F);
+        Vector2D divved = vec.div(32F);
+        Assert.assertEquals(2F, divved.getX(), 0.0001F);
+        Assert.assertEquals(4F, divved.getY(), 0.0001F);
     }
 
     @Test

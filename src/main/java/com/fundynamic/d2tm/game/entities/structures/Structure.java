@@ -26,12 +26,12 @@ public class Structure extends Entity implements Selectable, Destructible {
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D mapCoordinates, Image imageOfStructure, Player player, EntityData entityData) {
-        this(mapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData);
+    public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData) {
+        this(absoluteMapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData);
     }
 
-    public Structure(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData) {
-        super(mapCoordinates, spriteSheet, entityData.sight, player);
+    public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData) {
+        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player);
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints);
         widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);
@@ -55,8 +55,8 @@ public class Structure extends Entity implements Selectable, Destructible {
         this.fadingSelection.update(delta);
     }
 
-    public Vector2D getMapCoordinates() {
-        return mapCoordinates;
+    public Vector2D getAbsoluteMapCoordinates() {
+        return absoluteMapCoordinates;
     }
 
     @Override

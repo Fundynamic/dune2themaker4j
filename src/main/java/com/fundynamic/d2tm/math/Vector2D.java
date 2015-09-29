@@ -66,7 +66,7 @@ public class Vector2D {
     public String toString() {
         return "Vector2D{" +
                 "x=" + vec.getX() +
-                ", y=" + vec.getX() +
+                ", y=" + vec.getY() +
                 '}';
     }
 
@@ -96,6 +96,11 @@ public class Vector2D {
         return Vector2D.create(added.getX(), added.getY());
     }
 
+    public Vector2D div(float amount) {
+        Vector2f scaled = vec.copy().scale(1F / amount);
+        return Vector2D.create(scaled.getX(), scaled.getY());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,4 +115,5 @@ public class Vector2D {
     public int hashCode() {
         return vec != null ? vec.hashCode() : 0;
     }
+
 }

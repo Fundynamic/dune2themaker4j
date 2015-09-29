@@ -87,6 +87,10 @@ public class Cell {
         return Vector2D.create(x, y);
     }
 
+    public Vector2D getCoordinatesAsAbsoluteVector2D() {
+        return Vector2D.create(x * 32, y * 32);
+    }
+
     public boolean isAtSameLocationAs(Cell other) {
         if (other == null) return false;
         return this.x == other.getX() && y == other.getY();

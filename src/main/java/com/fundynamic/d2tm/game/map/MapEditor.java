@@ -126,7 +126,7 @@ public class MapEditor {
                 double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
                 // convert back the pixel coordinates back to a cell
-                Cell cell = map.getCellByAbsolutePixelCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
+                Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
                 putTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
             }
