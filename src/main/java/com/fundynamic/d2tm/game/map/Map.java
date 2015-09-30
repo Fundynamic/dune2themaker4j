@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
@@ -112,6 +113,13 @@ public class Map {
         return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
     }
 
+    public Projectile placeProjectile(Projectile projectile) {
+        Vector2D mapCoordinates = projectile.getAbsoluteMapCoordinates();
+        mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
+        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), projectile.getSight(), projectile.getPlayer());
+        return projectile;
+    }
+
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getAbsoluteMapCoordinates();
         mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
@@ -141,8 +149,13 @@ public class Map {
     }
 
     public void removeEntity(Entity entity) {
+        if (entity == null) throw new IllegalArgumentException("Cannot delete null entity");
         Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates().div(TILE_SIZE);
-        getCell(topLeftMapCoordinates).setEntity(null);
+        Cell cell = getCell(topLeftMapCoordinates);
+
+        if (!entity.equals(cell.getEntity())) return; // only remove yourself from the map
+
+        cell.setEntity(null);
 
         if (entity instanceof Structure) {
             Structure structure = (Structure) entity;
@@ -253,4 +266,5 @@ public class Map {
             }
         }
     }
+
 }

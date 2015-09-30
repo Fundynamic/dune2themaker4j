@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -57,6 +58,11 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     public Vector2D getAbsoluteMapCoordinates() {
         return absoluteMapCoordinates;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.STRUCTURE;
     }
 
     @Override

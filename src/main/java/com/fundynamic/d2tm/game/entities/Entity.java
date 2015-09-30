@@ -57,4 +57,5 @@ public abstract class Entity implements Renderable, Updateable {
         return this instanceof Destroyer;
     }
 
+    public abstract EntityType getEntityType();
 }

@@ -1,10 +1,7 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
 
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.game.entities.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -84,6 +81,11 @@ public class PredicateBuilder {
 
     public PredicateBuilder isDestroyed() {
         predicates.add(Predicate.isDestroyed());
+        return this;
+    }
+
+    public PredicateBuilder ofType(EntityType entityType) {
+        predicates.add(Predicate.ofType(entityType));
         return this;
     }
 

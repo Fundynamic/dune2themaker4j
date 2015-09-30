@@ -24,7 +24,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 
-public class EntityViewportRendererTest {
+public class CellBasedEntityViewportRendererTest {
 
     @Test
     public void rendersEntityInView() throws SlickException {
@@ -35,7 +35,7 @@ public class EntityViewportRendererTest {
         int viewportHeightInTiles = 10;
         int viewportWidth = Game.TILE_WIDTH * viewportWidthInTiles;
         int viewportHeight = Game.TILE_HEIGHT * viewportHeightInTiles;
-        EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
+        CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
         makeUnit(map, player, create(1, 1).scale(32));
@@ -51,7 +51,7 @@ public class EntityViewportRendererTest {
 
         Graphics graphics = mock(Graphics.class);
 
-        entityViewportRenderer.render(graphics, Vector2D.zero());
+        cellBasedEntityViewportRenderer.render(graphics, Vector2D.zero());
 
         verify(graphics, times(2)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }
@@ -65,7 +65,7 @@ public class EntityViewportRendererTest {
         int viewportHeightInTiles = 10;
         int viewportWidth = Game.TILE_WIDTH * viewportWidthInTiles;
         int viewportHeight = Game.TILE_HEIGHT * viewportHeightInTiles;
-        EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
+        CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
         Unit unit = makeUnit(map, player, create(1, 1).scale(32));
@@ -85,7 +85,7 @@ public class EntityViewportRendererTest {
         // assert it only renders once
         Graphics graphics = mock(Graphics.class);
 
-        entityViewportRenderer.render(graphics, Vector2D.zero());
+        cellBasedEntityViewportRenderer.render(graphics, Vector2D.zero());
 
         verify(graphics, times(1)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }

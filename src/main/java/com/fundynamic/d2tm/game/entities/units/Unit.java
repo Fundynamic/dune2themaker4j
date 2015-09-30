@@ -259,4 +259,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Vector2D getNextTargetToMoveTo() {
         return nextTargetToMoveTo;
     }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.UNIT;
+    }
 }

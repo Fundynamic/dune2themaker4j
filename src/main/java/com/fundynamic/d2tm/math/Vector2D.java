@@ -116,4 +116,22 @@ public class Vector2D {
         return vec != null ? vec.hashCode() : 0;
     }
 
+    public Vector2D normalise() {
+        Vector2f normalised = vec.getNormal();
+        return create(normalised.getX(), normalised.getY());
+    }
+
+    public float distance(Vector2D target) {
+        return vec.distance(new Vector2f(target.getX(), target.getY()));
+    }
+
+    public double getAngle() {
+        return vec.getTheta();
+    }
+
+    public double angleTo(Vector2D target) {
+        Vector2D direction = target.min(this);
+        direction = Vector2D.create(direction.getX(), direction.getY() * -1);
+        return direction.getAngle();
+    }
 }

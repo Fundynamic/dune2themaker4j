@@ -13,6 +13,10 @@ public class Rectangle {
         return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
     }
 
+    public static Rectangle createWithDimensions(Vector2D absTopLeftInPixels, Vector2D dimensions) {
+        return create(absTopLeftInPixels, absTopLeftInPixels.add(dimensions));
+    }
+
     public Rectangle(float srcX, float srcY, float destX, float destY) {
         this.src = Vector2D.create(Math.min(srcX, destX), Math.min(srcY, destY));
         this.dest = Vector2D.create(Math.max(srcX, destX), Math.max(srcY, destY));
@@ -30,7 +34,7 @@ public class Rectangle {
 
     public boolean isVectorWithin(Vector2D vec) {
         boolean result = vec.getX() >= src.getX() && vec.getX() < dest.getX() && vec.getY() >= src.getY() && vec.getY() < dest.getY();
-        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
+//        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
         return result;
     }
 

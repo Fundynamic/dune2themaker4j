@@ -14,7 +14,7 @@ import org.newdawn.slick.SlickException;
 import static com.fundynamic.d2tm.game.controls.MouseTest.makeTestableMouse;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static com.fundynamic.d2tm.game.map.MapTest.makeMap;
-import static com.fundynamic.d2tm.game.rendering.EntityViewportRendererTest.makeUnit;
+import static com.fundynamic.d2tm.game.rendering.CellBasedEntityViewportRendererTest.makeUnit;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 

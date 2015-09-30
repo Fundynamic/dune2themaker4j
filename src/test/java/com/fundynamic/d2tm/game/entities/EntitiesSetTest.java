@@ -155,6 +155,11 @@ public class EntitiesSetTest {
         }
 
         @Override
+        public EntityType getEntityType() {
+            return EntityType.UNIT;
+        }
+
+        @Override
         public void takeDamage(int hitPoints) {
             // leave empty because we don't need to test damage taking logic
         }

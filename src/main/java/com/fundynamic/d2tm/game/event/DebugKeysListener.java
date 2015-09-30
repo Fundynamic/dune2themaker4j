@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.event;
 
 
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.controls.PlacingProjectileMouse;
 import com.fundynamic.d2tm.game.controls.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.controls.PlacingUnitMouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -30,6 +31,10 @@ public class DebugKeysListener extends AbstractKeyListener {
         if (key == Input.KEY_S) {
             System.out.println("Debug key: Place structure");
             mouse.setMouseBehavior(new PlacingStructureMouse(mouse, entityRepsitory));
+        }
+        if (key == Input.KEY_P) {
+            System.out.println("Debug key: Place projectile");
+            mouse.setMouseBehavior(new PlacingProjectileMouse(mouse, entityRepsitory));
         }
         if (key == Input.KEY_U) {
             System.out.println("Debug key: Place unit");

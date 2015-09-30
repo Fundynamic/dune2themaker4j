@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
@@ -10,17 +11,23 @@ import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import java.util.HashMap;
 import java.util.Set;
 
 public class EntityRepository {
 
+    // units
     public static int TRIKE = 0;
     public static int QUAD = 1;
 
+    // structures
     public static int CONSTRUCTION_YARD = 0;
     public static int REFINERY = 1;
+
+    // projectiles
+    public static int ROCKET = 0;
 
     private final Map map;
 
@@ -36,8 +43,11 @@ public class EntityRepository {
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200);
         createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150);
+
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
+
+        createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, 3, 1.5F, 200);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -76,8 +86,13 @@ public class EntityRepository {
                     createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
+                case PROJECTILE:
+                    SpriteSheet spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player);
+                    entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
+                    break;
                 default:
-                    throw new IllegalArgumentException("Unknown type!");
+                    throw new IllegalArgumentException("Unknown type " + entityData.type);
             }
             return createdEntity;
         } catch (CellAlreadyOccupiedException e) {
@@ -87,6 +102,10 @@ public class EntityRepository {
 
     public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints) throws SlickException {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
+    }
+
+    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, sight, moveSpeed, hitPoints);
     }
 
     public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints) throws SlickException {
@@ -162,6 +181,26 @@ public class EntityRepository {
                 Predicate.builder().
                         selectableMovableForPlayer(player).
                         withinArea(rectangle)
+        );
+    }
+
+    /**
+     * Slow way of filtering within area!
+     * @param rectangle
+     * @return
+     */
+    public Set<Entity> findProjectilesWithinRectangle(Rectangle rectangle) {
+        return filter(
+                Predicate.builder().
+                        ofType(EntityType.PROJECTILE).
+                        withinArea(rectangle)
+        );
+    }
+
+    public Set<Entity> allProjectiles() {
+        return filter(
+                Predicate.builder().
+                        ofType(EntityType.PROJECTILE)
         );
     }
 }

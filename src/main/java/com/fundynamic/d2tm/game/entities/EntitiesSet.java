@@ -21,7 +21,7 @@ public class EntitiesSet extends HashSet<Entity> {
     public Set<Entity> filter(PredicateBuilder predicateBuilder) {
         Predicate predicate = predicateBuilder.build();
         Set<Entity> results = filter(predicate);
-        System.out.println("Filter with predicate " + predicate + " - yields " + results.size() + " results: \n" + results);
+        //System.out.println("Filter with predicate " + predicate + " - yields " + results.size() + " results: \n" + results);
         return results;
     }
 

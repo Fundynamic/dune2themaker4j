@@ -11,7 +11,7 @@ import org.newdawn.slick.SlickException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityViewportRenderer {
+public class CellBasedEntityViewportRenderer {
 
     private final int tileHeight;
     private final int tileWidth;
@@ -19,7 +19,7 @@ public class EntityViewportRenderer {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public EntityViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public CellBasedEntityViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
         this.map = map;
         this.tileHeight = tileHeight;
         this.tileWidth = tileWidth;
@@ -27,6 +27,14 @@ public class EntityViewportRenderer {
         cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
     }
 
+    /**
+     * Rendering is done cell based. So first check which cells are visible. Then check which entity is assigned to
+     * the cell and then decide to render it.
+     *
+     * @param graphics
+     * @param viewingVector
+     * @throws SlickException
+     */
     public void render(Graphics graphics, Vector2D viewingVector) throws SlickException {
         int startCellX = viewingVector.getXAsInt() / tileWidth;
         int startCellY = viewingVector.getYAsInt() / tileHeight;

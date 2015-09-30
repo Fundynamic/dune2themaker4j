@@ -101,10 +101,14 @@ public class Cell {
     }
 
     public boolean isOccupied(Entity entityWhoWantsToKnow) {
-        return entity != null && !entity.equals(entityWhoWantsToKnow);
+        return hasAnyEntity() && !entity.equals(entityWhoWantsToKnow);
     }
 
     public boolean isVisibleFor(Player controllingPlayer) {
         return !controllingPlayer.isShrouded(position);
+    }
+
+    public boolean hasAnyEntity() {
+        return entity != null;
     }
 }
