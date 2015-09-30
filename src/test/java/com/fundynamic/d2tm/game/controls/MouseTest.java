@@ -191,9 +191,8 @@ public class MouseTest {
      */
     public static Mouse makeTestableMouse(Map map, Player player) throws SlickException {
         EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
-        ImageRepository imageRepository = ImageRepositoryTest.makeTestableImageRepository();
         GameContainer gameContainer = mock(GameContainer.class);
-        return new TestableMouse(player, gameContainer, entityRepository, imageRepository);
+        return new TestableMouse(player, gameContainer, entityRepository);
     }
 
 }

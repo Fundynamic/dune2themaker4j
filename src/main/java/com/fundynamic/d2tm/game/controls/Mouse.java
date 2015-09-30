@@ -35,7 +35,7 @@ public class Mouse {
 
     private Map<MouseImages, Image> mouseImages;
 
-    Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) {
+    Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
         this.controllingPlayer = controllingPlayer;
         this.entityRepository = entityRepository;
         this.mouseBehavior = null;
@@ -45,7 +45,7 @@ public class Mouse {
     }
 
     public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) throws SlickException {
-        Mouse mouse = new Mouse(player, gameContainer, entityRepository, imageRepository);
+        Mouse mouse = new Mouse(player, gameContainer, entityRepository);
         mouse.addMouseImage(Mouse.MouseImages.NORMAL, imageRepository.loadAndCache("mouse/mouse_normal.png"));
         mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, imageRepository.loadAndCache("mouse/mouse_pick.png"));
         mouse.addMouseImage(Mouse.MouseImages.MOVE, imageRepository.loadAndCache("mouse/mouse_move.png"));
