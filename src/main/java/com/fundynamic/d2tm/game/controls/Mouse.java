@@ -25,7 +25,6 @@ public class Mouse {
     private final Player controllingPlayer;
     private final GameContainer gameContainer;
     private final EntityRepository entityRepository;
-    private final ImageRepository imageRepository;
 
     private Viewport viewport;
 
@@ -39,7 +38,6 @@ public class Mouse {
     Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) {
         this.controllingPlayer = controllingPlayer;
         this.entityRepository = entityRepository;
-        this.imageRepository = imageRepository;
         this.mouseBehavior = null;
         this.hoverCell = null;
         this.gameContainer = gameContainer;
