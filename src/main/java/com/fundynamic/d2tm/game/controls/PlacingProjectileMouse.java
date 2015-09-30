@@ -29,9 +29,10 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
         Projectile projectile = (Projectile) entityPlacedOnMap;
 
         // temporarily give some move to command to a projectile
-        Set<Entity> entities = entityRepository.filter(Predicate.builder().ofType(EntityType.UNIT));
+        Set<Entity> entities = entityRepository.filter(Predicate.builder().ofType(EntityType.STRUCTURE));
         ArrayList<Entity> ents = new ArrayList(entities);
-        Entity randomUnit = ents.get(Random.getRandomBetween(0, ents.size()));
+        Entity randomUnit = ents.get(0);
+//        Entity randomUnit = ents.get(Random.getRandomBetween(0, ents.size()));
         projectile.moveTo(randomUnit.getAbsoluteMapCoordinates());
 
         selectRandomlySomethingToPlace();

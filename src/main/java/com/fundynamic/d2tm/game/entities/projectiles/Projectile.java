@@ -44,9 +44,8 @@ public class Projectile extends Entity implements Moveable, Destructible {
         int facing = 0;
         if (target != absoluteMapCoordinates) {
             double angle = absoluteMapCoordinates.angleTo(target);
-            angle -= 90; // so 'right' becomes 'up'
-
-            facing = (int) angle / 16;
+            float chop = 22.5F; // 22.5 degrees equals 16 facings over 360 degrees (360 / 16 = 22.5)
+            facing = (int) (angle / chop);
         }
         return spriteSheet.getSprite(facing, 0);
     }
