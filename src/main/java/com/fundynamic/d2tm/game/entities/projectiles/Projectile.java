@@ -30,6 +30,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
                       EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         this.map = map;
+        this.entityData = entityData;
         target = mapCoordinates;
         this.speed = entityData.moveSpeed;
         this.damage = entityData.damage;
@@ -51,10 +52,12 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
     public Image getSprite() {
         int facing = 0;
-        if (target != absoluteMapCoordinates) {
-            double angle = absoluteMapCoordinates.angleTo(target);
-            float chop = 22.5F; // 22.5 degrees equals 16 facings over 360 degrees (360 / 16 = 22.5)
-            facing = (int) (angle / chop);
+        if (entityData.hasFacings()) {
+            if (target != absoluteMapCoordinates) {
+                double angle = absoluteMapCoordinates.angleTo(target);
+                float chop = 360 / entityData.facings; // degrees equals .. facings over 360 degrees
+                facing = (int) (angle / chop);
+            }
         }
         return spriteSheet.getSprite(facing, 0);
     }
@@ -74,8 +77,10 @@ public class Projectile extends Entity implements Moveable, Destructible {
         }
 
         if (target.distance(absoluteMapCoordinates) < 0.1F) {
-            // spawn explosion
-            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, explosionId, player);
+            if (explosionId > -1) {
+                // spawn explosion
+                entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, explosionId, player);
+            }
 
             // do damage on cell / range of cells
             Cell cell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);

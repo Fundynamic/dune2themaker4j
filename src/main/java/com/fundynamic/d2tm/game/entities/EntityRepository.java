@@ -29,8 +29,10 @@ public class EntityRepository {
 
     // projectiles
     public static int ROCKET = 0;
+    public static int BULLET = 1;
 
     // explosions
+    public static final int NO_EXPLOSION = -1;
     public static int EXPLOSION_NORMAL = 0;
 
     private final Map map;
@@ -53,7 +55,8 @@ public class EntityRepository {
 
         createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48, 3f);
 
-        createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200);
+        createProjectile(ROCKET, "projectiles/LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200, 16);
+        createProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, NO_EXPLOSION, 160f, 15, 0);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -116,10 +119,11 @@ public class EntityRepository {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
     }
 
-    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int explosionId, float moveSpeed, int damage) throws SlickException {
+    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int explosionId, float moveSpeed, int damage, int facings) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
         entity.damage = damage;
         entity.explosionId = explosionId;
+        entity.facings = facings;
     }
 
     public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {

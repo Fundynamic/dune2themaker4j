@@ -16,6 +16,8 @@ public class EntityData {
     public float moveSpeed;
     public int hitPoints;
 
+    public int facings; //
+
     public int damage;
     public int explosionId = -1;
     public float animationSpeed; // in frames per second
@@ -51,5 +53,9 @@ public class EntityData {
                 ", damage=" + damage +
                 ", explosionId=" + explosionId +
                 '}';
+    }
+
+    public boolean hasFacings() {
+        return facings > 0;
     }
 }

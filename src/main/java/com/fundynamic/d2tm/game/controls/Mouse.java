@@ -133,6 +133,18 @@ public class Mouse {
         }
     }
 
+    public void setMouseImageHotSpotCentered(Image image) {
+        if (image == null) throw new IllegalArgumentException("Image to set for mouse cursor may not be null!");
+        if (!mouseImages.containsValue(image)) {
+            this.currentImage = MouseImages.CUSTOM;
+        }
+        try {
+            gameContainer.setMouseCursor(image, image.getWidth() / 2, image.getHeight() / 2);
+        } catch (SlickException e) {
+            throw new CannotSetMouseCursorException(e);
+        }
+    }
+
     public void setMouseImage(MouseImages key, int hotSpotX, int hotSpotY) {
         if (key.equals(this.currentImage)) return;
         this.currentImage = key;

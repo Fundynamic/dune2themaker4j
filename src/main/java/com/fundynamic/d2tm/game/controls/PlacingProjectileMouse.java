@@ -61,9 +61,9 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
     }
 
     private void selectRandomlySomethingToPlace() {
-        entityToPlace = entityRepository.getEntityData(EntityType.PROJECTILE, EntityRepository.ROCKET);
+        entityToPlace = entityRepository.getEntityData(EntityType.PROJECTILE, EntityRepository.BULLET);
         if (entityToPlace != null) {
-            mouse.setMouseImage(entityToPlace.getFirstImage(), 16, 16);
+            mouse.setMouseImageHotSpotCentered(entityToPlace.getFirstImage());
         }
     }
 

@@ -147,7 +147,7 @@ public class EntityRepositoryTest {
         entityRepository.createStructure(STRUCTURE_ID, "constyard.png", 32, 32, 2, 1000);
         entityRepository.createUnit(UNIT_FIRST_ID, "quad.png", 32, 32, 2, 1.0F, 100);
         entityRepository.createUnit(UNIT_SECOND_ID, "trike.png", 32, 32, 2, 1.0F, 100);
-        entityRepository.createProjectile(PROJECTILE_ID, "projectile.png", 32, 32, 2, 1.0F, 100);
+        entityRepository.createProjectile(PROJECTILE_ID, "projectile.png", 32, 32, 2, 1.0F, 100, 16);
 
         return entityRepository;
     }
