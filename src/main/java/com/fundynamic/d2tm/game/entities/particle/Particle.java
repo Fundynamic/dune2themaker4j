@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.particle;
 
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -14,9 +15,11 @@ public class Particle extends Entity implements Destructible {
 
     boolean destroyed = false;
     private float sprite = 0;
+    private float animationSpeed;
 
-    public Particle(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityRepository entityRepository) {
+    public Particle(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, 0, null, entityRepository);
+        animationSpeed = entityData.animationSpeed;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class Particle extends Entity implements Destructible {
 
     @Override
     public void update(float deltaInSeconds) {
-        sprite += 3f * deltaInSeconds;
+        sprite += animationSpeed * deltaInSeconds;
 
         if (sprite >= spriteSheet.getHorizontalCount()) {
             destroyed = true;

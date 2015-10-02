@@ -51,7 +51,7 @@ public class EntityRepository {
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
 
-        createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48);
+        createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48, 3f);
 
         createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200);
     }
@@ -100,7 +100,7 @@ public class EntityRepository {
                     break;
                 case PARTICLE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Particle(mapCoordinate, spriteSheet, this);
+                    createdEntity = new Particle(mapCoordinate, spriteSheet, entityData, this);
                     entitiesSet.add(createdEntity);
                     break;
                 default:
@@ -122,8 +122,9 @@ public class EntityRepository {
         entity.explosionId = explosionId;
     }
 
-    public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
+    public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
+        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
+        entity.animationSpeed = framesPerSecond;
     }
 
     public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints) throws SlickException {
