@@ -30,7 +30,7 @@ Then to view the test report, just open `target/site/jacoco/index.html`
 For every feature or improvement a small tech demo is created and posted at youtube. These demos are grouped by milestone:
 
 - [Alpha 1 (v0.0.1) Demos @ YouTube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW2_Ue06RVQewDQBF8nkW_dE)
-- Alpha 2 (v0.0.2) tbd
+- [Alpha 2 (v0.0.2) Demos @ Youtube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW0rdEfpvgFH2sHiB3JIR-BN)
 
 ## Development
 Import the project using your favorite IDE.
