@@ -3,8 +3,8 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -25,7 +25,7 @@ public class Viewport implements Renderable {
     private final Perimeter viewingVectorPerimeter;
 
     private final CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer;
-    private final ProjectileViewportRenderer projectileViewportRenderer;
+    private final EntityViewportRenderer entityViewportRenderer;
 
     private final CellTerrainRenderer cellTerrainRenderer;
     private final CellShroudRenderer cellShroudRenderer;
@@ -83,7 +83,7 @@ public class Viewport implements Renderable {
         this.mouse.setViewport(this); // <-- THIS IS BAD!
 
         this.cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
-        this.projectileViewportRenderer = new ProjectileViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
+        this.entityViewportRenderer = new EntityViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
     }
 
     public void init() throws SlickException {
@@ -105,7 +105,10 @@ public class Viewport implements Renderable {
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
 
             cellBasedEntityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
-            projectileViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PARTICLE);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PROJECTILE);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 

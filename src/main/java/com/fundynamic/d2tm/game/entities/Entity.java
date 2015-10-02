@@ -18,7 +18,10 @@ public abstract class Entity implements Renderable, Updateable {
         this.spriteSheet = spriteSheet;
         this.sight = sight;
         this.player = player;
-        player.addEntity(this);
+        if (player != null) {
+            // temporarily, because 'particle' does not belong to a player
+            player.addEntity(this);
+        }
     }
 
     public Vector2D getAbsoluteMapCoordinates() {
@@ -34,7 +37,7 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public boolean belongsToPlayer(Player other) {
-        return player.equals(other);
+        return other.equals(player);
     }
 
     public boolean isMovable() {
@@ -58,4 +61,10 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public abstract EntityType getEntityType();
+
+    public void removeFromPlayerSet(Entity entity) {
+        if (player != null) {
+            player.removeEntity(entity);
+        }
+    }
 }

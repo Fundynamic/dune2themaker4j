@@ -44,16 +44,16 @@ public class Structure extends Entity implements Selectable, Destructible {
         return spriteSheet.getSprite(0, animationFrame);
     }
 
-    public void update(float delta) {
+    public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
-        float offset = delta * ANIMATION_FRAMES_PER_SECOND;
+        float offset = deltaInSeconds * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
-        this.fadingSelection.update(delta);
+        this.fadingSelection.update(deltaInSeconds);
     }
 
     public Vector2D getAbsoluteMapCoordinates() {

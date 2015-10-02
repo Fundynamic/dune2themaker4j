@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
@@ -29,6 +30,9 @@ public class EntityRepository {
     // projectiles
     public static int ROCKET = 0;
 
+    // explosions
+    public static int EXPLOSION_NORMAL = 0;
+
     private final Map map;
 
     private final Recolorer recolorer;
@@ -48,6 +52,8 @@ public class EntityRepository {
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
 
         createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, 3, 1.5F, 200);
+
+        createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -76,6 +82,7 @@ public class EntityRepository {
             Entity createdEntity;
             Image originalImage = entityData.image;
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            SpriteSheet spriteSheet;
 
             switch (entityData.type) {
                 case STRUCTURE:
@@ -87,9 +94,14 @@ public class EntityRepository {
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:
-                    SpriteSheet spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
                     createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player);
                     entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
+                    break;
+                case PARTICLE:
+                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                    createdEntity = new Particle(mapCoordinate, spriteSheet);
+                    entitiesSet.add(createdEntity);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown type " + entityData.type);
@@ -108,6 +120,10 @@ public class EntityRepository {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, sight, moveSpeed, hitPoints);
     }
 
+    public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
+        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
+    }
+
     public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints) throws SlickException {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
     }
@@ -120,7 +136,7 @@ public class EntityRepository {
 
         for (Entity entity : entitiesToRemove) {
             map.removeEntity(entity);
-            entity.getPlayer().removeEntity(entity);
+            entity.removeFromPlayerSet(entity);
             entitiesSet.remove(entity);
         }
 
@@ -189,10 +205,10 @@ public class EntityRepository {
      * @param rectangle
      * @return
      */
-    public Set<Entity> findProjectilesWithinRectangle(Rectangle rectangle) {
+    public Set<Entity> findEntitiesOfTypeWithinRectangle(Rectangle rectangle, EntityType entityType) {
         return filter(
                 Predicate.builder().
-                        ofType(EntityType.PROJECTILE).
+                        ofType(entityType).
                         withinArea(rectangle)
         );
     }

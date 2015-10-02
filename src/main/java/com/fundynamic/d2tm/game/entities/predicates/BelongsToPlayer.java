@@ -15,7 +15,7 @@ public class BelongsToPlayer extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return entity.getPlayer().equals(playerItShouldBelongTo);
+        return entity.belongsToPlayer(playerItShouldBelongTo);
     }
 
     @Override
