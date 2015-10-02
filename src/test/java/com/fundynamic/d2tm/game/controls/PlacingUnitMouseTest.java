@@ -1,9 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapTest;
@@ -18,13 +15,13 @@ import java.util.ArrayList;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 
-public class PlacingProjectileMouseTest {
+public class PlacingUnitMouseTest {
 
-    private PlacingProjectileMouse placingProjectileMouse;
+    private PlacingUnitMouse placingUnitMouse;
     private Map map;
     private EntityRepository entityRepository;
 
@@ -34,28 +31,30 @@ public class PlacingProjectileMouseTest {
         Player player = new Player("Stefan", Recolorer.FactionColor.RED);
         Mouse mouse = MouseTest.makeTestableMouse(map, player);
         entityRepository = mouse.getEntityRepository();
-        placingProjectileMouse = new PlacingProjectileMouse(mouse, entityRepository);
+        placingUnitMouse = new PlacingUnitMouse(mouse, entityRepository);
     }
 
     @Test
     public void leftClickedOnNoCellDoesNothing() throws SlickException {
-        placingProjectileMouse.leftClicked();
+        placingUnitMouse.leftClicked();
     }
 
     @Test
-    public void leftClickedOnNoHoverCellPlacesProjectile() throws SlickException {
+    public void leftClickedOnNoHoverCellPlacesUnit() throws SlickException {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
-        placingProjectileMouse.mouseMovedToCell(cell);
+        placingUnitMouse.mouseMovedToCell(cell);
 
-        assertThat(entityRepository.allProjectiles(), is(empty()));
+        assertThat(entityRepository.allUnits(), is(empty()));
 
-        placingProjectileMouse.leftClicked();
+        placingUnitMouse.leftClicked();
 
-        assertThat(entityRepository.allProjectiles().size(), is(1));
-        Entity projectile = new ArrayList<>(entityRepository.allProjectiles()).get(0);
+        EntitiesSet allUnits = entityRepository.allUnits();
+        assertThat(allUnits.size(), is(1));
 
-        assertThat(projectile.getAbsoluteMapCoordinates(), is(Vector2D.create(32, 32)));
-        assertThat(projectile.getEntityType(), is (EntityType.PROJECTILE));
+        Entity unit = allUnits.asList().get(0);
+
+        assertThat(unit.getAbsoluteMapCoordinates(), is(Vector2D.create(32, 32)));
+        assertThat(unit.getEntityType(), is (EntityType.UNIT));
     }
 
 }

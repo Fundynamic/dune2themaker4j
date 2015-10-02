@@ -54,7 +54,7 @@ public class DraggingSelectionBoxMouseTest {
         EntityRepository entityRepository = mouse.getEntityRepository();
 
         Vector2D mapCoordinate = Vector2D.create(1, 1); // == 32, 32 pixels
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_ID, player);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_FIRST_ID, player);
         assertFalse(entity.isSelected());
 
         draggingSelectionBoxMouse.draggedToCoordinates(draggingCoordinates);
@@ -71,7 +71,7 @@ public class DraggingSelectionBoxMouseTest {
         EntityRepository entityRepository = mouse.getEntityRepository();
 
         Vector2D mapCoordinate = Vector2D.create(1, 1);
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_ID, player);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_FIRST_ID, player);
         entity.select();
         assertTrue(entity.isSelected());
 

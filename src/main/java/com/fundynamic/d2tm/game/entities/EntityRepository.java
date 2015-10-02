@@ -164,15 +164,15 @@ public class EntityRepository {
         return entityType.toString() + "-" + id;
     }
 
-    public Set<Entity> getEntitiesSet() {
+    public EntitiesSet getEntitiesSet() {
         return entitiesSet;
     }
 
-    public Set<Entity> filter(PredicateBuilder predicateBuilder) {
+    public EntitiesSet filter(PredicateBuilder predicateBuilder) {
         return entitiesSet.filter(predicateBuilder);
     }
 
-    public Set<Entity> filter(Predicate<Entity> predicate) {
+    public EntitiesSet filter(Predicate<Entity> predicate) {
         return entitiesSet.filter(predicate);
     }
 
@@ -197,10 +197,19 @@ public class EntityRepository {
         );
     }
 
-    public Set<Entity> allProjectiles() {
+    public EntitiesSet allProjectiles() {
+        return ofType(EntityType.PROJECTILE);
+    }
+
+    public EntitiesSet ofType(EntityType entityType) {
         return filter(
                 Predicate.builder().
-                        ofType(EntityType.PROJECTILE)
+                        ofType(entityType)
         );
     }
+
+    public EntitiesSet allUnits() {
+        return ofType(EntityType.UNIT);
+    }
+
 }
