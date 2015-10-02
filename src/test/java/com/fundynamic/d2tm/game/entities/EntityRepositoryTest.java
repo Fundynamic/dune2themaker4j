@@ -26,10 +26,6 @@ import static org.mockito.Mockito.when;
 public class EntityRepositoryTest {
 
     public static final int UNIT_FIRST_ID = 0;
-    public static final int UNIT_SECOND_ID = 1;
-    public static final int STRUCTURE_ID = 0;
-    public static final int PROJECTILE_ONE_ID = 0;
-    public static final int PROJECTILE_TWO_ID = 1;
 
     @Mock
     public Map map;
@@ -144,15 +140,7 @@ public class EntityRepositoryTest {
 
     public static EntityRepository makeTestableEntityRepository(Map map) throws SlickException {
         TestableEntityRepository entityRepository = makeEmptyTestableEntityRepository(map);
-
-        entityRepository.createStructure(STRUCTURE_ID, "constyard.png", 32, 32, 2, 1000);
-        entityRepository.createUnit(UNIT_FIRST_ID, "quad.png", 32, 32, 2, 1.0F, 100);
-        entityRepository.createUnit(UNIT_SECOND_ID, "trike.png", 32, 32, 2, 1.0F, 100);
-        entityRepository.createProjectile(PROJECTILE_ONE_ID, "projectile.png", 32, 32, 2, 1.0F, 100, 16);
-        entityRepository.createProjectile(PROJECTILE_TWO_ID, "projectile.png", 32, 32, 2, 1.0F, 100, 16);
-
-        // would be nice if we could just do:
-        // entityRepository.init();
+        entityRepository.init();
         return entityRepository;
     }
 
