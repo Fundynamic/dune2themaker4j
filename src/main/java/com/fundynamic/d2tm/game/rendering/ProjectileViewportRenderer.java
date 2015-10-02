@@ -23,7 +23,7 @@ public class ProjectileViewportRenderer {
     }
 
     public void render(Graphics graphics, Vector2D viewingVector) throws SlickException {
-        // very slow and naieve way
+        // very slow and naive way
         Rectangle rectangle = Rectangle.createWithDimensions(viewingVector.min(Vector2D.create(32, 32)), viewportDimensions.add(Vector2D.create(64, 64)));
         Set<Entity> entities = entityRepository.findProjectilesWithinRectangle(rectangle);
 
