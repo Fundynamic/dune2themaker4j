@@ -4,10 +4,7 @@ import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -27,12 +24,12 @@ public class Structure extends Entity implements Selectable, Destructible {
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
 
-    public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData) {
-        this(absoluteMapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData);
+    public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
+        this(absoluteMapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData, entityRepository);
     }
 
-    public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData) {
-        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player);
+    public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints);
         widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);

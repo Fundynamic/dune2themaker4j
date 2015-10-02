@@ -10,14 +10,16 @@ public abstract class Entity implements Renderable, Updateable {
     protected final SpriteSheet spriteSheet;
     protected final int sight;
     protected final Player player;
+    protected final EntityRepository entityRepository;
 
     protected Vector2D absoluteMapCoordinates;
 
-    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
+    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
         this.absoluteMapCoordinates = absoluteMapCoordinates;
         this.spriteSheet = spriteSheet;
         this.sight = sight;
         this.player = player;
+        this.entityRepository = entityRepository;
         if (player != null) {
             // temporarily, because 'particle' does not belong to a player
             player.addEntity(this);

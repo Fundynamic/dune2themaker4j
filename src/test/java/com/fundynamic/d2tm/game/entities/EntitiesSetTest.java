@@ -7,6 +7,9 @@ import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 
@@ -15,7 +18,11 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+@RunWith(MockitoJUnitRunner.class)
 public class EntitiesSetTest {
+
+    @Mock
+    private EntityRepository entityRepository;
 
     public static final int TILE_SIZE = 32;
     private EntitiesSet entitiesSet;
@@ -44,8 +51,8 @@ public class EntitiesSetTest {
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
 
-        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200));
-        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200));
+        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200, entityRepository));
+        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200, entityRepository));
         playerOneStructureCount = 2;
 
         // player two has 3 units and 3 structures
@@ -54,12 +61,12 @@ public class EntitiesSetTest {
         entitiesSet.add(UnitFactory.makeUnit(playerTwo, 300));
         destroyers += 3;
 
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200));
+        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
+        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
+        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
 
         // Bare entities (with no behavior at all) - to test filtering
-        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne));
+        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne, null));
         playerOneBareEntitiesCount = 1;
     }
 
@@ -115,8 +122,8 @@ public class EntitiesSetTest {
 
     class DestroyedEntity extends Entity implements Destructible {
 
-        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
-            super(mapCoordinates, spriteSheet, sight, player);
+        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
+            super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         }
 
         @Override

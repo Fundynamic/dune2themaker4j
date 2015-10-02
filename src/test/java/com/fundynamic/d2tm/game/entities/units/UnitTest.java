@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -36,6 +37,9 @@ public class UnitTest {
     @Mock
     private FadingSelection fadingSelection;
 
+    @Mock
+    private EntityRepository entityRepository;
+
     private Unit unit;
     private Vector2D unitAbsoluteMapCoordinates;
 
@@ -58,7 +62,7 @@ public class UnitTest {
     }
 
     public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints) {
-        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection);
+        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository);
     }
 
     @Test

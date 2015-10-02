@@ -86,21 +86,21 @@ public class EntityRepository {
 
             switch (entityData.type) {
                 case STRUCTURE:
-                    createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData);
+                    createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
-                    createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData);
+                    createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player);
+                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player, this);
                     entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Particle(mapCoordinate, spriteSheet);
+                    createdEntity = new Particle(mapCoordinate, spriteSheet, this);
                     entitiesSet.add(createdEntity);
                     break;
                 default:

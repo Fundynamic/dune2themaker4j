@@ -29,7 +29,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int facing;
     private float moveSpeed;
 
-    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData) {
+    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
                 absoluteMapCoordinates,
@@ -37,13 +37,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 new FadingSelection(entityData.width, entityData.height),
                 new HitPointBasedDestructibility(entityData.hitPoints),
                 player,
-                entityData
+                entityData,
+                entityRepository
         );
     }
 
     // TODO: Simplify constructor
-    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
-        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player);
+    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -60,8 +61,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
                 Player player, int sight, int facing,
                 Vector2D target, Vector2D nextTargetToMoveTo, Vector2D offset,
-                int hitPoints, FadingSelection fadingSelection) {
-        super(mapCoordinates, spriteSheet, sight, player);
+                int hitPoints, FadingSelection fadingSelection, EntityRepository entityRepository) {
+        super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         this.offset = offset;
         this.moveSpeed = 1.0F;
         this.map = map;

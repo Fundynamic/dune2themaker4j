@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities.projectiles;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -21,8 +22,8 @@ public class Projectile extends Entity implements Moveable, Destructible {
     // Implementation
     private final Map map;
 
-    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player) {
-        super(mapCoordinates, spriteSheet, sight, player);
+    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
+        super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         this.map = map;
         target = mapCoordinates;
     }
@@ -53,20 +54,24 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public void update(float deltaInSeconds) {
         if (target != absoluteMapCoordinates) {
-            float speed = 0.5f * deltaInSeconds;
+            float speed = 96f;
+
+            float timeCorrectedSpeed = speed * deltaInSeconds;
             Vector2D direction = target.min(absoluteMapCoordinates);
             Vector2D normalised = direction.normalise();
 
             // make sure we don't overshoot
             float distance = absoluteMapCoordinates.distance(target);
-            if (distance < speed) speed = distance;
+            if (distance < timeCorrectedSpeed) timeCorrectedSpeed = distance;
 
-            absoluteMapCoordinates = absoluteMapCoordinates.add(normalised.scale(speed));
+            absoluteMapCoordinates = absoluteMapCoordinates.add(normalised.scale(timeCorrectedSpeed));
         }
 
         if (target.distance(absoluteMapCoordinates) < 0.1F) {
-            // 1. do damage on cell / range of cells
-            // 2. spawn explosion
+            // spawn explosion
+            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL, player);
+
+            // do damage on cell / range of cells
             Cell cell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
             if (cell.hasAnyEntity()) {
                 Entity entity = cell.getEntity();

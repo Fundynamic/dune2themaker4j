@@ -3,8 +3,7 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -97,11 +96,12 @@ public class CellBasedEntityViewportRendererTest {
      * @param mapCoordinates
      * @return
      */
-    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) {
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) throws SlickException {
         FadingSelection fadingSelection = new FadingSelection(32, 32);
+        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
         HitPointBasedDestructibility hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
         EntityData entityData = new EntityData(32, 32, 9);
-        Unit unit = new Unit(map, mapCoordinates, makeSpriteSheet(), fadingSelection, hitPointBasedDestructibility, player, entityData);
+        Unit unit = new Unit(map, mapCoordinates, makeSpriteSheet(), fadingSelection, hitPointBasedDestructibility, player, entityData, entityRepository);
         map.placeUnit(unit);
         return unit;
     }
