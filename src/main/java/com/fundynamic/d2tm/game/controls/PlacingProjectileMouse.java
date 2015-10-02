@@ -4,7 +4,7 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -25,15 +25,20 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
     @Override
     public void leftClicked() {
         Cell hoverCell = mouse.getHoverCell();
+        if (hoverCell == null) return;
+
         Entity entityPlacedOnMap = entityRepository.placeOnMap(hoverCell.getCoordinatesAsAbsoluteVector2D(), entityToPlace, mouse.getControllingPlayer());
         Projectile projectile = (Projectile) entityPlacedOnMap;
 
         // temporarily give some move to command to a projectile
         Set<Entity> entities = entityRepository.filter(Predicate.builder().ofType(EntityType.STRUCTURE));
         ArrayList<Entity> ents = new ArrayList(entities);
-        Entity randomUnit = ents.get(0);
-//        Entity randomUnit = ents.get(Random.getRandomBetween(0, ents.size()));
-        projectile.moveTo(randomUnit.getAbsoluteMapCoordinates());
+        if (ents.size() > 0) {
+            Entity randomStructure = ents.get(0);
+            projectile.moveTo(randomStructure.getAbsoluteMapCoordinates());
+        } else {
+            projectile.moveTo(Vector2D.random(640, 640));
+        }
 
         selectRandomlySomethingToPlace();
     }

@@ -27,6 +27,7 @@ public class EntityRepositoryTest {
 
     public static final int UNIT_ID = 1;
     public static final int STRUCTURE_ID = 0;
+    public static final int PROJECTILE_ID = 0;
 
     @Mock
     public Map map;
@@ -144,6 +145,7 @@ public class EntityRepositoryTest {
 
         entityRepository.createStructure(STRUCTURE_ID, "constyard.png", 32, 32, 2, 1000);
         entityRepository.createUnit(UNIT_ID, "quad.png", 32, 32, 2, 1.0F, 100);
+        entityRepository.createProjectile(PROJECTILE_ID, "projectile.png", 32, 32, 2, 1.0F, 100);
 
         return entityRepository;
     }
