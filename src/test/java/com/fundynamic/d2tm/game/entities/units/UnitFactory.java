@@ -19,6 +19,13 @@ public class UnitFactory {
     public static Unit makeUnit(Player player, int hitPoints, Vector2D mapCoordinates) {
         EntityData entityData = new EntityData(32, 32, 2);
         entityData.hitPoints = hitPoints;
-        return new Unit(mock(Map.class), mapCoordinates, mock(Image.class), player, entityData, mock(EntityRepository.class));
+        return new Unit(mock(Map.class), mapCoordinates, mock(Image.class), player, entityData, mock(EntityRepository.class)) {
+            @Override
+            public boolean isDestroyed() {
+                // we do this so that we do not have to deal with spawning explosions (which is done in the
+                // update method)
+                return super.hitPointBasedDestructibility.hasDied();
+            }
+        };
     }
 }

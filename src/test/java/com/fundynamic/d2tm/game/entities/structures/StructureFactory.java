@@ -14,7 +14,14 @@ public class StructureFactory {
     public static Structure makeStructure(Player player, int hitPoints, EntityRepository entityRepository) {
         EntityData entityData = new EntityData(32, 32, 2);
         entityData.hitPoints = hitPoints;
-        return new Structure(Vector2D.zero(), mock(Image.class), player, entityData, entityRepository);
+        return new Structure(Vector2D.zero(), mock(Image.class), player, entityData, entityRepository) {
+            @Override
+            public boolean isDestroyed() {
+                // we do this so that we do not have to deal with spawning explosions (which is done in the
+                // update method)
+                return super.hitPointBasedDestructibility.hasDied();
+            }
+        };
     }
 
 }

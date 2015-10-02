@@ -62,7 +62,14 @@ public class UnitTest {
     }
 
     public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints) {
-        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository);
+        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository) {
+            @Override
+            public boolean isDestroyed() {
+                // we do this so that we do not have to deal with spawning explosions (which is done in the
+                // update method)
+                return super.hitPointBasedDestructibility.hasDied();
+            }
+        };
     }
 
     @Test

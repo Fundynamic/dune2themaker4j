@@ -16,7 +16,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Behaviors
     private final FadingSelection fadingSelection;
-    private final HitPointBasedDestructibility hitPointBasedDestructibility;
+    protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
@@ -94,6 +94,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+
         this.fadingSelection.update(deltaInMs);
         if (shouldBeSomewhereElse()) {
             if (isWaitingForNextCellToDetermine()) {

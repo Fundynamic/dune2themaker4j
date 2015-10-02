@@ -45,7 +45,10 @@ public class EntityRepository {
 
     public EntityRepository(Map map, Recolorer recolorer) throws SlickException {
         this(map, recolorer, new HashMap<String, EntityData>());
+        init();
+    }
 
+    public void init() throws SlickException {
         // TODO: read this data from an external (XML/JSON/YML/INI) file
         createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200);
         createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150);

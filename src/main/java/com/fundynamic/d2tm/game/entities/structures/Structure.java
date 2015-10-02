@@ -19,7 +19,7 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     // Behaviors
     private final FadingSelection fadingSelection;
-    private final HitPointBasedDestructibility hitPointBasedDestructibility;
+    protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     // Implementation
     private final int widthInCells, heightInCells;
