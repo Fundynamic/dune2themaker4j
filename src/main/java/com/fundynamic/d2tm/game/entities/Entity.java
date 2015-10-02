@@ -79,4 +79,10 @@ public abstract class Entity implements Renderable, Updateable {
         }
     }
 
+    public Vector2D getRandomPositionWithin() {
+        int topX = getX() - 16;
+        int topY = getY() - 16;
+        return Vector2D.random(topX, topX + entityData.width, topY, topY + entityData.height);
+    }
+
 }

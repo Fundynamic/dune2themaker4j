@@ -53,7 +53,7 @@ public class EntityRepository {
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
 
-        createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48, 3f);
+        createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48, 5f);
 
         createProjectile(ROCKET, "projectiles/LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200, 16);
         createProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, NO_EXPLOSION, 160f, 15, 0);
@@ -84,15 +84,17 @@ public class EntityRepository {
         try {
             Entity createdEntity;
             Image originalImage = entityData.image;
-            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = originalImage;
             SpriteSheet spriteSheet;
 
             switch (entityData.type) {
                 case STRUCTURE:
+                    recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
                     createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
+                    recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
                     createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;

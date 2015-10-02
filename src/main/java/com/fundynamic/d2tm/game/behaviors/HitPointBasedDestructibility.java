@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-public class HitPointBasedDestructibility implements Destructible {
+public class HitPointBasedDestructibility {
 
     private int hitPoints;
 
@@ -8,13 +8,11 @@ public class HitPointBasedDestructibility implements Destructible {
         this.hitPoints = hitPoints;
     }
 
-    @Override
     public void takeDamage(int hitPoints) {
         this.hitPoints -= hitPoints;
     }
 
-    @Override
-    public boolean isDestroyed() {
+    public boolean hasDied() {
         return hitPoints < 1;
     }
 

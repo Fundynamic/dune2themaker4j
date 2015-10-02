@@ -23,23 +23,23 @@ public class HitPointBasedDestructibilityTest {
     @Test
     public void isDestroyedWhenWithZeroHitPointsOrLower() {
         hitPointBasedDestructibility.takeDamage(HIT_POINTS);
-        Assert.assertTrue(hitPointBasedDestructibility.isDestroyed());
+        Assert.assertTrue(hitPointBasedDestructibility.hasDied());
     }
 
     @Test
     public void isDestroyedWithLessThanZeroHitPoints() {
         hitPointBasedDestructibility.takeDamage(HIT_POINTS + 1);
-        Assert.assertTrue(hitPointBasedDestructibility.isDestroyed());
+        Assert.assertTrue(hitPointBasedDestructibility.hasDied());
     }
 
     @Test
     public void isNotDestroyedMoreThanOneHitPoint() {
-        Assert.assertFalse(hitPointBasedDestructibility.isDestroyed());
+        Assert.assertFalse(hitPointBasedDestructibility.hasDied());
     }
 
     @Test
     public void isNotDestroyedWithOneHitPoint() {
         hitPointBasedDestructibility.takeDamage(HIT_POINTS - 1);
-        Assert.assertFalse(hitPointBasedDestructibility.isDestroyed());
+        Assert.assertFalse(hitPointBasedDestructibility.hasDied());
     }
 }

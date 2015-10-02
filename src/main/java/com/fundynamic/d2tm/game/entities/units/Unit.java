@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
@@ -29,6 +30,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int facing;
     private float moveSpeed;
 
+    private boolean hasSpawnedExplosions;
+
     public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
@@ -45,6 +48,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // TODO: Simplify constructor
     public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
+        this.entityData = entityData;
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -99,6 +103,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 facing = determineFacingFor(nextTargetToMoveTo).getValue();
                 moveToNextCellPixelByPixel();
             }
+        }
+
+        if (hitPointBasedDestructibility.hasDied()) {
+            hasSpawnedExplosions = true;
+            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL, player);
         }
     }
 
@@ -236,7 +245,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public boolean isDestroyed() {
-        return hitPointBasedDestructibility.isDestroyed();
+        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
     }
 
     @Override
@@ -247,10 +256,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
 
         // spawn projectile from this cell , to another cell.
-//        entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, 0, player);
-
-        Destructible destructible = (Destructible) entity;
-        destructible.takeDamage(Random.getRandomBetween(50, 150));
+        Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, EntityRepository.BULLET, player);
+        projectile.moveTo(entity.getRandomPositionWithin());
+//
+//        Destructible destructible = (Destructible) entity;
+//        destructible.takeDamage(Random.getRandomBetween(50, 150));
     }
 
     public Vector2D getOffset() {

@@ -181,6 +181,7 @@ public class PlayingState extends BasicGameState {
             entity.update(deltaInSeconds);
         }
 
+        // Entities can 'remove' themselves, by flagging them as 'removable'
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 
         for (Viewport viewport : viewports) {

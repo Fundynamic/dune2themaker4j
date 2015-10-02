@@ -10,6 +10,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Structure extends Entity implements Selectable, Destructible {
 
     public static int TILE_SIZE = 32; // TODO: remove HACK HACK
@@ -23,6 +26,8 @@ public class Structure extends Entity implements Selectable, Destructible {
     private float animationTimer;
     private static final int ANIMATION_FRAME_COUNT = 2;
     private static final int ANIMATION_FRAMES_PER_SECOND = 5;
+
+    private boolean hasSpawnedExplosions;
 
     public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(absoluteMapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData, entityRepository);
@@ -52,6 +57,13 @@ public class Structure extends Entity implements Selectable, Destructible {
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
         this.fadingSelection.update(deltaInSeconds);
+
+        if (hitPointBasedDestructibility.hasDied()) {
+            hasSpawnedExplosions = true;
+            for (Vector2D pos : getAllCellsAsVectors()) {
+                entityRepository.placeOnMap(pos, EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL, player);
+            }
+        }
     }
 
     public Vector2D getAbsoluteMapCoordinates() {
@@ -109,12 +121,21 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     @Override
     public boolean isDestroyed() {
-        return hitPointBasedDestructibility.isDestroyed();
+        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
     }
 
-    public Vector2D getRandomPositionWithin() {
-        int topX = getX() - 16;
-        int topY = getY() - 16;
-        return Vector2D.random(topX, topX + entityData.width, topY, topY + entityData.height);
+    public List<Vector2D> getAllCellsAsVectors() {
+        List<Vector2D> result = new ArrayList<>(widthInCells * heightInCells);
+        for (int x = 0; x < widthInCells; x++) {
+            for (int y = 0; y < heightInCells; y++) {
+                int vecX = getX() + x * TILE_SIZE;
+                int vecY = getY() + y * TILE_SIZE;
+//                // center
+//                vecX += 16;
+//                vecY += 16;
+                result.add(Vector2D.create(vecX, vecY));
+            }
+        }
+        return result;
     }
 }
