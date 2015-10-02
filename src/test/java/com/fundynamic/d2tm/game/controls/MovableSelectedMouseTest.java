@@ -1,36 +1,19 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.controls.MouseTest.makeTestableMouse;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
-import static com.fundynamic.d2tm.game.map.MapTest.makeMap;
 import static com.fundynamic.d2tm.game.rendering.CellBasedEntityViewportRendererTest.makeUnit;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 
-public class MovableSelectedMouseTest {
-
-    private Player player;
-    private Map map;
-    private Mouse mouse;
-
-    @Before
-    public void setUp() throws SlickException {
-        player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-        map = makeMap();
-        mouse = makeTestableMouse(map, player);
-    }
+public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {

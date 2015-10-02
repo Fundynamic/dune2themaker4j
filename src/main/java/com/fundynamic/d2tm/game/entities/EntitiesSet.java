@@ -24,7 +24,7 @@ public class EntitiesSet extends HashSet<Entity> {
         return filter(predicate);
     }
 
-    public List<Entity> asList() {
+    public List<Entity> toList() {
         return new ArrayList<>(this);
     }
 

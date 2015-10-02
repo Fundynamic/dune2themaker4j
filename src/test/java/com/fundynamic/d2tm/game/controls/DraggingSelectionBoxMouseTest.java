@@ -18,18 +18,13 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 
-public class DraggingSelectionBoxMouseTest {
+public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
 
     private DraggingSelectionBoxMouse draggingSelectionBoxMouse;
-    private Mouse mouse;
-    private Player player;
 
     @Before
     public void setUp() throws SlickException {
-        Map map = MapTest.makeMap();
-
-        player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-        mouse = MouseTest.makeTestableMouse(map, player);
+        super.setUp();
 
         Viewport viewport = new Viewport(map, mouse, player);
         mouse.setViewport(viewport);

@@ -21,14 +21,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 
-public class NormalMouseTest {
+public class NormalMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickSelectsEntityOnHoverCell() throws SlickException {
-        Map map = makeMap();
-        Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-        Mouse mouse = makeTestableMouse(map, player);
-
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         mouse.setHoverCell(cell);
 

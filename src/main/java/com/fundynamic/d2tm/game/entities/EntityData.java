@@ -3,11 +3,16 @@ package com.fundynamic.d2tm.game.entities;
 import org.newdawn.slick.Image;
 
 public class EntityData {
+
     public EntityType type;
+
     public Image image;
+
     public int width;
     public int height;
+
     public int sight;
+
     public float moveSpeed;
     public int hitPoints;
 
