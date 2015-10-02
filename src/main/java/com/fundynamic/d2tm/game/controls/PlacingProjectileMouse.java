@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
@@ -35,7 +36,7 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
         ArrayList<Entity> ents = new ArrayList(entities);
         if (ents.size() > 0) {
             Entity randomStructure = ents.get(0);
-            projectile.moveTo(randomStructure.getAbsoluteMapCoordinates());
+            projectile.moveTo(((Structure)randomStructure).getRandomPositionWithin());
         } else {
             projectile.moveTo(Vector2D.random(640, 640));
         }

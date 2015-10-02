@@ -8,8 +8,8 @@ public class EntityData {
 
     public Image image;
 
-    public int width;
-    public int height;
+    public int width; // in pixels
+    public int height; // in pixels
 
     public int sight;
 

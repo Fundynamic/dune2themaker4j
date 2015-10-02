@@ -30,6 +30,7 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
+        this.entityData = entityData;
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints);
         widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);
@@ -109,5 +110,11 @@ public class Structure extends Entity implements Selectable, Destructible {
     @Override
     public boolean isDestroyed() {
         return hitPointBasedDestructibility.isDestroyed();
+    }
+
+    public Vector2D getRandomPositionWithin() {
+        int topX = getX() - 16;
+        int topY = getY() - 16;
+        return Vector2D.random(topX, topX + entityData.width, topY, topY + entityData.height);
     }
 }

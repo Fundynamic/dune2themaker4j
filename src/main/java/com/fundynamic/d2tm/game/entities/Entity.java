@@ -7,6 +7,7 @@ import org.newdawn.slick.SpriteSheet;
 public abstract class Entity implements Renderable, Updateable {
 
     // Final properties of unit
+    protected EntityData entityData;
     protected final SpriteSheet spriteSheet;
     protected final int sight;
     protected final Player player;
@@ -28,6 +29,14 @@ public abstract class Entity implements Renderable, Updateable {
 
     public Vector2D getAbsoluteMapCoordinates() {
         return absoluteMapCoordinates;
+    }
+
+    public int getX() {
+        return absoluteMapCoordinates.getXAsInt();
+    }
+
+    public int getY() {
+        return absoluteMapCoordinates.getYAsInt();
     }
 
     public int getSight() {
@@ -69,4 +78,5 @@ public abstract class Entity implements Renderable, Updateable {
             player.removeEntity(entity);
         }
     }
+
 }
