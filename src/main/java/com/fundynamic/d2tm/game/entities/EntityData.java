@@ -15,6 +15,8 @@ public class EntityData {
 
     public float moveSpeed;
     public int hitPoints;
+    public int damage;
+    public int explosionId = -1;
 
     public EntityData() {
     }
@@ -30,6 +32,10 @@ public class EntityData {
         this.moveSpeed = moveSpeed;
     }
 
+    public Image getFirstImage() {
+        return image.getSubImage(0, 0, width, height);
+    }
+
     @Override
     public String toString() {
         return "EntityData{" +
@@ -40,10 +46,8 @@ public class EntityData {
                 ", sight=" + sight +
                 ", moveSpeed=" + moveSpeed +
                 ", hitPoints=" + hitPoints +
+                ", damage=" + damage +
+                ", explosionId=" + explosionId +
                 '}';
-    }
-
-    public Image getFirstImage() {
-        return image.getSubImage(0, 0, width, height);
     }
 }

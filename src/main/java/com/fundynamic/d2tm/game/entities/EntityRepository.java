@@ -51,9 +51,9 @@ public class EntityRepository {
         createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
         createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
 
-        createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, 3, 1.5F, 200);
-
         createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48);
+
+        createProjectile(ROCKET, "missiles/Bullet_LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -95,7 +95,7 @@ public class EntityRepository {
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player, this);
+                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player, entityData, this);
                     entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
@@ -116,8 +116,10 @@ public class EntityRepository {
         createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
     }
 
-    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, sight, moveSpeed, hitPoints);
+    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int explosionId, float moveSpeed, int damage) throws SlickException {
+        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
+        entity.damage = damage;
+        entity.explosionId = explosionId;
     }
 
     public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels) throws SlickException {
@@ -142,7 +144,7 @@ public class EntityRepository {
 
     }
 
-    private void createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
+    private EntityData createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
@@ -155,6 +157,7 @@ public class EntityRepository {
         entityData.moveSpeed = moveSpeed;
         entityData.hitPoints = hitPoints;
         entitiesData.put(constructKey(entityType, id), entityData);
+        return entityData;
     }
 
     protected Image loadImage(String pathToImage) throws SlickException {

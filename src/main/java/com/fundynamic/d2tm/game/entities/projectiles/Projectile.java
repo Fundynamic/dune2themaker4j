@@ -3,10 +3,7 @@ package com.fundynamic.d2tm.game.entities.projectiles;
 
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -16,16 +13,27 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Projectile extends Entity implements Moveable, Destructible {
 
+    // state
     private Vector2D target;
     private boolean destroyed;
 
     // Implementation
     private final Map map;
 
-    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
+    // entity properties
+    private float speed;
+    private int damage;
+    private int explosionId;
+
+
+    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player,
+                      EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         this.map = map;
         target = mapCoordinates;
+        this.speed = entityData.moveSpeed;
+        this.damage = entityData.damage;
+        this.explosionId = entityData.explosionId;
     }
 
     @Override
@@ -54,8 +62,6 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public void update(float deltaInSeconds) {
         if (target != absoluteMapCoordinates) {
-            float speed = 96f;
-
             float timeCorrectedSpeed = speed * deltaInSeconds;
             Vector2D direction = target.min(absoluteMapCoordinates);
             Vector2D normalised = direction.normalise();
@@ -69,7 +75,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
         if (target.distance(absoluteMapCoordinates) < 0.1F) {
             // spawn explosion
-            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL, player);
+            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, explosionId, player);
 
             // do damage on cell / range of cells
             Cell cell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
@@ -77,7 +83,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
                 Entity entity = cell.getEntity();
                 if (entity.isDestructible()) {
                     Destructible destructibleEntity = (Destructible) entity;
-                    destructibleEntity.takeDamage(100);
+                    destructibleEntity.takeDamage(damage);
                 }
             }
             destroyed = true;
