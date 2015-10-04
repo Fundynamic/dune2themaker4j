@@ -151,7 +151,7 @@ public class ProjectileTest {
     public Projectile makeProjectileWithOnlyEntityData() {
         // Given a Projectile with 16 facings, see LargeBullet.png
         EntityData entityData = new EntityData();
-        entityData.facings = 16;
+        entityData.setFacingsAndCalculateChops(16);
 
         return new Projectile(null, null, null, 0, null, entityData, null);
     }

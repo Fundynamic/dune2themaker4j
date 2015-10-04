@@ -4,6 +4,9 @@ import org.newdawn.slick.Image;
 
 public class EntityData {
 
+    private float chop = -1f;
+    private float halfChop = -1f;
+
     public EntityType type;
 
     public Image image;
@@ -16,7 +19,7 @@ public class EntityData {
     public float moveSpeed;
     public int hitPoints;
 
-    public int facings; //
+    private int facings;
 
     public int damage;
     public int explosionId = -1;
@@ -57,5 +60,23 @@ public class EntityData {
 
     public boolean hasFacings() {
         return facings > 0;
+    }
+
+    public void setFacingsAndCalculateChops(int facings) {
+        this.facings = facings;
+        this.chop = 360F / facings;
+        this.halfChop = chop / 2F;
+    }
+
+    public float getChop() {
+        return chop;
+    }
+
+    public float getHalfChop() {
+        return halfChop;
+    }
+
+    public int getFacings() {
+        return facings;
     }
 }

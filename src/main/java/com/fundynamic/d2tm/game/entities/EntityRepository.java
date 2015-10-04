@@ -128,7 +128,7 @@ public class EntityRepository {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
         entity.damage = damage;
         entity.explosionId = explosionId;
-        entity.facings = facings;
+        entity.setFacingsAndCalculateChops(facings);
     }
 
     public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
