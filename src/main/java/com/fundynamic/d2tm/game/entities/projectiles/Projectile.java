@@ -64,8 +64,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
         if (entityData.hasFacings()) {
             if (from != to) {
                 double angle = from.angleTo(to);
-                float chop = 360 / entityData.facings; // degrees equals .. facings over 360 degrees
-                facing = (int) (angle / chop);
+                float chop = 360F / entityData.facings;
+                angle += (chop / 2);
+                facing = (int) (angle / chop) % entityData.facings;
             }
         }
         return facing;
