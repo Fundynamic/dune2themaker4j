@@ -51,15 +51,24 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     public Image getSprite() {
+        return spriteSheet.getSprite(getFacing(absoluteMapCoordinates, target), 0);
+    }
+
+    /**
+     * Calculates facing index.
+     *
+     * @return
+     */
+    public int getFacing(Vector2D from, Vector2D to) {
         int facing = 0;
         if (entityData.hasFacings()) {
-            if (target != absoluteMapCoordinates) {
-                double angle = absoluteMapCoordinates.angleTo(target);
+            if (from != to) {
+                double angle = from.angleTo(to);
                 float chop = 360 / entityData.facings; // degrees equals .. facings over 360 degrees
                 facing = (int) (angle / chop);
             }
         }
-        return spriteSheet.getSprite(facing, 0);
+        return facing;
     }
 
     @Override

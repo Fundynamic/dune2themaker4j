@@ -45,5 +45,4 @@ public class PlacingProjectileMouseTest extends AbstractMouseBehaviorTest {
         assertThat(projectile.getAbsoluteMapCoordinates(), is(Vector2D.create(32, 32)));
         assertThat(projectile.getEntityType(), is (EntityType.PROJECTILE));
     }
-
 }
