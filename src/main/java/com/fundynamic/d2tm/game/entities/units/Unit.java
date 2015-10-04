@@ -273,6 +273,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
+    public boolean removeFromMap(Map map) {
+        if (!nextTargetToMoveTo.equals(absoluteMapCoordinates)) {
+            map.getCellByAbsoluteMapCoordinates(nextTargetToMoveTo).removeEntity();
+        }
+        return super.removeFromMap(map);
+    }
+
+    @Override
     public EntityType getEntityType() {
         return EntityType.UNIT;
     }

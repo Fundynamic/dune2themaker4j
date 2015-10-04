@@ -148,14 +148,15 @@ public class Map {
         return structure;
     }
 
-    public void removeEntity(Entity entity) {
+    public boolean removeEntity(Entity entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot delete null entity");
         Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates().div(TILE_SIZE);
         Cell cell = getCell(topLeftMapCoordinates);
 
-        if (!entity.equals(cell.getEntity())) return; // only remove yourself from the map
+        if (!entity.equals(cell.getEntity())) return false; // only remove yourself from the map
 
         cell.setEntity(null);
+        entity.removeFromMap(this);
 
         if (entity instanceof Structure) {
             Structure structure = (Structure) entity;
@@ -168,6 +169,7 @@ public class Map {
                 }
             }
         }
+        return true;
     }
 
     public Cell getCell(Vector2D mapCoordinates) {

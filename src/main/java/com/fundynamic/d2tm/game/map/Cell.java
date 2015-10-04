@@ -48,8 +48,9 @@ public class Cell {
         return entity;
     }
 
-    public void removeEntity() {
+    public boolean removeEntity() {
         this.entity = null;
+        return true;
     }
 
     public void setEntity(Entity entity) {

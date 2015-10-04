@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
@@ -25,6 +26,10 @@ public abstract class Entity implements Renderable, Updateable {
             // temporarily, because 'particle' does not belong to a player
             player.addEntity(this);
         }
+    }
+
+    public boolean removeFromMap(Map map) {
+        return map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates).removeEntity();
     }
 
     public Vector2D getAbsoluteMapCoordinates() {
@@ -73,10 +78,11 @@ public abstract class Entity implements Renderable, Updateable {
 
     public abstract EntityType getEntityType();
 
-    public void removeFromPlayerSet(Entity entity) {
+    public boolean removeFromPlayerSet(Entity entity) {
         if (player != null) {
-            player.removeEntity(entity);
+            return player.removeEntity(entity);
         }
+        return false;
     }
 
     public Vector2D getRandomPositionWithin() {

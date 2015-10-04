@@ -39,8 +39,8 @@ public class Player {
         entitiesSet.add(entity);
     }
 
-    public void removeEntity(Entity entity) {
-        entitiesSet.remove(entity);
+    public boolean removeEntity(Entity entity) {
+        return entitiesSet.remove(entity);
     }
 
     public int aliveEntities() {
