@@ -2,9 +2,7 @@ package com.fundynamic.d2tm.game.controls;
 
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
 
@@ -39,7 +37,10 @@ public class NormalMouse extends AbstractMouseBehavior {
     protected Entity hoveringOverSelectableEntity() {
         Cell hoverCell = mouse.getHoverCell();
         if (hoverCell == null) return null;
-        Entity entity = hoverCell.getEntity();
+        EntitiesSet entities = mouse.getEntityRepository().filter(Predicate.builder().
+                vectorWithin(hoverCell.getCoordinatesAsAbsoluteVector2D()).
+                isSelectable());
+        Entity entity = entities.getFirst();
         if (entity == null) return null;
         if (!entity.isSelectable()) return null;
         return entity;

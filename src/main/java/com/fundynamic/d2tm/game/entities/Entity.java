@@ -1,35 +1,29 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
 public abstract class Entity implements Renderable, Updateable {
 
     // Final properties of unit
-    protected EntityData entityData;
+    protected final EntityData entityData;
     protected final SpriteSheet spriteSheet;
-    protected final int sight;
     protected final Player player;
     protected final EntityRepository entityRepository;
 
     protected Vector2D absoluteMapCoordinates;
 
-    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
+    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
         this.absoluteMapCoordinates = absoluteMapCoordinates;
         this.spriteSheet = spriteSheet;
-        this.sight = sight;
+        this.entityData = entityData;
         this.player = player;
         this.entityRepository = entityRepository;
         if (player != null) {
             // temporarily, because 'particle' does not belong to a player
             player.addEntity(this);
         }
-    }
-
-    public boolean removeFromMap(Map map) {
-        return map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates).removeEntity();
     }
 
     public Vector2D getAbsoluteMapCoordinates() {
@@ -45,7 +39,7 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public int getSight() {
-        return sight;
+        return entityData.sight;
     }
 
     public Player getPlayer() {
@@ -91,4 +85,7 @@ public abstract class Entity implements Renderable, Updateable {
         return Vector2D.random(topX, topX + entityData.width, topY, topY + entityData.height);
     }
 
+    public Vector2D getDimensions() {
+        return Vector2D.create(entityData.width, entityData.height);
+    }
 }

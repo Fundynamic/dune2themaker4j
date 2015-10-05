@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapTest;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -17,7 +18,10 @@ import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -95,6 +99,31 @@ public class EntityRepositoryTest {
         assertEquals(explosionId, data.explosionId);
     }
 
+    @Test
+    public void findsUnitAtVector() throws SlickException {
+        Map map = MapTest.makeMap();
+        entityRepository = makeTestableEntityRepository(map);
+
+        Unit unit = createUnit(entityRepository, Vector2D.create(100, 100), player);
+
+        // find at same position
+        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(100, 100), EntityType.UNIT);
+        assertThat(entities.hasAny(), is(true));
+        assertThat((Unit) entities.getFirst(), is(unit));
+
+        // do not find anything at a bit more upwards
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(99, 99), EntityType.UNIT);
+        assertThat(entities, is(empty()));
+
+        // find entity at its right-bottom dimension
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(131, 131), EntityType.UNIT);
+        assertThat(entities.hasAny(), is(true));
+        assertThat((Unit) entities.getFirst(), is(unit));
+
+        // do not find anything at a bit more upwards
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(132, 132), EntityType.UNIT);
+        assertThat(entities, is(empty()));
+    }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
@@ -137,7 +166,7 @@ public class EntityRepositoryTest {
     }
 
     public static Unit createUnit(EntityRepository entityRepository, Vector2D mapCoordinates, Player player) throws SlickException {
-        return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, 1, player);
+        return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, EntityRepository.QUAD, player);
     }
 
     public static EntityRepository makeTestableEntityRepositoryWithMockedMap() throws SlickException {

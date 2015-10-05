@@ -106,7 +106,7 @@ public class EntityRepository {
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player, entityData, this);
+                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, player, entityData, this);
                     entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
@@ -153,7 +153,6 @@ public class EntityRepository {
         System.out.println("Removing following entities: " + entitiesToRemove);
 
         for (Entity entity : entitiesToRemove) {
-            map.removeEntity(entity);
             entity.removeFromPlayerSet(entity);
             entitiesSet.remove(entity);
         }
@@ -248,4 +247,18 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
+    public EntitiesSet findEntitiesOfTypeAtVector(Vector2D absoluteMapCoordinates, EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        vectorWithin(absoluteMapCoordinates)
+        );
+    }
+
+    public EntitiesSet findEntitiesAtVector(Vector2D absoluteMapCoordinates) {
+        return filter(
+                Predicate.builder().
+                        vectorWithin(absoluteMapCoordinates)
+        );
+    }
 }

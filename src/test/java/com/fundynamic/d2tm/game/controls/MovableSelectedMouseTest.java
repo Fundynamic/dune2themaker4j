@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
-import static com.fundynamic.d2tm.game.rendering.CellBasedEntityViewportRendererTest.makeUnit;
+import static com.fundynamic.d2tm.game.entities.units.UnitTest.makeUnit;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -22,7 +22,6 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
         Unit unit = makeUnit(map, player, Vector2D.create(1, 1));
         assertFalse(unit.isSelected());
-        cell.setEntity(unit);
 
         MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, mouse.getEntityRepository());
 

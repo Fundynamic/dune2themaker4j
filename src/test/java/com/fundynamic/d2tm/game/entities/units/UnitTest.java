@@ -1,7 +1,10 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
+import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -62,7 +65,8 @@ public class UnitTest {
     }
 
     public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints) {
-        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository) {
+        EntityData entityData = new EntityData(32, 32, 10);
+        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, entityData, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository) {
             @Override
             public boolean isDestroyed() {
                 // we do this so that we do not have to deal with spawning explosions (which is done in the
@@ -220,4 +224,31 @@ public class UnitTest {
         assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
+
+
+    /**
+     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
+     * @param map
+     * @param player
+     * @param mapCoordinates
+     * @return
+     */
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) throws SlickException {
+        FadingSelection fadingSelection = new FadingSelection(32, 32);
+        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+        HitPointBasedDestructibility hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
+        EntityData entityData = new EntityData(32, 32, 9);
+        Unit unit = new Unit(map, mapCoordinates, makeSpriteSheet(), fadingSelection, hitPointBasedDestructibility, player, entityData, entityRepository);
+        map.placeUnit(unit);
+        return unit;
+    }
+
+    public static SpriteSheet makeSpriteSheet() {
+        SpriteSheet spriteSheet = mock(SpriteSheet.class);
+        Image image = mock(Image.class);
+
+        when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
+        return spriteSheet;
+    }
+
 }

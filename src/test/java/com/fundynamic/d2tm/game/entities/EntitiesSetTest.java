@@ -37,6 +37,8 @@ public class EntitiesSetTest {
 
     @Before
     public void setUp() {
+        EntityData entityData = new EntityData(32, 32, 10);
+
         entitiesSet = new EntitiesSet();
 
         playerOne = new Player("Player one", Recolorer.FactionColor.GREEN);
@@ -66,7 +68,7 @@ public class EntitiesSetTest {
         entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
 
         // Bare entities (with no behavior at all) - to test filtering
-        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), 1, playerOne, null));
+        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), entityData, playerOne, null));
         playerOneBareEntitiesCount = 1;
     }
 
@@ -122,8 +124,8 @@ public class EntitiesSetTest {
 
     class DestroyedEntity extends Entity implements Destructible {
 
-        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player, EntityRepository entityRepository) {
-            super(mapCoordinates, spriteSheet, sight, player, entityRepository);
+        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+            super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         }
 
         @Override

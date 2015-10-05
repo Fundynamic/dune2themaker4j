@@ -25,7 +25,6 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
 
         EntityRepository entityRepository = makeTestableEntityRepository(map);
         Unit unit = createUnit(entityRepository, Vector2D.create(1, 1), player);
-        cell.setEntity(unit);
         assertFalse(unit.isSelected());
 
         NormalMouse normalMouse = new NormalMouse(mouse);

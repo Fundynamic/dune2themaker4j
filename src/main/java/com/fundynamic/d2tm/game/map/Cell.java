@@ -15,9 +15,6 @@ public class Cell {
 
     private Terrain terrain;
 
-    // TODO: for now the cell has a direct link to an entity, this *will* become obsolete and thus removed.
-    private Entity entity;
-
     private Vector2D position;
 
     public Cell(Map map, Terrain terrain, int mapX, int mapY) {
@@ -28,7 +25,6 @@ public class Cell {
         this.map = map;
         this.x = mapX;
         this.y = mapY;
-        this.entity = null;
         this.position = new Vector2D(mapX, mapY);
     }
 
@@ -42,22 +38,6 @@ public class Cell {
 
     public Terrain getTerrain() {
         return terrain;
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public boolean removeEntity() {
-        this.entity = null;
-        return true;
-    }
-
-    public void setEntity(Entity entity) {
-        if (this.entity != null && this.entity != entity && entity != null) {
-            throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
-        }
-        this.entity = entity;
     }
 
     public int getX() {
@@ -101,15 +81,8 @@ public class Cell {
         return position;
     }
 
-    public boolean isOccupied(Entity entityWhoWantsToKnow) {
-        return hasAnyEntity() && !entity.equals(entityWhoWantsToKnow);
-    }
-
     public boolean isVisibleFor(Player controllingPlayer) {
         return !controllingPlayer.isShrouded(position);
     }
 
-    public boolean hasAnyEntity() {
-        return entity != null;
-    }
 }

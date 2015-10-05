@@ -18,7 +18,7 @@ public class Particle extends Entity implements Destructible {
     private float animationSpeed;
 
     public Particle(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, EntityRepository entityRepository) {
-        super(mapCoordinates, spriteSheet, 0, null, entityRepository);
+        super(mapCoordinates, spriteSheet, entityData, null, entityRepository);
         animationSpeed = entityData.animationSpeed;
     }
 

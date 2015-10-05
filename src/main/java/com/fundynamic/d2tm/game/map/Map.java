@@ -123,7 +123,6 @@ public class Map {
     public Unit placeUnit(Unit unit) {
         Vector2D mapCoordinates = unit.getAbsoluteMapCoordinates();
         mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
-        getCell(mapCoordinates).setEntity(unit);
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight(), unit.getPlayer());
         return unit;
     }
@@ -139,37 +138,11 @@ public class Map {
                 int cellX = topLeftMapCoordinates.getXAsInt() + x;
                 int cellY = topLeftMapCoordinates.getYAsInt() + y;
 
-                getCell(cellX, cellY).setEntity(structure);
-
                 revealShroudFor(cellX, cellY, structure.getSight(), structure.getPlayer());
             }
         }
 
         return structure;
-    }
-
-    public boolean removeEntity(Entity entity) {
-        if (entity == null) throw new IllegalArgumentException("Cannot delete null entity");
-        Vector2D topLeftMapCoordinates = entity.getAbsoluteMapCoordinates().div(TILE_SIZE);
-        Cell cell = getCell(topLeftMapCoordinates);
-
-        if (!entity.equals(cell.getEntity())) return false; // only remove yourself from the map
-
-        cell.setEntity(null);
-        entity.removeFromMap(this);
-
-        if (entity instanceof Structure) {
-            Structure structure = (Structure) entity;
-            for (int x = 0; x < structure.getWidthInCells(); x++) {
-                for (int y = 0; y < structure.getHeightInCells(); y++) {
-                    int cellX = topLeftMapCoordinates.getXAsInt() + x;
-                    int cellY = topLeftMapCoordinates.getYAsInt() + y;
-
-                    getCell(cellX, cellY).setEntity(null);
-                }
-            }
-        }
-        return true;
     }
 
     public Cell getCell(Vector2D mapCoordinates) {

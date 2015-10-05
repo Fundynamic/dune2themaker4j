@@ -24,7 +24,6 @@ public class Viewport implements Renderable {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer;
     private final EntityViewportRenderer entityViewportRenderer;
 
     private final CellTerrainRenderer cellTerrainRenderer;
@@ -82,7 +81,6 @@ public class Viewport implements Renderable {
         this.mouse = mouse;
         this.mouse.setViewport(this); // <-- THIS IS BAD!
 
-        this.cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.entityViewportRenderer = new EntityViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
     }
 
@@ -104,7 +102,9 @@ public class Viewport implements Renderable {
             // TODO: Merge the culling into this viewport class(?)
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
 
-            cellBasedEntityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.STRUCTURE);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.UNIT);
 
             entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PARTICLE);
 

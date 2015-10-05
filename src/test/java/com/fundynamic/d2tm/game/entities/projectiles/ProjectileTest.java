@@ -153,7 +153,7 @@ public class ProjectileTest {
         EntityData entityData = new EntityData();
         entityData.setFacingsAndCalculateChops(16);
 
-        return new Projectile(null, null, null, 0, null, entityData, null);
+        return new Projectile(null, null, null, null, entityData, null);
     }
 
 }

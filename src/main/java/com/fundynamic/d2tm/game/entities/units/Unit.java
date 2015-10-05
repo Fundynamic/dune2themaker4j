@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -47,8 +46,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // TODO: Simplify constructor
     public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
-        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
-        this.entityData = entityData;
+        super(absoluteMapCoordinates, spriteSheet, entityData, player, entityRepository);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -63,10 +61,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // TODO: Simplify constructor
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
-                Player player, int sight, int facing,
+                Player player, EntityData entityData, int facing,
                 Vector2D target, Vector2D nextTargetToMoveTo, Vector2D offset,
                 int hitPoints, FadingSelection fadingSelection, EntityRepository entityRepository) {
-        super(mapCoordinates, spriteSheet, sight, player, entityRepository);
+        super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         this.offset = offset;
         this.moveSpeed = 1.0F;
         this.map = map;
@@ -153,11 +151,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (target.getYAsInt() > absoluteMapCoordinates.getYAsInt()) nextYCoordinate += 32F;
 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
-        Cell intendedCellToMoveTo = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
 
-        if (!intendedCellToMoveTo.isOccupied(this)) {
+        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT);
+
+        if (entities.isEmpty()) {
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
-            intendedCellToMoveTo.setEntity(this); // claim this cell so we make sure nobody else can move here/take it.
         }
     }
 
@@ -166,16 +164,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private void moveToCell(Vector2D vectorToMoveTo) {
-        Cell mapCell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
-        mapCell.removeEntity();
-
         this.absoluteMapCoordinates = vectorToMoveTo;
         this.nextTargetToMoveTo = vectorToMoveTo;
 
-        map.revealShroudFor(absoluteMapCoordinates, sight, player);
-
-        mapCell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
-        mapCell.setEntity(this);
+        map.revealShroudFor(absoluteMapCoordinates, getSight(), player);
     }
 
     private boolean shouldBeSomewhereElse() {
@@ -189,7 +181,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public String toString() {
         return "Unit [" +
-                "sight=" + super.sight +
+                "sight=" + getSight() +
                 ", player=" + super.player +
                 ", facing=" + facing +
                 ", hitPoints=" + hitPointBasedDestructibility +
@@ -270,14 +262,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Vector2D getNextTargetToMoveTo() {
         return nextTargetToMoveTo;
-    }
-
-    @Override
-    public boolean removeFromMap(Map map) {
-        if (!nextTargetToMoveTo.equals(absoluteMapCoordinates)) {
-            map.getCellByAbsoluteMapCoordinates(nextTargetToMoveTo).removeEntity();
-        }
-        return super.removeFromMap(map);
     }
 
     @Override
