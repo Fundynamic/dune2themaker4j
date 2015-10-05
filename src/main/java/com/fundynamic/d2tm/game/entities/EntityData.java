@@ -3,13 +3,28 @@ package com.fundynamic.d2tm.game.entities;
 import org.newdawn.slick.Image;
 
 public class EntityData {
+
+    private float chop = -1f;
+    private float halfChop = -1f;
+
     public EntityType type;
+
     public Image image;
-    public int width;
-    public int height;
+
+    public int width; // in pixels
+    public int height; // in pixels
+
     public int sight;
+
     public float moveSpeed;
     public int hitPoints;
+
+    private int facings;
+
+    public int damage;
+    public int explosionId = -1;
+    public float animationSpeed; // in frames per second
+    public int weaponId = -1;
 
     public EntityData() {
     }
@@ -25,6 +40,10 @@ public class EntityData {
         this.moveSpeed = moveSpeed;
     }
 
+    public Image getFirstImage() {
+        return image.getSubImage(0, 0, width, height);
+    }
+
     @Override
     public String toString() {
         return "EntityData{" +
@@ -35,10 +54,30 @@ public class EntityData {
                 ", sight=" + sight +
                 ", moveSpeed=" + moveSpeed +
                 ", hitPoints=" + hitPoints +
+                ", damage=" + damage +
+                ", explosionId=" + explosionId +
                 '}';
     }
 
-    public Image getFirstImage() {
-        return image.getSubImage(0, 0, width, height);
+    public boolean hasFacings() {
+        return facings > 0;
+    }
+
+    public void setFacingsAndCalculateChops(int facings) {
+        this.facings = facings;
+        this.chop = 360F / facings;
+        this.halfChop = chop / 2F;
+    }
+
+    public float getChop() {
+        return chop;
+    }
+
+    public float getHalfChop() {
+        return halfChop;
+    }
+
+    public int getFacings() {
+        return facings;
     }
 }

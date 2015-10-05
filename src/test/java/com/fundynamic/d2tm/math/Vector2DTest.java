@@ -15,6 +15,13 @@ public class Vector2DTest {
     }
 
     @Test
+    public void angles() {
+        Vector2D start = new Vector2D(0F, 0F);
+        Vector2D target = new Vector2D(10, 10);
+        System.out.println(start.angleTo(target));
+    }
+
+    @Test
     public void movesVector() {
         Vector2D vec = new Vector2D(0F, 1F);
         Vector2D moved = vec.move(10F, 10F);

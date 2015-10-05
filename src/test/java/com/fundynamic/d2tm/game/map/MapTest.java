@@ -1,9 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
@@ -28,6 +26,8 @@ public class MapTest {
     private static int MAP_WIDTH = 10;
     private static int MAP_HEIGHT = 20;
 
+    private EntityRepository entityRepository;
+
     @Mock
     private Player player;
 
@@ -40,6 +40,8 @@ public class MapTest {
         map.getCell(0, 0).changeTerrain(new Sand());
         map.getCell(5, 5).changeTerrain(new Spice());
         map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(new Rock()); // because of the invisible border
+
+        entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
     }
 
     @Test
@@ -113,7 +115,7 @@ public class MapTest {
         int SIGHT = 2;
 
         Vector2D mapCoordinate = Vector2D.create(5, 5);
-        Structure refinery = new Structure(mapCoordinate.scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT));
+        Structure refinery = new Structure(mapCoordinate.scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT), entityRepository);
         map.placeStructure(refinery);
 
         Entity entity = map.getCell(mapCoordinate).getEntity();
@@ -132,7 +134,7 @@ public class MapTest {
     public void removesEntity() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Structure turret = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT));
+        Structure turret = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT), entityRepository);
         map.placeStructure(turret);
 
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();
@@ -150,7 +152,7 @@ public class MapTest {
         int TILE_SIZE = 32;
         int SIGHT = 2;
 
-        Structure refinery = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT));
+        Structure refinery = new Structure(Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE * 3, TILE_SIZE * 2, SIGHT), entityRepository);
         map.placeStructure(refinery);
 
         assertSame(refinery, map.getCell(Vector2D.create(5, 5)).getEntity()); // top left
@@ -174,7 +176,7 @@ public class MapTest {
     public void placeUnit() {
         int TILE_SIZE = 32;
         int SIGHT = 2;
-        Unit quad = new Unit(map, Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT, 1.0f));
+        Unit quad = new Unit(map, Vector2D.create(5, 5).scale(TILE_SIZE), mock(Image.class), player, new EntityData(TILE_SIZE, TILE_SIZE, SIGHT, 1.0f), entityRepository);
         map.placeUnit(quad);
         
         Entity entity = map.getCell(Vector2D.create(5, 5)).getEntity();

@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Random;
@@ -15,7 +16,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Behaviors
     private final FadingSelection fadingSelection;
-    private final HitPointBasedDestructibility hitPointBasedDestructibility;
+    protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
@@ -29,7 +30,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int facing;
     private float moveSpeed;
 
-    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData) {
+    private boolean hasSpawnedExplosions;
+
+    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
                 absoluteMapCoordinates,
@@ -37,13 +40,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 new FadingSelection(entityData.width, entityData.height),
                 new HitPointBasedDestructibility(entityData.hitPoints),
                 player,
-                entityData
+                entityData,
+                entityRepository
         );
     }
 
     // TODO: Simplify constructor
-    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData) {
-        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player);
+    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(absoluteMapCoordinates, spriteSheet, entityData.sight, player, entityRepository);
+        this.entityData = entityData;
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -60,8 +65,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
                 Player player, int sight, int facing,
                 Vector2D target, Vector2D nextTargetToMoveTo, Vector2D offset,
-                int hitPoints, FadingSelection fadingSelection) {
-        super(mapCoordinates, spriteSheet, sight, player);
+                int hitPoints, FadingSelection fadingSelection, EntityRepository entityRepository) {
+        super(mapCoordinates, spriteSheet, sight, player, entityRepository);
         this.offset = offset;
         this.moveSpeed = 1.0F;
         this.map = map;
@@ -89,6 +94,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+
         this.fadingSelection.update(deltaInMs);
         if (shouldBeSomewhereElse()) {
             if (isWaitingForNextCellToDetermine()) {
@@ -98,6 +104,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 facing = determineFacingFor(nextTargetToMoveTo).getValue();
                 moveToNextCellPixelByPixel();
             }
+        }
+
+        if (hitPointBasedDestructibility.hasDied()) {
+            hasSpawnedExplosions = true;
+            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, entityData.explosionId, player);
         }
     }
 
@@ -235,7 +246,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public boolean isDestroyed() {
-        return hitPointBasedDestructibility.isDestroyed();
+        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
     }
 
     @Override
@@ -246,10 +257,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
 
         // spawn projectile from this cell , to another cell.
-//        entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, 0, player);
-
-        Destructible destructible = (Destructible) entity;
-        destructible.takeDamage(Random.getRandomBetween(50, 150));
+        Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
+        projectile.moveTo(entity.getRandomPositionWithin());
+//
+//        Destructible destructible = (Destructible) entity;
+//        destructible.takeDamage(Random.getRandomBetween(50, 150));
     }
 
     public Vector2D getOffset() {
@@ -258,5 +270,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Vector2D getNextTargetToMoveTo() {
         return nextTargetToMoveTo;
+    }
+
+    @Override
+    public boolean removeFromMap(Map map) {
+        if (!nextTargetToMoveTo.equals(absoluteMapCoordinates)) {
+            map.getCellByAbsoluteMapCoordinates(nextTargetToMoveTo).removeEntity();
+        }
+        return super.removeFromMap(map);
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.UNIT;
     }
 }

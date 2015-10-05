@@ -16,4 +16,8 @@ public class TestableMouse extends Mouse {
         // do nothing
     }
 
+    @Override
+    public void setMouseImageHotSpotCentered(Image image) {
+        // do nothing
+    }
 }

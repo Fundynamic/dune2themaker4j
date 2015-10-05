@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 
 public class PlayerTest {
@@ -63,7 +64,7 @@ public class PlayerTest {
     }
 
     private Structure makeStructure(int hitPoints) {
-        return StructureFactory.makeStructure(player, hitPoints);
+        return StructureFactory.makeStructure(player, hitPoints, mock(EntityRepository.class));
     }
 
 

@@ -15,21 +15,21 @@ public class Cell {
 
     private Terrain terrain;
 
-    // TODO: for now the cell has a direct link to an entity, this *will* become obselete and thus removed.
+    // TODO: for now the cell has a direct link to an entity, this *will* become obsolete and thus removed.
     private Entity entity;
 
     private Vector2D position;
 
-    public Cell(Map map, Terrain terrain, int x, int y) {
+    public Cell(Map map, Terrain terrain, int mapX, int mapY) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
         if (map == null) throw new IllegalArgumentException("Map argument may not be null");
-        if (x < 0 || y < 0) throw new OutOfMapBoundsException("x may ot be lower than 0, for given x, y: " + x + "," + y);
+        if (mapX < 0 || mapY < 0) throw new OutOfMapBoundsException("x may ot be lower than 0, for given x, y: " + mapX + "," + mapY);
         this.terrain = terrain;
         this.map = map;
-        this.x = x;
-        this.y = y;
+        this.x = mapX;
+        this.y = mapY;
         this.entity = null;
-        this.position = new Vector2D(x, y);
+        this.position = new Vector2D(mapX, mapY);
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -48,8 +48,9 @@ public class Cell {
         return entity;
     }
 
-    public void removeEntity() {
+    public boolean removeEntity() {
         this.entity = null;
+        return true;
     }
 
     public void setEntity(Entity entity) {
@@ -101,10 +102,14 @@ public class Cell {
     }
 
     public boolean isOccupied(Entity entityWhoWantsToKnow) {
-        return entity != null && !entity.equals(entityWhoWantsToKnow);
+        return hasAnyEntity() && !entity.equals(entityWhoWantsToKnow);
     }
 
     public boolean isVisibleFor(Player controllingPlayer) {
         return !controllingPlayer.isShrouded(position);
+    }
+
+    public boolean hasAnyEntity() {
+        return entity != null;
     }
 }

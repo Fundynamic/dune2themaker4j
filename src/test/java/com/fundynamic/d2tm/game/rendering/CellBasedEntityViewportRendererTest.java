@@ -3,8 +3,7 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -24,7 +23,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 
-public class EntityViewportRendererTest {
+public class CellBasedEntityViewportRendererTest {
 
     @Test
     public void rendersEntityInView() throws SlickException {
@@ -35,7 +34,7 @@ public class EntityViewportRendererTest {
         int viewportHeightInTiles = 10;
         int viewportWidth = Game.TILE_WIDTH * viewportWidthInTiles;
         int viewportHeight = Game.TILE_HEIGHT * viewportHeightInTiles;
-        EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
+        CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
         makeUnit(map, player, create(1, 1).scale(32));
@@ -51,7 +50,7 @@ public class EntityViewportRendererTest {
 
         Graphics graphics = mock(Graphics.class);
 
-        entityViewportRenderer.render(graphics, Vector2D.zero());
+        cellBasedEntityViewportRenderer.render(graphics, Vector2D.zero());
 
         verify(graphics, times(2)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }
@@ -65,7 +64,7 @@ public class EntityViewportRendererTest {
         int viewportHeightInTiles = 10;
         int viewportWidth = Game.TILE_WIDTH * viewportWidthInTiles;
         int viewportHeight = Game.TILE_HEIGHT * viewportHeightInTiles;
-        EntityViewportRenderer entityViewportRenderer = new EntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
+        CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, Game.TILE_HEIGHT, Game.TILE_WIDTH, create(viewportWidth, viewportHeight));
 
         // this one should be rendered because it is within view
         Unit unit = makeUnit(map, player, create(1, 1).scale(32));
@@ -85,7 +84,7 @@ public class EntityViewportRendererTest {
         // assert it only renders once
         Graphics graphics = mock(Graphics.class);
 
-        entityViewportRenderer.render(graphics, Vector2D.zero());
+        cellBasedEntityViewportRenderer.render(graphics, Vector2D.zero());
 
         verify(graphics, times(1)).drawImage(isA(Image.class), anyFloat(), anyFloat());
     }
@@ -97,11 +96,12 @@ public class EntityViewportRendererTest {
      * @param mapCoordinates
      * @return
      */
-    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) {
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) throws SlickException {
         FadingSelection fadingSelection = new FadingSelection(32, 32);
+        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
         HitPointBasedDestructibility hitPointBasedDestructibility = new HitPointBasedDestructibility(100);
         EntityData entityData = new EntityData(32, 32, 9);
-        Unit unit = new Unit(map, mapCoordinates, makeSpriteSheet(), fadingSelection, hitPointBasedDestructibility, player, entityData);
+        Unit unit = new Unit(map, mapCoordinates, makeSpriteSheet(), fadingSelection, hitPointBasedDestructibility, player, entityData, entityRepository);
         map.placeUnit(unit);
         return unit;
     }

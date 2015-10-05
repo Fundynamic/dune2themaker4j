@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
@@ -23,6 +24,7 @@ public class Viewport implements Renderable {
 
     private final Perimeter viewingVectorPerimeter;
 
+    private final CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer;
     private final EntityViewportRenderer entityViewportRenderer;
 
     private final CellTerrainRenderer cellTerrainRenderer;
@@ -80,7 +82,8 @@ public class Viewport implements Renderable {
         this.mouse = mouse;
         this.mouse.setViewport(this); // <-- THIS IS BAD!
 
-        this.entityViewportRenderer = new EntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
+        this.entityViewportRenderer = new EntityViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
     }
 
     public void init() throws SlickException {
@@ -101,7 +104,11 @@ public class Viewport implements Renderable {
             // TODO: Merge the culling into this viewport class(?)
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
 
-            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
+            cellBasedEntityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PARTICLE);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PROJECTILE);
 
             cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
 

@@ -33,4 +33,8 @@ public abstract class Predicate<T> {
     public static Predicate<Entity> isSelectable() {
         return IsSelectable.instance;
     }
+
+    public static Predicate<Entity> ofType(EntityType entityType) {
+        return OfType.instance(entityType);
+    }
 }
