@@ -46,7 +46,7 @@ public class PlacingParticleMouse extends AbstractMouseBehavior {
     }
 
     private void selectRandomlySomethingToPlace() {
-        entityToPlace = entityRepository.getEntityData(EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL);
+        entityToPlace = entityRepository.getEntityData(EntityType.PARTICLE, EntityRepository.EXPLOSION_SMALL_UNIT);
         if (entityToPlace != null) {
             mouse.setMouseImage(entityToPlace.getFirstImage(), 24, 24);
         }

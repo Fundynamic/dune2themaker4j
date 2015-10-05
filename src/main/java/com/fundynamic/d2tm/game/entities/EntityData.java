@@ -24,6 +24,7 @@ public class EntityData {
     public int damage;
     public int explosionId = -1;
     public float animationSpeed; // in frames per second
+    public int weaponId = -1;
 
     public EntityData() {
     }

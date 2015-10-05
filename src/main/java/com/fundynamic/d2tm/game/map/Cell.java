@@ -15,7 +15,7 @@ public class Cell {
 
     private Terrain terrain;
 
-    // TODO: for now the cell has a direct link to an entity, this *will* become obselete and thus removed.
+    // TODO: for now the cell has a direct link to an entity, this *will* become obsolete and thus removed.
     private Entity entity;
 
     private Vector2D position;

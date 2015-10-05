@@ -34,6 +34,8 @@ public class EntityRepository {
     // explosions
     public static final int NO_EXPLOSION = -1;
     public static int EXPLOSION_NORMAL = 0;
+    public static int EXPLOSION_SMALL_UNIT = 1;
+    public static int EXPLOSION_SMALL_BULLET = 2;
 
     private final Map map;
 
@@ -49,17 +51,18 @@ public class EntityRepository {
     }
 
     public void init() throws SlickException {
-        // TODO: read this data from an external (XML/JSON/YML/INI) file
-        createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200);
-        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150);
-
-        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000);
-        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500);
-
         createParticle(EXPLOSION_NORMAL, "explosions/explosion_3.png", 48, 48, 5f);
+        createParticle(EXPLOSION_SMALL_UNIT, "explosions/small_unit_explosion.png", 48, 48, 3f);
+        createParticle(EXPLOSION_SMALL_BULLET, "explosions/small_bullet_explosion.png", 32, 32, 3f);
 
         createProjectile(ROCKET, "projectiles/LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200, 16);
-        createProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, NO_EXPLOSION, 160f, 15, 0);
+        createProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, EXPLOSION_SMALL_BULLET, 160f, 15, 0);
+
+        createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200, BULLET, EXPLOSION_SMALL_UNIT);
+        createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150, BULLET, EXPLOSION_SMALL_UNIT);
+
+        createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000, EXPLOSION_NORMAL);
+        createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500, EXPLOSION_NORMAL);
     }
 
     public EntityRepository(Map map, Recolorer recolorer, HashMap<String, EntityData> entitiesData) throws SlickException {
@@ -120,8 +123,10 @@ public class EntityRepository {
         }
     }
 
-    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
+    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, int weaponId, int explosionId) throws SlickException {
+        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
+        entity.weaponId = weaponId;
+        entity.explosionId = explosionId;
     }
 
     public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int explosionId, float moveSpeed, int damage, int facings) throws SlickException {
@@ -136,8 +141,9 @@ public class EntityRepository {
         entity.animationSpeed = framesPerSecond;
     }
 
-    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints) throws SlickException {
-        createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, int explosionId) throws SlickException {
+        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+        entity.explosionId = explosionId;
     }
 
     public void removeEntities(Predicate predicate) {
@@ -215,6 +221,7 @@ public class EntityRepository {
 
     /**
      * Slow way of filtering within area!
+     *
      * @param rectangle
      * @return
      */

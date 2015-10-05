@@ -108,7 +108,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
-            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, EntityRepository.EXPLOSION_NORMAL, player);
+            entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, entityData.explosionId, player);
         }
     }
 
@@ -257,7 +257,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
 
         // spawn projectile from this cell , to another cell.
-        Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, EntityRepository.ROCKET, player);
+        Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
         projectile.moveTo(entity.getRandomPositionWithin());
 //
 //        Destructible destructible = (Destructible) entity;
