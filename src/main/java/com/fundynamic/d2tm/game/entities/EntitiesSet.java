@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.entities.predicates.IsEntity;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 
 import java.util.ArrayList;
@@ -18,10 +17,6 @@ public class EntitiesSet extends HashSet<Entity> {
             }
         }
         return result;
-    }
-
-    public EntitiesSet filterEntity(Entity entity) {
-        return filter(new IsEntity(entity));
     }
 
     public EntitiesSet filter(PredicateBuilder predicateBuilder) {

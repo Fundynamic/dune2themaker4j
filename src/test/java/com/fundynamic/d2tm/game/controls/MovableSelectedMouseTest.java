@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
@@ -9,6 +10,7 @@ import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static com.fundynamic.d2tm.game.entities.units.UnitTest.makeUnit;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -17,16 +19,18 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {
+        EntityRepository entityRepository = mouse.getEntityRepository();
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         mouse.setHoverCell(cell);
 
-        Unit unit = makeUnit(map, player, Vector2D.create(1, 1));
-        assertFalse(unit.isSelected());
+        Vector2D coordinatesAsAbsoluteVector2D = cell.getCoordinatesAsAbsoluteVector2D();
+        Unit unit = makeUnit(map, player, coordinatesAsAbsoluteVector2D, entityRepository);
+        assertThat(unit.isSelected(), is(false));
 
-        MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, mouse.getEntityRepository());
+        MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, entityRepository);
 
         movableSelectedMouse.leftClicked();
-        assertTrue(unit.isSelected());
+        assertThat(unit.isSelected(), is(true));
     }
 
     @Test

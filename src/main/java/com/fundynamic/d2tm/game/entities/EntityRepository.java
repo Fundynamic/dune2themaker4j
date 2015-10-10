@@ -72,21 +72,21 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public void placeUnitOnMap(Vector2D mapCoordinate, int id, Player player) {
-        placeOnMap(mapCoordinate, EntityType.UNIT, id, player);
+    public Unit placeUnitOnMap(Vector2D absoluteMapCoordinate, int id, Player player) {
+        return (Unit) placeOnMap(absoluteMapCoordinate, EntityType.UNIT, id, player);
     }
 
     public void placeStructureOnMap(Vector2D topLeftMapCoordinate, int id, Player player) {
         placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
     }
 
-    public Entity placeOnMap(Vector2D topLeftMapCoordinate, EntityType entityType, int id, Player player) {
+    public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        return placeOnMap(topLeftMapCoordinate, entityData, player);
+        return placeOnMap(topLeftAbsoluteMapCoordinate, entityData, player);
     }
 
-    public Entity placeOnMap(Vector2D mapCoordinate, EntityData entityData, Player player) {
-        System.out.println("Placing " + entityData + " on map at " + mapCoordinate + " for " + player);
+    public Entity placeOnMap(Vector2D absoluteMapCoordinates, EntityData entityData, Player player) {
+        System.out.println("Placing " + entityData + " on map at " + absoluteMapCoordinates + " for " + player);
         try {
             Entity createdEntity;
             Image originalImage = entityData.image;
@@ -96,22 +96,22 @@ public class EntityRepository {
             switch (entityData.type) {
                 case STRUCTURE:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData, this);
+                    createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData, this);
+                    createdEntity = new Unit(map, absoluteMapCoordinates, recoloredImage, player, entityData, this);
                     entitiesSet.add(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, player, entityData, this);
+                    createdEntity = new Projectile(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
                     entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Particle(mapCoordinate, spriteSheet, entityData, this);
+                    createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
                     entitiesSet.add(createdEntity);
                     break;
                 default:

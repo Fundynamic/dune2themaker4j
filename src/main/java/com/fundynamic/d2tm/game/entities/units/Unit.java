@@ -15,6 +15,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Behaviors
     private final FadingSelection fadingSelection;
+    // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     private Vector2D target;

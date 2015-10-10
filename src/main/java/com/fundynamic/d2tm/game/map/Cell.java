@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -8,6 +7,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 public class Cell {
+
+    public static final int TILE_SIZE = 32;
 
     private final Map map;
     private final int x;
@@ -69,7 +70,7 @@ public class Cell {
     }
 
     public Vector2D getCoordinatesAsAbsoluteVector2D() {
-        return Vector2D.create(x * 32, y * 32);
+        return Vector2D.create(x * TILE_SIZE, y * TILE_SIZE);
     }
 
     public boolean isAtSameLocationAs(Cell other) {

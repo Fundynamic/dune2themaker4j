@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.makeTestableEntityRepository;
+import static com.fundynamic.d2tm.game.entities.units.UnitTest.makeUnit;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -20,12 +21,13 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickSelectsEntityOnHoverCell() throws SlickException {
+        EntityRepository entityRepository = mouse.getEntityRepository();
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         mouse.setHoverCell(cell);
 
-        EntityRepository entityRepository = makeTestableEntityRepository(map);
-        Unit unit = createUnit(entityRepository, Vector2D.create(1, 1), player);
-        assertFalse(unit.isSelected());
+        Vector2D coordinatesAsAbsoluteVector2D = cell.getCoordinatesAsAbsoluteVector2D();
+        Unit unit = makeUnit(map, player, coordinatesAsAbsoluteVector2D, entityRepository);
+        assertThat(unit.isSelected(), is(false));
 
         NormalMouse normalMouse = new NormalMouse(mouse);
 
