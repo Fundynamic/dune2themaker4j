@@ -97,22 +97,22 @@ public class EntityRepository {
                 case STRUCTURE:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
                     createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
-                    entitiesSet.add(map.placeStructure((Structure) createdEntity));
+                    addEntityToList(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
                     createdEntity = new Unit(map, absoluteMapCoordinates, recoloredImage, player, entityData, this);
-                    entitiesSet.add(map.placeUnit((Unit) createdEntity));
+                    addEntityToList(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
                     createdEntity = new Projectile(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
-                    entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
+                    addEntityToList(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
                     createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
-                    entitiesSet.add(createdEntity);
+                    addEntityToList(createdEntity);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown type " + entityData.type);
@@ -121,6 +121,10 @@ public class EntityRepository {
         } catch (CellAlreadyOccupiedException e) {
             throw new UnableToPlaceEntityOnMapException(e);
         }
+    }
+
+    public void addEntityToList(Entity entity) {
+        entitiesSet.add(entity);
     }
 
     public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, int weaponId, int explosionId) throws SlickException {

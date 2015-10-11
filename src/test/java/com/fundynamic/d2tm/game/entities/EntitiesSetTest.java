@@ -1,16 +1,15 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
-import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
-import com.fundynamic.d2tm.game.entities.units.UnitFactory;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.Set;
@@ -19,12 +18,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EntitiesSetTest {
+public class EntitiesSetTest extends AbstractD2TMTest {
 
-    @Mock
-    private EntityRepository entityRepository;
-
-    public static final int TILE_SIZE = 32;
     private EntitiesSet entitiesSet;
 
     private Player playerOne;
@@ -36,7 +31,8 @@ public class EntitiesSetTest {
     private int moveableUnitsOfPlayerOne;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SlickException {
+        super.setUp();
         EntityData entityData = new EntityData(32, 32, 10);
 
         entitiesSet = new EntitiesSet();
@@ -45,27 +41,27 @@ public class EntitiesSetTest {
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 100, Vector2D.create(320, 320)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(384, 320)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 300, Vector2D.create(320, 384)));
-        entitiesSet.add(UnitFactory.makeUnit(playerOne, 200, Vector2D.create(960, 960)));
+        entitiesSet.add(makeUnit(playerOne, 100, Vector2D.create(320, 320)));
+        entitiesSet.add(makeUnit(playerOne, 200, Vector2D.create(384, 320)));
+        entitiesSet.add(makeUnit(playerOne, 300, Vector2D.create(320, 384)));
+        entitiesSet.add(makeUnit(playerOne, 200, Vector2D.create(960, 960)));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
 
-        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200, entityRepository));
-        entitiesSet.add(StructureFactory.makeStructure(playerOne, 200, entityRepository));
+        entitiesSet.add(makeStructure(playerOne, 200));
+        entitiesSet.add(makeStructure(playerOne, 200));
         playerOneStructureCount = 2;
 
         // player two has 3 units and 3 structures
-        entitiesSet.add(UnitFactory.makeUnit(playerTwo, 100));
-        entitiesSet.add(UnitFactory.makeUnit(playerTwo, 200));
-        entitiesSet.add(UnitFactory.makeUnit(playerTwo, 300));
+        entitiesSet.add(makeUnit(playerTwo, 100));
+        entitiesSet.add(makeUnit(playerTwo, 200));
+        entitiesSet.add(makeUnit(playerTwo, 300));
         destroyers += 3;
 
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
-        entitiesSet.add(StructureFactory.makeStructure(playerTwo, 200, entityRepository));
+        entitiesSet.add(makeStructure(playerTwo, 200));
+        entitiesSet.add(makeStructure(playerTwo, 200));
+        entitiesSet.add(makeStructure(playerTwo, 200));
 
         // Bare entities (with no behavior at all) - to test filtering
         entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), entityData, playerOne, null));
