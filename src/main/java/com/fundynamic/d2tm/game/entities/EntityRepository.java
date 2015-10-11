@@ -265,4 +265,8 @@ public class EntityRepository {
                         vectorWithin(absoluteMapCoordinates)
         );
     }
+
+    public void removeAllEntityData() {
+        entitiesData.clear();
+    }
 }

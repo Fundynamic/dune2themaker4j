@@ -1,12 +1,12 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
-import com.fundynamic.d2tm.graphics.ImageRepositoryTest;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Before;
@@ -23,22 +23,17 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class PlayingStateTest {
+public class PlayingStateTest extends AbstractD2TMTest {
 
     private static int TILE_WIDTH = 32;
     private static int TILE_HEIGHT = 32;
     private PlayingState playingState;
-
-    @Mock
-    private GameContainer gameContainer;
-    private ImageRepository imageRepository;
 
     @Before
     public void setUp() throws SlickException {
         TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_WIDTH, TILE_HEIGHT));
         Shroud shroud = new Shroud(mock(Image.class), TILE_WIDTH, TILE_HEIGHT);
 
-        imageRepository = ImageRepositoryTest.makeTestableImageRepository();
         playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_WIDTH, TILE_HEIGHT);
     }
 

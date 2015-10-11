@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -27,9 +28,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UnitTest {
-
-    private Map map;
+public class UnitTest extends AbstractD2TMTest {
 
     @Mock
     private SpriteSheet spriteSheet;
@@ -47,10 +46,8 @@ public class UnitTest {
 
     @Before
     public void setUp() throws SlickException {
+        super.setUp();
         int TILE_SIZE = 32;
-        int mapWidth = 64;
-        int mapHeight = 64;
-        map = MapTest.makeMap(); //new Map(new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE), mapWidth, mapHeight);
         unitAbsoluteMapCoordinates = Vector2D.create(10, 10).scale(TILE_SIZE);
         entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
         unit = makeUnit(UnitFacings.RIGHT, entityRepository);

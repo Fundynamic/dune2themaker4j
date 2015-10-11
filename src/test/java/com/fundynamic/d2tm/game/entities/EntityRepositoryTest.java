@@ -1,18 +1,13 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapTest;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -28,21 +23,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EntityRepositoryTest {
+public class EntityRepositoryTest extends AbstractD2TMTest {
 
     public static final int UNIT_FIRST_ID = 0;
 
-    public Map map;
-
-    @Mock
-    public Player player;
-
-    private EntityRepository entityRepository;
-
     @Before
     public void setUp() throws SlickException {
-        map = MapTest.makeMap();
-        entityRepository = makeEmptyTestableEntityRepository(map);
+        super.setUp();
+        entityRepository.removeAllEntityData();
     }
 
     @Test
@@ -102,7 +90,7 @@ public class EntityRepositoryTest {
 
     @Test
     public void findsUnitAtVector() throws SlickException {
-        Map map = MapTest.makeMap();
+        Map map = makeMap(64, 64);
         entityRepository = makeTestableEntityRepository(map);
 
         Unit unit = createUnit(entityRepository, Vector2D.create(100, 100), player);
