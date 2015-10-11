@@ -2,20 +2,16 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
-import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapTest;
-import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -31,46 +27,17 @@ import static org.mockito.Mockito.*;
 public class UnitTest extends AbstractD2TMTest {
 
     @Mock
-    private SpriteSheet spriteSheet;
-
-    @Mock
-    private Player player;
-
-    @Mock
     private FadingSelection fadingSelection;
 
-    private EntityRepository entityRepository;
-
     private Unit unit;
+
     private Vector2D unitAbsoluteMapCoordinates;
 
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        int TILE_SIZE = 32;
         unitAbsoluteMapCoordinates = Vector2D.create(10, 10).scale(TILE_SIZE);
-        entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
-        unit = makeUnit(UnitFacings.RIGHT, entityRepository);
-    }
-
-    public Unit makeUnit(UnitFacings facing, EntityRepository entityRepository) {
-        return makeUnit(facing, Vector2D.zero(), 100, entityRepository);
-    }
-
-    public Unit makeUnit(UnitFacings facing, int hitPoints, EntityRepository entityRepository) {
-        return makeUnit(facing, Vector2D.zero(), hitPoints, entityRepository);
-    }
-
-    public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints, EntityRepository entityRepository) {
-        EntityData entityData = new EntityData(32, 32, 10);
-        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, entityData, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository) {
-            @Override
-            public boolean isDestroyed() {
-                // we do this so that we do not have to deal with spawning explosions (which is done in the
-                // update method)
-                return super.hitPointBasedDestructibility.hasDied();
-            }
-        };
+        unit = makeUnit(UnitFacings.RIGHT, unitAbsoluteMapCoordinates);
     }
 
     @Test
@@ -122,7 +89,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void determinesFacingRight() {
-        unit = makeUnit(UnitFacings.LEFT, entityRepository);
+        unit = makeUnit(UnitFacings.LEFT, unitAbsoluteMapCoordinates);
         Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 0));
         assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(coordinatesToFaceTo));
     }
@@ -133,8 +100,8 @@ public class UnitTest extends AbstractD2TMTest {
         int offsetY = 6;
         Vector2D offset = Vector2D.create(offsetX, offsetY);
 
-        Unit unit = makeUnit(UnitFacings.DOWN, offset, 100, entityRepository);
-        Graphics graphics = mock(Graphics.class);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, offset, 100);
+        unit.setFadingSelection(fadingSelection);
 
         // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
         // but isn't that basically the unit coordinates * tile size!?
@@ -152,8 +119,9 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void aliveUnitUpdateCycleOfUnitThatHasNothingToDo() {
-        Unit unit = makeUnit(UnitFacings.DOWN, entityRepository);
+    public void aliveUnitUpdateCycleOfUnitThatIsNotSelected() {
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
+        unit.setFadingSelection(fadingSelection);
 
         int deltaInMs = 1;
         unit.update(deltaInMs);
@@ -164,7 +132,9 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void deadUnitUpdateCycle() {
         int hitPoints = 100;
-        Unit unit = makeUnit(UnitFacings.DOWN, hitPoints, entityRepository);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, Vector2D.zero(), hitPoints);
+        unit.setFadingSelection(fadingSelection);
+
         unit.takeDamage(hitPoints);
 
         unit.update(1);
@@ -174,7 +144,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, entityRepository);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
@@ -199,7 +169,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, entityRepository);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
         unit.moveTo(mapCoordinateToMoveTo); // move to left-up

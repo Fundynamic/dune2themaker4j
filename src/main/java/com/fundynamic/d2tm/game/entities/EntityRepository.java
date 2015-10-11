@@ -101,7 +101,8 @@ public class EntityRepository {
                     break;
                 case UNIT:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Unit(map, absoluteMapCoordinates, recoloredImage, player, entityData, this);
+                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                    createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
                     addEntityToList(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:

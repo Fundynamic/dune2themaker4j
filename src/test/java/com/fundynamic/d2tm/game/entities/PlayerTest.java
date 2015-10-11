@@ -12,8 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 public class PlayerTest extends AbstractD2TMTest {
 
-    private Player player;
-
     @Before
     public void setUp() throws SlickException {
         super.setUp();

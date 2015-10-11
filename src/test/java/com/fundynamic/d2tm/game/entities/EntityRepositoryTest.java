@@ -30,6 +30,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
+        // remove all data because the tests assume an empty state
         entityRepository.removeAllEntityData();
     }
 

@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 
 public class TestableMouse extends Mouse {
+
     public TestableMouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
         super(controllingPlayer, gameContainer, entityRepository);
     }

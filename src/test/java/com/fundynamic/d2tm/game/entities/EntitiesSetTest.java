@@ -22,8 +22,6 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     private EntitiesSet entitiesSet;
 
-    private Player playerOne;
-
     private int playerOneUnitCount;
     private int playerOneStructureCount;
     private int playerOneBareEntitiesCount;
@@ -37,20 +35,20 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
         entitiesSet = new EntitiesSet();
 
-        playerOne = new Player("Player one", Recolorer.FactionColor.GREEN);
+        player = new Player("Player one", Recolorer.FactionColor.GREEN);
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(makeUnit(playerOne, 100, Vector2D.create(320, 320)));
-        entitiesSet.add(makeUnit(playerOne, 200, Vector2D.create(384, 320)));
-        entitiesSet.add(makeUnit(playerOne, 300, Vector2D.create(320, 384)));
-        entitiesSet.add(makeUnit(playerOne, 200, Vector2D.create(960, 960)));
+        entitiesSet.add(makeUnit(player, 100, Vector2D.create(320, 320)));
+        entitiesSet.add(makeUnit(player, 200, Vector2D.create(384, 320)));
+        entitiesSet.add(makeUnit(player, 300, Vector2D.create(320, 384)));
+        entitiesSet.add(makeUnit(player, 200, Vector2D.create(960, 960)));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
 
-        entitiesSet.add(makeStructure(playerOne, 200));
-        entitiesSet.add(makeStructure(playerOne, 200));
+        entitiesSet.add(makeStructure(player, 200));
+        entitiesSet.add(makeStructure(player, 200));
         playerOneStructureCount = 2;
 
         // player two has 3 units and 3 structures
@@ -64,13 +62,13 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         entitiesSet.add(makeStructure(playerTwo, 200));
 
         // Bare entities (with no behavior at all) - to test filtering
-        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), entityData, playerOne, null));
+        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), entityData, player, null));
         playerOneBareEntitiesCount = 1;
     }
 
     @Test
     public void filtersForPlayer() {
-        Set<Entity> result = entitiesSet.filter(Predicate.builder().forPlayer(playerOne));
+        Set<Entity> result = entitiesSet.filter(Predicate.builder().forPlayer(player));
         assertEquals(playerOneStructureCount + playerOneUnitCount + playerOneBareEntitiesCount, result.size());
     }
 
@@ -82,7 +80,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     @Test
     public void filtersMovable() {
-        Set<Entity> result = entitiesSet.filter(Predicate.builder().selectableMovableForPlayer(playerOne));
+        Set<Entity> result = entitiesSet.filter(Predicate.builder().selectableMovableForPlayer(player));
         assertEquals(moveableUnitsOfPlayerOne, result.size());
     }
 

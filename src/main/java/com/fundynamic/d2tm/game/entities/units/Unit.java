@@ -14,7 +14,8 @@ import org.newdawn.slick.SpriteSheet;
 public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
 
     // Behaviors
-    private final FadingSelection fadingSelection;
+    private FadingSelection fadingSelection;
+
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
@@ -32,11 +33,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private boolean hasSpawnedExplosions;
 
-    public Unit(Map map, Vector2D absoluteMapCoordinates, Image image, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
                 absoluteMapCoordinates,
-                new SpriteSheet(image, entityData.width, entityData.height),
+                spriteSheet,
                 new FadingSelection(entityData.width, entityData.height),
                 new HitPointBasedDestructibility(entityData.hitPoints),
                 player,
@@ -58,22 +59,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.nextTargetToMoveTo = absoluteMapCoordinates;
         this.offset = Vector2D.zero();
         this.moveSpeed = entityData.moveSpeed;
-    }
-
-    // TODO: Simplify constructor
-    public Unit(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet,
-                Player player, EntityData entityData, int facing,
-                Vector2D target, Vector2D nextTargetToMoveTo, Vector2D offset,
-                int hitPoints, FadingSelection fadingSelection, EntityRepository entityRepository) {
-        super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
-        this.offset = offset;
-        this.moveSpeed = 1.0F;
-        this.map = map;
-        this.facing = facing;
-        this.nextTargetToMoveTo = nextTargetToMoveTo;
-        this.target = target;
-        this.fadingSelection = fadingSelection;
-        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(hitPoints);
+        if (moveSpeed < 0.0001f) {
+            throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + this.moveSpeed);
+        }
     }
 
     @Override
@@ -95,8 +83,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
 
         this.fadingSelection.update(deltaInMs);
-        if (shouldBeSomewhereElse()) {
-            if (isWaitingForNextCellToDetermine()) {
+        if (goingSomewhere()) {
+            if (hasNoNextCellToMoveTo()) {
                 decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
                 // TODO: "make it turn to facing"
@@ -114,10 +102,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private void moveToNextCellPixelByPixel() {
         float offsetX = offset.getX();
         float offsetY = offset.getY();
+
         if (nextTargetToMoveTo.getXAsInt() < absoluteMapCoordinates.getXAsInt()) offsetX -= moveSpeed;
         if (nextTargetToMoveTo.getXAsInt() > absoluteMapCoordinates.getXAsInt()) offsetX += moveSpeed;
         if (nextTargetToMoveTo.getYAsInt() < absoluteMapCoordinates.getYAsInt()) offsetY -= moveSpeed;
         if (nextTargetToMoveTo.getYAsInt() > absoluteMapCoordinates.getYAsInt()) offsetY += moveSpeed;
+
         Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
             offsetX = 0;
@@ -160,7 +150,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
-    private boolean isWaitingForNextCellToDetermine() {
+    private boolean hasNoNextCellToMoveTo() {
         return nextTargetToMoveTo == absoluteMapCoordinates;
     }
 
@@ -171,7 +161,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         map.revealShroudFor(absoluteMapCoordinates, getSight(), player);
     }
 
-    private boolean shouldBeSomewhereElse() {
+    private boolean goingSomewhere() {
         return !this.target.equals(absoluteMapCoordinates);
     }
 
@@ -268,5 +258,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public EntityType getEntityType() {
         return EntityType.UNIT;
+    }
+
+    public void setFacing(int facing) {
+        this.facing = facing;
+    }
+
+    public void setOffset(Vector2D offset) {
+        this.offset = offset;
+    }
+
+    public void setFadingSelection(FadingSelection fadingSelection) {
+        this.fadingSelection = fadingSelection;
     }
 }
