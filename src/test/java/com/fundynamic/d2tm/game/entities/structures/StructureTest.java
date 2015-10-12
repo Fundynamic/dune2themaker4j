@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -10,8 +11,7 @@ import org.newdawn.slick.Image;
 
 import static org.mockito.Mockito.mock;
 
-public class StructureTest {
-    public static int TILE_SIZE = 32;
+public class StructureTest extends AbstractD2TMTest {
 
     @Test
     public void constructorCalculatesWidthInCells() {
