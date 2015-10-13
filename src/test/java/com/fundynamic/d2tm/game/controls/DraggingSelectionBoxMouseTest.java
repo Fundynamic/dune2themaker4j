@@ -8,10 +8,12 @@ import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
 
 
 public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
@@ -22,7 +24,7 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
     public void setUp() throws SlickException {
         super.setUp();
 
-        Viewport viewport = new Viewport(map, mouse, player);
+        Viewport viewport = new Viewport(map, mouse, player, mock(Image.class));
         mouse.setViewport(viewport);
 
         // start dragging from 0,0

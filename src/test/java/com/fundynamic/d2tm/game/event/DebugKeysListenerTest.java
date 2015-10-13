@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.event;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.controls.PlacingUnitMouse;
@@ -27,7 +28,8 @@ public class DebugKeysListenerTest {
 
     @Mock private Mouse mouse;
     @Mock private Viewport viewport;
-    @Mock private EntityRepository entityRepository;
+    @Mock private EntityRepository entityRepository; // we want a mock here
+
     private final Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     private DebugKeysListener debugKeysListener;
 

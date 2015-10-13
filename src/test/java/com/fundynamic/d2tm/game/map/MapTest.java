@@ -1,36 +1,22 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
-import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
-import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.SlickException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
 public class MapTest extends AbstractD2TMTest {
 
     private static int MAP_WIDTH = 10;
     private static int MAP_HEIGHT = 20;
-
-    private EntityRepository entityRepository;
-
-    @Mock
-    private Player player;
-
-    private Map map;
 
     @Before
     public void setUp() throws SlickException {
@@ -88,15 +74,12 @@ public class MapTest extends AbstractD2TMTest {
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapMiddleOfCell() {
-        int TILE_SIZE = 32;
         Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2));
         assertTrue(cell.getTerrain() instanceof Sand);
     }
 
     @Test
     public void returnsCellForPixelCoordinatesMiddleOfMapBottomRightOfCell() {
-        int TILE_SIZE = 32;
-
         // at 5,5 (see setup) is Spice
         int pixelX = TILE_SIZE * 5;
         int pixelY = TILE_SIZE * 5;

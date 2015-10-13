@@ -12,12 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 public class PlayerTest extends AbstractD2TMTest {
 
-    @Before
-    public void setUp() throws SlickException {
-        super.setUp();
-        player = new Player("I am awesome", Recolorer.FactionColor.BLUE);
-    }
-
     @Test
     public void hasNoAliveEntitiesAtDefault() {
         assertEquals(0, player.aliveEntities());

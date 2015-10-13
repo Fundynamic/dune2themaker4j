@@ -12,18 +12,24 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractD2TMTest {
 
     public static int TILE_SIZE = 32;
@@ -40,6 +46,7 @@ public abstract class AbstractD2TMTest {
     protected ImageRepository imageRepository;
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Map map;
+
     protected EntityRepository entityRepository;
 
     @Before
@@ -47,6 +54,9 @@ public abstract class AbstractD2TMTest {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
         entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+
+        Input input = mock(Input.class);
+        when(gameContainer.getInput()).thenReturn(input);
     }
 
     // RESOURCE LOADING
@@ -55,6 +65,11 @@ public abstract class AbstractD2TMTest {
         return new ImageRepository() {
             @Override
             public Image load(String path) {
+                return Mockito.mock(Image.class);
+            }
+
+            @Override
+            public Image createImage(Vector2D dimensions) throws SlickException {
                 return Mockito.mock(Image.class);
             }
         };
@@ -78,6 +93,11 @@ public abstract class AbstractD2TMTest {
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
         return new Map(new Shroud(null, Game.TILE_WIDTH, Game.TILE_HEIGHT), width, height);
+    }
+
+    public Cell makeCell(int x, int y) {
+        Terrain terrain = mock(Terrain.class);
+        return new Cell(map, terrain, x, y);
     }
 
     // STRUCTURES
@@ -128,4 +148,7 @@ public abstract class AbstractD2TMTest {
         return unit;
     }
 
+    public EntityRepository getTestableEntityRepository() {
+        return entityRepository;
+    }
 }

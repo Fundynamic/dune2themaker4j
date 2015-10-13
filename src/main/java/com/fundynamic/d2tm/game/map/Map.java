@@ -145,10 +145,6 @@ public class Map {
         return structure;
     }
 
-    public Cell getCell(Vector2D mapCoordinates) {
-        return getCell(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt());
-    }
-
     public String getAsciiShroudMap(Player player) {
         String result = "";
         for (int y = 0; y < height; y++) {

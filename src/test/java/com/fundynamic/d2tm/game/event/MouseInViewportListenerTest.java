@@ -42,8 +42,6 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     @Mock
     private ImageRepository imageRepository;
 
-    private Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-
     private Mouse mouse;
 
     @Before
@@ -59,15 +57,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        Viewport viewport = new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player) {
-            // ugly seam in the code, but I'd rather do this than create a partial mock
-            @Override
-            protected Image constructImage(Vector2D screenResolution) throws SlickException {
-                return mock(Image.class);
-            }
-        };
-        viewport.init(); // initialize graphical stuff here
-        return viewport;
+        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player, mock(Image.class));
     }
 
     @Test

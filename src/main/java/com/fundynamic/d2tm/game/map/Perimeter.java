@@ -16,6 +16,7 @@ public class Perimeter {
         this.maxY = maxY;
     }
 
+    // TODO: move to Rectangle?
     public Vector2D makeSureVectorStaysWithin(Vector2D vec) {
         float x = Math.min(Math.max(vec.getX(), minX), maxX);
         float y = Math.min(Math.max(vec.getY(), minY), maxY);

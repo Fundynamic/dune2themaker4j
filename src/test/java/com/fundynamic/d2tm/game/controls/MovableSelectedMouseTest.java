@@ -18,7 +18,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {
-        Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
+        Cell cell = makeCell(1, 1);
         mouse.setHoverCell(cell);
 
         Vector2D coordinatesAsAbsoluteVector2D = cell.getCoordinatesAsAbsoluteVector2D();
@@ -33,7 +33,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
-        Cell cell = new Cell(map, mock(Terrain.class), 2, 2);
+        Cell cell = makeCell(2, 2);
         mouse.setHoverCell(cell);
 
         Vector2D mapCoordinates = Vector2D.create(1, 1);
