@@ -39,7 +39,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 absoluteMapCoordinates,
                 spriteSheet,
                 new FadingSelection(entityData.width, entityData.height),
-                new HitPointBasedDestructibility(entityData.hitPoints),
+                new HitPointBasedDestructibility(entityData.hitPoints, entityData.width),
                 player,
                 entityData,
                 entityRepository
@@ -73,6 +73,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         int drawX = x + offset.getXAsInt();
         graphics.drawImage(sprite, drawX, drawY);
         this.fadingSelection.render(graphics, drawX, drawY);
+        this.hitPointBasedDestructibility.render(graphics, drawX, drawY);
     }
 
     @Override

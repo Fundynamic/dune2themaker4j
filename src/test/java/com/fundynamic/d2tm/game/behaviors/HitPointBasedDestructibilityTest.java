@@ -4,31 +4,47 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 public class HitPointBasedDestructibilityTest {
 
-    private static int HIT_POINTS = 100;
+    public static final int WIDTH_IN_PIXELS = 64;
+    private static int MAX_HIT_POINTS = 100;
+
     private HitPointBasedDestructibility hitPointBasedDestructibility;
 
     @Before
     public void setUp() {
-        hitPointBasedDestructibility = new HitPointBasedDestructibility(HIT_POINTS);
+        hitPointBasedDestructibility = new HitPointBasedDestructibility(MAX_HIT_POINTS, WIDTH_IN_PIXELS);
+    }
+
+    @Test
+    public void whenMaxHealthThenHealthBarPixelWidthIsWidthInPixels() {
+        assertThat(hitPointBasedDestructibility.getHealthBarPixelWidth(), is(WIDTH_IN_PIXELS));
+    }
+
+    @Test
+    public void whenHalfHealthThenHealthBarPixelWidthIsWidthInPixels() {
+        hitPointBasedDestructibility.takeDamage(MAX_HIT_POINTS / 2);
+        assertThat(hitPointBasedDestructibility.getHealthBarPixelWidth(), is(WIDTH_IN_PIXELS / 2));
     }
 
     @Test
     public void deductsDamageFromHitPoints() {
         hitPointBasedDestructibility.takeDamage(40);
-        Assert.assertEquals((HIT_POINTS - 40), hitPointBasedDestructibility.getHitPoints());
+        Assert.assertEquals((MAX_HIT_POINTS - 40), hitPointBasedDestructibility.getHitPoints());
     }
 
     @Test
     public void isDestroyedWhenWithZeroHitPointsOrLower() {
-        hitPointBasedDestructibility.takeDamage(HIT_POINTS);
+        hitPointBasedDestructibility.takeDamage(MAX_HIT_POINTS);
         Assert.assertTrue(hitPointBasedDestructibility.hasDied());
     }
 
     @Test
     public void isDestroyedWithLessThanZeroHitPoints() {
-        hitPointBasedDestructibility.takeDamage(HIT_POINTS + 1);
+        hitPointBasedDestructibility.takeDamage(MAX_HIT_POINTS + 1);
         Assert.assertTrue(hitPointBasedDestructibility.hasDied());
     }
 
@@ -39,7 +55,7 @@ public class HitPointBasedDestructibilityTest {
 
     @Test
     public void isNotDestroyedWithOneHitPoint() {
-        hitPointBasedDestructibility.takeDamage(HIT_POINTS - 1);
+        hitPointBasedDestructibility.takeDamage(MAX_HIT_POINTS - 1);
         Assert.assertFalse(hitPointBasedDestructibility.hasDied());
     }
 }

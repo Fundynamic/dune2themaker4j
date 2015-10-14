@@ -36,7 +36,7 @@ public class Structure extends Entity implements Selectable, Destructible {
     public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(absoluteMapCoordinates, spriteSheet, entityData, player, entityRepository);
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
-        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints);
+        this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.width);
         widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);
         heightInCells = (int) Math.ceil(entityData.height / TILE_SIZE);
     }
@@ -79,6 +79,7 @@ public class Structure extends Entity implements Selectable, Destructible {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
         fadingSelection.render(graphics, x, y);
+        hitPointBasedDestructibility.render(graphics, x, y);
     }
 
     public void select() {
