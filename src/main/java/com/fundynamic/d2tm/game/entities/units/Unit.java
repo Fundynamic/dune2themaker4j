@@ -22,7 +22,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
 
-    // Implementation
+    // Dependencies
     private final Map map;
 
 
@@ -146,7 +146,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT);
 
         if (entities.isEmpty()) {
-            this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+            if (!UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
+                this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+                UnitMoveIntents.addIntent(nextTargetToMoveTo);
+            }
         }
     }
 
@@ -158,7 +161,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.absoluteMapCoordinates = vectorToMoveTo;
         this.nextTargetToMoveTo = vectorToMoveTo;
 
+        UnitMoveIntents.removeIntent(vectorToMoveTo);
+
+        // TODO: replace with some event "unit moved to coordinate" which is picked up
+        // elsewhere (Listener?)
         map.revealShroudFor(absoluteMapCoordinates, getSight(), player);
+
     }
 
     private boolean goingSomewhere() {

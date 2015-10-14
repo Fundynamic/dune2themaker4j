@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -11,7 +10,6 @@ import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 
 public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {

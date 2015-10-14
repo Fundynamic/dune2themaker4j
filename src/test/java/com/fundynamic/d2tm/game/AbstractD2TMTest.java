@@ -44,10 +44,11 @@ public abstract class AbstractD2TMTest {
     protected GameContainer gameContainer;
 
     protected ImageRepository imageRepository;
+    protected EntityRepository entityRepository;
+
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Map map;
 
-    protected EntityRepository entityRepository;
 
     @Before
     public void setUp() throws SlickException {
@@ -135,7 +136,7 @@ public abstract class AbstractD2TMTest {
                 mock(SpriteSheet.class),
                 player,
                 entityData,
-                entityRepository) { //mock(EntityRepository.class)
+                entityRepository) {
             @Override
             public boolean isDestroyed() {
                 // we do this so that we do not have to deal with spawning explosions (which is done in the

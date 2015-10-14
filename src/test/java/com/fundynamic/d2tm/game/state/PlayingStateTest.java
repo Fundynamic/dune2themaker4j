@@ -38,12 +38,10 @@ public class PlayingStateTest extends AbstractD2TMTest {
     }
 
     @Test
-//    @Ignore("fails due some dependencies set up that are not stub/mockable yet")
     public void testInit() throws SlickException {
         int tileWidth = 32;
         int tileHeight = 32;
 
-//        GameContainer gameContainer = mock(GameContainer.class);
         TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), tileWidth, tileHeight));
         Shroud shroud = new Shroud(mock(Image.class), tileWidth, tileHeight);
 
