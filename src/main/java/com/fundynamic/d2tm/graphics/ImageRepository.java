@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.graphics;
 
 
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -30,6 +31,10 @@ public class ImageRepository {
         } catch (SlickException e) {
             throw new CannotLoadImageException(e);
         }
+    }
+
+    public Image createImage(Vector2D dimensions) throws SlickException {
+        return new Image(dimensions.getXAsInt(), dimensions.getYAsInt());
     }
 
 }

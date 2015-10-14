@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
@@ -8,36 +8,30 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EntityRepositoryTest {
+public class EntityRepositoryTest extends AbstractD2TMTest {
 
     public static final int UNIT_FIRST_ID = 0;
 
-    @Mock
-    public Map map;
-
-    @Mock
-    public Player player;
-
-    private EntityRepository entityRepository;
-
     @Before
     public void setUp() throws SlickException {
-        entityRepository = makeEmptyTestableEntityRepository(map);
+        super.setUp();
+        // remove all data because the tests assume an empty state
+        entityRepository.removeAllEntityData();
     }
 
     @Test
@@ -95,6 +89,31 @@ public class EntityRepositoryTest {
         assertEquals(explosionId, data.explosionId);
     }
 
+    @Test
+    public void findsUnitAtVector() throws SlickException {
+        Map map = makeMap(64, 64);
+        entityRepository = makeTestableEntityRepository(map);
+
+        Unit unit = createUnit(entityRepository, Vector2D.create(100, 100), player);
+
+        // find at same position
+        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(100, 100), EntityType.UNIT);
+        assertThat(entities.hasAny(), is(true));
+        assertThat((Unit) entities.getFirst(), is(unit));
+
+        // do not find anything at a bit more upwards
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(99, 99), EntityType.UNIT);
+        assertThat(entities, is(empty()));
+
+        // find entity at its right-bottom dimension
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(131, 131), EntityType.UNIT);
+        assertThat(entities.hasAny(), is(true));
+        assertThat((Unit) entities.getFirst(), is(unit));
+
+        // do not find anything at a bit more upwards
+        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(132, 132), EntityType.UNIT);
+        assertThat(entities, is(empty()));
+    }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
@@ -108,36 +127,39 @@ public class EntityRepositoryTest {
         entityRepository.placeOnMap(Vector2D.zero(), EntityType.UNIT, 0, player);
     }
 
+    // TODO: This test name is now a bit weird, and we really need to clean up our tests suite, for proper setup etc.
+    // TODO: See placeOnMapPutsStructureOnMap
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
         entityRepository.createUnit(0, "quad.png", 32, 32, 2, 1.0F, 200, 0, 1);
 
         entityRepository.placeOnMap(Vector2D.create(10, 11), EntityType.UNIT, 0, player);
 
-        ArgumentCaptor<Unit> argument = ArgumentCaptor.forClass(Unit.class);
-        Mockito.verify(map).placeUnit(argument.capture());
-        Unit unitToPlace = argument.getValue();
+        EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
+        assertThat(entitiesSet.size(), is(1));
 
-        assertEquals(Vector2D.create(10, 11), unitToPlace.getAbsoluteMapCoordinates());
-        assertEquals(1, entityRepository.getEntitiesSet().size());
+        Entity first = entitiesSet.getFirst();
+
+        assertThat(first.getAbsoluteMapCoordinates(), is(Vector2D.create(10, 11)));
     }
 
+    // TODO: This test name is now a bit weird, and we really need to clean up our tests suite, for proper setup etc.
     @Test
     public void placeOnMapPutsStructureOnMap() throws SlickException {
         entityRepository.createStructure(0, "constyard.png", 32, 32, 2, 1000, 1);
 
         entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.STRUCTURE, 0, player);
 
-        ArgumentCaptor<Structure> argument = ArgumentCaptor.forClass(Structure.class);
-        Mockito.verify(map).placeStructure(argument.capture());
-        Structure structureToPlace = argument.getValue();
+        EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
+        assertThat(entitiesSet.size(), is(1));
 
-        assertEquals(Vector2D.create(21, 23), structureToPlace.getAbsoluteMapCoordinates());
-        assertEquals(1, entityRepository.getEntitiesSet().size());
+        Entity first = entitiesSet.getFirst();
+
+        assertThat(first.getAbsoluteMapCoordinates(), is(Vector2D.create(21, 23)));
     }
 
     public static Unit createUnit(EntityRepository entityRepository, Vector2D mapCoordinates, Player player) throws SlickException {
-        return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, 1, player);
+        return (Unit) entityRepository.placeOnMap(mapCoordinates, EntityType.UNIT, EntityRepository.QUAD, player);
     }
 
     public static EntityRepository makeTestableEntityRepositoryWithMockedMap() throws SlickException {

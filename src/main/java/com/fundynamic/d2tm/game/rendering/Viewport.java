@@ -18,13 +18,12 @@ public class Viewport implements Renderable {
 
     private final Vector2D viewportDimensions;
 
-    private Image buffer;
+    private final Image buffer;
 
     private final Vector2D drawingVector;
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final CellBasedEntityViewportRenderer cellBasedEntityViewportRenderer;
     private final EntityViewportRenderer entityViewportRenderer;
 
     private final CellTerrainRenderer cellTerrainRenderer;
@@ -42,8 +41,8 @@ public class Viewport implements Renderable {
 
     private Map map;
 
-    public Viewport(Map map, Mouse mouse, Player player) throws SlickException {
-        this(Vector2D.create(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT),
+    public Viewport(Map map, Mouse mouse, Player player, Image buffer) throws SlickException {
+        this(Game.getResolution(),
                 Vector2D.zero(),
                 Vector2D.zero(),
                 map,
@@ -51,7 +50,8 @@ public class Viewport implements Renderable {
                 Game.TILE_WIDTH,
                 Game.TILE_HEIGHT,
                 mouse,
-                player);
+                player,
+                buffer);
     }
 
     public Viewport(Vector2D viewportDimensions,
@@ -62,12 +62,13 @@ public class Viewport implements Renderable {
                     int tileWidth,
                     int tileHeight,
                     Mouse mouse,
-                    Player player) throws SlickException {
+                    Player player,
+                    Image buffer) throws SlickException {
         this.viewportDimensions = viewportDimensions;
         this.map = map;
 
         this.drawingVector = drawingVector;
-        this.buffer = null;
+        this.buffer = buffer;
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions, tileWidth, tileHeight);
         this.viewingVector = viewingVector;
@@ -80,14 +81,9 @@ public class Viewport implements Renderable {
         this.cellShroudRenderer = new CellShroudRenderer(map, player);
         this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
         this.mouse = mouse;
-        this.mouse.setViewport(this); // <-- THIS IS BAD!
+        this.mouse.setViewport(this); // TODO: <-- THIS IS BAD! (get rid of this cyclic reference)
 
-        this.cellBasedEntityViewportRenderer = new CellBasedEntityViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.entityViewportRenderer = new EntityViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
-    }
-
-    public void init() throws SlickException {
-        this.buffer = constructImage(viewportDimensions);
     }
 
     public void render(Graphics graphics) {
@@ -104,7 +100,9 @@ public class Viewport implements Renderable {
             // TODO: Merge the culling into this viewport class(?)
             cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
 
-            cellBasedEntityViewportRenderer.render(this.buffer.getGraphics(), viewingVector);
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.STRUCTURE);
+
+            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.UNIT);
 
             entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PARTICLE);
 
@@ -162,10 +160,6 @@ public class Viewport implements Renderable {
     // least not the use them in the non-test code.
     public Vector2D getViewingVector() {
         return viewingVector;
-    }
-
-    protected Image constructImage(Vector2D screenResolution) throws SlickException {
-        return new Image(screenResolution.getXAsInt(), screenResolution.getYAsInt());
     }
 
     public Map getMap() {

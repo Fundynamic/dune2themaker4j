@@ -28,4 +28,26 @@ public class EntitiesSet extends HashSet<Entity> {
         return new ArrayList<>(this);
     }
 
+    public boolean hasAny() {
+        return size() > 0;
+    }
+
+    /**
+     *
+     * Returns first element or null when size is 0
+     *
+     * @return
+     */
+    public Entity getFirst() {
+        if (hasAny()) {
+            return toList().get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean add(Entity entity) {
+        if (entity == null) throw new IllegalArgumentException("Cannot add null to entity set");
+        return super.add(entity);
+    }
 }

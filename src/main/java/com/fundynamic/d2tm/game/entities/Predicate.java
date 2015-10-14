@@ -37,4 +37,12 @@ public abstract class Predicate<T> {
     public static Predicate<Entity> ofType(EntityType entityType) {
         return OfType.instance(entityType);
     }
+
+    public static Predicate<Entity> ofTypes(EntityType[] entityTypes) {
+        OrPredicate orPredicate = new OrPredicate();
+        for (EntityType entityType : entityTypes) {
+            orPredicate.addPredicate(ofType(entityType));
+        }
+        return orPredicate;
+    }
 }

@@ -1,17 +1,17 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -24,52 +24,20 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UnitTest {
-
-    private Map map;
-
-    @Mock
-    private SpriteSheet spriteSheet;
-
-    @Mock
-    private Player player;
+public class UnitTest extends AbstractD2TMTest {
 
     @Mock
     private FadingSelection fadingSelection;
 
-    @Mock
-    private EntityRepository entityRepository;
-
     private Unit unit;
+
     private Vector2D unitAbsoluteMapCoordinates;
 
     @Before
     public void setUp() throws SlickException {
-        int TILE_SIZE = 32;
-        int mapWidth = 64;
-        int mapHeight = 64;
-        map = new Map(new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE), mapWidth, mapHeight);
+        super.setUp();
         unitAbsoluteMapCoordinates = Vector2D.create(10, 10).scale(TILE_SIZE);
-        unit = makeUnit(UnitFacings.RIGHT);
-    }
-
-    public Unit makeUnit(UnitFacings facing) {
-        return makeUnit(facing, Vector2D.zero(), 100);
-    }
-
-    public Unit makeUnit(UnitFacings facing, int hitPoints) {
-        return makeUnit(facing, Vector2D.zero(), hitPoints);
-    }
-
-    public Unit makeUnit(UnitFacings facing, Vector2D offset, int hitPoints) {
-        return new Unit(map, unitAbsoluteMapCoordinates, spriteSheet, player, 10, facing.getValue(), unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates, offset, hitPoints, fadingSelection, entityRepository) {
-            @Override
-            public boolean isDestroyed() {
-                // we do this so that we do not have to deal with spawning explosions (which is done in the
-                // update method)
-                return super.hitPointBasedDestructibility.hasDied();
-            }
-        };
+        unit = makeUnit(UnitFacings.RIGHT, unitAbsoluteMapCoordinates);
     }
 
     @Test
@@ -121,7 +89,7 @@ public class UnitTest {
 
     @Test
     public void determinesFacingRight() {
-        unit = makeUnit(UnitFacings.LEFT);
+        unit = makeUnit(UnitFacings.LEFT, unitAbsoluteMapCoordinates);
         Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 0));
         assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(coordinatesToFaceTo));
     }
@@ -132,8 +100,8 @@ public class UnitTest {
         int offsetY = 6;
         Vector2D offset = Vector2D.create(offsetX, offsetY);
 
-        Unit unit = makeUnit(UnitFacings.DOWN, offset, 100);
-        Graphics graphics = mock(Graphics.class);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, offset, 100);
+        unit.setFadingSelection(fadingSelection);
 
         // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
         // but isn't that basically the unit coordinates * tile size!?
@@ -151,8 +119,9 @@ public class UnitTest {
     }
 
     @Test
-    public void aliveUnitUpdateCycleOfUnitThatHasNothingToDo() {
-        Unit unit = makeUnit(UnitFacings.DOWN);
+    public void aliveUnitUpdateCycleOfUnitThatIsNotSelected() {
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
+        unit.setFadingSelection(fadingSelection);
 
         int deltaInMs = 1;
         unit.update(deltaInMs);
@@ -163,7 +132,9 @@ public class UnitTest {
     @Test
     public void deadUnitUpdateCycle() {
         int hitPoints = 100;
-        Unit unit = makeUnit(UnitFacings.DOWN, hitPoints);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, Vector2D.zero(), hitPoints);
+        unit.setFadingSelection(fadingSelection);
+
         unit.takeDamage(hitPoints);
 
         unit.update(1);
@@ -173,7 +144,7 @@ public class UnitTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
@@ -198,7 +169,7 @@ public class UnitTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
         unit.moveTo(mapCoordinateToMoveTo); // move to left-up
@@ -220,4 +191,35 @@ public class UnitTest {
         assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
+
+
+    /**
+     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
+     * @return
+     */
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) throws SlickException {
+        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+        return makeUnit(map, player, mapCoordinates, entityRepository);
+    }
+    /**
+     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
+     * @param map
+     * @param player
+     * @param mapCoordinates
+     * @return
+     */
+    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates, EntityRepository entityRepository) throws SlickException {
+        Unit unit = entityRepository.placeUnitOnMap(mapCoordinates, EntityRepositoryTest.UNIT_FIRST_ID, player);
+        map.placeUnit(unit);
+        return unit;
+    }
+
+    public static SpriteSheet makeSpriteSheet() {
+        SpriteSheet spriteSheet = mock(SpriteSheet.class);
+        Image image = mock(Image.class);
+
+        when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
+        return spriteSheet;
+    }
+
 }

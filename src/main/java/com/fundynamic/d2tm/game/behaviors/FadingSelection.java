@@ -17,29 +17,36 @@ public class FadingSelection extends SimpleSelectLogic implements Renderable, Up
     public FadingSelection(int width, int height) {
         this.width = width;
         this.height = height;
-        this.selectedIntensity = 1f;
-        this.selectedDarkening = true;
+        resetFading();
     }
 
     public void update(float delta) {
         if (selected) {
-            float intensityChange = .5f * delta;
-            if (selectedDarkening) {
-                selectedIntensity -= intensityChange;
-            } else {
-                selectedIntensity += intensityChange;
-            }
-
-            // fade back and forth
-            if (selectedIntensity <= 0.0f) {
-                selectedIntensity = 0.0f;
-                selectedDarkening = false;
-            } else if (selectedIntensity >= 1.0f) {
-                selectedIntensity = 1.0f;
-                selectedDarkening = true;
-            }
+            updateFadingColor(delta);
         } else {
-            selectedIntensity = 1f;
+            resetFading();
+        }
+    }
+
+    public void resetFading() {
+        selectedIntensity = 1f;
+        selectedDarkening = true;
+    }
+
+    public void updateFadingColor(float delta) {
+        float intensityChange = .5f * delta;
+        if (selectedDarkening) {
+            selectedIntensity -= intensityChange;
+        } else {
+            selectedIntensity += intensityChange;
+        }
+
+        // fade back and forth
+        if (selectedIntensity <= 0.0f) {
+            selectedIntensity = 0.0f;
+            selectedDarkening = false;
+        } else if (selectedIntensity >= 1.0f) {
+            selectedIntensity = 1.0f;
             selectedDarkening = true;
         }
     }

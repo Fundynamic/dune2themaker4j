@@ -13,12 +13,14 @@ public class OfType extends Predicate<Entity> {
     private final EntityType entityType;
 
     public OfType(EntityType entityType) {
+        if (entityType == null) throw new IllegalArgumentException("Cannot test for null Entity type");
         this.entityType = entityType;
     }
 
     @Override
     public boolean test(Entity entity) {
-        return entity.getEntityType() == entityType;
+        if (entity == null) throw new IllegalArgumentException("Cannot test on null entity");
+        return entityType.equals(entity.getEntityType());
     }
 
     public static Predicate<Entity> instance(EntityType entityType) {

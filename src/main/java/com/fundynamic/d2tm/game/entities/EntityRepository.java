@@ -72,21 +72,21 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public void placeUnitOnMap(Vector2D mapCoordinate, int id, Player player) {
-        placeOnMap(mapCoordinate, EntityType.UNIT, id, player);
+    public Unit placeUnitOnMap(Vector2D absoluteMapCoordinate, int id, Player player) {
+        return (Unit) placeOnMap(absoluteMapCoordinate, EntityType.UNIT, id, player);
     }
 
     public void placeStructureOnMap(Vector2D topLeftMapCoordinate, int id, Player player) {
         placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
     }
 
-    public Entity placeOnMap(Vector2D topLeftMapCoordinate, EntityType entityType, int id, Player player) {
+    public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, int id, Player player) {
         EntityData entityData = getEntityData(entityType, id);
-        return placeOnMap(topLeftMapCoordinate, entityData, player);
+        return placeOnMap(topLeftAbsoluteMapCoordinate, entityData, player);
     }
 
-    public Entity placeOnMap(Vector2D mapCoordinate, EntityData entityData, Player player) {
-        System.out.println("Placing " + entityData + " on map at " + mapCoordinate + " for " + player);
+    public Entity placeOnMap(Vector2D absoluteMapCoordinates, EntityData entityData, Player player) {
+        System.out.println("Placing " + entityData + " on map at " + absoluteMapCoordinates + " for " + player);
         try {
             Entity createdEntity;
             Image originalImage = entityData.image;
@@ -96,23 +96,24 @@ public class EntityRepository {
             switch (entityData.type) {
                 case STRUCTURE:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Structure(mapCoordinate, recoloredImage, player, entityData, this);
-                    entitiesSet.add(map.placeStructure((Structure) createdEntity));
+                    createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
+                    addEntityToList(map.placeStructure((Structure) createdEntity));
                     break;
                 case UNIT:
                     recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Unit(map, mapCoordinate, recoloredImage, player, entityData, this);
-                    entitiesSet.add(map.placeUnit((Unit) createdEntity));
+                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                    createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+                    addEntityToList(map.placeUnit((Unit) createdEntity));
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, mapCoordinate, spriteSheet, entityData.sight, player, entityData, this);
-                    entitiesSet.add(map.placeProjectile((Projectile) createdEntity));
+                    createdEntity = new Projectile(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+                    addEntityToList(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Particle(mapCoordinate, spriteSheet, entityData, this);
-                    entitiesSet.add(createdEntity);
+                    createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
+                    addEntityToList(createdEntity);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown type " + entityData.type);
@@ -121,6 +122,10 @@ public class EntityRepository {
         } catch (CellAlreadyOccupiedException e) {
             throw new UnableToPlaceEntityOnMapException(e);
         }
+    }
+
+    public void addEntityToList(Entity entity) {
+        entitiesSet.add(entity);
     }
 
     public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, int weaponId, int explosionId) throws SlickException {
@@ -153,7 +158,6 @@ public class EntityRepository {
         System.out.println("Removing following entities: " + entitiesToRemove);
 
         for (Entity entity : entitiesToRemove) {
-            map.removeEntity(entity);
             entity.removeFromPlayerSet(entity);
             entitiesSet.remove(entity);
         }
@@ -248,4 +252,22 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
+    public EntitiesSet findEntitiesOfTypeAtVector(Vector2D absoluteMapCoordinates, EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        vectorWithin(absoluteMapCoordinates)
+        );
+    }
+
+    public EntitiesSet findEntitiesAtVector(Vector2D absoluteMapCoordinates) {
+        return filter(
+                Predicate.builder().
+                        vectorWithin(absoluteMapCoordinates)
+        );
+    }
+
+    public void removeAllEntityData() {
+        entitiesData.clear();
+    }
 }

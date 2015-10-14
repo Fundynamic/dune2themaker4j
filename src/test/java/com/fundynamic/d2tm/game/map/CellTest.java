@@ -1,20 +1,14 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CellTest {
-
-    @Mock
-    private Map map;
+public class CellTest extends AbstractD2TMTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void terrainConstructorThrowsIllegalArgumentExceptionWhenArgumentIsNull() {
@@ -33,21 +27,21 @@ public class CellTest {
 
     @Test
     public void sameLocation() {
-        Cell mapCell = CellFactory.makeCell(10, 10);
-        Cell other = CellFactory.makeCell(10, 10);
+        Cell mapCell = makeCell(10, 10);
+        Cell other = makeCell(10, 10);
         assertTrue(mapCell.isAtSameLocationAs(other));
     }
 
     @Test
     public void notOnSameLocationWhenCoordinatesDoNotMatch() {
-        Cell mapCell = CellFactory.makeCell(10, 10);
-        Cell other = CellFactory.makeCell(10, 11);
+        Cell mapCell = makeCell(10, 10);
+        Cell other = makeCell(10, 11);
         assertFalse(mapCell.isAtSameLocationAs(other));
     }
 
     @Test
     public void notOnSameLocationWhenOtherIsNull() {
-        Cell mapCell = CellFactory.makeCell(10, 10);
+        Cell mapCell = makeCell(10, 10);
         assertFalse(mapCell.isAtSameLocationAs(null));
     }
 

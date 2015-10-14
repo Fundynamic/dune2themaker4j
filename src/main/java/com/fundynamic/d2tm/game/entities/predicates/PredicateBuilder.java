@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.predicates;
 
 
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -96,6 +97,16 @@ public class PredicateBuilder {
 
     public PredicateBuilder isNotDestroyed() {
         predicates.add(Predicate.isNotDestroyed());
+        return this;
+    }
+
+    public PredicateBuilder vectorWithin(Vector2D absoluteMapCoordinates) {
+        predicates.add(new Vector2DIsWithinEntity(absoluteMapCoordinates));
+        return this;
+    }
+
+    public PredicateBuilder ofTypes(EntityType[] types) {
+        predicates.add(Predicate.ofTypes(types));
         return this;
     }
 }

@@ -21,16 +21,6 @@ public class CellDebugInfoRenderer implements Renderer<Cell> {
     public void draw(Graphics graphics, Cell mapCell, int drawX, int drawY) {
         if (mouse.getHoverCell() == null) return;
 
-        Entity entity = mapCell.getEntity();
-        if (entity != null) {
-            boolean belongsToPlayer = entity.getPlayer().equals(mouse.getControllingPlayer());
-            Color color = belongsToPlayer ? Color.red : Color.green;
-
-            graphics.setColor(color);
-            graphics.setLineWidth(1.1f);
-            graphics.drawRect(drawX, drawY, 32, 32);
-        }
-
         if (mapCell.isAtSameLocationAs(mouse.getHoverCell())) {
 
             MouseBehavior mouseBehavior = mouse.getMouseBehavior();

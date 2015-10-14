@@ -4,7 +4,6 @@ package com.fundynamic.d2tm.game.entities.projectiles;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -26,11 +25,10 @@ public class Projectile extends Entity implements Moveable, Destructible {
     private int explosionId;
 
 
-    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, int sight, Player player,
+    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
-        super(mapCoordinates, spriteSheet, sight, player, entityRepository);
+        super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         this.map = map;
-        this.entityData = entityData;
         target = mapCoordinates;
         this.speed = entityData.moveSpeed;
         this.damage = entityData.damage;
@@ -93,9 +91,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
             }
 
             // do damage on cell / range of cells
-            Cell cell = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates);
-            if (cell.hasAnyEntity()) {
-                Entity entity = cell.getEntity();
+            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+            if (entities.hasAny()) {
+                Entity entity = entities.getFirst();
                 if (entity.isDestructible()) {
                     Destructible destructibleEntity = (Destructible) entity;
                     destructibleEntity.takeDamage(damage);

@@ -1,10 +1,7 @@
 package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.MouseInViewportListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
@@ -70,11 +67,9 @@ public class PlayingState extends BasicGameState {
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
         MapEditor mapEditor = new MapEditor(terrainFactory);
-        int mapWidth = 64;
-        int mapHeight = 64;
-        Map map = mapEditor.generateRandom(shroud, mapWidth, mapHeight);
+        Map map = mapEditor.generateRandom(shroud, 64, 64);
 
-        this.entityRepository = new EntityRepository(map, new Recolorer());
+        entityRepository = createEntityRepository(map);
 
         Mouse mouse = Mouse.create(human, gameContainer, entityRepository, imageRepository);
 
@@ -93,7 +88,8 @@ public class PlayingState extends BasicGameState {
                     tileWidth,
                     tileHeight,
                     mouse,
-                    human);
+                    human,
+                    imageRepository.createImage(screenResolution));
 
             // here we can create a new viewport
 //            Vector2D viewportDrawingPosition2 = viewportDrawingPosition.add(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
@@ -124,6 +120,10 @@ public class PlayingState extends BasicGameState {
         initializeMap(entityRepository, human, cpu);
     }
 
+    public EntityRepository createEntityRepository(Map map) throws SlickException {
+        return new EntityRepository(map, new Recolorer());
+    }
+
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
         this.human = human;
         this.cpu = cpu;
@@ -146,9 +146,6 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeUnitOnMap(Vector2D.create(52 * TILE_WIDTH, 52 * TILE_HEIGHT), 1, cpu);
         entityRepository.placeUnitOnMap(Vector2D.create(53 * TILE_WIDTH, 53 * TILE_HEIGHT), 1, cpu);
 
-        for (Viewport viewport : viewports) {
-            viewport.init();
-        }
     }
 
     @Override

@@ -1,19 +1,11 @@
 package com.fundynamic.d2tm.game.event;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.controls.MouseTest;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Viewport;
-import com.fundynamic.d2tm.graphics.ImageRepository;
-import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -21,8 +13,7 @@ import org.newdawn.slick.SlickException;
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MouseInViewportListenerTest {
+public class MouseInViewportListenerTest extends AbstractD2TMTest {
     public static final float MOVE_SPEED = 2.0F;
 
     private static final int TILE_WIDTH = 32;
@@ -39,39 +30,24 @@ public class MouseInViewportListenerTest {
     private Viewport viewport;
     private MouseInViewportListener listener;
 
-    private Vector2D screenResolution;
-    private Map map;
-
-    @Mock
-    private ImageRepository imageRepository;
-
-    @Mock
-    private Player player;
+    private Vector2D screenResolution = Vector2D.create(800, 600);
 
     private Mouse mouse;
 
     @Before
     public void setUp() throws SlickException {
-        Shroud shroud = mock(Shroud.class);
-        map = new Map(shroud, WIDTH_OF_MAP, HEIGHT_OF_MAP);
-        screenResolution = new Vector2D(800, 600);
-        this.mouse = MouseTest.makeTestableMouse(map, player);
+        super.setUp();
+        map = makeMap(WIDTH_OF_MAP, HEIGHT_OF_MAP);
+        this.mouse = makeTestableMouse(player);
         this.mouse.init();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
+
         listener = new MouseInViewportListener(mouse);
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        Viewport viewport = new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player) {
-            // ugly seam in the code, but I'd rather do this than create a Spy
-            @Override
-            protected Image constructImage(Vector2D screenResolution) throws SlickException {
-                return mock(Image.class);
-            }
-        };
-        viewport.init(); // initialize graphical stuff here
-        return viewport;
+        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player, mock(Image.class));
     }
 
     @Test
@@ -290,7 +266,7 @@ public class MouseInViewportListenerTest {
 
     private void updateAndRender() throws SlickException {
         viewport.update(ONE_FRAME_PER_SECOND_DELTA);
-        viewport.render(mock(Graphics.class));
+        viewport.render(graphics);
     }
 
     private Vector2D getLastCalledViewport() throws SlickException {

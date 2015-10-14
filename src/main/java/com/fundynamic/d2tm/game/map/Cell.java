@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -9,14 +8,13 @@ import org.newdawn.slick.SlickException;
 
 public class Cell {
 
+    public static final int TILE_SIZE = 32;
+
     private final Map map;
     private final int x;
     private final int y;
 
     private Terrain terrain;
-
-    // TODO: for now the cell has a direct link to an entity, this *will* become obsolete and thus removed.
-    private Entity entity;
 
     private Vector2D position;
 
@@ -28,7 +26,6 @@ public class Cell {
         this.map = map;
         this.x = mapX;
         this.y = mapY;
-        this.entity = null;
         this.position = new Vector2D(mapX, mapY);
     }
 
@@ -42,22 +39,6 @@ public class Cell {
 
     public Terrain getTerrain() {
         return terrain;
-    }
-
-    public Entity getEntity() {
-        return entity;
-    }
-
-    public boolean removeEntity() {
-        this.entity = null;
-        return true;
-    }
-
-    public void setEntity(Entity entity) {
-        if (this.entity != null && this.entity != entity && entity != null) {
-            throw new CellAlreadyOccupiedException("Cannot place Entity (" + entity + ") on cell because Entity already present: " + this.entity);
-        }
-        this.entity = entity;
     }
 
     public int getX() {
@@ -89,7 +70,7 @@ public class Cell {
     }
 
     public Vector2D getCoordinatesAsAbsoluteVector2D() {
-        return Vector2D.create(x * 32, y * 32);
+        return Vector2D.create(x * TILE_SIZE, y * TILE_SIZE);
     }
 
     public boolean isAtSameLocationAs(Cell other) {
@@ -101,15 +82,8 @@ public class Cell {
         return position;
     }
 
-    public boolean isOccupied(Entity entityWhoWantsToKnow) {
-        return hasAnyEntity() && !entity.equals(entityWhoWantsToKnow);
-    }
-
     public boolean isVisibleFor(Player controllingPlayer) {
         return !controllingPlayer.isShrouded(position);
     }
 
-    public boolean hasAnyEntity() {
-        return entity != null;
-    }
 }

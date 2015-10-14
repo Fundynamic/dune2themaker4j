@@ -1,21 +1,22 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
-import com.fundynamic.d2tm.graphics.ImageRepository;
-import com.fundynamic.d2tm.graphics.ImageRepositoryTest;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static org.mockito.Mockito.mock;
@@ -23,36 +24,33 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class PlayingStateTest {
+public class PlayingStateTest extends AbstractD2TMTest {
 
-    private static int TILE_WIDTH = 32;
-    private static int TILE_HEIGHT = 32;
     private PlayingState playingState;
-
-    @Mock
-    private GameContainer gameContainer;
-    private ImageRepository imageRepository;
 
     @Before
     public void setUp() throws SlickException {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_WIDTH, TILE_HEIGHT));
-        Shroud shroud = new Shroud(mock(Image.class), TILE_WIDTH, TILE_HEIGHT);
+        super.setUp();
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_SIZE, TILE_SIZE));
+        Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE);
 
-        imageRepository = ImageRepositoryTest.makeTestableImageRepository();
-        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_WIDTH, TILE_HEIGHT);
+        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE, TILE_SIZE);
     }
 
     @Test
-    @Ignore("fails due some dependencies set up that are not stub/mockable yet")
     public void testInit() throws SlickException {
         int tileWidth = 32;
         int tileHeight = 32;
 
-        GameContainer gameContainer = mock(GameContainer.class);
         TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), tileWidth, tileHeight));
         Shroud shroud = new Shroud(mock(Image.class), tileWidth, tileHeight);
 
-        PlayingState playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, tileWidth, tileHeight);
+        PlayingState playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, tileWidth, tileHeight) {
+            @Override
+            public EntityRepository createEntityRepository(Map map) throws SlickException {
+                return getTestableEntityRepository();
+            }
+        };
 
         StateBasedGame stateBasedGame = mock(StateBasedGame.class);
 
