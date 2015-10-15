@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -65,8 +66,8 @@ public class Structure extends Entity implements Selectable, Destructible {
         }
     }
 
-    public Vector2D getAbsoluteMapCoordinates() {
-        return absoluteMapCoordinates;
+    public Vector2D getAbsoluteCoordinates() {
+        return absoluteCoordinates;
     }
 
     @Override
@@ -78,8 +79,6 @@ public class Structure extends Entity implements Selectable, Destructible {
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
-        fadingSelection.render(graphics, x, y);
-        hitPointBasedDestructibility.render(graphics, x, y);
     }
 
     public void select() {
@@ -139,4 +138,13 @@ public class Structure extends Entity implements Selectable, Destructible {
         }
         return result;
     }
+
+    @Override
+    public void enrichRenderQueue(RenderQueue renderQueue) {
+        if (isSelected()) {
+            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getAbsoluteCoordinates());
+        }
+        renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates());
+    }
+
 }

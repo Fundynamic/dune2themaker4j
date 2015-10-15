@@ -140,7 +140,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
         Entity first = entitiesSet.getFirst();
 
-        assertThat(first.getAbsoluteMapCoordinates(), is(Vector2D.create(10, 11)));
+        assertThat(first.getAbsoluteCoordinates(), is(Vector2D.create(10, 11)));
     }
 
     // TODO: This test name is now a bit weird, and we really need to clean up our tests suite, for proper setup etc.
@@ -155,7 +155,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
         Entity first = entitiesSet.getFirst();
 
-        assertThat(first.getAbsoluteMapCoordinates(), is(Vector2D.create(21, 23)));
+        assertThat(first.getAbsoluteCoordinates(), is(Vector2D.create(21, 23)));
     }
 
     public static Unit createUnit(EntityRepository entityRepository, Vector2D mapCoordinates, Player player) throws SlickException {

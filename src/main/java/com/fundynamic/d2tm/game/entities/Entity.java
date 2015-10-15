@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
@@ -12,10 +13,10 @@ public abstract class Entity implements Renderable, Updateable {
     protected final Player player;
     protected final EntityRepository entityRepository;
 
-    protected Vector2D absoluteMapCoordinates;
+    protected Vector2D absoluteCoordinates;
 
-    public Entity(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
-        this.absoluteMapCoordinates = absoluteMapCoordinates;
+    public Entity(Vector2D absoluteCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+        this.absoluteCoordinates = absoluteCoordinates;
         this.spriteSheet = spriteSheet;
         this.entityData = entityData;
         this.player = player;
@@ -26,16 +27,16 @@ public abstract class Entity implements Renderable, Updateable {
         }
     }
 
-    public Vector2D getAbsoluteMapCoordinates() {
-        return absoluteMapCoordinates;
+    public Vector2D getAbsoluteCoordinates() {
+        return absoluteCoordinates;
     }
 
     public int getX() {
-        return absoluteMapCoordinates.getXAsInt();
+        return absoluteCoordinates.getXAsInt();
     }
 
     public int getY() {
-        return absoluteMapCoordinates.getYAsInt();
+        return absoluteCoordinates.getYAsInt();
     }
 
     public int getSight() {
@@ -87,5 +88,10 @@ public abstract class Entity implements Renderable, Updateable {
 
     public Vector2D getDimensions() {
         return Vector2D.create(entityData.width, entityData.height);
+    }
+
+    @Override
+    public void enrichRenderQueue(RenderQueue renderQueue) {
+        // by default do nothing
     }
 }

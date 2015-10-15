@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.behaviors;
 
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import org.newdawn.slick.Graphics;
 
 /**
@@ -11,4 +12,5 @@ public interface Renderable {
 
     void render(Graphics graphics, int x, int y);
 
+    void enrichRenderQueue(RenderQueue renderQueue);
 }

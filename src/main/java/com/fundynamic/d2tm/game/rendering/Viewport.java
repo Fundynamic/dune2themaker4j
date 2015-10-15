@@ -3,8 +3,7 @@ package com.fundynamic.d2tm.game.rendering;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -24,7 +23,7 @@ public class Viewport implements Renderable {
 
     private final Perimeter viewingVectorPerimeter;
 
-    private final EntityViewportRenderer entityViewportRenderer;
+    private final EntityRepository entityRepository;
 
     private final CellTerrainRenderer cellTerrainRenderer;
     private final CellShroudRenderer cellShroudRenderer;
@@ -80,10 +79,10 @@ public class Viewport implements Renderable {
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(map, player);
         this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
+
+        this.entityRepository = mouse.getEntityRepository();
         this.mouse = mouse;
         this.mouse.setViewport(this); // TODO: <-- THIS IS BAD! (get rid of this cyclic reference)
-
-        this.entityViewportRenderer = new EntityViewportRenderer(mouse.getEntityRepository(), viewportDimensions);
     }
 
     public void render(Graphics graphics) {
@@ -98,17 +97,15 @@ public class Viewport implements Renderable {
                 return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
 
             // TODO: Merge the culling into this viewport class(?)
-            cellViewportRenderer.render(this.buffer, viewingVector, cellTerrainRenderer);
+            cellViewportRenderer.render(buffer, viewingVector, cellTerrainRenderer);
 
-            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.STRUCTURE);
+            // 1) Select entities to draw
+            // 2) Decide if there is more to draw (from the entities)
+            // 3) draw!
+            RenderQueue renderQueue = getEntitiesToDraw();
+            renderQueue.render(buffer.getGraphics());
 
-            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.UNIT);
-
-            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PARTICLE);
-
-            entityViewportRenderer.render(this.buffer.getGraphics(), viewingVector, EntityType.PROJECTILE);
-
-            cellViewportRenderer.render(this.buffer, viewingVector, cellShroudRenderer);
+            cellViewportRenderer.render(buffer, viewingVector, cellShroudRenderer);
 
             // TODO make mouse implement Renderable interface?
             mouse.render(this.buffer.getGraphics());
@@ -121,6 +118,20 @@ public class Viewport implements Renderable {
         } catch (SlickException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void enrichRenderQueue(RenderQueue renderQueue) {
+        // do nothing (TODO: Remove 'renderable' from viewport!?)
+    }
+
+    private RenderQueue getEntitiesToDraw() {
+        Rectangle rectangle = Rectangle.createWithDimensions(viewingVector.min(Vector2D.create(32, 32)), viewportDimensions.add(Vector2D.create(64, 64)));
+
+        RenderQueue renderQueue = new RenderQueue(this.viewingVector);
+        renderQueue.put(entityRepository.findEntitiesWithinRectangle(rectangle).toList());
+
+        return renderQueue;
     }
 
     public void update(float delta) {

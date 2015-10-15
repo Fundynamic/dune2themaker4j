@@ -45,7 +45,7 @@ public class PlacingUnitMouseTest extends AbstractMouseBehaviorTest {
 
         Entity unit = allUnits.toList().get(0);
 
-        assertThat(unit.getAbsoluteMapCoordinates(), is(Vector2D.create(32, 32)));
+        assertThat(unit.getAbsoluteCoordinates(), is(Vector2D.create(32, 32)));
         assertThat(unit.getEntityType(), is (EntityType.UNIT));
     }
 

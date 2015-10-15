@@ -229,10 +229,23 @@ public class EntityRepository {
      * @param rectangle
      * @return
      */
-    public Set<Entity> findEntitiesOfTypeWithinRectangle(Rectangle rectangle, EntityType entityType) {
+    public EntitiesSet findEntitiesOfTypeWithinRectangle(Rectangle rectangle, EntityType entityType) {
         return filter(
                 Predicate.builder().
                         ofType(entityType).
+                        withinArea(rectangle)
+        );
+    }
+
+    /**
+     * Slow way of filtering within area!
+     *
+     * @param rectangle
+     * @return
+     */
+    public EntitiesSet findEntitiesWithinRectangle(Rectangle rectangle) {
+        return filter(
+                Predicate.builder().
                         withinArea(rectangle)
         );
     }

@@ -113,21 +113,21 @@ public class Map {
     }
 
     public Projectile placeProjectile(Projectile projectile) {
-        Vector2D mapCoordinates = projectile.getAbsoluteMapCoordinates();
+        Vector2D mapCoordinates = projectile.getAbsoluteCoordinates();
         mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), projectile.getSight(), projectile.getPlayer());
         return projectile;
     }
 
     public Unit placeUnit(Unit unit) {
-        Vector2D mapCoordinates = unit.getAbsoluteMapCoordinates();
+        Vector2D mapCoordinates = unit.getAbsoluteCoordinates();
         mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight(), unit.getPlayer());
         return unit;
     }
 
     public Structure placeStructure(Structure structure) {
-        Vector2D topLeftMapCoordinates = structure.getAbsoluteMapCoordinates();
+        Vector2D topLeftMapCoordinates = structure.getAbsoluteCoordinates();
 
         // translate from absolute pixels to map coordinates
         topLeftMapCoordinates = topLeftMapCoordinates.div(TILE_SIZE);

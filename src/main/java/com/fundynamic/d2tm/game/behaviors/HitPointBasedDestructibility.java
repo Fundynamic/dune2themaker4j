@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.behaviors;
 
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -44,6 +45,11 @@ public class HitPointBasedDestructibility implements Renderable {
         graphics.setColor(getHealthBarColor());
         graphics.setLineWidth(1.1f);
         graphics.fillRect(x, y - 6, getHealthBarPixelWidth(), 5);
+    }
+
+    @Override
+    public void enrichRenderQueue(RenderQueue renderQueue) {
+        // do nothing
     }
 
     public Color getHealthBarColor() {

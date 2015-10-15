@@ -1,5 +1,8 @@
 package com.fundynamic.d2tm.game.behaviors;
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -58,5 +61,10 @@ public class FadingSelection extends SimpleSelectLogic implements Renderable, Up
             graphics.setLineWidth(2.f);
             graphics.drawRect(drawX, drawY, width, height - 1);
         }
+    }
+
+    @Override
+    public void enrichRenderQueue(RenderQueue renderQueue) {
+        // do nothing
     }
 }

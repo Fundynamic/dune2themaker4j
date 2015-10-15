@@ -10,7 +10,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -26,9 +25,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UnitTest extends AbstractD2TMTest {
 
-    @Mock
-    private FadingSelection fadingSelection;
-
     private Unit unit;
 
     private Vector2D unitAbsoluteMapCoordinates;
@@ -42,7 +38,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void returnsCurrentFacingWhenNothingChanged() {
-        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getAbsoluteMapCoordinates()));
+        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getAbsoluteCoordinates()));
     }
 
     @Test
@@ -101,7 +97,6 @@ public class UnitTest extends AbstractD2TMTest {
         Vector2D offset = Vector2D.create(offsetX, offsetY);
 
         Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, offset, 100);
-        unit.setFadingSelection(fadingSelection);
 
         // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
         // but isn't that basically the unit coordinates * tile size!?
@@ -113,13 +108,12 @@ public class UnitTest extends AbstractD2TMTest {
         int expectedDrawX = drawX + offsetX;
         int expectedDrawY = drawY + offsetY;
 
-        verify(graphics).drawImage((Image) anyObject(), eq((float)expectedDrawX), eq((float)expectedDrawY));
-
-        verify(fadingSelection, times(1)).render(eq(graphics), eq(expectedDrawX), eq(expectedDrawY));
+        verify(graphics).drawImage((Image) anyObject(), eq((float) expectedDrawX), eq((float) expectedDrawY));
     }
 
     @Test
     public void aliveUnitUpdateCycleOfUnitThatIsNotSelected() {
+        FadingSelection fadingSelection = mock(FadingSelection.class);
         Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
         unit.setFadingSelection(fadingSelection);
 
@@ -131,6 +125,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void deadUnitUpdateCycle() {
+        FadingSelection fadingSelection = mock(FadingSelection.class);
         int hitPoints = 100;
         Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, Vector2D.zero(), hitPoints);
         unit.setFadingSelection(fadingSelection);
@@ -149,7 +144,7 @@ public class UnitTest extends AbstractD2TMTest {
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
 
-        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
@@ -157,13 +152,13 @@ public class UnitTest extends AbstractD2TMTest {
         }
 
         // the unit is about to fully move onto new cell
-        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
         assertThat(unit.getOffset(), is(Vector2D.create(31, 31)));
 
         // one more time
         unit.update(1);
 
-        assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getAbsoluteCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 
@@ -174,7 +169,7 @@ public class UnitTest extends AbstractD2TMTest {
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
         unit.moveTo(mapCoordinateToMoveTo); // move to left-up
 
-        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
         // update 32 'ticks'
         for (int tick = 0; tick < 32; tick++) {
@@ -182,13 +177,13 @@ public class UnitTest extends AbstractD2TMTest {
         }
 
         // the unit is about to move, so do not expect it has been moved yet
-        assertThat(unit.getAbsoluteMapCoordinates(), is(unitAbsoluteMapCoordinates));
+        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
         assertThat(unit.getOffset(), is(Vector2D.create(-31, -31)));
 
         // one more time
         unit.update(1);
 
-        assertThat(unit.getAbsoluteMapCoordinates(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getAbsoluteCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 

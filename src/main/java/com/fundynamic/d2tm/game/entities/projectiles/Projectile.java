@@ -4,7 +4,6 @@ package com.fundynamic.d2tm.game.entities.projectiles;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -45,7 +44,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite(getFacing(absoluteMapCoordinates, target), 0);
+        return spriteSheet.getSprite(getFacing(absoluteCoordinates, target), 0);
     }
 
     /**
@@ -68,26 +67,26 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (target != absoluteMapCoordinates) {
+        if (target != absoluteCoordinates) {
             float timeCorrectedSpeed = speed * deltaInSeconds;
-            Vector2D direction = target.min(absoluteMapCoordinates);
+            Vector2D direction = target.min(absoluteCoordinates);
             Vector2D normalised = direction.normalise();
 
             // make sure we don't overshoot
-            float distance = absoluteMapCoordinates.distance(target);
+            float distance = absoluteCoordinates.distance(target);
             if (distance < timeCorrectedSpeed) timeCorrectedSpeed = distance;
 
-            absoluteMapCoordinates = absoluteMapCoordinates.add(normalised.scale(timeCorrectedSpeed));
+            absoluteCoordinates = absoluteCoordinates.add(normalised.scale(timeCorrectedSpeed));
         }
 
-        if (target.distance(absoluteMapCoordinates) < 0.1F) {
+        if (target.distance(absoluteCoordinates) < 0.1F) {
             if (explosionId > -1) {
                 // spawn explosion
-                entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.PARTICLE, explosionId, player);
+                entityRepository.placeOnMap(absoluteCoordinates, EntityType.PARTICLE, explosionId, player);
             }
 
             // do damage on cell / range of cells
-            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(absoluteCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
             if (entities.hasAny()) {
                 Entity entity = entities.getFirst();
                 if (entity.isDestructible()) {
