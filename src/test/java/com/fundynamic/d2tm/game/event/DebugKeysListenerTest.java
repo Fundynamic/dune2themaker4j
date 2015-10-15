@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.event;
 
-import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.controls.PlacingUnitMouse;

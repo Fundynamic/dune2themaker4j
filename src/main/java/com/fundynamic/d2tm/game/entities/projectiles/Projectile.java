@@ -16,19 +16,15 @@ public class Projectile extends Entity implements Moveable, Destructible {
     private Vector2D target;
     private boolean destroyed;
 
-    // Implementation
-    private final Map map;
-
     // entity properties
     private float speed;
     private int damage;
     private int explosionId;
 
 
-    public Projectile(Map map, Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player,
+    public Projectile(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
-        this.map = map;
         target = mapCoordinates;
         this.speed = entityData.moveSpeed;
         this.damage = entityData.damage;

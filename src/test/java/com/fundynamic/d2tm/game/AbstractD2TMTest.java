@@ -66,12 +66,12 @@ public abstract class AbstractD2TMTest {
         return new ImageRepository() {
             @Override
             public Image load(String path) {
-                return Mockito.mock(Image.class);
+                return mock(Image.class);
             }
 
             @Override
             public Image createImage(Vector2D dimensions) throws SlickException {
-                return Mockito.mock(Image.class);
+                return mock(Image.class);
             }
         };
     }

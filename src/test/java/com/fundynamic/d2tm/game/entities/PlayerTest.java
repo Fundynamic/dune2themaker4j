@@ -2,10 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import org.junit.Before;
 import org.junit.Test;
-import org.newdawn.slick.SlickException;
 
 import static org.junit.Assert.assertEquals;
 
