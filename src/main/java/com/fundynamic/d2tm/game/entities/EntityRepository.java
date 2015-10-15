@@ -107,7 +107,7 @@ public class EntityRepository {
                     break;
                 case PROJECTILE:
                     spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+                    createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
                     addEntityToList(map.placeProjectile((Projectile) createdEntity));
                     break;
                 case PARTICLE:
