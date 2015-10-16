@@ -18,7 +18,7 @@ public class EntityRepositoryFactoryTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        entitiesData = entityRepositoryFactory.fromResource(getClass().getResourceAsStream("test-rules.ini"));
+        entitiesData = entityRepositoryFactory.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
     }
 
     @Test

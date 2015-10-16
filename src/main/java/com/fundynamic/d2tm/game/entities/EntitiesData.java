@@ -17,13 +17,10 @@ public class EntitiesData {
     public static String REFINERY = "REFINERY";
 
     // projectiles
-    public static String ROCKET = "ROCKET";
     public static String BULLET = "RIFLE";
 
     // explosions
-    public static String EXPLOSION_NORMAL = "NORMAL";
     public static String EXPLOSION_SMALL_UNIT = "WHEELED";
-    public static String EXPLOSION_SMALL_BULLET = "RIFLEHIT";
 
     private HashMap<String, EntityData> entitiesData;
 

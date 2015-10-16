@@ -62,7 +62,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
     @Test
     public void placeOnMapPutsStructureOnMap() throws SlickException {
 
-        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.STRUCTURE, EntitiesData.REFINERY, player);
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD, player);
 
         EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
         assertThat(entitiesSet.size(), is(1));

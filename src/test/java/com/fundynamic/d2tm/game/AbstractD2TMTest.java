@@ -64,8 +64,8 @@ public abstract class AbstractD2TMTest {
                 };
             }
         };
-        entitiesData = entityRepositoryFactory.load();
-        entityRepository = makeTestableEntityRepository(map, entitiesData);
+        entitiesData = entityRepositoryFactory.fromIni();
+        this.entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);

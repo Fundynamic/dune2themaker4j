@@ -129,6 +129,7 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
+        //TODO: read from SCENARIO.INI file
         // human entities
         entityRepository.placeStructureOnMap(Vector2D.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
         entityRepository.placeStructureOnMap(Vector2D.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
