@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.Graphics;
 
@@ -12,10 +11,10 @@ public class CellShroudRenderer implements Renderer<Cell> {
 
     private final Player player;
 
-    public CellShroudRenderer(Map map, Player player) {
+    public CellShroudRenderer(Player player, Shroud shroud) {
         if (player == null) throw new IllegalArgumentException("Player cannot be null");
         this.player = player;
-        this.shroud = map.getShroud();
+        this.shroud = shroud;
     }
 
     @Override

@@ -45,8 +45,6 @@ public class PlayingState extends BasicGameState {
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
 
-    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory();
-
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
@@ -122,7 +120,7 @@ public class PlayingState extends BasicGameState {
     }
 
     public EntityRepository createEntityRepository(Map map) throws SlickException {
-        return new EntityRepository(map, new Recolorer(), entityRepositoryFactory.fromIni());
+        return new EntityRepository(map, new Recolorer(), new EntitiesDataReader().fromRulesIni());
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
@@ -180,7 +178,6 @@ public class PlayingState extends BasicGameState {
             entity.update(deltaInSeconds);
         }
 
-        // Entities can 'remove' themselves, by flagging them as 'removable'
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 
         for (Viewport viewport : viewports) {
@@ -200,9 +197,5 @@ public class PlayingState extends BasicGameState {
             this.destroyedEntitiesPredicate = Predicate.builder().isDestroyed().build();
         }
         return this.destroyedEntitiesPredicate;
-    }
-
-    public void setEntityRepositoryFactory(EntityRepositoryFactory entityRepositoryFactory) {
-        this.entityRepositoryFactory = entityRepositoryFactory;
     }
 }

@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -19,6 +20,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,18 +37,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
         TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_SIZE, TILE_SIZE));
         Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE);
 
-        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE, TILE_SIZE);
-    }
-
-    @Test
-    public void testInit() throws SlickException {
-        int tileWidth = 32;
-        int tileHeight = 32;
-
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), tileWidth, tileHeight));
-        Shroud shroud = new Shroud(mock(Image.class), tileWidth, tileHeight);
-
-        PlayingState playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, tileWidth, tileHeight) {
+        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE, TILE_SIZE) {
             @Override
             public EntityRepository createEntityRepository(Map map) throws SlickException {
                 return getTestableEntityRepository();
@@ -56,6 +48,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
         playingState.init(gameContainer, stateBasedGame);
     }
+
 
     @Test
     public void testInitInitialGame() throws SlickException {
@@ -74,12 +67,28 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
         when(graphics.getFont()).thenReturn(font);
 
-        EntityRepository entityRepository = mock(EntityRepository.class);
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
         Player human = new Player("human", Recolorer.FactionColor.BLUE);
 
         playingState.initializeMap(entityRepository, human, cpu);
 
         playingState.render(gameContainer, game, graphics);
+    }
+
+    @Test
+    public void updateRemovesDestroyedEntities() throws SlickException {
+        StateBasedGame game = mock(StateBasedGame.class);
+        Unit unit = makeUnit(player, 100);
+        int originalCount = entityRepository.getEntitiesCount();
+
+        // keep unit alive
+        playingState.update(gameContainer, game, 10);
+        assertThat(entityRepository.getEntitiesCount(), is(originalCount));
+
+        unit.takeDamage(100); // takes damage, so it gets destroyed
+        assertThat(unit.isDestroyed(), is(true));
+
+        playingState.update(gameContainer, game, 10);
+        assertThat(entityRepository.getEntitiesCount(), is(originalCount - 1));
     }
 }

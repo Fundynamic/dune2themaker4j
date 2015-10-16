@@ -41,7 +41,7 @@ public abstract class AbstractD2TMTest {
     protected GameContainer gameContainer;
 
     protected ImageRepository imageRepository;
-    protected EntityRepositoryFactory entityRepositoryFactory;
+    protected EntitiesDataReader entitiesDataReader;
     protected EntityRepository entityRepository;
     protected EntitiesData entitiesData;
 
@@ -53,7 +53,7 @@ public abstract class AbstractD2TMTest {
     public void setUp() throws SlickException {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
-        entityRepositoryFactory = new EntityRepositoryFactory() {
+        entitiesDataReader = new EntitiesDataReader() {
             @Override
             public EntitiesData createNewEntitiesData() {
                 return new EntitiesData() {
@@ -64,8 +64,8 @@ public abstract class AbstractD2TMTest {
                 };
             }
         };
-        entitiesData = entityRepositoryFactory.fromIni();
-        this.entityRepository = makeTestableEntityRepository(map, entitiesData);
+        entitiesData = entitiesDataReader.fromRulesIni();
+        entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
@@ -104,7 +104,19 @@ public abstract class AbstractD2TMTest {
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
-        return new Map(new Shroud(null, Game.TILE_SIZE, Game.TILE_SIZE), width, height);
+        return new Map(new Shroud(null, Game.TILE_SIZE, Game.TILE_SIZE) {
+            @Override
+            public SpriteSheet createSpriteSheetFromImage() {
+                return mock(SpriteSheet.class);
+            }
+        }, width, height) {
+            @Override
+            public Cell getCell(int x, int y) {
+                Cell cell = super.getCell(x, y);
+                cell.setTileImage(mock(Image.class)); // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                return cell;
+            }
+        };
     }
 
     public Cell makeCell(int x, int y) {

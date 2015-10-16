@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,11 +44,8 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         entityRepository.placeOnMap(Vector2D.zero(), EntityType.UNIT, "93232", player);
     }
 
-    // TODO: This test name is now a bit weird, and we really need to clean up our tests suite, for proper setup etc.
-    // TODO: See placeOnMapPutsStructureOnMap
     @Test
     public void placeOnMapPutsUnitOnMap() throws SlickException {
-
         entityRepository.placeOnMap(Vector2D.create(10, 11), EntityType.UNIT, EntitiesData.QUAD, player);
 
         EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
@@ -58,10 +56,8 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         assertThat(first.getAbsoluteCoordinates(), is(Vector2D.create(10, 11)));
     }
 
-    // TODO: This test name is now a bit weird, and we really need to clean up our tests suite, for proper setup etc.
     @Test
     public void placeOnMapPutsStructureOnMap() throws SlickException {
-
         entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD, player);
 
         EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
@@ -70,6 +66,23 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         Entity first = entitiesSet.getFirst();
 
         assertThat(first.getAbsoluteCoordinates(), is(Vector2D.create(21, 23)));
+    }
+
+    @Test
+    public void placeParticleOnMap() {
+        entityRepository.placeOnMap(Vector2D.create(21, 23), EntityType.PARTICLE, EntitiesData.EXPLOSION_SMALL_UNIT, player);
+
+        EntitiesSet entitiesSet = entityRepository.getEntitiesSet();
+        assertThat(entitiesSet.size(), is(1));
+
+        Entity first = entitiesSet.getFirst();
+
+        assertThat(first.getAbsoluteCoordinates(), is(Vector2D.create(21, 23)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void creatingEntityRepositoryWithoutEntitiesDataThrowsException() throws SlickException {
+        new EntityRepository(map, new Recolorer(), new EntitiesData());
     }
 
 }

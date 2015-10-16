@@ -11,14 +11,14 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 
-public class EntityRepositoryFactoryTest extends AbstractD2TMTest {
+public class EntitiesDataReaderTest extends AbstractD2TMTest {
 
     private EntitiesData entitiesData;
 
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        entitiesData = entityRepositoryFactory.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
+        entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
     }
 
     @Test

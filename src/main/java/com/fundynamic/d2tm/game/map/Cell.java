@@ -33,7 +33,17 @@ public class Cell {
         this.terrain = terrain;
     }
 
+    private Image tileImage;
+
+    // ugh...
+    public void setTileImage(Image image) {
+        this.tileImage = image;
+    }
+
     public Image getTileImage() throws SlickException {
+        if (this.tileImage != null) {
+            return this.tileImage;
+        }
         return terrain.getTileImage();
     }
 

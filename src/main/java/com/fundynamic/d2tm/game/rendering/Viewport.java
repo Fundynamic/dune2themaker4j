@@ -43,7 +43,7 @@ public class Viewport implements Renderable {
     public Viewport(Map map, Mouse mouse, Player player, Image buffer) throws SlickException {
         this(Game.getResolution(),
                 Vector2D.zero(),
-                Vector2D.zero(),
+                Vector2D.create(32, 32),
                 map,
                 (float)Game.TILE_SIZE * 30,
                 Game.TILE_SIZE,
@@ -77,7 +77,7 @@ public class Viewport implements Renderable {
 
         this.cellViewportRenderer = new CellViewportRenderer(map, tileHeight, tileWidth, viewportDimensions);
         this.cellTerrainRenderer = new CellTerrainRenderer();
-        this.cellShroudRenderer = new CellShroudRenderer(map, player);
+        this.cellShroudRenderer = new CellShroudRenderer(player, map.getShroud());
         this.cellDebugInfoRenderer = new CellDebugInfoRenderer(mouse);
 
         this.entityRepository = mouse.getEntityRepository();

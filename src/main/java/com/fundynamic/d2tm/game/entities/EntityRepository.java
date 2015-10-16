@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.map.CellAlreadyOccupiedException;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -14,7 +13,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.HashMap;
 import java.util.Set;
 
 public class EntityRepository {
@@ -52,41 +50,37 @@ public class EntityRepository {
 
     public Entity placeOnMap(Vector2D absoluteMapCoordinates, EntityData entityData, Player player) {
         System.out.println("Placing " + entityData + " on map at " + absoluteMapCoordinates + " for " + player);
-        try {
-            Entity createdEntity;
-            Image originalImage = entityData.image;
-            Image recoloredImage = originalImage;
-            SpriteSheet spriteSheet;
+        Entity createdEntity;
+        Image originalImage = entityData.image;
+        Image recoloredImage = originalImage;
+        SpriteSheet spriteSheet;
 
-            switch (entityData.type) {
-                case STRUCTURE:
-                    recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
-                    addEntityToList(map.placeStructure((Structure) createdEntity));
-                    break;
-                case UNIT:
-                    recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
-                    addEntityToList(map.placeUnit((Unit) createdEntity));
-                    break;
-                case PROJECTILE:
-                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
-                    addEntityToList(map.placeProjectile((Projectile) createdEntity));
-                    break;
-                case PARTICLE:
-                    spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                    createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
-                    addEntityToList(createdEntity);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown type " + entityData.type);
-            }
-            return createdEntity;
-        } catch (CellAlreadyOccupiedException e) {
-            throw new UnableToPlaceEntityOnMapException(e);
+        switch (entityData.type) {
+            case STRUCTURE:
+                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+                createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
+                addEntityToList(map.placeStructure((Structure) createdEntity));
+                break;
+            case UNIT:
+                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+                addEntityToList(map.placeUnit((Unit) createdEntity));
+                break;
+            case PROJECTILE:
+                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
+                addEntityToList(map.placeProjectile((Projectile) createdEntity));
+                break;
+            case PARTICLE:
+                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+                createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
+                addEntityToList(createdEntity);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
+        return createdEntity;
     }
 
     public void addEntityToList(Entity entity) {
@@ -188,5 +182,9 @@ public class EntityRepository {
 
     public EntityData getEntityData(EntityType entityType, String id) {
         return entitiesData.getEntityData(entityType, id);
+    }
+
+    public int getEntitiesCount() {
+        return entitiesSet.size();
     }
 }

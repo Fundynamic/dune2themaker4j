@@ -8,9 +8,9 @@ import org.newdawn.slick.SlickException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class EntityRepositoryFactory {
+public class EntitiesDataReader {
 
-    public EntitiesData fromIni() {
+    public EntitiesData fromRulesIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));
     }
 

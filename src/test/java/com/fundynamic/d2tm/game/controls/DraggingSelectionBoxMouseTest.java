@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -47,7 +46,7 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
 
         EntityRepository entityRepository = mouse.getEntityRepository();
 
-        Vector2D mapCoordinate = Vector2D.create(1, 1); // == 32, 32 pixels
+        Vector2D mapCoordinate = Vector2D.create(32, 32);
         Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         assertFalse(entity.isSelected());
 
