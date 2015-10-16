@@ -56,4 +56,13 @@ public class Particle extends Entity implements Destructible {
     public boolean isDestroyed() {
         return destroyed;
     }
+
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "destroyed=" + destroyed +
+                ", sprite=" + sprite +
+                ", animationSpeed=" + animationSpeed +
+                '}';
+    }
 }

@@ -37,15 +37,15 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public Unit placeUnitOnMap(Vector2D absoluteMapCoordinate, int id, Player player) {
+    public Unit placeUnitOnMap(Vector2D absoluteMapCoordinate, String id, Player player) {
         return (Unit) placeOnMap(absoluteMapCoordinate, EntityType.UNIT, id, player);
     }
 
-    public void placeStructureOnMap(Vector2D topLeftMapCoordinate, int id, Player player) {
+    public void placeStructureOnMap(Vector2D topLeftMapCoordinate, String id, Player player) {
         placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
     }
 
-    public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, int id, Player player) {
+    public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, String id, Player player) {
         EntityData entityData = entitiesData.getEntityData(entityType, id);
         return placeOnMap(topLeftAbsoluteMapCoordinate, entityData, player);
     }
@@ -186,7 +186,7 @@ public class EntityRepository {
         entitiesData.clear();
     }
 
-    public EntityData getEntityData(EntityType entityType, int id) {
+    public EntityData getEntityData(EntityType entityType, String id) {
         return entitiesData.getEntityData(entityType, id);
     }
 }

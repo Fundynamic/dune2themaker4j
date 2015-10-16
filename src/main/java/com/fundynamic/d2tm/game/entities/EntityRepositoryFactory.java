@@ -3,7 +3,13 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
 
 import static com.fundynamic.d2tm.game.entities.EntitiesData.*;
 
@@ -28,6 +34,24 @@ public class EntityRepositoryFactory {
         entitiesData.createStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000, EXPLOSION_NORMAL);
         entitiesData.createStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500, EXPLOSION_NORMAL);
         return entitiesData;
+    }
+
+    public EntitiesData fromIni() {
+        return fromResource(getClass().getResourceAsStream("rules.ini"));
+    }
+
+    public EntitiesData fromResource(InputStream inputStream) {
+        try {
+            Ini ini = new Ini(inputStream);
+            Profile.Section structures = ini.get("STRUCTURES");
+            String[] strings = structures.childrenNames();
+            for (String structure : strings) {
+                System.out.println("Structure " + structure + " found.");
+            }
+            return null;
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to read rules.ini", e);
+        }
     }
 
     public EntitiesData createNewEntitiesData() {

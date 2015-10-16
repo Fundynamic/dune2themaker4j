@@ -9,22 +9,21 @@ import java.util.HashMap;
 public class EntitiesData {
 
     // units
-    public static int TRIKE = 0;
-    public static int QUAD = 1;
+    public static String TRIKE = "TRIKE";
+    public static String QUAD = "QUAD";
 
     // structures
-    public static int CONSTRUCTION_YARD = 0;
-    public static int REFINERY = 1;
+    public static String CONSTRUCTION_YARD = "CONSTYARD";
+    public static String REFINERY = "REFINERY";
 
     // projectiles
-    public static int ROCKET = 0;
-    public static int BULLET = 1;
+    public static String ROCKET = "ROCKET";
+    public static String BULLET = "RIFLE";
 
     // explosions
-    public static final int NO_EXPLOSION = -1;
-    public static int EXPLOSION_NORMAL = 0;
-    public static int EXPLOSION_SMALL_UNIT = 1;
-    public static int EXPLOSION_SMALL_BULLET = 2;
+    public static String EXPLOSION_NORMAL = "NORMAL";
+    public static String EXPLOSION_SMALL_UNIT = "WHEELED";
+    public static String EXPLOSION_SMALL_BULLET = "RIFLEHIT";
 
     private HashMap<String, EntityData> entitiesData;
 
@@ -32,30 +31,30 @@ public class EntitiesData {
         entitiesData = new HashMap<>();
     }
 
-    public void createProjectile(int id, String pathToImage, int widthInPixels, int heightInPixels, int explosionId, float moveSpeed, int damage, int facings) throws SlickException {
+    public void createProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
         entity.damage = damage;
         entity.explosionId = explosionId;
         entity.setFacingsAndCalculateChops(facings);
     }
 
-    public void createParticle(int id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
+    public void createParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
         entity.animationSpeed = framesPerSecond;
     }
 
-    public void createStructure(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, int explosionId) throws SlickException {
+    public void createStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
         entity.explosionId = explosionId;
     }
 
-    public void createUnit(int id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, int weaponId, int explosionId) throws SlickException {
+    public void createUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
         entity.weaponId = weaponId;
         entity.explosionId = explosionId;
     }
 
-    private EntityData createEntity(int id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
+    private EntityData createEntity(String id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
@@ -76,13 +75,14 @@ public class EntitiesData {
     }
 
 
-    public EntityData getEntityData(EntityType entityType, int id) {
-        EntityData entityData = entitiesData.get(constructKey(entityType, id));
-        if (entityData == null) throw new EntityNotFoundException("Entity not found for entityType " + entityType + " and ID " + id + ". Known entities are:\n" + entitiesData);
+    public EntityData getEntityData(EntityType entityType, String id) {
+        String key = constructKey(entityType, id);
+        EntityData entityData = entitiesData.get(key);
+        if (entityData == null) throw new EntityNotFoundException("Entity not found for key " + key + ". Known entities are:\n" + toString());
         return entityData;
     }
 
-    private boolean tryGetEntityData(EntityType entityType, int id) {
+    private boolean tryGetEntityData(EntityType entityType, String id) {
         try {
             getEntityData(entityType, id);
             return true;
@@ -91,7 +91,7 @@ public class EntitiesData {
         }
     }
 
-    public String constructKey(EntityType entityType, int id) {
+    public String constructKey(EntityType entityType, String id) {
         return entityType.toString() + "-" + id;
     }
 
@@ -101,5 +101,17 @@ public class EntitiesData {
 
     public boolean isEmpty() {
         return this.entitiesData.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.
+                append("--- EntitiesData ---\n");
+        for (String key : entitiesData.keySet()) {
+            stringBuffer.append(key + "=" + entitiesData.get(key) + "\n");
+        }
+        stringBuffer.append("--- EntitiesData ---\n");
+        return stringBuffer.toString();
     }
 }

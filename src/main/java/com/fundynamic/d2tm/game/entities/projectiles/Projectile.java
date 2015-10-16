@@ -15,19 +15,10 @@ public class Projectile extends Entity implements Moveable, Destructible {
     private Vector2D target;
     private boolean destroyed;
 
-    // entity properties
-    private float speed;
-    private int damage;
-    private int explosionId;
-
-
     public Projectile(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         target = mapCoordinates;
-        this.speed = entityData.moveSpeed;
-        this.damage = entityData.damage;
-        this.explosionId = entityData.explosionId;
     }
 
     @Override
@@ -68,7 +59,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public void update(float deltaInSeconds) {
         if (target != absoluteCoordinates) {
-            float timeCorrectedSpeed = speed * deltaInSeconds;
+            float timeCorrectedSpeed = entityData.moveSpeed * deltaInSeconds;
             Vector2D direction = target.min(absoluteCoordinates);
             Vector2D normalised = direction.normalise();
 
@@ -80,9 +71,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
         }
 
         if (target.distance(absoluteCoordinates) < 0.1F) {
-            if (explosionId > -1) {
+            if (entityData.hasExplosionId()) {
                 // spawn explosion
-                entityRepository.placeOnMap(absoluteCoordinates, EntityType.PARTICLE, explosionId, player);
+                entityRepository.placeOnMap(absoluteCoordinates, EntityType.PARTICLE, entityData.explosionId, player);
             }
 
             // do damage on cell / range of cells
@@ -91,7 +82,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
                 Entity entity = entities.getFirst();
                 if (entity.isDestructible()) {
                     Destructible destructibleEntity = (Destructible) entity;
-                    destructibleEntity.takeDamage(damage);
+                    destructibleEntity.takeDamage(entityData.damage);
                 }
             }
             destroyed = true;
@@ -111,5 +102,13 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public boolean isDestroyed() {
         return destroyed;
+    }
+
+    @Override
+    public String toString() {
+        return "Projectile{" +
+                "target=" + target +
+                ", destroyed=" + destroyed +
+                '}';
     }
 }
