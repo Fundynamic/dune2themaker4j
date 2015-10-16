@@ -45,9 +45,9 @@ public class Viewport implements Renderable {
                 Vector2D.zero(),
                 Vector2D.zero(),
                 map,
-                (float)Game.TILE_HEIGHT * 30,
-                Game.TILE_WIDTH,
-                Game.TILE_HEIGHT,
+                (float)Game.TILE_SIZE * 30,
+                Game.TILE_SIZE,
+                Game.TILE_SIZE,
                 mouse,
                 player,
                 buffer);

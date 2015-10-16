@@ -17,8 +17,7 @@ public class Game extends StateBasedGame {
     public static final int SCREEN_WIDTH = 800;
     public static final int SCREEN_HEIGHT = 600;
 
-    public static final int TILE_WIDTH = 32;
-    public static final int TILE_HEIGHT = 32;
+    public static final int TILE_SIZE = 32;
 
     public static Vector2D getResolution() {
         return new Vector2D(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -34,8 +33,8 @@ public class Game extends StateBasedGame {
         DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
                 new Theme(
                         imageRepository.loadAndCache("sheet_terrain.png"),
-                        TILE_WIDTH,
-                        TILE_HEIGHT
+                        TILE_SIZE,
+                        TILE_SIZE
                 )
         );
 
@@ -47,11 +46,11 @@ public class Game extends StateBasedGame {
                 imageRepository,
                 new Shroud(
                     imageRepository.loadAndCache("shroud_edges.png"),
-                    TILE_WIDTH,
-                    TILE_HEIGHT
+                        TILE_SIZE,
+                        TILE_SIZE
                 ),
-                TILE_WIDTH,
-                TILE_HEIGHT
+                TILE_SIZE,
+                TILE_SIZE
         );
 
         addState(playingState);

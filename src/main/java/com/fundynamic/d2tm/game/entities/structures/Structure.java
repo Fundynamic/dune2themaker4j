@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
@@ -16,8 +17,6 @@ import java.util.List;
 
 public class Structure extends Entity implements Selectable, Destructible {
 
-    public static int TILE_SIZE = 32; // TODO: remove HACK HACK
-
     // Behaviors
     private final FadingSelection fadingSelection;
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
@@ -31,15 +30,22 @@ public class Structure extends Entity implements Selectable, Destructible {
     private boolean hasSpawnedExplosions;
 
     public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
-        this(absoluteMapCoordinates, new SpriteSheet(imageOfStructure, entityData.width, entityData.height), player, entityData, entityRepository);
+        this(
+                absoluteMapCoordinates,
+                new SpriteSheet(imageOfStructure, entityData.width, entityData.height),
+                player,
+                entityData,
+                entityRepository
+        );
     }
 
     public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(absoluteMapCoordinates, spriteSheet, entityData, player, entityRepository);
+
         this.fadingSelection = new FadingSelection(entityData.width, entityData.height);
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.width);
-        widthInCells = (int) Math.ceil(entityData.width / TILE_SIZE);
-        heightInCells = (int) Math.ceil(entityData.height / TILE_SIZE);
+        widthInCells = (int) Math.ceil(entityData.width / Game.TILE_SIZE);
+        heightInCells = (int) Math.ceil(entityData.height / Game.TILE_SIZE);
     }
 
     public Image getSprite() {
@@ -128,8 +134,8 @@ public class Structure extends Entity implements Selectable, Destructible {
         List<Vector2D> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                int vecX = getX() + x * TILE_SIZE;
-                int vecY = getY() + y * TILE_SIZE;
+                int vecX = getX() + x * Game.TILE_SIZE;
+                int vecY = getY() + y * Game.TILE_SIZE;
 //                // center
 //                vecX += 16;
 //                vecY += 16;

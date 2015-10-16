@@ -93,7 +93,7 @@ public abstract class AbstractD2TMTest {
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
-        return new Map(new Shroud(null, Game.TILE_WIDTH, Game.TILE_HEIGHT), width, height);
+        return new Map(new Shroud(null, Game.TILE_SIZE, Game.TILE_SIZE), width, height);
     }
 
     public Cell makeCell(int x, int y) {

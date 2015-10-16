@@ -166,7 +166,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
         map.revealShroudFor(absoluteCoordinates, getSight(), player);
-
     }
 
     private boolean goingSomewhere() {
