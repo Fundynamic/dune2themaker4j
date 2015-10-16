@@ -4,10 +4,7 @@ package com.fundynamic.d2tm.game;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
-import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -22,10 +19,10 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +42,7 @@ public abstract class AbstractD2TMTest {
 
     protected ImageRepository imageRepository;
     protected EntityRepository entityRepository;
+    protected EntitiesData entitiesData;
 
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Map map;
@@ -54,7 +52,19 @@ public abstract class AbstractD2TMTest {
     public void setUp() throws SlickException {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
-        entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+        EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory() {
+            @Override
+            public EntitiesData createNewEntitiesData() {
+                return new EntitiesData() {
+                    @Override
+                    protected Image loadImage(String pathToImage) throws SlickException {
+                        return mock(Image.class);
+                    }
+                };
+            }
+        };
+        entitiesData = entityRepositoryFactory.load();
+        entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
@@ -152,4 +162,12 @@ public abstract class AbstractD2TMTest {
     public EntityRepository getTestableEntityRepository() {
         return entityRepository;
     }
+
+    public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
+        Image image = mock(Image.class);
+        Recolorer recolorer = mock(Recolorer.class);
+        when(recolorer.recolorToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        return new EntityRepository(map, recolorer, entitiesData);
+    }
+
 }

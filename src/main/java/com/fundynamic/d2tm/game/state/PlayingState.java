@@ -1,10 +1,7 @@
 package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.MouseInViewportListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
@@ -47,6 +44,8 @@ public class PlayingState extends BasicGameState {
 
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
+
+    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory();
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -123,7 +122,7 @@ public class PlayingState extends BasicGameState {
     }
 
     public EntityRepository createEntityRepository(Map map) throws SlickException {
-        return new EntityRepository(map, new Recolorer());
+        return entityRepositoryFactory.create(map);
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
@@ -131,8 +130,8 @@ public class PlayingState extends BasicGameState {
         this.cpu = cpu;
 
         // human entities
-        entityRepository.placeStructureOnMap(Vector2D.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntityRepository.REFINERY, human);
-        entityRepository.placeStructureOnMap(Vector2D.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntityRepository.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(Vector2D.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
+        entityRepository.placeStructureOnMap(Vector2D.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
 
         entityRepository.placeUnitOnMap(Vector2D.create(10 * TILE_SIZE, 10 * TILE_SIZE), 0, human);
         entityRepository.placeUnitOnMap(Vector2D.create(11 * TILE_SIZE, 11 * TILE_SIZE), 0, human);
@@ -140,8 +139,8 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeUnitOnMap(Vector2D.create(15 * TILE_SIZE, 11 * TILE_SIZE), 1, human);
 
         // cpu entities
-        entityRepository.placeStructureOnMap(Vector2D.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntityRepository.REFINERY, cpu);
-        entityRepository.placeStructureOnMap(Vector2D.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntityRepository.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntitiesData.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Vector2D.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
 
         entityRepository.placeUnitOnMap(Vector2D.create(50 * TILE_SIZE, 50 * TILE_SIZE), 0, cpu);
         entityRepository.placeUnitOnMap(Vector2D.create(49 * TILE_SIZE, 49 * TILE_SIZE), 0, cpu);
@@ -200,5 +199,9 @@ public class PlayingState extends BasicGameState {
             this.destroyedEntitiesPredicate = Predicate.builder().isDestroyed().build();
         }
         return this.destroyedEntitiesPredicate;
+    }
+
+    public void setEntityRepositoryFactory(EntityRepositoryFactory entityRepositoryFactory) {
+        this.entityRepositoryFactory = entityRepositoryFactory;
     }
 }

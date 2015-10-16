@@ -26,6 +26,13 @@
 			</exclusions>
 		</dependency>
 
+		<!-- ini file reading -->
+		<dependency>
+			<groupId>org.ini4j</groupId>
+			<artifactId>ini4j</artifactId>
+			<version>0.5.4</version>
+		</dependency>
+
 		<!-- unit testing -->
 		<dependency>
 			<groupId>junit</groupId>

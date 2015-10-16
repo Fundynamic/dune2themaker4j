@@ -2,10 +2,6 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -187,27 +183,6 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 
-
-    /**
-     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
-     * @return
-     */
-    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates) throws SlickException {
-        EntityRepository entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
-        return makeUnit(map, player, mapCoordinates, entityRepository);
-    }
-    /**
-     * Replace with com.fundynamic.d2tm.game.entities.EntityRepositoryTest#createUnit(EntityRepository, Vector2D, Player) ?
-     * @param map
-     * @param player
-     * @param mapCoordinates
-     * @return
-     */
-    public static Unit makeUnit(Map map, Player player, Vector2D mapCoordinates, EntityRepository entityRepository) throws SlickException {
-        Unit unit = entityRepository.placeUnitOnMap(mapCoordinates, EntityRepositoryTest.UNIT_FIRST_ID, player);
-        map.placeUnit(unit);
-        return unit;
-    }
 
     public static SpriteSheet makeSpriteSheet() {
         SpriteSheet spriteSheet = mock(SpriteSheet.class);

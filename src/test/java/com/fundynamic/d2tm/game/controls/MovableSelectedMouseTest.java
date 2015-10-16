@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.entities.EntityRepositoryTest.createUnit;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -35,7 +34,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
         mouse.setHoverCell(cell);
 
         Vector2D mapCoordinates = Vector2D.create(1, 1);
-        Unit unit = createUnit(mouse.getEntityRepository(), mapCoordinates.scale(32F), player);
+        Unit unit = makeUnit(player, 100, mapCoordinates.scale(32F));
         unit.select();
 
         // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
