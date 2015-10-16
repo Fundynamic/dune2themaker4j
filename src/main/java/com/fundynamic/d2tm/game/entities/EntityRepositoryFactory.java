@@ -47,6 +47,7 @@ public class EntityRepositoryFactory {
             EntitiesData entitiesData = createNewEntitiesData();
 
             Ini ini = new Ini(inputStream);
+            readWeapons(entitiesData, ini);
             readExplosions(entitiesData, ini);
             readStructures(entitiesData, ini);
 
@@ -56,8 +57,24 @@ public class EntityRepositoryFactory {
         }
     }
 
+    private void readWeapons(EntitiesData entitiesData, Ini ini) throws SlickException {
+        Profile.Section weapons = ini.get("WEAPONS");
+        String[] strings = weapons.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = weapons.getChild(id);
+            entitiesData.createProjectile(id,
+                    struct.get("image", String.class),
+                    struct.get("width", Integer.class),
+                    struct.get("height", Integer.class),
+                    struct.get("explosion", String.class),
+                    struct.get("movespeed", Float.class),
+                    struct.get("damage", Integer.class),
+                    struct.get("facings", Integer.class));
+        }
+
+    }
+
     public void readStructures(EntitiesData entitiesData, Ini ini) throws SlickException {
-        // READ STRUCTURES
         Profile.Section structures = ini.get("STRUCTURES");
         String[] strings = structures.childrenNames();
         for (String id : strings) {
