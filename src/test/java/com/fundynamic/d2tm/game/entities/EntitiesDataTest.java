@@ -26,7 +26,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         float moveSpeed = 1.0F;
         String weaponId = "214";
         String explosionId = "23";
-        entitiesData.createUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, hitPoints, weaponId, explosionId);
+        entitiesData.addUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, hitPoints, weaponId, explosionId);
 
         EntityData data = entitiesData.getEntityData(EntityType.UNIT, idOfEntity);
 
@@ -42,8 +42,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.createUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F, 100, "0", "1"); // success!
-        entitiesData.createUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F, 100, "0", "1"); // boom!
+        entitiesData.addUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F, 100, "0", "1"); // success!
+        entitiesData.addUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F, 100, "0", "1"); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)

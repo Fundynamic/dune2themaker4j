@@ -34,6 +34,20 @@ public class EntityRepositoryFactoryTest extends AbstractD2TMTest {
     }
 
     @Test
+    public void readsUnitFromIniFile() {
+        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
+        assertThat(quad, is(not(nullValue())));
+        assertThat(quad.image, is(not(nullValue())));
+        assertThat(quad.hitPoints, is(434));
+        assertThat(quad.moveSpeed, is(1.5F));
+        assertThat(quad.width, is(32));
+        assertThat(quad.height, is(32));
+        assertThat(quad.sight, is(7));
+        assertThat(quad.explosionId, is("BOOM"));
+        assertThat(quad.weaponId, is("RIFLE"));
+    }
+
+    @Test
     public void readsWeaponsFromIniFile() {
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));

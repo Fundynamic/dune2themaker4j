@@ -31,7 +31,7 @@ public class EntitiesData {
         entitiesData = new HashMap<>();
     }
 
-    public void createProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
+    public void addProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
         entity.damage = damage;
         entity.explosionId = explosionId;
@@ -70,7 +70,7 @@ public class EntitiesData {
         entity.explosionId = explosionId;
     }
 
-    public void createUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
+    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
         entity.weaponId = weaponId;
         entity.explosionId = explosionId;

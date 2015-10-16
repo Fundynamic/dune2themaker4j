@@ -27,11 +27,11 @@ public class EntityRepositoryFactory {
         entitiesData.addParticle(EXPLOSION_SMALL_UNIT, "explosions/small_unit_explosion.png", 48, 48, 3f);
         entitiesData.addParticle(EXPLOSION_SMALL_BULLET, "explosions/small_bullet_explosion.png", 32, 32, 3f);
 
-        entitiesData.createProjectile(ROCKET, "projectiles/LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200, 16);
-        entitiesData.createProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, EXPLOSION_SMALL_BULLET, 160f, 15, 0);
+        entitiesData.addProjectile(ROCKET, "projectiles/LargeRocket.png", 48, 48, EXPLOSION_NORMAL, 160f, 200, 16);
+        entitiesData.addProjectile(BULLET, "projectiles/SmallBullet.png", 6, 6, EXPLOSION_SMALL_BULLET, 160f, 15, 0);
 
-        entitiesData.createUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200, BULLET, EXPLOSION_SMALL_UNIT);
-        entitiesData.createUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150, BULLET, EXPLOSION_SMALL_UNIT);
+        entitiesData.addUnit(QUAD, "units/quad.png", 32, 32, 3, 1.5F, 200, BULLET, EXPLOSION_SMALL_UNIT);
+        entitiesData.addUnit(TRIKE, "units/trike.png", 28, 26, 4, 2.5F, 150, BULLET, EXPLOSION_SMALL_UNIT);
 
         entitiesData.addStructure(CONSTRUCTION_YARD, "structures/2x2_constyard.png", 64, 64, 5, 1000, EXPLOSION_NORMAL);
         entitiesData.addStructure(REFINERY, "structures/3x2_refinery.png", 96, 64, 5, 1500, EXPLOSION_NORMAL);
@@ -50,6 +50,7 @@ public class EntityRepositoryFactory {
             readWeapons(entitiesData, ini);
             readExplosions(entitiesData, ini);
             readStructures(entitiesData, ini);
+            readUnits(entitiesData, ini);
 
             return entitiesData;
         } catch (IOException | SlickException e) {
@@ -62,7 +63,7 @@ public class EntityRepositoryFactory {
         String[] strings = weapons.childrenNames();
         for (String id : strings) {
             Profile.Section struct = weapons.getChild(id);
-            entitiesData.createProjectile(id,
+            entitiesData.addProjectile(id,
                     struct.get("image", String.class),
                     struct.get("width", Integer.class),
                     struct.get("height", Integer.class),
@@ -85,6 +86,23 @@ public class EntityRepositoryFactory {
                     struct.get("height", Integer.class),
                     struct.get("sight", Integer.class),
                     struct.get("hitpoints", Integer.class),
+                    struct.get("explosion", String.class));
+        }
+    }
+
+    public void readUnits(EntitiesData entitiesData, Ini ini) throws SlickException {
+        Profile.Section units = ini.get("UNITS");
+        String[] strings = units.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = units.getChild(id);
+            entitiesData.addUnit(id,
+                    struct.get("image", String.class),
+                    struct.get("width", Integer.class),
+                    struct.get("height", Integer.class),
+                    struct.get("sight", Integer.class),
+                    struct.get("movespeed", Float.class),
+                    struct.get("hitpoints", Integer.class),
+                    struct.get("weapon", String.class),
                     struct.get("explosion", String.class));
         }
     }
