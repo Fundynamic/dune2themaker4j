@@ -39,11 +39,12 @@ public class EntityRepositoryFactory {
     }
 
     public EntitiesData fromIni() {
-        return fromResource(getClass().getResourceAsStream("rules.ini"));
+        return fromResource(getClass().getResourceAsStream("/rules.ini"));
     }
 
     public EntitiesData fromResource(InputStream inputStream) {
         try {
+            if (inputStream == null) throw new IllegalArgumentException("Unable to read from null stream");
             EntitiesData entitiesData = createNewEntitiesData();
 
             Ini ini = new Ini(inputStream);
@@ -126,7 +127,7 @@ public class EntityRepositoryFactory {
 
     public EntityRepository create(Map map) {
         try {
-            return new EntityRepository(map, new Recolorer(), load());
+            return new EntityRepository(map, new Recolorer(), fromIni());
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create entity repository", e);
         }
