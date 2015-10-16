@@ -53,7 +53,7 @@ public abstract class AbstractD2TMTest {
     public void setUp() throws SlickException {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
-        entityRepositoryFactory = new EntityRepositoryFactory(imageRepository) {
+        entityRepositoryFactory = new EntityRepositoryFactory() {
             @Override
             public EntitiesData createNewEntitiesData() {
                 return new EntitiesData() {

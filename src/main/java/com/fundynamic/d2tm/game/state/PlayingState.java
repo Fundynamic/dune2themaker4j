@@ -45,7 +45,7 @@ public class PlayingState extends BasicGameState {
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
 
-    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory(imageRepository);
+    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory();
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -122,7 +122,7 @@ public class PlayingState extends BasicGameState {
     }
 
     public EntityRepository createEntityRepository(Map map) throws SlickException {
-        return entityRepositoryFactory.create(map);
+        return new EntityRepository(map, new Recolorer(), entityRepositoryFactory.fromIni());
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {

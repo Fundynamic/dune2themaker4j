@@ -1,9 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.graphics.ImageRepository;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
@@ -11,15 +8,7 @@ import org.newdawn.slick.SlickException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.fundynamic.d2tm.game.entities.EntitiesData.*;
-
 public class EntityRepositoryFactory {
-
-    private final ImageRepository imageRepository;
-
-    public EntityRepositoryFactory(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
-    }
 
     public EntitiesData fromIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));
@@ -106,14 +95,6 @@ public class EntityRepositoryFactory {
 
     public EntitiesData createNewEntitiesData() {
         return new EntitiesData();
-    }
-
-    public EntityRepository create(Map map) {
-        try {
-            return new EntityRepository(map, new Recolorer(), fromIni());
-        } catch (SlickException e) {
-            throw new IllegalStateException("Unable to create entity repository", e);
-        }
     }
 
 }
