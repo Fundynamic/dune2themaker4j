@@ -45,7 +45,7 @@ public class PlayingState extends BasicGameState {
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
 
-    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory();
+    private EntityRepositoryFactory entityRepositoryFactory = new EntityRepositoryFactory(imageRepository);
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
         this.terrainFactory = terrainFactory;

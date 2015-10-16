@@ -38,12 +38,34 @@ public class EntitiesData {
         entity.setFacingsAndCalculateChops(facings);
     }
 
-    public void createParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
+    /**
+     * Create and add particle to this collection.
+     *
+     * @param id
+     * @param pathToImage
+     * @param widthInPixels
+     * @param heightInPixels
+     * @param framesPerSecond
+     * @throws SlickException
+     */
+    public void addParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
         entity.animationSpeed = framesPerSecond;
     }
 
-    public void createStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
+    /**
+     * Create and add structure to this collection.
+     *
+     * @param id
+     * @param pathToImage
+     * @param widthInPixels
+     * @param heightInPixels
+     * @param sight
+     * @param hitPoints
+     * @param explosionId
+     * @throws SlickException
+     */
+    public void addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
         entity.explosionId = explosionId;
     }
