@@ -17,27 +17,25 @@ import static org.mockito.Mockito.mock;
 
 public class PlacingProjectileMouseTest extends AbstractMouseBehaviorTest {
 
-    private PlacingProjectileMouse placingProjectileMouse;
-
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        placingProjectileMouse = new PlacingProjectileMouse(mouse, entityRepository);
+        mouse.setMouseBehavior(new PlacingProjectileMouse(mouse, entityRepository));
     }
 
     @Test
     public void leftClickedOnNoCellDoesNothing() throws SlickException {
-        placingProjectileMouse.leftClicked();
+        mouse.leftClicked();
     }
 
     @Test
     public void leftClickedOnNoHoverCellPlacesProjectile() throws SlickException {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
-        placingProjectileMouse.mouseMovedToCell(cell);
+        mouse.mouseMovedToCell(cell);
 
         assertThat(entityRepository.allProjectiles(), is(empty()));
 
-        placingProjectileMouse.leftClicked();
+        mouse.leftClicked();
 
         assertThat(entityRepository.allProjectiles().size(), is(1));
         Entity projectile = entityRepository.allProjectiles().toList().get(0);

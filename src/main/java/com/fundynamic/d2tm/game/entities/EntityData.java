@@ -90,4 +90,8 @@ public class EntityData {
     public boolean hasExplosionId() {
         return !"UNKNOWN".equals(explosionId);
     }
+
+    public boolean hasWeaponId() {
+        return !"UNKNOWN".equals(weaponId);
+    }
 }
