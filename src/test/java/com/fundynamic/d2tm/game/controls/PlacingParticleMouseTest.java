@@ -18,4 +18,8 @@ public class PlacingParticleMouseTest extends AbstractMouseBehaviorTest {
         mouse.leftClicked();
     }
 
+    @Test
+    public void render() {
+        mouse.render(graphics);
+    }
 }

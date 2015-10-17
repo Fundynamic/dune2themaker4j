@@ -46,4 +46,9 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
         assertFalse(unit.isSelected());
     }
 
+    @Test
+    public void render() {
+        mouse.render(graphics);
+    }
+
 }

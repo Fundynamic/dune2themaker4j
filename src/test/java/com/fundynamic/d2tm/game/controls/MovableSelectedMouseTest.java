@@ -66,4 +66,9 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
         mouse.leftClicked();
     }
 
+    @Test
+    public void render() {
+        mouse.render(graphics);
+    }
+
 }

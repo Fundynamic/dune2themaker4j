@@ -69,4 +69,9 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
         assertFalse(entity.isSelected());
     }
 
+    @Test
+    public void render() {
+        mouse.render(graphics);
+    }
+
 }
