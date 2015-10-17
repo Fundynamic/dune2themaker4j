@@ -1,8 +1,6 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 

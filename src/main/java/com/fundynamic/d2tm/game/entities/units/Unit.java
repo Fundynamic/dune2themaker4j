@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
@@ -11,6 +12,8 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+
+import static com.fundynamic.d2tm.Game.TILE_SIZE;
 
 public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
 
@@ -136,20 +139,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private void decideWhatCellToMoveToNextOrStopMovingWhenNotPossible() {
         int nextXCoordinate = absoluteCoordinates.getXAsInt();
         int nextYCoordinate = absoluteCoordinates.getYAsInt();
-        if (target.getXAsInt() < absoluteCoordinates.getXAsInt()) nextXCoordinate -= 32F;
-        if (target.getXAsInt() > absoluteCoordinates.getXAsInt()) nextXCoordinate += 32F;
-        if (target.getYAsInt() < absoluteCoordinates.getYAsInt()) nextYCoordinate -= 32F;
-        if (target.getYAsInt() > absoluteCoordinates.getYAsInt()) nextYCoordinate += 32F;
+        if (target.getXAsInt() < absoluteCoordinates.getXAsInt()) nextXCoordinate -= TILE_SIZE;
+        if (target.getXAsInt() > absoluteCoordinates.getXAsInt()) nextXCoordinate += TILE_SIZE;
+        if (target.getYAsInt() < absoluteCoordinates.getYAsInt()) nextYCoordinate -= TILE_SIZE;
+        if (target.getYAsInt() > absoluteCoordinates.getYAsInt()) nextYCoordinate += TILE_SIZE;
 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
 
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT);
 
-        if (entities.isEmpty()) {
-            if (!UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
-                this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
-                UnitMoveIntents.addIntent(nextTargetToMoveTo);
-            }
+        if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
+            this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+            UnitMoveIntents.addIntent(nextTargetToMoveTo);
         }
     }
 
@@ -250,9 +251,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
             projectile.moveTo(entity.getRandomPositionWithin());
         }
-//
-//        Destructible destructible = (Destructible) entity;
-//        destructible.takeDamage(Random.getRandomBetween(50, 150));
     }
 
     public Vector2D getOffset() {
@@ -284,7 +282,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getAbsoluteCoordinates().add(this.offset));
+            renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates().add(this.offset));
         }
-        renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates().add(this.offset));
     }
 }

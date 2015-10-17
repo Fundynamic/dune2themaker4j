@@ -36,7 +36,7 @@ public class Map {
         this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                Cell cell = new Cell(this, new EmptyTerrain(TILE_SIZE, TILE_SIZE), x, y);
+                Cell cell = new Cell(this, new EmptyTerrain(TILE_SIZE), x, y);
                 // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
                 cells[x][y] = cell;
             }
@@ -93,11 +93,13 @@ public class Map {
         return this.height * tileHeight;
     }
 
-    public Perimeter createViewablePerimeter(Vector2D screenResolution, int tileWidth, int tileHeight) {
-        return new Perimeter(tileWidth,
-                (getWidthInPixels(tileWidth) - tileWidth) - screenResolution.getX(),
-                tileHeight,
-                (getHeightInPixels(tileHeight) - tileHeight) - screenResolution.getY());
+    public Perimeter createViewablePerimeter(Vector2D screenResolution, int tileSize) {
+        return new Perimeter(
+                tileSize,
+                (getWidthInPixels(tileSize) - tileSize) - screenResolution.getX(),
+                tileSize,
+                (getHeightInPixels(tileSize) - tileSize) - screenResolution.getY()
+        );
     }
 
     public Shroud getShroud() {

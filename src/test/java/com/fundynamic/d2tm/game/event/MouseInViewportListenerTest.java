@@ -16,9 +16,6 @@ import static org.mockito.Mockito.*;
 public class MouseInViewportListenerTest extends AbstractD2TMTest {
     public static final float MOVE_SPEED = 2.0F;
 
-    private static final int TILE_WIDTH = 32;
-    private static final int TILE_HEIGHT = 32;
-
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
     public static final float INITIAL_VIEWPORT_X = 34F;
     public static final float INITIAL_VIEWPORT_Y = 34F;
@@ -47,7 +44,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     }
 
     private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_WIDTH, TILE_HEIGHT, mouse, player, mock(Image.class));
+        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_SIZE, mouse, player, mock(Image.class));
     }
 
     @Test
@@ -156,7 +153,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
         int viewportY = 608;
         float moveSpeed = 16F;
 
-        float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_HEIGHT) - TILE_HEIGHT)- screenResolution.getY();
+        float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_SIZE) - TILE_SIZE)- screenResolution.getY();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new MouseInViewportListener(mouse);
@@ -176,7 +173,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
         int viewportY = 0;
         float moveSpeed = 32F;
 
-        float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_WIDTH) - TILE_WIDTH) - screenResolution.getX();
+        float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_SIZE) - TILE_SIZE) - screenResolution.getX();
 
         viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
         listener = new MouseInViewportListener(mouse);

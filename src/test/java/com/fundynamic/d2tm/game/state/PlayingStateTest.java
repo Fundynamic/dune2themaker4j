@@ -34,10 +34,10 @@ public class PlayingStateTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_SIZE, TILE_SIZE));
-        Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE, TILE_SIZE);
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_SIZE));
+        Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE);
 
-        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE, TILE_SIZE) {
+        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE) {
             @Override
             public EntityRepository createEntityRepository(Map map) throws SlickException {
                 return getTestableEntityRepository();

@@ -10,17 +10,15 @@ public class Shroud {
 
     // needed for spriteSheet
     private final Image image;
-    private int tileWidth;
-    private int tileHeight;
+    private int tileSize;
 
     public Shroud() {
         this.image = null;
     }
 
-    public Shroud(Image image, int tileWidth, int tileHeight) {
+    public Shroud(Image image, int tileSize) {
         this.image = image;
-        this.tileHeight = tileHeight;
-        this.tileWidth = tileWidth;
+        this.tileSize = tileSize;
     }
 
     public Image getShroudImage(CellShroudRenderer.ShroudFacing facing) {
@@ -32,6 +30,6 @@ public class Shroud {
     }
 
     public SpriteSheet createSpriteSheetFromImage() {
-        return new SpriteSheet(image, tileWidth, tileHeight);
+        return new SpriteSheet(image, tileSize, tileSize);
     }
 }

@@ -33,7 +33,6 @@ public class Game extends StateBasedGame {
         DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
                 new Theme(
                         imageRepository.loadAndCache("sheet_terrain.png"),
-                        TILE_SIZE,
                         TILE_SIZE
                 )
         );
@@ -46,10 +45,8 @@ public class Game extends StateBasedGame {
                 imageRepository,
                 new Shroud(
                     imageRepository.loadAndCache("shroud_edges.png"),
-                        TILE_SIZE,
                         TILE_SIZE
                 ),
-                TILE_SIZE,
                 TILE_SIZE
         );
 

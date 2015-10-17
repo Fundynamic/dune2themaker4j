@@ -10,13 +10,11 @@ import org.newdawn.slick.SlickException;
 public class EmptyTerrain implements Terrain {
 
     private Image image;
-    private int tileWidth;
-    private int tileHeight;
+    private int tileSize;
     private static Image blackImage = null;
 
-    public EmptyTerrain(int tileWidth, int tileHeight) {
-        this.tileHeight = tileHeight;
-        this.tileWidth = tileWidth;
+    public EmptyTerrain(int tileSize) {
+        this.tileSize = tileSize;
     }
 
     // Used for testing
@@ -27,9 +25,9 @@ public class EmptyTerrain implements Terrain {
     public Image getTileImage() {
         try {
             if (blackImage == null) {
-                blackImage = new Image(tileWidth, tileHeight);
+                blackImage = new Image(tileSize, tileSize);
                 blackImage.getGraphics().setColor(Color.black);
-                blackImage.getGraphics().fillRect(0, 0, tileWidth, tileHeight);
+                blackImage.getGraphics().fillRect(0, 0, tileSize, tileSize);
             }
             this.image = blackImage;
         } catch (SlickException e) {

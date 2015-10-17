@@ -11,22 +11,20 @@ public class Theme {
 
     // needed for spriteSheet
     private final Image image;
-    private int tileWidth;
-    private int tileHeight;
+    private int tileSize;
 
     public Theme() {
         this.image = null;
     }
 
-    public Theme(Image image, int tileWidth, int tileHeight) {
+    public Theme(Image image, int tileSize) {
         this.image = image;
-        this.tileHeight = tileHeight;
-        this.tileWidth = tileWidth;
+        this.tileSize = tileSize;
     }
 
     public Image getFacingTile(int row, MapEditor.TerrainFacing facing) {
         if (spriteSheet == null) {
-            this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
+            this.spriteSheet = new SpriteSheet(image, tileSize, tileSize);
         }
         int column = facing.ordinal();
         return this.spriteSheet.getSprite(column, row);

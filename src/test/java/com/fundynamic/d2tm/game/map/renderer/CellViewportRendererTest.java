@@ -19,7 +19,7 @@ public class CellViewportRendererTest extends AbstractD2TMTest {
         int screenWidth = 800;
         int screenHeight = 600;
 
-        CellViewportRenderer cellViewportRenderer = new CellViewportRenderer(map, TILE_SIZE, TILE_SIZE, new Vector2D(screenWidth, screenHeight));
+        CellViewportRenderer cellViewportRenderer = new CellViewportRenderer(map, TILE_SIZE, new Vector2D(screenWidth, screenHeight));
 
         Vector2D viewingVector = Vector2D.zero();
 

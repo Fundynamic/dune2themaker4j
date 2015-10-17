@@ -12,31 +12,29 @@ import org.newdawn.slick.SlickException;
  */
 public class CellViewportRenderer implements ViewportRenderer<Cell> {
 
-    private final int tileHeight;
-    private final int tileWidth;
+    private final int tileSize;
     private final int cellsThatFitHorizontally;
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public CellViewportRenderer(Map map, int tileHeight, int tileWidth, Vector2D windowDimensions) {
+    public CellViewportRenderer(Map map, int tileSize, Vector2D windowDimensions) {
         this.map = map;
-        this.tileHeight = tileHeight;
-        this.tileWidth = tileWidth;
-        cellsThatFitHorizontally = (windowDimensions.getXAsInt() / tileWidth) + 1;
-        cellsThatFitVertically = (windowDimensions.getYAsInt() / tileHeight) + 1;
+        this.tileSize = tileSize;
+        cellsThatFitHorizontally = (windowDimensions.getXAsInt() / tileSize) + 1;
+        cellsThatFitVertically = (windowDimensions.getYAsInt() / tileSize) + 1;
     }
 
     public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<Cell> renderer) throws SlickException {
-        int startCellX = viewingVector.getXAsInt() / tileWidth;
-        int startCellY = viewingVector.getYAsInt() / tileHeight;
+        int startCellX = viewingVector.getXAsInt() / tileSize;
+        int startCellY = viewingVector.getYAsInt() / tileSize;
 
         int endCellX = startCellX + cellsThatFitHorizontally;
         int endCellY = startCellY + cellsThatFitVertically;
 
         for (int x = startCellX; x <= endCellX; x++) {
             for (int y = startCellY; y <= endCellY; y++) {
-                int drawX = ((x - startCellX) * tileWidth) - (viewingVector.getXAsInt() % tileWidth);
-                int drawY = ((y - startCellY) * tileHeight) - (viewingVector.getYAsInt() % tileHeight);
+                int drawX = ((x - startCellX) * tileSize) - (viewingVector.getXAsInt() % tileSize);
+                int drawY = ((y - startCellY) * tileSize) - (viewingVector.getYAsInt() % tileSize);
 
                 // TODO: 2 responsibilities happening here, one is culling, one is drawing
                 // it is better to separate the two

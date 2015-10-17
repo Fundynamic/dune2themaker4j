@@ -45,13 +45,11 @@ public class Projectile extends Entity implements Moveable, Destructible {
      */
     public int getFacing(Vector2D from, Vector2D to) {
         int facing = 0;
-        if (entityData.hasFacings()) {
-            if (from != to) {
-                double angle = from.angleTo(to);
-                float chop = entityData.getChop();
-                angle += (chop / 2);
-                facing = (int) (angle / chop) % entityData.getFacings();
-            }
+        if (entityData.hasFacings() && from != to) {
+            double angle = from.angleTo(to);
+            float chop = entityData.getChop();
+            angle += (chop / 2);
+            facing = (int) (angle / chop) % entityData.getFacings();
         }
         return facing;
     }
@@ -96,7 +94,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
     @Override
     public void takeDamage(int hitPoints) {
-
+        // a projectile cannot take damage (yet?, we could somehow make it possible that projectiles can get intercepted?)
     }
 
     @Override

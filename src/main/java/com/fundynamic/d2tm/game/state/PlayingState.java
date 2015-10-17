@@ -32,8 +32,7 @@ public class PlayingState extends BasicGameState {
     private final Input input;
     private final Vector2D screenResolution;
 
-    private final int tileWidth;
-    private final int tileHeight;
+    private final int tileSize;
 
     private Player human;
     private Player cpu;
@@ -45,11 +44,10 @@ public class PlayingState extends BasicGameState {
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileWidth, int tileHeight) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileSize) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.tileSize = tileSize;
         this.input = gameContainer.getInput();
         this.screenResolution = getResolution();
         this.imageRepository = imageRepository;
@@ -73,7 +71,7 @@ public class PlayingState extends BasicGameState {
         Mouse mouse = Mouse.create(human, gameContainer, entityRepository, imageRepository);
 
         try {
-            float moveSpeed = 30 * tileWidth;
+            float moveSpeed = 30 * tileSize;
             Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
 //            Vector2D half = screenResolution.min(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
@@ -84,8 +82,7 @@ public class PlayingState extends BasicGameState {
                     viewingVector,
                     map,
                     moveSpeed,
-                    tileWidth,
-                    tileHeight,
+                    tileSize,
                     mouse,
                     human,
                     imageRepository.createImage(screenResolution));
@@ -99,7 +96,7 @@ public class PlayingState extends BasicGameState {
 //                    viewingVector,
 //                    map,
 //                    moveSpeed,
-//                    tileWidth,
+//                    tileSize,
 //                    tileHeight,
 //                    mouse,
 //                    human);
