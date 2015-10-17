@@ -149,8 +149,8 @@ public class Structure extends Entity implements Selectable, Destructible {
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getAbsoluteCoordinates());
+            renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates());
         }
-        renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates());
     }
 
 }

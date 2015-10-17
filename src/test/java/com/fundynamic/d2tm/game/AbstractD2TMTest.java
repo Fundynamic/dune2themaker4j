@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.structures.StructureFactory;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -127,7 +126,30 @@ public abstract class AbstractD2TMTest {
     // STRUCTURES
     ////////////////////////////////////////////////////////////////////////////////
     public Structure makeStructure(Player player, int hitPoints) {
-        return StructureFactory.makeStructure(player, hitPoints, entityRepository);
+        return makeStructure(player, hitPoints, 2, 3, 5, Vector2D.create(32, 32));
+    }
+
+    public Structure makeStructure(Player player, int hitPoints, Vector2D absoluteCoordinates) {
+        return makeStructure(player, hitPoints, 2, 3, 5, absoluteCoordinates);
+    }
+
+    public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Vector2D absoluteMapCoordinates) {
+        EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
+        entityData.hitPoints = hitPoints;
+        return new Structure(absoluteMapCoordinates, mock(Image.class), player, entityData, entityRepository) {
+
+            @Override
+            public boolean isDestroyed() {
+                // we do this so that we do not have to deal with spawning explosions (which is done in the
+                // update method)
+                return super.hitPointBasedDestructibility.hasDied();
+            }
+
+            @Override
+            public Image getSprite() {
+                return mock(Image.class);
+            }
+        };
     }
 
     // UNIT

@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class RenderQueue {
 
+    public static final int ENTITY_GUI_LAYER = 4;
     private Vector2D viewportVec;
 
     private static int MAX_LAYERS = 10;
@@ -46,7 +47,7 @@ public class RenderQueue {
     }
 
     public void putEntityGui(Renderable renderable, Vector2D absoluteCoordinates) {
-        put(4, renderable, absoluteCoordinates);
+        put(ENTITY_GUI_LAYER, renderable, absoluteCoordinates);
     }
 
     public void put(int layer, Renderable renderable, Vector2D absoluteCoordinates) {
@@ -66,9 +67,13 @@ public class RenderQueue {
         }
     }
 
-    class ThingToRender {
-        int x, y;               // screen coordinates
-        Renderable renderable;  // what to render
+    public List<ThingToRender> getThingsToRender(int layer) {
+        return thingsToRender.get(layer);
+    }
+
+    public class ThingToRender {
+        public int x, y;               // screen coordinates
+        public Renderable renderable;  // what to render
 
         public ThingToRender(int x, int y, Renderable renderable) {
             this.x = x;
