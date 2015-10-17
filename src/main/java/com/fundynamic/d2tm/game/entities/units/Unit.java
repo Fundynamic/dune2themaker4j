@@ -246,9 +246,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return;
         }
 
-        // spawn projectile from this cell , to another cell.
-        Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
-        projectile.moveTo(entity.getRandomPositionWithin());
+        if (entityData.hasWeaponId()) {
+            Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
+            projectile.moveTo(entity.getRandomPositionWithin());
+        }
 //
 //        Destructible destructible = (Destructible) entity;
 //        destructible.takeDamage(Random.getRandomBetween(50, 150));

@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
@@ -27,7 +26,7 @@ public class MapTest extends AbstractD2TMTest {
         map.getCell(5, 5).changeTerrain(new Spice());
         map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(new Rock()); // because of the invisible border
 
-        entityRepository = EntityRepositoryTest.makeTestableEntityRepository(map);
+        entityRepository = makeTestableEntityRepository(map, entitiesData);
     }
 
     @Test

@@ -22,9 +22,10 @@ public class EntityData {
     private int facings;
 
     public int damage;
-    public int explosionId = -1;
+    public String explosionId = "UNKNOWN";
+    public String weaponId = "UNKNOWN";
+
     public float animationSpeed; // in frames per second
-    public int weaponId = -1;
 
     public EntityData() {
     }
@@ -47,15 +48,20 @@ public class EntityData {
     @Override
     public String toString() {
         return "EntityData{" +
-                "type=" + type +
+                "chop=" + chop +
+                ", type=" + type +
+                ", halfChop=" + halfChop +
                 ", image=" + image +
                 ", width=" + width +
                 ", height=" + height +
                 ", sight=" + sight +
                 ", moveSpeed=" + moveSpeed +
                 ", hitPoints=" + hitPoints +
+                ", facings=" + facings +
                 ", damage=" + damage +
-                ", explosionId=" + explosionId +
+                ", explosionId='" + explosionId + '\'' +
+                ", weaponId='" + weaponId + '\'' +
+                ", animationSpeed=" + animationSpeed +
                 '}';
     }
 
@@ -79,5 +85,13 @@ public class EntityData {
 
     public int getFacings() {
         return facings;
+    }
+
+    public boolean hasExplosionId() {
+        return !"UNKNOWN".equals(explosionId);
+    }
+
+    public boolean hasWeaponId() {
+        return !"UNKNOWN".equals(weaponId);
     }
 }

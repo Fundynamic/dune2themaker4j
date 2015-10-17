@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
+import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityRepositoryTest;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -18,8 +18,6 @@ import static org.mockito.Mockito.mock;
 
 public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
 
-    private DraggingSelectionBoxMouse draggingSelectionBoxMouse;
-
     @Before
     public void setUp() throws SlickException {
         super.setUp();
@@ -28,50 +26,45 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
         mouse.setViewport(viewport);
 
         // start dragging from 0,0
-        draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(mouse, Vector2D.zero());
+        DraggingSelectionBoxMouse draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(mouse, Vector2D.zero());
+        mouse.setMouseBehavior(draggingSelectionBoxMouse);
     }
 
     @Test
     public void draggingOverNothingSelectsNoUnits() throws SlickException {
-        Vector2D draggingCoordinates = Vector2D.create(10, 10);
+        mouse.draggedToCoordinates(10, 10);
 
-        draggingSelectionBoxMouse.draggedToCoordinates(draggingCoordinates);
-
-        draggingSelectionBoxMouse.leftButtonReleased();
+        mouse.leftButtonReleased();
     }
 
     @Test
     public void draggingOverUnitsSelectsUnits() {
-        Vector2D draggingCoordinates = Vector2D.create(64, 64); // == 2, 2 on map
-
         EntityRepository entityRepository = mouse.getEntityRepository();
 
-        Vector2D mapCoordinate = Vector2D.create(1, 1); // == 32, 32 pixels
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_FIRST_ID, player);
+        Vector2D mapCoordinate = Vector2D.create(32, 32);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         assertFalse(entity.isSelected());
 
-        draggingSelectionBoxMouse.draggedToCoordinates(draggingCoordinates);
+        mouse.draggedToCoordinates(64, 64); // == 2, 2 on map
 
-        draggingSelectionBoxMouse.leftButtonReleased();
+        mouse.leftButtonReleased();
 
         assertTrue(entity.isSelected());
     }
 
     @Test
     public void whenReleasingLeftButtonDeselectAllPreviouslySelectedUnitsFirst() {
-        Vector2D draggingCoordinates = Vector2D.zero();
-
         EntityRepository entityRepository = mouse.getEntityRepository();
 
         Vector2D mapCoordinate = Vector2D.create(1, 1);
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntityRepositoryTest.UNIT_FIRST_ID, player);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         entity.select();
         assertTrue(entity.isSelected());
 
-        draggingSelectionBoxMouse.draggedToCoordinates(draggingCoordinates);
+        mouse.draggedToCoordinates(0, 0);
 
         // this will select nothing
-        draggingSelectionBoxMouse.leftButtonReleased();
+        mouse.leftButtonReleased();
 
         assertFalse(entity.isSelected());
     }

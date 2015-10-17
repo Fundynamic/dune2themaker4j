@@ -25,9 +25,13 @@ public class Shroud {
 
     public Image getShroudImage(CellShroudRenderer.ShroudFacing facing) {
         if (spriteSheet == null) {
-            this.spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
+            this.spriteSheet = createSpriteSheetFromImage();
         }
         int column = facing.ordinal();
         return this.spriteSheet.getSprite(column, 0);
+    }
+
+    public SpriteSheet createSpriteSheetFromImage() {
+        return new SpriteSheet(image, tileWidth, tileHeight);
     }
 }

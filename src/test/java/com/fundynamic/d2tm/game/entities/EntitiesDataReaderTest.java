@@ -1,0 +1,71 @@
+package com.fundynamic.d2tm.game.entities;
+
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.newdawn.slick.SlickException;
+
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+
+public class EntitiesDataReaderTest extends AbstractD2TMTest {
+
+    private EntitiesData entitiesData;
+
+    @Before
+    public void setUp() throws SlickException {
+        super.setUp();
+        entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
+    }
+
+    @Test
+    public void readsStructureFromIniFile() {
+        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, "CONSTYARD");
+        assertThat(constyard, is(not(nullValue())));
+        assertThat(constyard.hitPoints, is(230));
+        assertThat(constyard.image, is(not(nullValue())));
+        assertThat(constyard.width, is(64));
+        assertThat(constyard.height, is(64));
+        assertThat(constyard.sight, is(4));
+        assertThat(constyard.explosionId, is("BOOM"));
+    }
+
+    @Test
+    public void readsUnitFromIniFile() {
+        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
+        assertThat(quad, is(not(nullValue())));
+        assertThat(quad.image, is(not(nullValue())));
+        assertThat(quad.hitPoints, is(434));
+        assertThat(quad.moveSpeed, is(1.5F));
+        assertThat(quad.width, is(32));
+        assertThat(quad.height, is(32));
+        assertThat(quad.sight, is(7));
+        assertThat(quad.explosionId, is("BOOM"));
+        assertThat(quad.weaponId, is("RIFLE"));
+    }
+
+    @Test
+    public void readsWeaponsFromIniFile() {
+        EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
+        assertThat(rifle, is(not(nullValue())));
+        assertThat(rifle.image, is(not(nullValue())));
+        assertThat(rifle.width, is(6));
+        assertThat(rifle.height, is(6));
+        assertThat(rifle.explosionId, is("BOOM"));
+        assertThat(rifle.moveSpeed, is(160f));
+        assertThat(rifle.damage, is(28));
+    }
+
+    @Test
+    public void readsExplosionFromIniFile() {
+        EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
+        assertThat(boom, is(not(nullValue())));
+        assertThat(boom.image, is(not(nullValue())));
+        assertThat(boom.width, is(48));
+        assertThat(boom.height, is(48));
+    }
+
+}
