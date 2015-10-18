@@ -67,7 +67,7 @@ public class Structure extends Entity implements Selectable, Destructible {
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
             for (Vector2D pos : getAllCellsAsVectors()) {
-                entityRepository.placeOnMap(pos, EntityType.PARTICLE, entityData.explosionId, player);
+                entityRepository.explodeAt(pos, entityData.explosionId, player);
             }
         }
     }
@@ -136,9 +136,6 @@ public class Structure extends Entity implements Selectable, Destructible {
             for (int y = 0; y < heightInCells; y++) {
                 int vecX = getX() + x * Game.TILE_SIZE;
                 int vecY = getY() + y * Game.TILE_SIZE;
-//                // center
-//                vecX += 16;
-//                vecY += 16;
                 result.add(Vector2D.create(vecX, vecY));
             }
         }

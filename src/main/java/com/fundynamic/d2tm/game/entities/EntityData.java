@@ -26,6 +26,7 @@ public class EntityData {
     public String weaponId = "UNKNOWN";
 
     public float animationSpeed; // in frames per second
+    public String key; // key used in HashMap
 
     public EntityData() {
     }

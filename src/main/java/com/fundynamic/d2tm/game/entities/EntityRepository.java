@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
@@ -41,6 +42,24 @@ public class EntityRepository {
 
     public void placeStructureOnMap(Vector2D topLeftMapCoordinate, String id, Player player) {
         placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
+    }
+
+    public void explodeAt(Vector2D topLeftAbsoluteMapCoordinate, String explosionId, Player player) {
+        if ("UNKNOWN".equals(explosionId)) return;
+
+        EntityData particle = entitiesData.getEntityData(EntityType.PARTICLE, explosionId);
+
+        // The top left map coordinate is based on Game.TILE_SIZE tiles. So assumes at top-left of tile
+        // depending on the particle that will be created, we need to correct this so the explosion appears
+        // centered in that cell.
+        //
+        // Meaning, when the particle dimensions are < Game.TILE_SIZE then something needs to be added to the x and y
+        // of the absoluteCoordinates. When the particle dimensions are > Game.TILE_SIZE then we need to substract.
+        int correctedX = (Game.TILE_SIZE - particle.width) / 2;
+        int correctedY = (Game.TILE_SIZE - particle.height) / 2;
+        Vector2D correctedCoordinate = topLeftAbsoluteMapCoordinate.add(correctedX, correctedY);
+
+        placeOnMap(correctedCoordinate, particle, player);
     }
 
     public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, String id, Player player) {

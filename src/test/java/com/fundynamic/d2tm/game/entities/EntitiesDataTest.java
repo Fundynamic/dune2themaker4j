@@ -24,8 +24,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String idOfEntity = "1";
         int sight = 2;
         float moveSpeed = 1.0F;
-        String weaponId = "214";
-        String explosionId = "23";
+        String weaponId = "UNKNOWN";
+        String explosionId = "UNKNOWN";
         entitiesData.addUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, hitPoints, weaponId, explosionId);
 
         EntityData data = entitiesData.getEntityData(EntityType.UNIT, idOfEntity);
@@ -58,7 +58,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         int hitPoints = 1000;
         String idOfEntity = "1";
         int sight = 3;
-        String explosionId = "24";
+        String explosionId = "UNKNOWN";
         entitiesData.addStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000, explosionId);
 
         EntityData data = entitiesData.getEntityData(EntityType.STRUCTURE, idOfEntity);
