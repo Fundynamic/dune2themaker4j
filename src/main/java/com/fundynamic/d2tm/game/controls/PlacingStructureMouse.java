@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.math.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 

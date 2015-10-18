@@ -5,8 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 

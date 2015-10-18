@@ -13,7 +13,7 @@ import org.newdawn.slick.SpriteSheet;
 
 public class Particle extends Entity implements Destructible {
 
-    boolean destroyed = false;
+    private boolean destroyed = false;
     private float sprite = 0;
     private float animationSpeed;
 

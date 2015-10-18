@@ -45,7 +45,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
      */
     public int getFacing(Vector2D from, Vector2D to) {
         int facing = 0;
-        if (entityData.hasFacings() && from != to) {
+        if (entityData.hasFacings() && !from.equals(to)) {
             double angle = from.angleTo(to);
             float chop = entityData.getChop();
             angle += (chop / 2);
