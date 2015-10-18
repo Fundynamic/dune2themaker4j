@@ -82,11 +82,6 @@ public class MovableSelectedMouse extends NormalMouse {
     }
 
     @Override
-    public void rightClicked() {
-        super.rightClicked();
-    }
-
-    @Override
     public String toString() {
         return "MovableSelectedMouse";
     }

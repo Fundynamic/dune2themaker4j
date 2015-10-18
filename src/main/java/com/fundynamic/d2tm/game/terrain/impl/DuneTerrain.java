@@ -23,7 +23,6 @@ public abstract class DuneTerrain implements Terrain {
 
     public DuneTerrain(Theme theme) {
         this.theme = theme;
-        this.tileImage = null;
         this.terrainFacing = MapEditor.TerrainFacing.FULL;
     }
 

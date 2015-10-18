@@ -28,12 +28,12 @@ public class EntityTest extends AbstractD2TMTest {
 
             @Override
             public void render(Graphics graphics, int x, int y) {
-
+                // no rendering, boring entity
             }
 
             @Override
             public void update(float deltaInSeconds) {
-
+                // no updating, boring entity
             }
         };
 

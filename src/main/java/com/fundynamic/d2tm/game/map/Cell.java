@@ -17,6 +17,7 @@ public class Cell {
     private Terrain terrain;
 
     private Vector2D position;
+    private Image tileImage;
 
     public Cell(Map map, Terrain terrain, int mapX, int mapY) {
         if (terrain == null) throw new IllegalArgumentException("Terrain argument may not be null");
@@ -33,9 +34,7 @@ public class Cell {
         this.terrain = terrain;
     }
 
-    private Image tileImage;
-
-    // ugh...
+    // this is an ugly seam required for testing
     public void setTileImage(Image image) {
         this.tileImage = image;
     }

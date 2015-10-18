@@ -38,7 +38,6 @@ public class Mouse {
     Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
         this.controllingPlayer = controllingPlayer;
         this.entityRepository = entityRepository;
-        this.hoverCell = null;
         this.gameContainer = gameContainer;
     }
 
