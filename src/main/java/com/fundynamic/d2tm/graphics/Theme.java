@@ -13,10 +13,6 @@ public class Theme {
     private final Image image;
     private int tileSize;
 
-    public Theme() {
-        this.image = null;
-    }
-
     public Theme(Image image, int tileSize) {
         this.image = image;
         this.tileSize = tileSize;

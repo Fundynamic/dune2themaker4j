@@ -31,17 +31,15 @@ public class Mouse {
     private MouseBehavior mouseBehavior;
     private Entity lastSelectedEntity;
     private Cell hoverCell;
-    private MouseImages currentImage = null;
+    private MouseImages currentImage;
 
-    private Map<MouseImages, Image> mouseImages;
+    private Map<MouseImages, Image> mouseImages = new HashMap<>();
 
     Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
         this.controllingPlayer = controllingPlayer;
         this.entityRepository = entityRepository;
-        this.mouseBehavior = null;
         this.hoverCell = null;
         this.gameContainer = gameContainer;
-        this.mouseImages = new HashMap<>();
     }
 
     public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) throws SlickException {

@@ -12,10 +12,6 @@ public class Shroud {
     private final Image image;
     private int tileSize;
 
-    public Shroud() {
-        this.image = null;
-    }
-
     public Shroud(Image image, int tileSize) {
         this.image = image;
         this.tileSize = tileSize;

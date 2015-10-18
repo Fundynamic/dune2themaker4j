@@ -52,7 +52,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
     @Test
     public void testInitInitialGame() throws SlickException {
-        EntityRepository entityRepository = mock(EntityRepository.class);
+//        EntityRepository entityRepository = mock(EntityRepository.class);
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
         Player human = new Player("human", Recolorer.FactionColor.BLUE);
 

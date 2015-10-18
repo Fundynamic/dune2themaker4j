@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -9,7 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RevealShroudOnMapTest {
@@ -24,7 +28,7 @@ public class RevealShroudOnMapTest {
     @Before
     public void setUp() throws SlickException {
         player = new Player("John Doe", Recolorer.FactionColor.RED);
-        map = new Map(new Shroud(), MAP_WIDTH, MAP_HEIGHT);
+        map = new Map(new Shroud(mock(Image.class), Game.TILE_SIZE), MAP_WIDTH, MAP_HEIGHT);
     }
 
     @Test

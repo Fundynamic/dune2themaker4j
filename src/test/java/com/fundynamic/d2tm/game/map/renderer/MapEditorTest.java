@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -9,10 +10,12 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Before;
 import org.junit.Test;
+import org.newdawn.slick.Image;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class MapEditorTest {
 
@@ -21,8 +24,8 @@ public class MapEditorTest {
 
     @Before
     public void setUp() {
-        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme());
-        shroud = new Shroud();
+        TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), Game.TILE_SIZE));
+        shroud = new Shroud(mock(Image.class), Game.TILE_SIZE);
         mapEditor = new MapEditor(terrainFactory);
     }
 

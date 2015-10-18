@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
+import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.newdawn.slick.SlickException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class MapTest extends AbstractD2TMTest {
 
@@ -23,7 +25,7 @@ public class MapTest extends AbstractD2TMTest {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT);
 
         map.getCell(0, 0).changeTerrain(new Sand());
-        map.getCell(5, 5).changeTerrain(new Spice());
+        map.getCell(5, 5).changeTerrain(new Spice(mock(Theme.class), null, 0));
         map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(new Rock()); // because of the invisible border
 
         entityRepository = makeTestableEntityRepository(map, entitiesData);
