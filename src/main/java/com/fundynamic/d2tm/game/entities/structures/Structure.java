@@ -67,7 +67,7 @@ public class Structure extends Entity implements Selectable, Destructible {
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
             for (Vector2D pos : getAllCellsAsVectors()) {
-                entityRepository.explodeAt(pos, entityData.explosionId, player);
+                entityRepository.explodeAtCell(pos, entityData.explosionId, player);
             }
         }
     }

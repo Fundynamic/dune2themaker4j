@@ -71,7 +71,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
         if (target.distance(absoluteCoordinates) < 0.1F) {
             if (entityData.hasExplosionId()) {
                 // spawn explosion
-                entityRepository.explodeAt(absoluteCoordinates, entityData.explosionId, player);
+                entityRepository.explodeAt(absoluteCoordinates, entityData, player);
             }
 
             // do damage on cell / range of cells

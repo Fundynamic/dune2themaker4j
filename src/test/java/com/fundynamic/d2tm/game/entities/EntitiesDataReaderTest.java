@@ -111,4 +111,5 @@ public class EntitiesDataReaderTest {
             assertThat(e.getMessage(), is("structure CONSTYARD [explosion] refers to non-existing [EXPLOSIONS/THIS_EXPLOSION_DOES_NOT_EXIST]"));
         }
     }
+
 }

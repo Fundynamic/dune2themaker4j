@@ -118,6 +118,10 @@ public class EntitiesData {
     }
 
 
+    public EntityData getParticle(String id) {
+        return getEntityData(EntityType.PARTICLE, id);
+    }
+
     public EntityData getEntityData(EntityType entityType, String id) {
         String key = constructKey(entityType, id);
         EntityData entityData = entitiesData.get(key);
@@ -130,7 +134,7 @@ public class EntitiesData {
             getEntityData(entityType, id);
             return true;
         } catch (EntityNotFoundException e) {
-            System.out.println(e);
+//            System.out.println(e);
             return false;
         }
     }

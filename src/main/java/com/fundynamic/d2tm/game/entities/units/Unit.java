@@ -97,7 +97,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
-            entityRepository.explodeAt(absoluteCoordinates, entityData.explosionId, player);
+            entityRepository.explodeAtCell(absoluteCoordinates, entityData.explosionId, player);
         }
     }
 
