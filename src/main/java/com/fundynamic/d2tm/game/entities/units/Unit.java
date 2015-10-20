@@ -212,21 +212,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-        boolean left = coordinatesToFaceTo.getXAsInt() < absoluteCoordinates.getXAsInt();
-        boolean right = coordinatesToFaceTo.getXAsInt() > absoluteCoordinates.getXAsInt();
-        boolean up = coordinatesToFaceTo.getYAsInt() < absoluteCoordinates.getYAsInt();
-        boolean down = coordinatesToFaceTo.getYAsInt() > absoluteCoordinates.getYAsInt();
-
-        if (up && left) return UnitFacings.LEFT_UP;
-        if (up && right) return UnitFacings.RIGHT_UP;
-        if (down && left) return UnitFacings.LEFT_DOWN;
-        if (down && right) return UnitFacings.RIGHT_DOWN;
-        if (up) return UnitFacings.UP;
-        if (down) return UnitFacings.DOWN;
-        if (left) return UnitFacings.LEFT;
-        if (right) return UnitFacings.RIGHT;
-
-        return UnitFacings.byId(facing);
+       return UnitFacings.determine(absoluteCoordinates, coordinatesToFaceTo);
     }
 
     @Override

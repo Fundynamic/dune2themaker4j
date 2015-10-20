@@ -33,58 +33,11 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void returnsCurrentFacingWhenNothingChanged() {
+    public void returnsRightWhenUnableToFigureOutWhereToFaceTo() {
         assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getAbsoluteCoordinates()));
     }
 
-    @Test
-    public void determinesFacingRightDown() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 1));
-        assertEquals(UnitFacings.RIGHT_DOWN, unit.determineFacingFor(coordinatesToFaceTo));
-    }
 
-    @Test
-    public void determinesFacingLeftDown() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, 1));
-        assertEquals(UnitFacings.LEFT_DOWN, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingRightUp() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, -1));
-        assertEquals(UnitFacings.RIGHT_UP, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingLeftUp() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, -1));
-        assertEquals(UnitFacings.LEFT_UP, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingUp() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(0, -1));
-        assertEquals(UnitFacings.UP, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingDown() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(0, 1));
-        assertEquals(UnitFacings.DOWN, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingLeft() {
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(-1, 0));
-        assertEquals(UnitFacings.LEFT, unit.determineFacingFor(coordinatesToFaceTo));
-    }
-
-    @Test
-    public void determinesFacingRight() {
-        unit = makeUnit(UnitFacings.LEFT, unitAbsoluteMapCoordinates);
-        Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(Vector2D.create(1, 0));
-        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(coordinatesToFaceTo));
-    }
 
     @Test
     public void rendersUnitOnExpectedCoordinates() {
