@@ -17,4 +17,6 @@ public interface Destructible {
      * @return boolean
      */
     boolean isDestroyed();
+
+    int getHitPoints();
 }

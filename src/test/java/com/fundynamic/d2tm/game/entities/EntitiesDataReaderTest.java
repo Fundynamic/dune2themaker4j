@@ -1,28 +1,34 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.AbstractD2TMTest.makeEntitiesDataReader;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 
-public class EntitiesDataReaderTest extends AbstractD2TMTest {
+public class EntitiesDataReaderTest {
 
     private EntitiesData entitiesData;
+    private EntitiesDataReader entitiesDataReader;
 
     @Before
     public void setUp() throws SlickException {
-        super.setUp();
+        entitiesDataReader = makeEntitiesDataReader();
+    }
+
+    public void readFromTestRulesIni() {
         entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
     }
 
     @Test
     public void readsStructureFromIniFile() {
+        readFromTestRulesIni();
         EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, "CONSTYARD");
         assertThat(constyard, is(not(nullValue())));
         assertThat(constyard.hitPoints, is(230));
@@ -35,6 +41,7 @@ public class EntitiesDataReaderTest extends AbstractD2TMTest {
 
     @Test
     public void readsUnitFromIniFile() {
+        readFromTestRulesIni();
         EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
         assertThat(quad, is(not(nullValue())));
         assertThat(quad.image, is(not(nullValue())));
@@ -49,6 +56,7 @@ public class EntitiesDataReaderTest extends AbstractD2TMTest {
 
     @Test
     public void readsWeaponsFromIniFile() {
+        readFromTestRulesIni();
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
@@ -61,11 +69,47 @@ public class EntitiesDataReaderTest extends AbstractD2TMTest {
 
     @Test
     public void readsExplosionFromIniFile() {
+        readFromTestRulesIni();
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
         assertThat(boom.image, is(not(nullValue())));
         assertThat(boom.width, is(48));
         assertThat(boom.height, is(48));
+    }
+
+    @Test
+    public void throwsExceptionWhenWeaponIdForUnitDoesNotExist() {
+        try {
+            entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-wrong-weaponid-unit.ini"));
+            fail("Expected to have thrown an illegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("unit QUAD [weapon] refers to non-existing [WEAPONS/THIS_ID_DOES_NOT_EXIST]"));
+        }
+    }
+
+    @Test
+    public void acceptsNoExplosionId() {
+        entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-empty-weaponid-unit.ini"));
+    }
+
+    @Test
+    public void throwsExceptionWhenExplosionIdForUnitDoesNotExist() {
+        try {
+            entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-wrong-explosionid-unit.ini"));
+            fail("Expected to have thrown an illegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("unit QUAD [explosion] refers to non-existing [EXPLOSIONS/THIS_EXPLOSION_DOES_NOT_EXIST]"));
+        }
+    }
+
+    @Test
+    public void throwsExceptionWhenExplosionIdForStructureDoesNotExist() {
+        try {
+            entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-wrong-explosionid-structure.ini"));
+            fail("Expected to have thrown an illegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("structure CONSTYARD [explosion] refers to non-existing [EXPLOSIONS/THIS_EXPLOSION_DOES_NOT_EXIST]"));
+        }
     }
 
 }

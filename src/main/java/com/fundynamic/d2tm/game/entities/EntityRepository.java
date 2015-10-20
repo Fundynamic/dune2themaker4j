@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
@@ -22,6 +23,7 @@ public class EntityRepository {
     private final Recolorer recolorer;
 
     private EntitiesData entitiesData;
+    private Entity lastCreatedEntity;
 
     private EntitiesSet entitiesSet;
 
@@ -41,6 +43,59 @@ public class EntityRepository {
 
     public void placeStructureOnMap(Vector2D topLeftMapCoordinate, String id, Player player) {
         placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
+    }
+
+    /**
+     * This is the same logic as explodeAt(), only instead of assuming the origin is an entity, we assume the
+     * cell is the origin. Used for spawning explosions of structures (which are cell based).
+     * 
+     * @param topLeftAbsoluteMapCoordinate
+     * @param explosionId
+     * @param player
+     */
+    public void explodeAtCell(Vector2D topLeftAbsoluteMapCoordinate, String explosionId, Player player) {
+        if (EntitiesData.UNKNOWN.equals(explosionId)) return;
+
+        EntityData particle = entitiesData.getParticle(explosionId);
+
+        // The top left map coordinate is based on Game.TILE_SIZE tiles. So assumes at top-left of tile
+        // depending on the particle that will be created, we need to correct this so the explosion appears
+        // centered in that cell.
+        //
+        // Meaning, when the particle dimensions are < Game.TILE_SIZE then something needs to be added to the x and y
+        // of the absoluteCoordinates. When the particle dimensions are > Game.TILE_SIZE then we need to substract.
+        placeExplosionCenteredAt(topLeftAbsoluteMapCoordinate, player, Game.TILE_SIZE, Game.TILE_SIZE, particle);
+    }
+
+    /**
+     * This spawns an explosion from the origin entityData, ie, this could be a projectile about to explode.
+     * To make sure the center of the projectile corresponds with the center of the explosion we need to know about the
+     * width and height of the to-be-spawned explosion and correct its coordinates.
+     *
+     * @param topLeftAbsoluteMapCoordinate
+     * @param origin
+     * @param player
+     */
+    public void explodeAt(Vector2D topLeftAbsoluteMapCoordinate, EntityData origin, Player player) {
+        if (!origin.hasExplosionId()) return;
+        EntityData particle = entitiesData.getParticle(origin.explosionId);
+        placeExplosionCenteredAt(topLeftAbsoluteMapCoordinate, player, origin.width, origin.height, particle);
+    }
+
+    public void placeExplosionCenteredAt(Vector2D topLeftAbsoluteMapCoordinate, Player player, int originWidth, int originHeight, EntityData particle) {
+        // this compensates based on it comes from, so the center of the explosion is the same center
+        // of the original center.
+        int correctedX = (originWidth - particle.width) / 2;
+        int correctedY = (originHeight - particle.height) / 2;
+        Vector2D correctedCoordinate = topLeftAbsoluteMapCoordinate.add(correctedX, correctedY);
+        placeExplosion(correctedCoordinate, particle, player);
+    }
+
+    public void placeExplosion(Vector2D topLeftAbsoluteMapCoordinate, EntityData particle, Player player) {
+        if (particle.type != EntityType.PARTICLE) {
+            throw new IllegalArgumentException("Cannot explode type that is " + particle.type + ", it must be of entity type " + EntityType.PARTICLE);
+        }
+        placeOnMap(topLeftAbsoluteMapCoordinate, particle, player);
     }
 
     public Entity placeOnMap(Vector2D topLeftAbsoluteMapCoordinate, EntityType entityType, String id, Player player) {
@@ -84,6 +139,7 @@ public class EntityRepository {
     }
 
     public void addEntityToList(Entity entity) {
+        lastCreatedEntity = entity;
         entitiesSet.add(entity);
     }
 
@@ -186,5 +242,9 @@ public class EntityRepository {
 
     public int getEntitiesCount() {
         return entitiesSet.size();
+    }
+
+    public Entity getLastCreatedEntity() {
+        return lastCreatedEntity;
     }
 }

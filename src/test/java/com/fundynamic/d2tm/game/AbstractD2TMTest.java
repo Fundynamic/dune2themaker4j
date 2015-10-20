@@ -52,7 +52,16 @@ public abstract class AbstractD2TMTest {
     public void setUp() throws SlickException {
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
-        entitiesDataReader = new EntitiesDataReader() {
+        entitiesDataReader = makeEntitiesDataReader();
+        entitiesData = entitiesDataReader.fromRulesIni();
+        entityRepository = makeTestableEntityRepository(map, entitiesData);
+
+        Input input = mock(Input.class);
+        when(gameContainer.getInput()).thenReturn(input);
+    }
+
+    public static EntitiesDataReader makeEntitiesDataReader() {
+        return new EntitiesDataReader() {
             @Override
             public EntitiesData createNewEntitiesData() {
                 return new EntitiesData() {
@@ -63,11 +72,6 @@ public abstract class AbstractD2TMTest {
                 };
             }
         };
-        entitiesData = entitiesDataReader.fromRulesIni();
-        entityRepository = makeTestableEntityRepository(map, entitiesData);
-
-        Input input = mock(Input.class);
-        when(gameContainer.getInput()).thenReturn(input);
     }
 
     // RESOURCE LOADING

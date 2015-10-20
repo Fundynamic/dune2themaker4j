@@ -58,6 +58,11 @@ public class Particle extends Entity implements Destructible {
     }
 
     @Override
+    public int getHitPoints() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "Particle{" +
                 "destroyed=" + destroyed +

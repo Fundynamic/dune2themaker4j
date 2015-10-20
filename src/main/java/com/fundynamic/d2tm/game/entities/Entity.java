@@ -94,4 +94,20 @@ public abstract class Entity implements Renderable, Updateable {
     public void enrichRenderQueue(RenderQueue renderQueue) {
         // by default do nothing
     }
+
+    public Vector2D getCenteredPosition() {
+        return absoluteCoordinates.add(getHalfSize());
+    }
+
+    public Vector2D getHalfSize() {
+        return Vector2D.create(entityData.width / 2, entityData.height / 2);
+    }
+
+    /**
+     * Return the metadata about this entity.
+     * @return
+     */
+    public EntityData getEntityData() {
+        return this.entityData;
+    }
 }

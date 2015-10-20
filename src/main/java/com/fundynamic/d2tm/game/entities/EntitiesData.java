@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public class EntitiesData {
 
+    public static final String UNKNOWN = "UNKNOWN";
     // units
     public static String TRIKE = "TRIKE";
     public static String QUAD = "QUAD";
@@ -64,13 +65,35 @@ public class EntitiesData {
      */
     public void addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
-        entity.explosionId = explosionId;
+
+        if (!idProvided(explosionId)) {
+            if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
+                throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
+            }
+            entity.explosionId = explosionId;
+        }
     }
 
     public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
-        entity.weaponId = weaponId;
-        entity.explosionId = explosionId;
+
+        if (!idProvided(weaponId)) {
+            if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
+                throw new IllegalArgumentException("unit " + id + " [weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
+            }
+            entity.weaponId = weaponId;
+        }
+
+        if (!idProvided(explosionId)) {
+            if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
+                throw new IllegalArgumentException("unit " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
+            }
+            entity.explosionId = explosionId;
+        }
+    }
+
+    public boolean idProvided(String weaponId) {
+        return UNKNOWN.equals(weaponId);
     }
 
     private EntityData createEntity(String id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
@@ -85,7 +108,8 @@ public class EntitiesData {
         entityData.sight = sight;
         entityData.moveSpeed = moveSpeed;
         entityData.hitPoints = hitPoints;
-        entitiesData.put(constructKey(entityType, id), entityData);
+        entityData.key = EntityData.constructKey(entityType, id);
+        entitiesData.put(entityData.key, entityData);
         return entityData;
     }
 
@@ -94,8 +118,15 @@ public class EntitiesData {
     }
 
 
+    public EntityData getParticle(String id) {
+        return getEntityData(EntityType.PARTICLE, id);
+    }
+
     public EntityData getEntityData(EntityType entityType, String id) {
-        String key = constructKey(entityType, id);
+        return getEntityData(EntityData.constructKey(entityType, id));
+    }
+
+    public EntityData getEntityData(String key) {
         EntityData entityData = entitiesData.get(key);
         if (entityData == null) throw new EntityNotFoundException("Entity not found for key " + key + ". Known entities are:\n" + toString());
         return entityData;
@@ -106,12 +137,9 @@ public class EntitiesData {
             getEntityData(entityType, id);
             return true;
         } catch (EntityNotFoundException e) {
+//            System.out.println(e);
             return false;
         }
-    }
-
-    public String constructKey(EntityType entityType, String id) {
-        return entityType.toString() + "-" + id;
     }
 
     public void clear() {

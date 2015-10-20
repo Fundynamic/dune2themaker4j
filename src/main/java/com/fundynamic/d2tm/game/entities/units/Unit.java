@@ -97,7 +97,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
-            entityRepository.placeOnMap(absoluteCoordinates, EntityType.PARTICLE, entityData.explosionId, player);
+            entityRepository.explodeAtCell(absoluteCoordinates, entityData.explosionId, player);
         }
     }
 
@@ -237,6 +237,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public boolean isDestroyed() {
         return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
+    }
+
+    @Override
+    public int getHitPoints() {
+        return hitPointBasedDestructibility.getHitPoints();
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.newdawn.slick.SlickException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.fundynamic.d2tm.game.entities.EntitiesData.UNKNOWN;
+
 public class EntitiesDataReader {
 
     public EntitiesData fromRulesIni() {
@@ -59,7 +61,7 @@ public class EntitiesDataReader {
                     struct.get("height", Integer.class),
                     struct.get("sight", Integer.class),
                     struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class));
+                    struct.get("explosion", String.class, "UNKNOWN"));
         }
     }
 
@@ -69,13 +71,13 @@ public class EntitiesDataReader {
         for (String id : strings) {
             Profile.Section struct = units.getChild(id);
             entitiesData.addUnit(id,
-                    struct.get("image", String.class),
-                    struct.get("width", Integer.class),
-                    struct.get("height", Integer.class),
-                    struct.get("sight", Integer.class),
-                    struct.get("movespeed", Float.class),
-                    struct.get("hitpoints", Integer.class),
-                    struct.get("weapon", String.class),
+                    struct.get("image", String.class, "no-image-provided"),
+                    struct.get("width", Integer.class, 1),
+                    struct.get("height", Integer.class, 1),
+                    struct.get("sight", Integer.class, 1),
+                    struct.get("movespeed", Float.class, 0f),
+                    struct.get("hitpoints", Integer.class, 0),
+                    struct.get("weapon", String.class, UNKNOWN),
                     struct.get("explosion", String.class));
         }
     }
