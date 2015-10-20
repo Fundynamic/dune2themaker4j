@@ -23,6 +23,7 @@ public class EntityRepository {
     private final Recolorer recolorer;
 
     private EntitiesData entitiesData;
+    private Entity lastCreatedEntity;
 
     private EntitiesSet entitiesSet;
 
@@ -138,6 +139,7 @@ public class EntityRepository {
     }
 
     public void addEntityToList(Entity entity) {
+        lastCreatedEntity = entity;
         entitiesSet.add(entity);
     }
 
@@ -240,5 +242,9 @@ public class EntityRepository {
 
     public int getEntitiesCount() {
         return entitiesSet.size();
+    }
+
+    public Entity getLastCreatedEntity() {
+        return lastCreatedEntity;
     }
 }

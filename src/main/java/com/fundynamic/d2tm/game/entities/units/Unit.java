@@ -240,6 +240,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
+    public int getHitPoints() {
+        return hitPointBasedDestructibility.getHitPoints();
+    }
+
+    @Override
     public void attack(Entity entity) {
         if (!entity.isDestructible()) {
             System.out.println("I (" + this.toString() + ") attack an entity that is not destructible -> " + entity);

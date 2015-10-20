@@ -22,6 +22,7 @@ public class EntityData {
     private int facings;
 
     public int damage;
+
     public String explosionId = "UNKNOWN";
     public String weaponId = "UNKNOWN";
 
@@ -94,5 +95,17 @@ public class EntityData {
 
     public boolean hasWeaponId() {
         return !"UNKNOWN".equals(weaponId);
+    }
+
+    public String getWeaponIdKey() {
+        return constructKey(EntityType.PROJECTILE, weaponId);
+    }
+
+    public String getExplosionIdKey() {
+        return constructKey(EntityType.PARTICLE, explosionId);
+    }
+
+    public static String constructKey(EntityType entityType, String id) {
+        return entityType.toString() + "-" + id;
     }
 }

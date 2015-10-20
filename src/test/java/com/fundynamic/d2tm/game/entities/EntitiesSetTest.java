@@ -171,5 +171,10 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         public boolean isDestroyed() {
             return true;
         }
+
+        @Override
+        public int getHitPoints() {
+            return 0;
+        }
     }
 }

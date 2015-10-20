@@ -108,7 +108,7 @@ public class EntitiesData {
         entityData.sight = sight;
         entityData.moveSpeed = moveSpeed;
         entityData.hitPoints = hitPoints;
-        entityData.key = constructKey(entityType, id);
+        entityData.key = EntityData.constructKey(entityType, id);
         entitiesData.put(entityData.key, entityData);
         return entityData;
     }
@@ -123,7 +123,10 @@ public class EntitiesData {
     }
 
     public EntityData getEntityData(EntityType entityType, String id) {
-        String key = constructKey(entityType, id);
+        return getEntityData(EntityData.constructKey(entityType, id));
+    }
+
+    public EntityData getEntityData(String key) {
         EntityData entityData = entitiesData.get(key);
         if (entityData == null) throw new EntityNotFoundException("Entity not found for key " + key + ". Known entities are:\n" + toString());
         return entityData;
@@ -137,10 +140,6 @@ public class EntitiesData {
 //            System.out.println(e);
             return false;
         }
-    }
-
-    public String constructKey(EntityType entityType, String id) {
-        return entityType.toString() + "-" + id;
     }
 
     public void clear() {

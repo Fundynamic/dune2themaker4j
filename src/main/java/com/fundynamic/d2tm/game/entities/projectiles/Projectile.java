@@ -65,7 +65,8 @@ public class Projectile extends Entity implements Moveable, Destructible {
             float distance = absoluteCoordinates.distance(target);
             if (distance < timeCorrectedSpeed) timeCorrectedSpeed = distance;
 
-            absoluteCoordinates = absoluteCoordinates.add(normalised.scale(timeCorrectedSpeed));
+            Vector2D delta = normalised.scale(timeCorrectedSpeed);
+            absoluteCoordinates = absoluteCoordinates.add(delta);
         }
 
         if (target.distance(absoluteCoordinates) < 0.1F) {
@@ -100,6 +101,11 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public boolean isDestroyed() {
         return destroyed;
+    }
+
+    @Override
+    public int getHitPoints() {
+        return 0;
     }
 
     @Override

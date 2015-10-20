@@ -130,6 +130,11 @@ public class Structure extends Entity implements Selectable, Destructible {
         return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
     }
 
+    @Override
+    public int getHitPoints() {
+        return hitPointBasedDestructibility.getHitPoints();
+    }
+
     public List<Vector2D> getAllCellsAsVectors() {
         List<Vector2D> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {

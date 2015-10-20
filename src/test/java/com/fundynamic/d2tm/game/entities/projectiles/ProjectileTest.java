@@ -1,17 +1,24 @@
 package com.fundynamic.d2tm.game.entities.projectiles;
 
+import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.math.Vector2D.create;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.Is.is;
 
 
-public class ProjectileTest {
+public class ProjectileTest extends AbstractD2TMTest {
 
     public static final Vector2D CENTER_FROM = create(64, 64);
 
@@ -43,9 +50,13 @@ public class ProjectileTest {
 
     private Projectile projectile;
 
+    /////////////////////////////////////////
+    // Projectile facing
+
     // this is the order as in LargeRocket.png
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws SlickException {
+        super.setUp();
         projectile = makeProjectileWithOnlyEntityData();
     }
 
@@ -152,8 +163,61 @@ public class ProjectileTest {
         // Given a Projectile with 16 facings, see LargeBullet.png
         EntityData entityData = new EntityData();
         entityData.setFacingsAndCalculateChops(16);
-
         return new Projectile(null, null, null, entityData, null);
     }
 
+
+    ///////////////////////////////////////
+    // projectile movement
+
+    @Test
+    public void movesToTargetAndExplodes() {
+        Projectile projectile = (Projectile) entityRepository.placeOnMap(Vector2D.create(32, 32), EntityType.PROJECTILE, "LARGE_ROCKET", player);
+        EntityData entityData = projectile.getEntityData();
+        // movespeed is per second, so we emulate that we want to travel a distance per 2 seconds (ie, 2 update cycles
+        // with a delta of 1 second
+        int seconds = 2;
+        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        projectile.moveTo(projectile.getAbsoluteCoordinates().add(distance));
+
+        projectile.update(1);
+        assertThat(projectile.isDestroyed(), is(false));
+
+        projectile.update(1);
+        assertThat(projectile.isDestroyed(), is(false)); // it is very close, or at target, next update will 'destroy' it
+
+        projectile.update(1); // destroys projectile, spawns explosion if given
+        assertThat(projectile.isDestroyed(), is(true));
+
+        // check that an explosion is created (assuming it is not UNKNOWN, large rocket should not have that)
+        Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
+        assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PARTICLE));
+        assertThat(lastCreatedEntity.getEntityData().key, is(entityData.getExplosionIdKey()));
+    }
+
+    // note: yes this also means dealing damage to units owned by same player.
+    @Test
+    public void movesToTargetAndThenDealsDamageToEntity() {
+        Vector2D coordinate = Vector2D.create(32, 32);
+        Projectile projectile = (Projectile) entityRepository.placeOnMap(coordinate, EntityType.PROJECTILE, "LARGE_ROCKET", player);
+
+        EntityData entityData = projectile.getEntityData();
+
+        int seconds = 1;
+        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        Vector2D target = projectile.getAbsoluteCoordinates().add(distance);
+        projectile.moveTo(target);
+
+        // Place unit on target, so that it will be hit!
+        Unit unit = entityRepository.placeUnitOnMap(target, "QUAD", player);
+
+        projectile.update(1);
+        assertThat(projectile.isDestroyed(), is(false)); // it is very close, or at target, next update will 'destroy' it
+
+        projectile.update(1); // destroys projectile, deals damage
+        assertThat(projectile.isDestroyed(), is(true));
+
+        // damage should be dealt, how much damage is not relevant here
+        assertThat(unit.getHitPoints(), is(lessThan(unit.getEntityData().hitPoints)));
+    }
 }

@@ -103,4 +103,11 @@ public abstract class Entity implements Renderable, Updateable {
         return Vector2D.create(entityData.width / 2, entityData.height / 2);
     }
 
+    /**
+     * Return the metadata about this entity.
+     * @return
+     */
+    public EntityData getEntityData() {
+        return this.entityData;
+    }
 }
