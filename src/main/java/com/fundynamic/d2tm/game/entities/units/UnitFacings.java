@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.math.Vector2D;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.abs;
+
 public enum UnitFacings {
     RIGHT(0),
     RIGHT_UP(1),
@@ -54,6 +56,44 @@ public enum UnitFacings {
         if (right) return UnitFacings.RIGHT;
 
         return UnitFacings.RIGHT;
+    }
+
+    public static UnitFacings nextFacing(UnitFacings current, UnitFacings desired) {
+        int currentId = current.getValue();
+        int desiredId = desired.getValue();
+
+        int counterClockwise = getCounterClockwiseSteps(currentId, desiredId);
+        int clockwise = getClockwiseSteps(currentId, desiredId);
+
+        // Decide what the nextId (facing) should be
+        int newId = currentId;
+        if (counterClockwise < clockwise) {
+            newId++; // go counter-clockwise, which means go 'right' on the sprite
+        } else {
+            newId--; // go clock-wise which means go 'left' on the sprite
+        }
+
+        // make sure we stay within range
+        if (newId < 0) newId = 7;
+        if (newId > 7) newId = 0;
+
+        return byId(newId);
+    }
+
+    public static int getClockwiseSteps(int currentId, int desiredId) {
+        int clockwise = abs(currentId - (desiredId - 7));
+        if (clockwise > 7) clockwise -= 8;
+        return clockwise;
+    }
+
+    public static int getCounterClockwiseSteps(int currentId, int desiredId) {
+        int counterClockwise;
+        if (desiredId < currentId) {
+            counterClockwise = abs((currentId + desiredId) - 8);
+        } else {
+            counterClockwise = abs(desiredId - currentId);
+        }
+        return counterClockwise;
     }
 
 }
