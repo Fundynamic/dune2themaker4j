@@ -106,7 +106,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         float offsetX = offset.getX();
         float offsetY = offset.getY();
 
-        // TODO: moveSpeed has no relation with time!? - need to fix that
         if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
         if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
         if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
