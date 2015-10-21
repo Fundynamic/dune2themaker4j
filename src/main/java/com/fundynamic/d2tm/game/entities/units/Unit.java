@@ -34,8 +34,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private float facing;
     private int desiredFacing;
 
-    private float moveSpeed;
-
     private boolean hasSpawnedExplosions;
 
     public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
@@ -64,9 +62,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
         this.nextTargetToMoveTo = absoluteMapCoordinates;
         this.offset = Vector2D.zero();
-        this.moveSpeed = entityData.moveSpeed;
-        if (moveSpeed < 0.0001f) {
-            throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + this.moveSpeed);
+        if (entityData.moveSpeed < 0.0001f) {
+            throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
     }
 
@@ -81,22 +78,20 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
-    public void update(float deltaInMs) {
+    public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {
-            System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
 
-        this.fadingSelection.update(deltaInMs);
-        if (goingSomewhere()) {
+        this.fadingSelection.update(deltaInSeconds);
+        if (needsToBeSomewhereElse()) {
             if (hasNoNextCellToMoveTo()) {
                 decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
                 if (desiredFacing == (int) facing) {
-                    moveToNextCellPixelByPixel();
+                    moveToNextCellPixelByPixel(deltaInSeconds);
                 } else {
-                    float turnSpeed = 0.1f;
-                    facing = UnitFacings.turnTo(facing, desiredFacing, turnSpeed);
+                    facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
                 }
             }
         }
@@ -107,14 +102,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
-    private void moveToNextCellPixelByPixel() {
+    private void moveToNextCellPixelByPixel(float deltaInSeconds) {
         float offsetX = offset.getX();
         float offsetY = offset.getY();
 
-        if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= moveSpeed;
-        if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += moveSpeed;
-        if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= moveSpeed;
-        if (nextTargetToMoveTo.getYAsInt() > absoluteCoordinates.getYAsInt()) offsetY += moveSpeed;
+        // TODO: moveSpeed has no relation with time!? - need to fix that
+        if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() > absoluteCoordinates.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
@@ -175,7 +171,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         map.revealShroudFor(absoluteCoordinates, getSight(), player);
     }
 
-    private boolean goingSomewhere() {
+    private boolean needsToBeSomewhereElse() {
         return !this.target.equals(absoluteCoordinates);
     }
 

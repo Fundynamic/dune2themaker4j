@@ -50,7 +50,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public void update(float deltaInSeconds) {
         if (target != absoluteCoordinates) {
-            float timeCorrectedSpeed = entityData.moveSpeed * deltaInSeconds;
+            float timeCorrectedSpeed = entityData.getRelativeMoveSpeed(deltaInSeconds);
             Vector2D direction = target.min(absoluteCoordinates);
             Vector2D normalised = direction.normalise();
 

@@ -177,7 +177,8 @@ public abstract class AbstractD2TMTest {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
         EntityData entityData = new EntityData(32, 32, 2);
-        entityData.moveSpeed = 1.0f; // 1 pixel per frame
+        entityData.moveSpeed = 1; // 1 pixel per second
+        entityData.turnSpeed = 1; // 1 facing per second
         entityData.hitPoints = hitPoints;
         Unit unit = new Unit(
                 map,

@@ -95,7 +95,10 @@ public class UnitTest extends AbstractD2TMTest {
 
         assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
-        // update 32 'ticks'
+        // for facing
+        unit.update(1);
+
+        // 32 seconds
         for (int tick = 0; tick < 32; tick++) {
             unit.update(1);
         }
@@ -120,7 +123,14 @@ public class UnitTest extends AbstractD2TMTest {
 
         assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
-        // update 32 'ticks'
+        // for facing, coming from DOWN to LEFT_UP requires a minimum of 4 steps
+        unit.update(1); // first decide which cell
+        unit.update(1); // then start turning
+        unit.update(1); // until
+        unit.update(1); // we're
+        unit.update(1); // ready to move...
+
+        // and move 32 steps (remember, a unit in a test has a moveSpeed of 1 pixel per 1 second)
         for (int tick = 0; tick < 32; tick++) {
             unit.update(1);
         }

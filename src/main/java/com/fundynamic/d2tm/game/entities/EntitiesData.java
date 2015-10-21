@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class EntitiesData {
 
     public static final String UNKNOWN = "UNKNOWN";
+
     // units
     public static String TRIKE = "TRIKE";
     public static String QUAD = "QUAD";
@@ -74,9 +75,10 @@ public class EntitiesData {
         }
     }
 
-    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
+    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
 
+        entity.turnSpeed = turnSpeed;
         if (!idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
                 throw new IllegalArgumentException("unit " + id + " [weapon] refers to non-existing [WEAPONS/" + weaponId + "]");

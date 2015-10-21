@@ -10,6 +10,9 @@ import java.io.InputStream;
 
 import static com.fundynamic.d2tm.game.entities.EntitiesData.UNKNOWN;
 
+/**
+ * Reads the 'rules.ini' file and extracts an EntitiesData data structure.
+ */
 public class EntitiesDataReader {
 
     public EntitiesData fromRulesIni() {
@@ -76,6 +79,7 @@ public class EntitiesDataReader {
                     struct.get("height", Integer.class, 1),
                     struct.get("sight", Integer.class, 1),
                     struct.get("movespeed", Float.class, 0f),
+                    struct.get("turnspeed", Float.class, 0f),
                     struct.get("hitpoints", Integer.class, 0),
                     struct.get("weapon", String.class, UNKNOWN),
                     struct.get("explosion", String.class));
