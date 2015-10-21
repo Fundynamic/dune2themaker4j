@@ -98,11 +98,17 @@ public enum UnitFacings {
 
     // TODO: this looks very similar to the Projectile determine facing logic, move to somewhere else!?
     public static UnitFacings getFacing(Vector2D from, Vector2D to) {
-        double angle = from.angleTo(to);
         int facings = 8; // 8 facings in total for a unit
-        float chop = 360F / facings;
+        return byId(calculateFacingSpriteIndex(from, to, facings));
+    }
+
+    public static int calculateFacingSpriteIndex(Vector2D from, Vector2D to, int facings) {
+        return calculateFacingSpriteIndex(from, to, facings, 360F / facings);
+    }
+
+    public static int calculateFacingSpriteIndex(Vector2D from, Vector2D to, int facings, float chop) {
+        double angle = from.angleTo(to);
         angle += (chop / 2);
-        int facing = (int) (angle / chop) % facings;
-        return byId(facing);
+        return (int) (angle / chop) % facings;
     }
 }
