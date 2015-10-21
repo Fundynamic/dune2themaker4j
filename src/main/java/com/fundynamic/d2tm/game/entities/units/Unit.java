@@ -31,7 +31,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
-    private int facing;
+    private float facing;
+    private int desiredFacing;
+
     private float moveSpeed;
 
     private boolean hasSpawnedExplosions;
@@ -56,6 +58,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
+        this.desiredFacing = (int) facing;
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = absoluteMapCoordinates;
@@ -89,9 +92,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             if (hasNoNextCellToMoveTo()) {
                 decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
-                // TODO: "make it turn to facing"
-                facing = determineFacingFor(nextTargetToMoveTo).getValue();
-                moveToNextCellPixelByPixel();
+                if (desiredFacing == (int) facing) {
+                    moveToNextCellPixelByPixel();
+                } else {
+                    float turnSpeed = 0.1f;
+                    facing = UnitFacings.turnTo(facing, desiredFacing, turnSpeed);
+                }
             }
         }
 
@@ -149,6 +155,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+            this.desiredFacing = determineFacingFor(nextTargetToMoveTo).getValue();
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
         }
     }
@@ -173,7 +180,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite(facing, 0);
+        return spriteSheet.getSprite((int) facing, 0);
     }
 
     @Override
@@ -212,7 +219,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-       return UnitFacings.determine(absoluteCoordinates, coordinatesToFaceTo);
+       return UnitFacings.getFacing(absoluteCoordinates, coordinatesToFaceTo);
     }
 
     @Override

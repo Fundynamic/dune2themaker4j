@@ -58,26 +58,26 @@ public enum UnitFacings {
         return UnitFacings.RIGHT;
     }
 
-    public static UnitFacings nextFacing(UnitFacings current, UnitFacings desired) {
-        int currentId = current.getValue();
-        int desiredId = desired.getValue();
-
-        int counterClockwise = getCounterClockwiseSteps(currentId, desiredId);
-        int clockwise = getClockwiseSteps(currentId, desiredId);
-
+    public static int nextFacing(int current, int desired) {
         // Decide what the nextId (facing) should be
-        int newId = currentId;
-        if (counterClockwise < clockwise) {
-            newId++; // go counter-clockwise, which means go 'right' on the sprite
-        } else {
-            newId--; // go clock-wise which means go 'left' on the sprite
-        }
+        int newId = current + facingDirection(current, desired);
 
         // make sure we stay within range
         if (newId < 0) newId = 7;
         if (newId > 7) newId = 0;
 
-        return byId(newId);
+        return newId;
+    }
+
+    public static int facingDirection(int current, int desired) {
+        int counterClockwise = getCounterClockwiseSteps(current, desired);
+        int clockwise = getClockwiseSteps(current, desired);
+
+        // Decide what the nextId (facing) should be
+        if (counterClockwise < clockwise) {
+            return 1; // go counter-clockwise, which means go 'right' on the sprite
+        }
+        return -1; // go clock-wise which means go 'left' on the sprite
     }
 
     public static int getClockwiseSteps(int currentId, int desiredId) {
@@ -110,5 +110,12 @@ public enum UnitFacings {
         double angle = from.angleTo(to);
         angle += (chop / 2);
         return (int) (angle / chop) % facings;
+    }
+
+    public static float turnTo(float facing, int desiredFacing, float turnSpeed) {
+        float newFacing = facing + (facingDirection((int) facing, desiredFacing) * turnSpeed);
+        if (newFacing < 0) newFacing = 7;
+        if (newFacing > 7) newFacing = 0;
+        return newFacing;
     }
 }

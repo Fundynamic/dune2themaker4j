@@ -70,16 +70,16 @@ public class UnitFacingsTest {
 
     @Test
     public void determineNextFacingFromCurrentToDesired() {
-        assertThat(nextFacing(UP, RIGHT), is(RIGHT_UP));
-        assertThat(nextFacing(UP, RIGHT_DOWN), is(RIGHT_UP));
-        assertThat(nextFacing(UP, LEFT), is(LEFT_UP));
-        assertThat(nextFacing(RIGHT_DOWN, LEFT_UP), is(RIGHT));
+        assertThat(nextFacing(UP.getValue(), RIGHT.getValue()), is(RIGHT_UP.getValue()));
+        assertThat(nextFacing(UP.getValue(), RIGHT_DOWN.getValue()), is(RIGHT_UP.getValue()));
+        assertThat(nextFacing(UP.getValue(), LEFT.getValue()), is(LEFT_UP.getValue()));
+        assertThat(nextFacing(RIGHT_DOWN.getValue(), LEFT_UP.getValue()), is(RIGHT.getValue()));
 
         // these force wrapping around on facing indexes, ie RIGHT to RIGHT_DOWN:
-        assertThat(nextFacing(RIGHT, DOWN), is(RIGHT_DOWN));
-        assertThat(nextFacing(RIGHT_DOWN, RIGHT_UP), is(RIGHT));
+        assertThat(nextFacing(RIGHT.getValue(), DOWN.getValue()), is(RIGHT_DOWN.getValue()));
+        assertThat(nextFacing(RIGHT_DOWN.getValue(), RIGHT_UP.getValue()), is(RIGHT.getValue()));
 
-        assertThat(nextFacing(UP, LEFT), is(LEFT_UP));
+        assertThat(nextFacing(UP.getValue(), LEFT.getValue()), is(LEFT_UP.getValue()));
     }
 
     ////////////////////////////////////////////////
