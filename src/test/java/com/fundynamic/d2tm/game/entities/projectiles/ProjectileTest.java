@@ -55,7 +55,7 @@ public class ProjectileTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        projectile = makeProjectile(Vector2D.create(32, 32));
+        projectile = makeProjectile(create(32, 32));
     }
 
     @Test
@@ -166,7 +166,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         // movespeed is per second, so we emulate that we want to travel a distance per 2 seconds (ie, 2 update cycles
         // with a delta of 1 second
         int seconds = 2;
-        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
         projectile.moveTo(projectile.getAbsoluteCoordinates().add(distance));
 
         projectile.update(1);
@@ -190,7 +190,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         EntityData entityData = projectile.getEntityData();
 
         int seconds = 1;
-        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
         Vector2D target = projectile.getAbsoluteCoordinates().add(distance);
         projectile.moveTo(target);
 
@@ -209,7 +209,7 @@ public class ProjectileTest extends AbstractD2TMTest {
 
     @Test
     public void projectileCannotTakeDamage() {
-        Projectile projectile = makeProjectile(Vector2D.create(32, 32));
+        Projectile projectile = makeProjectile(create(32, 32));
         int hitPoints = projectile.getHitPoints();
         projectile.takeDamage(100);
 
