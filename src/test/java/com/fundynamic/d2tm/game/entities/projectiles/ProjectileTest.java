@@ -175,7 +175,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         projectile.update(1);
         assertThat(projectile.isDestroyed(), is(false)); // it is very close, or at target, next update will 'destroy' it
 
-        projectile.update(1); // destroys projectile, spawns explosion if given
+        projectile.update(1); // destroys projectile, spawns explosion
         assertThat(projectile.isDestroyed(), is(true));
 
         // check that an explosion is created (assuming it is not UNKNOWN, large rocket should not have that)
