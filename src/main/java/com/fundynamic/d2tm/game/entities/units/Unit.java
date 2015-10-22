@@ -85,31 +85,50 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return;
         }
 
-        if (entityToAttack != null) {
-            this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
-            if (((Destructible) entityToAttack).isDestroyed()) {
-                entityToAttack = null;
-            } else {
-                if (desiredFacing == (int) facing) {
-                    if (entityData.hasWeaponId()) {
-                        float attackRate = 2;
-                        attackTimer += attackRate * deltaInSeconds;
-                        while(attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
-                            projectile.moveTo(entityToAttack.getRandomPositionWithin());
-                            attackTimer -= 1.0F;
-                        }
-                    }
+        // when moving, do not consider attacking
+        if (!needsToBeSomewhereElse() && entityToAttack != null) {
+            float attackRange = 8f * Game.TILE_SIZE;
+            // ok, we don't need to move, so lets see if we are in range
+            if (absoluteCoordinates.distance(entityToAttack.getAbsoluteCoordinates()) < attackRange) {
+                // in range!!
+                this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
+                if (((Destructible) entityToAttack).isDestroyed()) {
+                    // target is destroyed, so stop attacking...
+                    entityToAttack = null;
                 } else {
-                    facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                    // target is not yet destroyed
+
+                    // face target first
+                    if (desiredFacing == (int) facing) {
+
+                        // weird check here, but we should have a weapon before we can fire...
+                        if (entityData.hasWeaponId()) {
+
+                            // depending on firerate
+                            float attackRate = 2;
+                            attackTimer += attackRate * deltaInSeconds;
+
+                            // fire projectiles! - we use this while loop so that in case if insane high number of attack
+                            // rates we can keep up with slow FPS
+                            while(attackTimer > 1.0F) {
+                                Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
+                                projectile.moveTo(entityToAttack.getRandomPositionWithin());
+                                attackTimer -= 1.0F;
+                            }
+                        }
+                    } else {
+                        facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                    }
                 }
+            } else {
+                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getAbsoluteCoordinates());
             }
         }
 
         this.fadingSelection.update(deltaInSeconds);
         if (needsToBeSomewhereElse()) {
             if (hasNoNextCellToMoveTo()) {
-                decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
+                decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(target);
             } else {
                 if (desiredFacing == (int) facing) {
                     moveToNextCellPixelByPixel(deltaInSeconds);
@@ -159,7 +178,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         offset = Vector2D.create(offsetX, offsetY);
     }
 
-    private void decideWhatCellToMoveToNextOrStopMovingWhenNotPossible() {
+    private Vector2D decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
         int nextXCoordinate = absoluteCoordinates.getXAsInt();
         int nextYCoordinate = absoluteCoordinates.getYAsInt();
         if (target.getXAsInt() < absoluteCoordinates.getXAsInt()) nextXCoordinate -= TILE_SIZE;
@@ -175,7 +194,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
             this.desiredFacing = determineFacingFor(nextTargetToMoveTo).getValue();
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
+            return intendedMapCoordinatesToMoveTo;
         }
+        return absoluteCoordinates;
     }
 
     private boolean hasNoNextCellToMoveTo() {
