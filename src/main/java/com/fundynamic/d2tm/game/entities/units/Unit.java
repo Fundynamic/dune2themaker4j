@@ -284,6 +284,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
 
         entityToAttack = entity;
+        if (offset.equals(Vector2D.zero())) {
+            target = absoluteCoordinates;
+        } else {
+            target = nextTargetToMoveTo;
+        }
     }
 
     public Vector2D getOffset() {
