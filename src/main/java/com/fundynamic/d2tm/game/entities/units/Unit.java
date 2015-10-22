@@ -92,12 +92,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             } else {
                 if (desiredFacing == (int) facing) {
                     if (entityData.hasWeaponId()) {
-                        float attackRate = 1;
+                        float attackRate = 2;
                         attackTimer += attackRate * deltaInSeconds;
-                        if (attackTimer > 1) {
-                            attackTimer = 0F;
-                            Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates.add(getHalfSize()), EntityType.PROJECTILE, entityData.weaponId, player);
+                        while(attackTimer > 1.0F) {
+                            Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
+                            attackTimer -= 1.0F;
                         }
                     }
                 } else {

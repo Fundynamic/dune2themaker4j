@@ -229,10 +229,6 @@ public class EntityRepository {
         );
     }
 
-    public void removeAllEntityData() {
-        entitiesData.clear();
-    }
-
     public EntityData getEntityData(EntityType entityType, String id) {
         return entitiesData.getEntityData(entityType, id);
     }
@@ -245,7 +241,7 @@ public class EntityRepository {
         return lastCreatedEntity;
     }
 
-    public Entity placeProjectile(Vector2D absoluteCoordinates, String id, Player player) {
-        return placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, id, player);
+    public Projectile placeProjectile(Vector2D absoluteCoordinates, String id, Player player) {
+        return (Projectile) placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, id, player);
     }
 }
