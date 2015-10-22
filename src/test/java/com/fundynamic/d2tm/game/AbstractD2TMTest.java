@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
@@ -178,6 +179,13 @@ public abstract class AbstractD2TMTest {
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
         return (Unit) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.UNIT, "QUAD", player);
     }
+
+    // PROJECTILE
+    ////////////////////////////////////////////////////////////////////////////////
+    public Projectile makeProjectile(Vector2D absoluteCoordinates) {
+        return (Projectile) entityRepository.placeProjectile(absoluteCoordinates, "LARGE_ROCKET", player);
+    }
+
 
     public EntityRepository getTestableEntityRepository() {
         return entityRepository;

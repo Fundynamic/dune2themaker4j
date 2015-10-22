@@ -244,4 +244,8 @@ public class EntityRepository {
     public Entity getLastCreatedEntity() {
         return lastCreatedEntity;
     }
+
+    public Entity placeProjectile(Vector2D absoluteCoordinates, String id, Player player) {
+        return placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, id, player);
+    }
 }
