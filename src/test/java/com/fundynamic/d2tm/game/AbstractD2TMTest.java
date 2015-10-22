@@ -159,44 +159,24 @@ public abstract class AbstractD2TMTest {
     // UNIT
     ////////////////////////////////////////////////////////////////////////////////
     public Unit makeUnit(UnitFacings facing, Vector2D unitAbsoluteMapCoordinates) {
-        return makeUnit(facing, unitAbsoluteMapCoordinates, Vector2D.zero(), 100);
+        return makeUnit(facing, unitAbsoluteMapCoordinates, Vector2D.zero());
     }
 
-    public Unit makeUnit(UnitFacings facing, Vector2D unitAbsoluteMapCoordinates, Vector2D offset, int hitPoints) {
-        Unit unit = makeUnit(player, hitPoints, unitAbsoluteMapCoordinates);
+    public Unit makeUnit(UnitFacings facing, Vector2D unitAbsoluteMapCoordinates, Vector2D offset) {
+        Unit unit = makeUnit(player, unitAbsoluteMapCoordinates);
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
     }
 
-    public Unit makeUnit(Player player, int hitPoints) {
-        return makeUnit(player, hitPoints, Vector2D.zero());
+    public Unit makeUnit(Player player) {
+        return makeUnit(player, Vector2D.zero());
     }
 
-    public Unit makeUnit(Player player, int hitPoints, Vector2D absoluteMapCoordinates) {
+    public Unit makeUnit(Player player, Vector2D absoluteMapCoordinates) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
-        EntityData entityData = new EntityData(32, 32, 2);
-        entityData.moveSpeed = 1; // 1 pixel per second
-        entityData.turnSpeed = 1; // 1 facing per second
-        entityData.hitPoints = hitPoints;
-        Unit unit = new Unit(
-                map,
-                absoluteMapCoordinates,
-                mock(SpriteSheet.class),
-                player,
-                entityData,
-                entityRepository) {
-            @Override
-            public boolean isDestroyed() {
-                // we do this so that we do not have to deal with spawning explosions (which is done in the
-                // update method of the 'original' unit.)
-                return super.hitPointBasedDestructibility.hasDied();
-            }
-        };
-        entityRepository.addEntityToList(unit);
-        map.placeUnit(unit);
-        return unit;
+        return (Unit) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.UNIT, "QUAD", player);
     }
 
     public EntityRepository getTestableEntityRepository() {
@@ -207,7 +187,12 @@ public abstract class AbstractD2TMTest {
         Image image = mock(Image.class);
         Recolorer recolorer = mock(Recolorer.class);
         when(recolorer.recolorToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
-        return new EntityRepository(map, recolorer, entitiesData);
+        return new EntityRepository(map, recolorer, entitiesData) {
+            @Override
+            public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
+                return mock(SpriteSheet.class);
+            }
+        };
     }
 
 }

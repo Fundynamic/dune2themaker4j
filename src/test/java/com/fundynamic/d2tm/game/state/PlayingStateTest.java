@@ -78,14 +78,15 @@ public class PlayingStateTest extends AbstractD2TMTest {
     @Test
     public void updateRemovesDestroyedEntities() throws SlickException {
         StateBasedGame game = mock(StateBasedGame.class);
-        Unit unit = makeUnit(player, 100);
+        Unit unit = makeUnit(player);
         int originalCount = entityRepository.getEntitiesCount();
 
         // keep unit alive
         playingState.update(gameContainer, game, 10);
         assertThat(entityRepository.getEntitiesCount(), is(originalCount));
 
-        unit.takeDamage(100); // takes damage, so it gets destroyed
+        unit.takeDamage(unit.getHitPoints()); // takes damage, so it gets destroyed
+        unit.update(1);       // required to update internal state
         assertThat(unit.isDestroyed(), is(true));
 
         playingState.update(gameContainer, game, 10);

@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class UnitFacingsTest {
 
-    Vector2D unitAbsoluteMapCoordinates = create(32, 32);
+    private Vector2D unitAbsoluteMapCoordinates = create(32, 32);
 
     //////////////////////////////////
     // Determine facing from A to B

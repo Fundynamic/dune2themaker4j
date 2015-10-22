@@ -2,6 +2,11 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +16,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -45,7 +53,7 @@ public class UnitTest extends AbstractD2TMTest {
         int offsetY = 6;
         Vector2D offset = Vector2D.create(offsetX, offsetY);
 
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, offset, 100);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, offset);
 
         // TODO: Resolve this quirky thing, because we pass here the coordinates to draw
         // but isn't that basically the unit coordinates * tile size!?
@@ -73,16 +81,20 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void deadUnitUpdateCycle() {
-        FadingSelection fadingSelection = mock(FadingSelection.class);
-        int hitPoints = 100;
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates, Vector2D.zero(), hitPoints);
-        unit.setFadingSelection(fadingSelection);
-
-        unit.takeDamage(hitPoints);
+    public void whenUnitDiesItSpawnsAnExplosion() {
+        Unit unit = makeUnit(player);
+        unit.takeDamage(unit.getHitPoints());
 
         unit.update(1);
 
+        Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
+        assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PARTICLE));
+        assertThat(lastCreatedEntity.getEntityData().key, is(unit.getEntityData().getExplosionIdKey()));
+
+        // once dead, we don't expect any interactions
+        FadingSelection fadingSelection = mock(FadingSelection.class);
+        unit.setFadingSelection(fadingSelection);
+        unit.update(1);
         verifyZeroInteractions(fadingSelection);
     }
 
@@ -95,20 +107,11 @@ public class UnitTest extends AbstractD2TMTest {
 
         assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
-        // for facing
-        unit.update(1);
+        unit.update(0.5F); // decide next cell
+        unit.update(0.5F); // start turning
 
-        // 32 seconds
-        for (int tick = 0; tick < 32; tick++) {
-            unit.update(1);
-        }
-
-        // the unit is about to fully move onto new cell
-        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
-        assertThat(unit.getOffset(), is(Vector2D.create(31, 31)));
-
-        // one more time
-        unit.update(1);
+        // a QUAD moves 2 squares for 1 second (see rules.ini)
+        unit.update(0.5F);
 
         assertThat(unit.getAbsoluteCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
@@ -116,36 +119,48 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
+        Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
 
         Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
         unit.moveTo(mapCoordinateToMoveTo); // move to left-up
 
         assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
 
-        // for facing, coming from DOWN to LEFT_UP requires a minimum of 4 steps
-        unit.update(1); // first decide which cell
-        unit.update(1); // then start turning
-        unit.update(1); // until
-        unit.update(1); // we're
-        unit.update(1); // ready to move...
+        // for facing, coming from UP to LEFT_UP requires a 1 step
+        unit.update(1); // first decide which movecell, etc
 
-        // and move 32 steps (remember, a unit in a test has a moveSpeed of 1 pixel per 1 second)
-        for (int tick = 0; tick < 32; tick++) {
-            unit.update(1);
-        }
+        // we take 0.5F because turnSpeed is 2 'turns' per second. So half a second is 1 facing per update
+        unit.update(0.5F); // turn towards
 
-        // the unit is about to move, so do not expect it has been moved yet
-        assertThat(unit.getAbsoluteCoordinates(), is(unitAbsoluteMapCoordinates));
-        assertThat(unit.getOffset(), is(Vector2D.create(-31, -31)));
-
-        // one more time
-        unit.update(1);
+        // a QUAD moves 2 squares for 1 second (see rules.ini)
+        unit.update(0.5F);
 
         assertThat(unit.getAbsoluteCoordinates(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 
+    @Test
+    public void selectedUnitPutsFadingSelectionAndHealthBarOnRenderQueue() {
+        Unit unit = makeUnit(player, Vector2D.create(48, 48));
+        unit.select();
+
+        Vector2D viewportVec = Vector2D.create(32, 32);
+        RenderQueue renderQueue = new RenderQueue(viewportVec);
+        unit.enrichRenderQueue(renderQueue);
+
+        List<RenderQueue.ThingToRender> thingsToRender = renderQueue.getThingsToRender(RenderQueue.ENTITY_GUI_LAYER);
+        assertThat(thingsToRender.size(), is(2));
+
+        RenderQueue.ThingToRender first = thingsToRender.get(0);
+        assertThat(first.renderable, is(instanceOf(HitPointBasedDestructibility.class)));
+        assertThat(first.x, is(16)); // unitX - viewportVecX
+        assertThat(first.y, is(16)); // unitY - viewportVecY
+
+        RenderQueue.ThingToRender second = thingsToRender.get(1);
+        assertThat(second.renderable, is(instanceOf(FadingSelection.class)));
+        assertThat(second.x, is(16)); // unitX - viewportVecX
+        assertThat(second.y, is(16)); // unitY - viewportVecY
+    }
 
     public static SpriteSheet makeSpriteSheet() {
         SpriteSheet spriteSheet = mock(SpriteSheet.class);
