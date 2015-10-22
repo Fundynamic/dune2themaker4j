@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.projectiles;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
@@ -10,7 +9,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.math.Vector2D.create;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -57,7 +55,7 @@ public class ProjectileTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        projectile = makeProjectileWithOnlyEntityData();
+        projectile = makeProjectile(Vector2D.create(32, 32));
     }
 
     @Test
@@ -159,20 +157,11 @@ public class ProjectileTest extends AbstractD2TMTest {
         assertThat(projectile.getFacing(from, to), is(expectedFacing));
     }
 
-    public Projectile makeProjectileWithOnlyEntityData() {
-        // Given a Projectile with 16 facings, see LargeBullet.png
-        EntityData entityData = new EntityData();
-        entityData.setFacingsAndCalculateChops(16);
-        return new Projectile(null, null, null, entityData, null);
-    }
-
-
     ///////////////////////////////////////
     // projectile movement
 
     @Test
     public void movesToTargetAndExplodes() {
-        Projectile projectile = (Projectile) entityRepository.placeOnMap(Vector2D.create(32, 32), EntityType.PROJECTILE, "LARGE_ROCKET", player);
         EntityData entityData = projectile.getEntityData();
         // movespeed is per second, so we emulate that we want to travel a distance per 2 seconds (ie, 2 update cycles
         // with a delta of 1 second
@@ -198,9 +187,6 @@ public class ProjectileTest extends AbstractD2TMTest {
     // note: yes this also means dealing damage to units owned by same player.
     @Test
     public void movesToTargetAndThenDealsDamageToEntity() {
-        Vector2D coordinate = Vector2D.create(32, 32);
-        Projectile projectile = (Projectile) entityRepository.placeOnMap(coordinate, EntityType.PROJECTILE, "LARGE_ROCKET", player);
-
         EntityData entityData = projectile.getEntityData();
 
         int seconds = 1;
@@ -219,5 +205,15 @@ public class ProjectileTest extends AbstractD2TMTest {
 
         // damage should be dealt, how much damage is not relevant here
         assertThat(unit.getHitPoints(), is(lessThan(unit.getEntityData().hitPoints)));
+    }
+
+    @Test
+    public void projectileCannotTakeDamage() {
+        Projectile projectile = makeProjectile(Vector2D.create(32, 32));
+        int hitPoints = projectile.getHitPoints();
+        projectile.takeDamage(100);
+
+        // damage does nothing
+        assertThat(projectile.getHitPoints(), is(hitPoints));
     }
 }

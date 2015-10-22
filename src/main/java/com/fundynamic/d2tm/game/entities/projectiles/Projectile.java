@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities.projectiles;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -38,18 +39,10 @@ public class Projectile extends Entity implements Moveable, Destructible {
         return spriteSheet.getSprite(getFacing(absoluteCoordinates, target), 0);
     }
 
-    /**
-     * Calculates facing index.
-     *
-     * @return
-     */
     public int getFacing(Vector2D from, Vector2D to) {
         int facing = 0;
         if (entityData.hasFacings() && !from.equals(to)) {
-            double angle = from.angleTo(to);
-            float chop = entityData.getChop();
-            angle += (chop / 2);
-            facing = (int) (angle / chop) % entityData.getFacings();
+            facing = UnitFacings.calculateFacingSpriteIndex(from, to, entityData.getFacings(), entityData.getChop());
         }
         return facing;
     }
@@ -57,7 +50,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     @Override
     public void update(float deltaInSeconds) {
         if (target != absoluteCoordinates) {
-            float timeCorrectedSpeed = entityData.moveSpeed * deltaInSeconds;
+            float timeCorrectedSpeed = entityData.getRelativeMoveSpeed(deltaInSeconds);
             Vector2D direction = target.min(absoluteCoordinates);
             Vector2D normalised = direction.normalise();
 

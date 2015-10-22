@@ -107,40 +107,37 @@ public class EntityRepository {
         System.out.println("Placing " + entityData + " on map at " + absoluteMapCoordinates + " for " + player);
         Entity createdEntity;
         Image originalImage = entityData.image;
-        Image recoloredImage = originalImage;
-        SpriteSheet spriteSheet;
 
-        switch (entityData.type) {
-            case STRUCTURE:
-                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
-                addEntityToList(map.placeStructure((Structure) createdEntity));
-                break;
-            case UNIT:
-                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
-                addEntityToList(map.placeUnit((Unit) createdEntity));
-                break;
-            case PROJECTILE:
-                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
-                addEntityToList(map.placeProjectile((Projectile) createdEntity));
-                break;
-            case PARTICLE:
-                spriteSheet = new SpriteSheet(recoloredImage, entityData.width, entityData.height);
-                createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
-                addEntityToList(createdEntity);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown type " + entityData.type);
+        if (EntityType.STRUCTURE.equals(entityData.type)) {
+            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
+            return addEntityToList(map.placeStructure((Structure) createdEntity));
+        } else if (EntityType.UNIT.equals(entityData.type)) {
+            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
+            createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+            return addEntityToList(map.placeUnit((Unit) createdEntity));
+        } else if (EntityType.PROJECTILE.equals(entityData.type)) {
+            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
+            createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
+            return addEntityToList(map.placeProjectile((Projectile) createdEntity));
+        }  else if (EntityType.PARTICLE.equals(entityData.type)) {
+            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
+            createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
+            return addEntityToList(createdEntity);
+        } else {
+            throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
-        return createdEntity;
     }
 
-    public void addEntityToList(Entity entity) {
+    public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
+        return new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+    }
+
+    public Entity addEntityToList(Entity entity) {
         lastCreatedEntity = entity;
         entitiesSet.add(entity);
+        return entity;
     }
 
     public void removeEntities(Predicate predicate) {
@@ -246,5 +243,9 @@ public class EntityRepository {
 
     public Entity getLastCreatedEntity() {
         return lastCreatedEntity;
+    }
+
+    public Entity placeProjectile(Vector2D absoluteCoordinates, String id, Player player) {
+        return placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, id, player);
     }
 }

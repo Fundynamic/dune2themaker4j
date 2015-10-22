@@ -39,10 +39,10 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(makeUnit(player, 100, Vector2D.create(320, 320)));
-        entitiesSet.add(makeUnit(player, 200, Vector2D.create(384, 320)));
-        entitiesSet.add(makeUnit(player, 300, Vector2D.create(320, 384)));
-        entitiesSet.add(makeUnit(player, 200, Vector2D.create(960, 960)));
+        entitiesSet.add(makeUnit(player, Vector2D.create(320, 320)));
+        entitiesSet.add(makeUnit(player, Vector2D.create(384, 320)));
+        entitiesSet.add(makeUnit(player, Vector2D.create(320, 384)));
+        entitiesSet.add(makeUnit(player, Vector2D.create(960, 960)));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
@@ -52,9 +52,9 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         playerOneStructureCount = 2;
 
         // player two has 3 units and 3 structures
-        entitiesSet.add(makeUnit(playerTwo, 100));
-        entitiesSet.add(makeUnit(playerTwo, 200));
-        entitiesSet.add(makeUnit(playerTwo, 300));
+        entitiesSet.add(makeUnit(playerTwo));
+        entitiesSet.add(makeUnit(playerTwo));
+        entitiesSet.add(makeUnit(playerTwo));
         destroyers += 3;
 
         entitiesSet.add(makeStructure(playerTwo, 200));

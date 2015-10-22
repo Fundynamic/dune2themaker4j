@@ -31,8 +31,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
-    private int facing;
-    private float moveSpeed;
+    private float facing;
+    private int desiredFacing;
 
     private boolean hasSpawnedExplosions;
 
@@ -56,14 +56,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         int possibleFacings = spriteSheet.getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
+        this.desiredFacing = (int) facing;
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = absoluteMapCoordinates;
         this.nextTargetToMoveTo = absoluteMapCoordinates;
         this.offset = Vector2D.zero();
-        this.moveSpeed = entityData.moveSpeed;
-        if (moveSpeed < 0.0001f) {
-            throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + this.moveSpeed);
+        if (entityData.moveSpeed < 0.0001f) {
+            throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
     }
 
@@ -78,20 +78,21 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
-    public void update(float deltaInMs) {
+    public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {
-            System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
 
-        this.fadingSelection.update(deltaInMs);
-        if (goingSomewhere()) {
+        this.fadingSelection.update(deltaInSeconds);
+        if (needsToBeSomewhereElse()) {
             if (hasNoNextCellToMoveTo()) {
                 decideWhatCellToMoveToNextOrStopMovingWhenNotPossible();
             } else {
-                // TODO: "make it turn to facing"
-                facing = determineFacingFor(nextTargetToMoveTo).getValue();
-                moveToNextCellPixelByPixel();
+                if (desiredFacing == (int) facing) {
+                    moveToNextCellPixelByPixel(deltaInSeconds);
+                } else {
+                    facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                }
             }
         }
 
@@ -101,14 +102,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
-    private void moveToNextCellPixelByPixel() {
+    private void moveToNextCellPixelByPixel(float deltaInSeconds) {
         float offsetX = offset.getX();
         float offsetY = offset.getY();
 
-        if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= moveSpeed;
-        if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += moveSpeed;
-        if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= moveSpeed;
-        if (nextTargetToMoveTo.getYAsInt() > absoluteCoordinates.getYAsInt()) offsetY += moveSpeed;
+        if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() > absoluteCoordinates.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
@@ -149,6 +150,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+            this.desiredFacing = determineFacingFor(nextTargetToMoveTo).getValue();
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
         }
     }
@@ -168,12 +170,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         map.revealShroudFor(absoluteCoordinates, getSight(), player);
     }
 
-    private boolean goingSomewhere() {
+    private boolean needsToBeSomewhereElse() {
         return !this.target.equals(absoluteCoordinates);
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite(facing, 0);
+        return spriteSheet.getSprite((int) facing, 0);
     }
 
     @Override
@@ -212,21 +214,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-        boolean left = coordinatesToFaceTo.getXAsInt() < absoluteCoordinates.getXAsInt();
-        boolean right = coordinatesToFaceTo.getXAsInt() > absoluteCoordinates.getXAsInt();
-        boolean up = coordinatesToFaceTo.getYAsInt() < absoluteCoordinates.getYAsInt();
-        boolean down = coordinatesToFaceTo.getYAsInt() > absoluteCoordinates.getYAsInt();
-
-        if (up && left) return UnitFacings.LEFT_UP;
-        if (up && right) return UnitFacings.RIGHT_UP;
-        if (down && left) return UnitFacings.LEFT_DOWN;
-        if (down && right) return UnitFacings.RIGHT_DOWN;
-        if (up) return UnitFacings.UP;
-        if (down) return UnitFacings.DOWN;
-        if (left) return UnitFacings.LEFT;
-        if (right) return UnitFacings.RIGHT;
-
-        return UnitFacings.byId(facing);
+       return UnitFacings.getFacing(absoluteCoordinates, coordinatesToFaceTo);
     }
 
     @Override

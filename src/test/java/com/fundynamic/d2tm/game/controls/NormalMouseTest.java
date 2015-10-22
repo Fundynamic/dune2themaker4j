@@ -29,7 +29,7 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
         mouse.setHoverCell(cell);
 
         Vector2D coordinatesAsAbsoluteVector2D = cell.getCoordinatesAsAbsoluteVector2D();
-        Unit unit = makeUnit(player, 100, coordinatesAsAbsoluteVector2D);
+        Unit unit = makeUnit(player, coordinatesAsAbsoluteVector2D);
         assertThat(unit.isSelected(), is(false));
 
         // ACT: click left

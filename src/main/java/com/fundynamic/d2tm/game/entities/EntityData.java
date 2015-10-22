@@ -16,7 +16,9 @@ public class EntityData {
 
     public int sight;
 
-    public float moveSpeed;
+    public float moveSpeed; // the speed a unit moves: value is pixels in seconds.
+    public float turnSpeed; // the speed a unit turns: value is facing angles in seconds. < 1 means
+
     public int hitPoints;
 
     private int facings;
@@ -107,5 +109,24 @@ public class EntityData {
 
     public static String constructKey(EntityType entityType, String id) {
         return entityType.toString() + "-" + id;
+    }
+
+    /**
+     * This takes time into account as well. This makes the distance of moveSpeed equivalent to 1 second.
+     *
+     * @param deltaInSeconds
+     * @return
+     */
+    public float getRelativeMoveSpeed(float deltaInSeconds) {
+        return moveSpeed * deltaInSeconds;
+    }
+
+    /**
+     * See @link getRelativeMoveSpeed
+     * @param deltaInSeconds
+     * @return
+     */
+    public float getRelativeTurnSpeed(float deltaInSeconds) {
+        return turnSpeed * deltaInSeconds;
     }
 }

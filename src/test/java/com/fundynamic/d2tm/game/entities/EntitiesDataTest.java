@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class EntitiesDataTest extends AbstractD2TMTest {
 
@@ -24,9 +26,10 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String idOfEntity = "1";
         int sight = 2;
         float moveSpeed = 1.0F;
+        float turnSpeed = 2.0F;
         String weaponId = "UNKNOWN";
         String explosionId = "UNKNOWN";
-        entitiesData.addUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, hitPoints, weaponId, explosionId);
+        entitiesData.addUnit(idOfEntity, "quad.png", widthInPixels, heightInPixels, sight, moveSpeed, turnSpeed, hitPoints, weaponId, explosionId);
 
         EntityData data = entitiesData.getEntityData(EntityType.UNIT, idOfEntity);
 
@@ -34,6 +37,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(widthInPixels, data.width);
         assertEquals(heightInPixels, data.height);
         assertEquals(sight, data.sight);
+        assertThat(moveSpeed, is(data.moveSpeed));
+        assertThat(turnSpeed, is(data.turnSpeed));
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
         assertEquals(weaponId, data.weaponId);
@@ -42,8 +47,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F, 100, "0", "1"); // success!
-        entitiesData.addUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F, 100, "0", "1"); // boom!
+        entitiesData.addUnit(idOfEntity, "quad.png", 32, 32, 2, 1.0F, 1.0F, 100, "0", "1"); // success!
+        entitiesData.addUnit(idOfEntity, "this is irrelevant", 32, 32, 3, 1.0F, 1.0F, 100, "0", "1"); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)
