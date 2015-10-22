@@ -28,11 +28,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // Dependencies
     private final Map map;
 
-
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
     private float facing;
     private int desiredFacing;
+
+    private Entity entityToAttack;
+    private float attackTimer;
 
     private boolean hasSpawnedExplosions;
 
@@ -81,6 +83,27 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {
             return;
+        }
+
+        if (entityToAttack != null) {
+            this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
+            if (((Destructible) entityToAttack).isDestroyed()) {
+                entityToAttack = null;
+            } else {
+                if (desiredFacing == (int) facing) {
+                    if (entityData.hasWeaponId()) {
+                        float attackRate = 1;
+                        attackTimer += attackRate * deltaInSeconds;
+                        if (attackTimer > 1) {
+                            attackTimer = 0F;
+                            Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates.add(getHalfSize()), EntityType.PROJECTILE, entityData.weaponId, player);
+                            projectile.moveTo(entityToAttack.getRandomPositionWithin());
+                        }
+                    }
+                } else {
+                    facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                }
+            }
         }
 
         this.fadingSelection.update(deltaInSeconds);
@@ -239,10 +262,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return;
         }
 
-        if (entityData.hasWeaponId()) {
-            Projectile projectile = (Projectile) entityRepository.placeOnMap(absoluteCoordinates, EntityType.PROJECTILE, entityData.weaponId, player);
-            projectile.moveTo(entity.getRandomPositionWithin());
-        }
+        entityToAttack = entity;
     }
 
     public Vector2D getOffset() {
