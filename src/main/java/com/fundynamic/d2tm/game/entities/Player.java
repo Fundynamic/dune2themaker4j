@@ -55,4 +55,7 @@ public class Player {
                 '}';
     }
 
+    public boolean isCPU() {
+        return "CPU".equalsIgnoreCase(name);
+    }
 }

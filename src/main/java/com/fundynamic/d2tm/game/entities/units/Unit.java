@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
@@ -263,6 +264,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void takeDamage(int hitPoints) {
+        if (player.isCPU()) {
+            // ahh freak out! :-)
+            int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+            int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+            Vector2D target = absoluteCoordinates.add(correctX, correctY);
+            System.out.println("correctX: " + correctX);
+            System.out.println("correctY: " + correctY);
+            moveTo(target);
+        }
         hitPointBasedDestructibility.takeDamage(hitPoints);
     }
 
