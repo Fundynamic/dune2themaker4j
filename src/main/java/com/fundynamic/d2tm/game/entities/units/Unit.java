@@ -213,7 +213,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
     }
 
-    public UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
+    private UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
        return UnitFacings.getFacing(absoluteCoordinates, coordinatesToFaceTo);
     }
 

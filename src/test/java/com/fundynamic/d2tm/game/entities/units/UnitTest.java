@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
@@ -29,23 +27,13 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UnitTest extends AbstractD2TMTest {
 
-    private Unit unit;
-
     private Vector2D unitAbsoluteMapCoordinates;
 
     @Before
     public void setUp() throws SlickException {
         super.setUp();
         unitAbsoluteMapCoordinates = Vector2D.create(10, 10).scale(TILE_SIZE);
-        unit = makeUnit(UnitFacings.RIGHT, unitAbsoluteMapCoordinates);
     }
-
-    @Test
-    public void returnsRightWhenUnableToFigureOutWhereToFaceTo() {
-        assertEquals(UnitFacings.RIGHT, unit.determineFacingFor(unit.getAbsoluteCoordinates()));
-    }
-
-
 
     @Test
     public void rendersUnitOnExpectedCoordinates() {

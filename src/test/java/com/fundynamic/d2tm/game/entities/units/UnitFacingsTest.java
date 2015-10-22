@@ -17,6 +17,11 @@ public class UnitFacingsTest {
     // Determine facing from A to B
 
     @Test
+    public void returnsRightWhenUnableToFigureOutWhereToFaceTo() {
+        assertEquals(UnitFacings.RIGHT, determine(unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates));
+    }
+
+    @Test
     public void determinesFacingRightDown() {
         Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(create(1, 1));
         assertEquals(RIGHT_DOWN, determine(unitAbsoluteMapCoordinates, coordinatesToFaceTo));
