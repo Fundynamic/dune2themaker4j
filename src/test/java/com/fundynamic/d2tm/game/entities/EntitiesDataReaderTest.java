@@ -48,6 +48,8 @@ public class EntitiesDataReaderTest {
         assertThat(quad.hitPoints, is(434));
         assertThat(quad.moveSpeed, is(1.5F));
         assertThat(quad.turnSpeed, is(0.75F));
+        assertThat(quad.attackRate, is(2.3F));
+        assertThat(quad.attackRange, is(96F));
         assertThat(quad.width, is(32));
         assertThat(quad.height, is(32));
         assertThat(quad.sight, is(7));

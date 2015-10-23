@@ -35,7 +35,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private int desiredFacing;
 
     private Entity entityToAttack;
-    private float attackTimer;
+    private float attackTimer; // needed for attackRate
 
     private boolean hasSpawnedExplosions;
 
@@ -88,9 +88,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         // when moving, do not consider attacking
         if (!needsToBeSomewhereElse() && entityToAttack != null) {
-            float attackRange = 8f * Game.TILE_SIZE;
+            float attackRange = entityData.attackRange;
             // ok, we don't need to move, so lets see if we are in range
-            if (absoluteCoordinates.distance(entityToAttack.getAbsoluteCoordinates()) < attackRange) {
+            Vector2D centeredFrom = absoluteCoordinates.add(getHalfSize());
+            Vector2D centeredTo = entityToAttack.getAbsoluteCoordinates().add(entityToAttack.getHalfSize());
+
+            if (centeredFrom.distance(centeredTo) < attackRange) {
                 // in range!!
                 this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
                 if (((Destructible) entityToAttack).isDestroyed()) {
@@ -105,9 +108,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         // weird check here, but we should have a weapon before we can fire...
                         if (entityData.hasWeaponId()) {
 
-                            // depending on firerate
-                            float attackRate = 2;
-                            attackTimer += attackRate * deltaInSeconds;
+                            attackTimer += entityData.getRelativeAttackRate(deltaInSeconds);
 
                             // fire projectiles! - we use this while loop so that in case if insane high number of attack
                             // rates we can keep up with slow FPS
@@ -256,6 +257,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
+        this.entityToAttack = null; // forget about attacking
     }
 
     private UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {

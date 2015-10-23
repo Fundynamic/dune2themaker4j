@@ -75,9 +75,11 @@ public class EntitiesData {
         }
     }
 
-    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, int hitPoints, String weaponId, String explosionId) throws SlickException {
+    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
 
+        entity.attackRate = attackRate;
+        entity.attackRange = attackRange;
         entity.turnSpeed = turnSpeed;
         if (!idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
