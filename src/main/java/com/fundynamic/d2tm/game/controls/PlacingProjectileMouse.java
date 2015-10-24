@@ -57,7 +57,7 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.green);
         graphics.setLineWidth(1.1f);
-        graphics.drawRect(x, y, entityToPlace.width, entityToPlace.height);
+        graphics.drawRect(x, y, entityToPlace.getWidth(), entityToPlace.getHeight());
     }
 
     private void selectRandomlySomethingToPlace() {

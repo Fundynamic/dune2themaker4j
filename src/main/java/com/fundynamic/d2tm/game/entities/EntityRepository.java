@@ -41,8 +41,8 @@ public class EntityRepository {
         return (Unit) placeOnMap(absoluteMapCoordinate, EntityType.UNIT, id, player);
     }
 
-    public void placeStructureOnMap(Vector2D topLeftMapCoordinate, String id, Player player) {
-        placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
+    public Structure placeStructureOnMap(Vector2D topLeftMapCoordinate, String id, Player player) {
+        return (Structure) placeOnMap(topLeftMapCoordinate, EntityType.STRUCTURE, id, player);
     }
 
     /**
@@ -79,14 +79,19 @@ public class EntityRepository {
     public void explodeAt(Vector2D topLeftAbsoluteMapCoordinate, EntityData origin, Player player) {
         if (!origin.hasExplosionId()) return;
         EntityData particle = entitiesData.getParticle(origin.explosionId);
-        placeExplosionCenteredAt(topLeftAbsoluteMapCoordinate, player, origin.width, origin.height, particle);
+        placeExplosionCenteredAt(topLeftAbsoluteMapCoordinate, player, origin.getWidth(), origin.getHeight(), particle);
+    }
+
+    public void placeExplosionWithCenterAt(Vector2D centerCoordinate, Player player, String explosionId) {
+        EntityData particle = entitiesData.getParticle(explosionId);
+
     }
 
     public void placeExplosionCenteredAt(Vector2D topLeftAbsoluteMapCoordinate, Player player, int originWidth, int originHeight, EntityData particle) {
         // this compensates based on it comes from, so the center of the explosion is the same center
         // of the original center.
-        int correctedX = (originWidth - particle.width) / 2;
-        int correctedY = (originHeight - particle.height) / 2;
+        float correctedX = (originWidth - particle.getWidth()) / 2;
+        float correctedY = (originHeight - particle.getHeight()) / 2;
         Vector2D correctedCoordinate = topLeftAbsoluteMapCoordinate.add(correctedX, correctedY);
         placeExplosion(correctedCoordinate, particle, player);
     }
@@ -103,27 +108,26 @@ public class EntityRepository {
         return placeOnMap(topLeftAbsoluteMapCoordinate, entityData, player);
     }
 
-    public Entity placeOnMap(Vector2D absoluteMapCoordinates, EntityData entityData, Player player) {
-        System.out.println("Placing " + entityData + " on map at " + absoluteMapCoordinates + " for " + player);
+    public Entity placeOnMap(Vector2D topLeftAbsCoordinate, EntityData entityData, Player player) {
         Entity createdEntity;
         Image originalImage = entityData.image;
 
-        if (EntityType.STRUCTURE.equals(entityData.type)) {
+        if (entityData.isTypeStructure()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-            createdEntity = new Structure(absoluteMapCoordinates, recoloredImage, player, entityData, this);
+            createdEntity = new Structure(topLeftAbsCoordinate, recoloredImage, player, entityData, this);
             return addEntityToList(map.placeStructure((Structure) createdEntity));
-        } else if (EntityType.UNIT.equals(entityData.type)) {
+        } else if (entityData.isTypeUnit()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
-            createdEntity = new Unit(map, absoluteMapCoordinates, spriteSheet, player, entityData, this);
+            createdEntity = new Unit(map, topLeftAbsCoordinate, spriteSheet, player, entityData, this);
             return addEntityToList(map.placeUnit((Unit) createdEntity));
-        } else if (EntityType.PROJECTILE.equals(entityData.type)) {
+        } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new Projectile(absoluteMapCoordinates, spriteSheet, player, entityData, this);
+            createdEntity = new Projectile(topLeftAbsCoordinate, spriteSheet, player, entityData, this);
             return addEntityToList(map.placeProjectile((Projectile) createdEntity));
-        }  else if (EntityType.PARTICLE.equals(entityData.type)) {
+        }  else if (entityData.isTypeParticle()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new Particle(absoluteMapCoordinates, spriteSheet, entityData, this);
+            createdEntity = new Particle(topLeftAbsCoordinate, spriteSheet, entityData, this);
             return addEntityToList(createdEntity);
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
@@ -131,7 +135,7 @@ public class EntityRepository {
     }
 
     public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
-        return new SpriteSheet(recoloredImage, entityData.width, entityData.height);
+        return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
     }
 
     public Entity addEntityToList(Entity entity) {

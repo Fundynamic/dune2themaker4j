@@ -100,7 +100,7 @@ public class Vector2D {
         return Vector2D.create(added.getX(), added.getY());
     }
 
-    public Vector2D add(int correctX, int correctY) {
+    public Vector2D add(float correctX, float correctY) {
         return Vector2D.create(getX() + correctX, getY() + correctY);
     }
 

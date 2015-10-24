@@ -44,8 +44,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 map,
                 absoluteMapCoordinates,
                 spriteSheet,
-                new FadingSelection(entityData.width, entityData.height),
-                new HitPointBasedDestructibility(entityData.hitPoints, entityData.width),
+                new FadingSelection(entityData.getWidth(), entityData.getHeight()),
+                new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
                 player,
                 entityData,
                 entityRepository
@@ -86,64 +86,91 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return;
         }
 
-        // when moving, do not consider attacking
-        if (!needsToBeSomewhereElse() && entityToAttack != null) {
-            float attackRange = entityData.attackRange;
-            // ok, we don't need to move, so lets see if we are in range
-            Vector2D centeredFrom = absoluteCoordinates.add(getHalfSize());
-            Vector2D centeredTo = entityToAttack.getAbsoluteCoordinates().add(entityToAttack.getHalfSize());
-
-            if (centeredFrom.distance(centeredTo) < attackRange) {
-                // in range!!
-                this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
-                if (((Destructible) entityToAttack).isDestroyed()) {
-                    // target is destroyed, so stop attacking...
-                    entityToAttack = null;
-                } else {
-                    // target is not yet destroyed
-
-                    // face target first
-                    if (desiredFacing == (int) facing) {
-
-                        // weird check here, but we should have a weapon before we can fire...
-                        if (entityData.hasWeaponId()) {
-
-                            attackTimer += entityData.getRelativeAttackRate(deltaInSeconds);
-
-                            // fire projectiles! - we use this while loop so that in case if insane high number of attack
-                            // rates we can keep up with slow FPS
-                            while(attackTimer > 1.0F) {
-                                Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
-                                projectile.moveTo(entityToAttack.getRandomPositionWithin());
-                                attackTimer -= 1.0F;
-                            }
-                        }
-                    } else {
-                        facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
-                    }
-                }
-            } else {
-                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getAbsoluteCoordinates());
-            }
+        if (shouldAttack()) {
+            chaseOrAttack(deltaInSeconds);
         }
 
-        this.fadingSelection.update(deltaInSeconds);
-        if (needsToBeSomewhereElse()) {
-            if (hasNoNextCellToMoveTo()) {
-                decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(target);
+        if (shouldMove()) {
+            moveCloserToTarget(deltaInSeconds);
+        }
+
+        if (shouldExplode()) {
+            explodeAndDie();
+        }
+
+        fadingSelection.update(deltaInSeconds);
+    }
+
+    public boolean shouldMove() {
+        return !this.target.equals(absoluteCoordinates);
+    }
+
+    public boolean shouldAttack() {
+        // we consider attacking when we have stopped moving, and when we have some entity to attack
+        return !shouldMove() && entityToAttack != null;
+    }
+
+    public void moveCloserToTarget(float deltaInSeconds) {
+        if (hasNoNextCellToMoveTo()) {
+            decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(target);
+        } else {
+            if (desiredFacing == (int) facing) {
+                moveToNextCellPixelByPixel(deltaInSeconds);
             } else {
+                facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+            }
+        }
+    }
+
+    public void chaseOrAttack(float deltaInSeconds) {
+        float attackRange = entityData.attackRange;
+        // ok, we don't need to move, so lets see if we are in range
+        if (distance(entityToAttack) < attackRange) {
+            // in range!!
+            this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
+            if (((Destructible) entityToAttack).isDestroyed()) {
+                // target is destroyed, so stop attacking...
+                entityToAttack = null;
+            } else {
+                // target is not yet destroyed
+
+                // face target first
                 if (desiredFacing == (int) facing) {
-                    moveToNextCellPixelByPixel(deltaInSeconds);
+
+                    // weird check here, but we should have a weapon before we can fire...
+                    if (entityData.hasWeaponId()) {
+
+                        attackTimer += entityData.getRelativeAttackRate(deltaInSeconds);
+
+                        // fire projectiles! - we use this while loop so that in case if insane high number of attack
+                        // rates we can keep up with slow FPS
+                        while(attackTimer > 1.0F) {
+                            Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
+                            projectile.moveTo(entityToAttack.getRandomPositionWithin());
+                            attackTimer -= 1.0F;
+                        }
+                    }
                 } else {
                     facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
                 }
             }
+        } else {
+            target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getAbsoluteCoordinates());
         }
+    }
 
-        if (hitPointBasedDestructibility.hasDied()) {
-            hasSpawnedExplosions = true;
-            entityRepository.explodeAtCell(absoluteCoordinates, entityData.explosionId, player);
-        }
+    private boolean shouldExplode() {
+        return hitPointBasedDestructibility.hasDied() && !hasExploded();
+    }
+
+    public boolean hasExploded() {
+        return hasSpawnedExplosions;
+    }
+
+    public void explodeAndDie() {
+        hasSpawnedExplosions = true;
+        entityRepository.explodeAtCell(absoluteCoordinates, entityData.explosionId, player);
+//        entityRepository.explodeAt();
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {
@@ -216,10 +243,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         map.revealShroudFor(absoluteCoordinates, getSight(), player);
     }
 
-    private boolean needsToBeSomewhereElse() {
-        return !this.target.equals(absoluteCoordinates);
-    }
-
     public Image getSprite() {
         return spriteSheet.getSprite((int) facing, 0);
     }
@@ -267,7 +290,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void takeDamage(int hitPoints) {
         if (player.isCPU()) {
-            // ahh freak out! :-)
+            // ahh we're hit!!! lets get outta here!!
             int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
             int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
             Vector2D target = absoluteCoordinates.add(correctX, correctY);

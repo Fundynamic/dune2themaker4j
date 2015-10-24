@@ -1,6 +1,11 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityData {
 
@@ -11,8 +16,10 @@ public class EntityData {
 
     public Image image;
 
-    public int width;   // in pixels
-    public int height;  // in pixels
+    private int width;   // in pixels
+    private int height;  // in pixels
+    private int widthInCells; // in cells, derived from pixels
+    private int heightInCells; // in cells, derived from pixels
 
     public int sight;
 
@@ -38,8 +45,8 @@ public class EntityData {
     }
 
     public EntityData(int width, int height, int sight) {
-        this.width = width;
-        this.height = height;
+        setWidth(width);
+        setHeight(height);
         this.sight = sight;
     }
 
@@ -50,6 +57,32 @@ public class EntityData {
 
     public Image getFirstImage() {
         return image.getSubImage(0, 0, width, height);
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+        widthInCells = (int) Math.ceil(width / Game.TILE_SIZE);
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+        heightInCells = (int) Math.ceil(height / Game.TILE_SIZE);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidthInCells() {
+        return widthInCells;
+    }
+
+    public int getHeightInCells() {
+        return heightInCells;
     }
 
     @Override
@@ -135,5 +168,39 @@ public class EntityData {
 
     public float getRelativeAttackRate(float deltaInSeconds) {
         return attackRate * deltaInSeconds;
+    }
+
+    public boolean isTypeStructure() {
+        return EntityType.STRUCTURE.equals(this.type);
+    }
+
+    public boolean isTypeUnit() {
+        return EntityType.UNIT.equals(this.type);
+    }
+
+    public boolean isTypeParticle() {
+        return EntityType.PARTICLE.equals(this.type);
+    }
+
+    public boolean isTypeProjectile() {
+        return EntityType.PROJECTILE.equals(this.type);
+    }
+
+    /**
+     * Given a topLeftX and topLeftY coordinate, calculate all cells that are being occupied by this
+     * entity and return that as a list of coordinates. These coordinates are top-left coordinates of cells.
+     *
+     * @return
+     */
+    public List<Vector2D> getAllCellsAsVectors(Vector2D topLeftAbsCoordinates) {
+        List<Vector2D> result = new ArrayList<>(widthInCells * heightInCells);
+        for (int x = 0; x < widthInCells; x++) {
+            for (int y = 0; y < heightInCells; y++) {
+                int vecX = topLeftAbsCoordinates.getXAsInt() + x * Game.TILE_SIZE;
+                int vecY = topLeftAbsCoordinates.getYAsInt() + y * Game.TILE_SIZE;
+                result.add(Vector2D.create(vecX, vecY));
+            }
+        }
+        return result;
     }
 }

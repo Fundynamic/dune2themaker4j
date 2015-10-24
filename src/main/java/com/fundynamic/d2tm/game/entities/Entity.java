@@ -1,9 +1,13 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Entity implements Renderable, Updateable {
 
@@ -27,8 +31,32 @@ public abstract class Entity implements Renderable, Updateable {
         }
     }
 
+    /**
+     * Returns the upper-left coordinate of this entity
+     *
+     * @return
+     */
     public Vector2D getAbsoluteCoordinates() {
         return absoluteCoordinates;
+    }
+
+    /**
+     * Returns center of this entity
+     *
+     * @return
+     */
+    public Vector2D getCenteredCoordinates() {
+        return absoluteCoordinates.add(getHalfSize());
+    }
+
+    /**
+     * Returns distance from this entity to other
+     *
+     * @param other
+     * @return
+     */
+    public float distance(Entity other) {
+        return getCenteredCoordinates().distance(other.getCenteredCoordinates());
     }
 
     public int getX() {
@@ -81,11 +109,11 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public Vector2D getRandomPositionWithin() {
-        return Vector2D.random(getX(), getX() + entityData.width, getY(), getY() + entityData.height);
+        return Vector2D.random(getX(), getX() + entityData.getWidth(), getY(), getY() + entityData.getHeight());
     }
 
     public Vector2D getDimensions() {
-        return Vector2D.create(entityData.width, entityData.height);
+        return Vector2D.create(entityData.getWidth(), entityData.getHeight());
     }
 
     @Override
@@ -93,12 +121,8 @@ public abstract class Entity implements Renderable, Updateable {
         // by default do nothing
     }
 
-    public Vector2D getCenteredPosition() {
-        return absoluteCoordinates.add(getHalfSize());
-    }
-
     public Vector2D getHalfSize() {
-        return Vector2D.create(entityData.width / 2, entityData.height / 2);
+        return Vector2D.create(entityData.getWidth() / 2, entityData.getHeight() / 2);
     }
 
     /**
@@ -107,5 +131,17 @@ public abstract class Entity implements Renderable, Updateable {
      */
     public EntityData getEntityData() {
         return this.entityData;
+    }
+
+    public int getWidthInCells() {
+        return entityData.getWidthInCells();
+    }
+
+    public int getHeightInCells() {
+        return entityData.getHeightInCells();
+    }
+
+    public List<Vector2D> getAllCellsAsVectors() {
+        return entityData.getAllCellsAsVectors(absoluteCoordinates);
     }
 }

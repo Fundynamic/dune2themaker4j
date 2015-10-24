@@ -106,8 +106,8 @@ public class EntitiesData {
         }
         EntityData entityData = new EntityData();
         entityData.image = loadImage(pathToImage);
-        entityData.width = widthInPixels;
-        entityData.height = heightInPixels;
+        entityData.setWidth(widthInPixels);
+        entityData.setHeight(heightInPixels);
         entityData.type = entityType;
         entityData.sight = sight;
         entityData.moveSpeed = moveSpeed;

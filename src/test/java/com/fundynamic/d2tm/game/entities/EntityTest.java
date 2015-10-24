@@ -18,8 +18,8 @@ public class EntityTest extends AbstractD2TMTest {
     public void randomPositionWithinDoesNotExceedBoundaries() {
         Vector2D absoluteCoordinates = Vector2D.create(100, 100);
         EntityData entityData = new EntityData();
-        entityData.width = 64;
-        entityData.height = 64;
+        entityData.setWidth(64);
+        entityData.setHeight(64);
         Entity entity = new Entity(absoluteCoordinates, mock(SpriteSheet.class), entityData, player, entityRepository) {
             @Override
             public EntityType getEntityType() {
@@ -43,8 +43,8 @@ public class EntityTest extends AbstractD2TMTest {
             Vector2D randomPositionWithin = entity.getRandomPositionWithin();
             assertThat(randomPositionWithin.getX(), is(not(lessThan(absoluteCoordinates.getX() - 16))));
             assertThat(randomPositionWithin.getY(), is(not(lessThan(absoluteCoordinates.getY() - 16))));
-            assertThat(randomPositionWithin.getX(), is(not(greaterThan(absoluteCoordinates.getX() + entityData.width))));
-            assertThat(randomPositionWithin.getY(), is(not(greaterThan(absoluteCoordinates.getY() + entityData.height))));
+            assertThat(randomPositionWithin.getX(), is(not(greaterThan(absoluteCoordinates.getX() + entityData.getWidth()))));
+            assertThat(randomPositionWithin.getY(), is(not(greaterThan(absoluteCoordinates.getY() + entityData.getHeight()))));
         }
     }
 
