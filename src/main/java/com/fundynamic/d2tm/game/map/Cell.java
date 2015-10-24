@@ -2,6 +2,8 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -16,7 +18,7 @@ public class Cell {
 
     private Terrain terrain;
 
-    private Vector2D position;
+    private MapCoordinate mapCoordinate;
     private Image tileImage;
 
     public Cell(Map map, Terrain terrain, int mapX, int mapY) {
@@ -27,7 +29,7 @@ public class Cell {
         this.map = map;
         this.x = mapX;
         this.y = mapY;
-        this.position = new Vector2D(mapX, mapY);
+        this.mapCoordinate = MapCoordinate.create(mapX, mapY);
     }
 
     public void changeTerrain(Terrain terrain) {
@@ -74,12 +76,8 @@ public class Cell {
         return map.getCell(this.x + 1, this.y);
     }
 
-    public Vector2D getCoordinatesAsVector2D() {
-        return Vector2D.create(x, y);
-    }
-
-    public Vector2D getCoordinatesAsAbsoluteVector2D() {
-        return Vector2D.create(x * TILE_SIZE, y * TILE_SIZE);
+    public Coordinate getCoordinates() {
+        return getMapCoordinate().toCoordinate();
     }
 
     public boolean isAtSameLocationAs(Cell other) {
@@ -87,12 +85,12 @@ public class Cell {
         return this.x == other.getX() && y == other.getY();
     }
 
-    public Vector2D getPosition() {
-        return position;
+    public MapCoordinate getMapCoordinate() {
+        return mapCoordinate;
     }
 
     public boolean isVisibleFor(Player controllingPlayer) {
-        return !controllingPlayer.isShrouded(position);
+        return !controllingPlayer.isShrouded(mapCoordinate);
     }
 
 }

@@ -12,6 +12,7 @@ import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -126,22 +127,22 @@ public class PlayingState extends BasicGameState {
 
         //TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeStructureOnMap(Vector2D.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
-        entityRepository.placeStructureOnMap(Vector2D.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
+        entityRepository.placeStructureOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
 
-        entityRepository.placeUnitOnMap(Vector2D.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.QUAD, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.QUAD, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TRIKE, human);
-        entityRepository.placeUnitOnMap(Vector2D.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.QUAD, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.QUAD, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TRIKE, human);
 
         // cpu entities
-        entityRepository.placeStructureOnMap(Vector2D.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntitiesData.REFINERY, cpu);
-        entityRepository.placeStructureOnMap(Vector2D.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(Coordinate.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntitiesData.REFINERY, cpu);
+        entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
 
-        entityRepository.placeUnitOnMap(Vector2D.create(50 * TILE_SIZE, 50 * TILE_SIZE), EntitiesData.QUAD, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(49 * TILE_SIZE, 49 * TILE_SIZE), EntitiesData.QUAD, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(52 * TILE_SIZE, 52 * TILE_SIZE), EntitiesData.TRIKE, cpu);
-        entityRepository.placeUnitOnMap(Vector2D.create(53 * TILE_SIZE, 53 * TILE_SIZE), EntitiesData.TRIKE, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(50 * TILE_SIZE, 50 * TILE_SIZE), EntitiesData.QUAD, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(49 * TILE_SIZE, 49 * TILE_SIZE), EntitiesData.QUAD, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(52 * TILE_SIZE, 52 * TILE_SIZE), EntitiesData.TRIKE, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(53 * TILE_SIZE, 53 * TILE_SIZE), EntitiesData.TRIKE, cpu);
 
     }
 

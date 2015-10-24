@@ -28,7 +28,7 @@ public class PlacingProjectileMouse extends AbstractMouseBehavior {
         Cell hoverCell = mouse.getHoverCell();
         if (hoverCell == null) return;
 
-        Entity entityPlacedOnMap = entityRepository.placeOnMap(hoverCell.getCoordinatesAsAbsoluteVector2D(), entityToPlace, mouse.getControllingPlayer());
+        Entity entityPlacedOnMap = entityRepository.placeOnMap(hoverCell.getCoordinates(), entityToPlace, mouse.getControllingPlayer());
         Projectile projectile = (Projectile) entityPlacedOnMap;
 
         // temporarily give some move to command to a projectile

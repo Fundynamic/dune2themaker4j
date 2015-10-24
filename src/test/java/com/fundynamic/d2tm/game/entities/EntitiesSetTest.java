@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +40,10 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(makeUnit(player, Vector2D.create(320, 320)));
-        entitiesSet.add(makeUnit(player, Vector2D.create(384, 320)));
-        entitiesSet.add(makeUnit(player, Vector2D.create(320, 384)));
-        entitiesSet.add(makeUnit(player, Vector2D.create(960, 960)));
+        entitiesSet.add(makeUnit(player, Coordinate.create(320, 320)));
+        entitiesSet.add(makeUnit(player, Coordinate.create(384, 320)));
+        entitiesSet.add(makeUnit(player, Coordinate.create(320, 384)));
+        entitiesSet.add(makeUnit(player, Coordinate.create(960, 960)));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
@@ -62,7 +63,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         entitiesSet.add(makeStructure(playerTwo, 200));
 
         // Bare entities (with no behavior at all) - to test filtering
-        entitiesSet.add(new DestroyedEntity(Vector2D.create(29, 30), mock(SpriteSheet.class), entityData, player, null));
+        entitiesSet.add(new DestroyedEntity(Coordinate.create(29, 30), mock(SpriteSheet.class), entityData, player, null));
         playerOneBareEntitiesCount = 1;
     }
 
@@ -118,7 +119,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     class DestroyedEntity extends Entity implements Destructible {
 
-        public DestroyedEntity(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+        public DestroyedEntity(Coordinate mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
             super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         }
 

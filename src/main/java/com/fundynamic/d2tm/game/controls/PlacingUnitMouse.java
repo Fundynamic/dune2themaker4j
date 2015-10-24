@@ -22,7 +22,7 @@ public class PlacingUnitMouse extends AbstractMouseBehavior {
     public void leftClicked() {
         Cell hoverCell = mouse.getHoverCell();
         if (hoverCell == null) return;
-        entityRepository.placeOnMap(hoverCell.getCoordinatesAsAbsoluteVector2D(), entityToPlace, mouse.getControllingPlayer());
+        entityRepository.placeOnMap(hoverCell.getCoordinates(), entityToPlace, mouse.getControllingPlayer());
         selectRandomlySomethingToPlace();
     }
 

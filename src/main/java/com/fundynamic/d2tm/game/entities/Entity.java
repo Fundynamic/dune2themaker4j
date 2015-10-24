@@ -1,12 +1,12 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Entity implements Renderable, Updateable {
@@ -17,10 +17,10 @@ public abstract class Entity implements Renderable, Updateable {
     protected final Player player;
     protected final EntityRepository entityRepository;
 
-    protected Vector2D absoluteCoordinates;
+    protected Coordinate coordinate;
 
-    public Entity(Vector2D absoluteCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
-        this.absoluteCoordinates = absoluteCoordinates;
+    public Entity(Coordinate coordinate, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+        this.coordinate = coordinate;
         this.spriteSheet = spriteSheet;
         this.entityData = entityData;
         this.player = player;
@@ -36,8 +36,8 @@ public abstract class Entity implements Renderable, Updateable {
      *
      * @return
      */
-    public Vector2D getAbsoluteCoordinates() {
-        return absoluteCoordinates;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class Entity implements Renderable, Updateable {
      * @return
      */
     public Vector2D getCenteredCoordinates() {
-        return absoluteCoordinates.add(getHalfSize());
+        return coordinate.add(getHalfSize());
     }
 
     /**
@@ -60,11 +60,11 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public int getX() {
-        return absoluteCoordinates.getXAsInt();
+        return coordinate.getXAsInt();
     }
 
     public int getY() {
-        return absoluteCoordinates.getYAsInt();
+        return coordinate.getYAsInt();
     }
 
     public int getSight() {
@@ -141,7 +141,7 @@ public abstract class Entity implements Renderable, Updateable {
         return entityData.getHeightInCells();
     }
 
-    public List<Vector2D> getAllCellsAsVectors() {
-        return entityData.getAllCellsAsVectors(absoluteCoordinates);
+    public List<Coordinate> getAllCellsAsCoordinates() {
+        return entityData.getAllCellsAsCoordinates(coordinate);
     }
 }

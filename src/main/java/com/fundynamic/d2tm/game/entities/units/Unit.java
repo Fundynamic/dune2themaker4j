@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -39,10 +40,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private boolean hasSpawnedExplosions;
 
-    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Unit(Map map, Coordinate coordinate, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
-                absoluteMapCoordinates,
+                coordinate,
                 spriteSheet,
                 new FadingSelection(entityData.getWidth(), entityData.getHeight()),
                 new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
@@ -53,8 +54,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     // TODO: Simplify constructor
-    public Unit(Map map, Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
-        super(absoluteMapCoordinates, spriteSheet, entityData, player, entityRepository);
+    public Unit(Map map, Coordinate coordinate, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(coordinate, spriteSheet, entityData, player, entityRepository);
         this.map = map;
 
         int possibleFacings = spriteSheet.getHorizontalCount();
@@ -62,8 +63,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.desiredFacing = (int) facing;
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
-        this.target = absoluteMapCoordinates;
-        this.nextTargetToMoveTo = absoluteMapCoordinates;
+        this.target = coordinate;
+        this.nextTargetToMoveTo = coordinate;
         this.offset = Vector2D.zero();
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
@@ -102,7 +103,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean shouldMove() {
-        return !this.target.equals(absoluteCoordinates);
+        return !this.target.equals(coordinate);
     }
 
     public boolean shouldAttack() {
@@ -127,7 +128,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // ok, we don't need to move, so lets see if we are in range
         if (distance(entityToAttack) < attackRange) {
             // in range!!
-            this.desiredFacing = determineFacingFor(entityToAttack.getAbsoluteCoordinates()).getValue();
+            this.desiredFacing = determineFacingFor(entityToAttack.getCoordinate()).getValue();
             if (((Destructible) entityToAttack).isDestroyed()) {
                 // target is destroyed, so stop attacking...
                 entityToAttack = null;
@@ -145,7 +146,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
                         while(attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(absoluteCoordinates.add(getHalfSize()), entityData.weaponId, player);
+                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, player);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
                         }
@@ -155,7 +156,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         } else {
-            target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getAbsoluteCoordinates());
+            target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
         }
     }
 
@@ -169,7 +170,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void explodeAndDie() {
         hasSpawnedExplosions = true;
-        entityRepository.explodeAtCell(absoluteCoordinates, entityData.explosionId, player);
+        entityRepository.explodeAtCoordinate(coordinate, entityData.explosionId, player);
 //        entityRepository.explodeAt();
     }
 
@@ -177,10 +178,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         float offsetX = offset.getX();
         float offsetY = offset.getY();
 
-        if (nextTargetToMoveTo.getXAsInt() < absoluteCoordinates.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getXAsInt() > absoluteCoordinates.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getYAsInt() < absoluteCoordinates.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getYAsInt() > absoluteCoordinates.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getXAsInt() < coordinate.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getXAsInt() > coordinate.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() < coordinate.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
+        if (nextTargetToMoveTo.getYAsInt() > coordinate.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
         if (offsetX > 31) {
@@ -202,18 +203,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         // Arrived at intended next target cell
         if (!vecToAdd.equals(Vector2D.zero())) {
-            moveToCell(absoluteCoordinates.add(vecToAdd));
+            moveToCell(coordinate.add(vecToAdd));
         }
         offset = Vector2D.create(offsetX, offsetY);
     }
 
     private Vector2D decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
-        int nextXCoordinate = absoluteCoordinates.getXAsInt();
-        int nextYCoordinate = absoluteCoordinates.getYAsInt();
-        if (target.getXAsInt() < absoluteCoordinates.getXAsInt()) nextXCoordinate -= TILE_SIZE;
-        if (target.getXAsInt() > absoluteCoordinates.getXAsInt()) nextXCoordinate += TILE_SIZE;
-        if (target.getYAsInt() < absoluteCoordinates.getYAsInt()) nextYCoordinate -= TILE_SIZE;
-        if (target.getYAsInt() > absoluteCoordinates.getYAsInt()) nextYCoordinate += TILE_SIZE;
+        int nextXCoordinate = coordinate.getXAsInt();
+        int nextYCoordinate = coordinate.getYAsInt();
+        if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
+        if (target.getXAsInt() > coordinate.getXAsInt()) nextXCoordinate += TILE_SIZE;
+        if (target.getYAsInt() < coordinate.getYAsInt()) nextYCoordinate -= TILE_SIZE;
+        if (target.getYAsInt() > coordinate.getYAsInt()) nextYCoordinate += TILE_SIZE;
 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
 
@@ -225,22 +226,22 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
             return intendedMapCoordinatesToMoveTo;
         }
-        return absoluteCoordinates;
+        return coordinate;
     }
 
     private boolean hasNoNextCellToMoveTo() {
-        return nextTargetToMoveTo == absoluteCoordinates;
+        return nextTargetToMoveTo == coordinate;
     }
 
-    private void moveToCell(Vector2D vectorToMoveTo) {
-        this.absoluteCoordinates = vectorToMoveTo;
-        this.nextTargetToMoveTo = vectorToMoveTo;
+    private void moveToCell(Coordinate coordinate) {
+        this.coordinate = coordinate;
+        this.nextTargetToMoveTo = coordinate;
 
-        UnitMoveIntents.removeIntent(vectorToMoveTo);
+        UnitMoveIntents.removeIntent(coordinate);
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
-        map.revealShroudFor(absoluteCoordinates, getSight(), player);
+        map.revealShroudFor(this.coordinate, getSight(), player);
     }
 
     public Image getSprite() {
@@ -254,7 +255,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 ", player=" + super.player +
                 ", facing=" + facing +
                 ", hitPoints=" + hitPointBasedDestructibility +
-                ", absoluteCoordinates=" + super.absoluteCoordinates +
+                ", coordinate=" + super.coordinate +
                 "]\n";
     }
 
@@ -284,7 +285,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-       return UnitFacings.getFacing(absoluteCoordinates, coordinatesToFaceTo);
+       return UnitFacings.getFacing(coordinate, coordinatesToFaceTo);
     }
 
     @Override
@@ -293,7 +294,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             // ahh we're hit!!! lets get outta here!!
             int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
             int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-            Vector2D target = absoluteCoordinates.add(correctX, correctY);
+            Vector2D target = coordinate.add(correctX, correctY);
             System.out.println("correctX: " + correctX);
             System.out.println("correctY: " + correctY);
             moveTo(target);
@@ -320,7 +321,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         entityToAttack = entity;
         if (offset.equals(Vector2D.zero())) {
-            target = absoluteCoordinates;
+            target = coordinate;
         } else {
             target = nextTargetToMoveTo;
         }
@@ -354,8 +355,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
-            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getAbsoluteCoordinates().add(this.offset));
-            renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates().add(this.offset));
+            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate().add(this.offset));
+            renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate().add(this.offset));
         }
     }
 }

@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -24,9 +24,9 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     private boolean hasSpawnedExplosions;
 
-    public Structure(Vector2D absoluteMapCoordinates, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Structure(Coordinate coordinate, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
-                absoluteMapCoordinates,
+                coordinate,
                 new SpriteSheet(imageOfStructure, entityData.getWidth(), entityData.getHeight()),
                 player,
                 entityData,
@@ -34,8 +34,8 @@ public class Structure extends Entity implements Selectable, Destructible {
         );
     }
 
-    public Structure(Vector2D absoluteMapCoordinates, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
-        super(absoluteMapCoordinates, spriteSheet, entityData, player, entityRepository);
+    public Structure(Coordinate coordinate, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(coordinate, spriteSheet, entityData, player, entityRepository);
 
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
@@ -59,14 +59,10 @@ public class Structure extends Entity implements Selectable, Destructible {
 
         if (hitPointBasedDestructibility.hasDied()) {
             hasSpawnedExplosions = true;
-            for (Vector2D pos : entityData.getAllCellsAsVectors(absoluteCoordinates)) {
-                entityRepository.explodeAtCell(pos, entityData.explosionId, player);
+            for (Coordinate pos : entityData.getAllCellsAsCoordinates(coordinate)) {
+                entityRepository.explodeAtCoordinate(pos, entityData.explosionId, player);
             }
         }
-    }
-
-    public Vector2D getAbsoluteCoordinates() {
-        return absoluteCoordinates;
     }
 
     @Override
@@ -121,8 +117,8 @@ public class Structure extends Entity implements Selectable, Destructible {
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
-            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getAbsoluteCoordinates());
-            renderQueue.putEntityGui(this.fadingSelection, this.getAbsoluteCoordinates());
+            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate());
+            renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());
         }
     }
 

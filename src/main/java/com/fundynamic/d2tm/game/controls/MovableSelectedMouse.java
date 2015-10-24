@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.Set;
@@ -59,7 +60,7 @@ public class MovableSelectedMouse extends NormalMouse {
             );
 
             for (Entity entity : selectedMovableEntities) {
-                Vector2D target = mouse.getHoverCell().getCoordinatesAsVector2D().scale(32F);
+                Coordinate target = mouse.getHoverCell().getMapCoordinate().toCoordinate();
                 ((Moveable) entity).moveTo(target);
             }
         }

@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
@@ -16,11 +17,11 @@ public class EntityTest extends AbstractD2TMTest {
 
     @Test
     public void randomPositionWithinDoesNotExceedBoundaries() {
-        Vector2D absoluteCoordinates = Vector2D.create(100, 100);
+        Coordinate coordinates = Coordinate.create(100, 100);
         EntityData entityData = new EntityData();
         entityData.setWidth(64);
         entityData.setHeight(64);
-        Entity entity = new Entity(absoluteCoordinates, mock(SpriteSheet.class), entityData, player, entityRepository) {
+        Entity entity = new Entity(coordinates, mock(SpriteSheet.class), entityData, player, entityRepository) {
             @Override
             public EntityType getEntityType() {
                 return null;
@@ -41,10 +42,10 @@ public class EntityTest extends AbstractD2TMTest {
         // Yeah, this could be more efficient with using a seed and whatnot...
         for (int i = 0; i < 100; i++) {
             Vector2D randomPositionWithin = entity.getRandomPositionWithin();
-            assertThat(randomPositionWithin.getX(), is(not(lessThan(absoluteCoordinates.getX() - 16))));
-            assertThat(randomPositionWithin.getY(), is(not(lessThan(absoluteCoordinates.getY() - 16))));
-            assertThat(randomPositionWithin.getX(), is(not(greaterThan(absoluteCoordinates.getX() + entityData.getWidth()))));
-            assertThat(randomPositionWithin.getY(), is(not(greaterThan(absoluteCoordinates.getY() + entityData.getHeight()))));
+            assertThat(randomPositionWithin.getX(), is(not(lessThan(coordinates.getX() - 16))));
+            assertThat(randomPositionWithin.getY(), is(not(lessThan(coordinates.getY() - 16))));
+            assertThat(randomPositionWithin.getX(), is(not(greaterThan(coordinates.getX() + entityData.getWidth()))));
+            assertThat(randomPositionWithin.getY(), is(not(greaterThan(coordinates.getY() + entityData.getHeight()))));
         }
     }
 

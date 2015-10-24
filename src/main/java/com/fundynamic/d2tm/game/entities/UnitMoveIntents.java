@@ -19,7 +19,7 @@ public class UnitMoveIntents {
 
     public static void removeIntent(Vector2D target) {
         if (!hasIntentFor(target)) {
-            throw new IllegalArgumentException("Unknown intent at " + target + ", cannot remove!");
+            throw new IllegalArgumentException("Unknown intent at " + target + ", cannot remove!\nIntents: " + intendedVectors);
         }
         intendedVectors.remove(target);
     }

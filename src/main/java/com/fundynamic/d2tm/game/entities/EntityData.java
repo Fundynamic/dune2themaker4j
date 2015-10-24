@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Image;
 
 import java.util.ArrayList;
@@ -61,12 +61,12 @@ public class EntityData {
 
     public void setWidth(int width) {
         this.width = width;
-        widthInCells = (int) Math.ceil(width / Game.TILE_SIZE);
+        widthInCells = (int) Math.ceil((float) width / Game.TILE_SIZE);
     }
 
     public void setHeight(int height) {
         this.height = height;
-        heightInCells = (int) Math.ceil(height / Game.TILE_SIZE);
+        heightInCells = (int) Math.ceil((float) height / Game.TILE_SIZE);
     }
 
     public int getWidth() {
@@ -192,13 +192,13 @@ public class EntityData {
      *
      * @return
      */
-    public List<Vector2D> getAllCellsAsVectors(Vector2D topLeftAbsCoordinates) {
-        List<Vector2D> result = new ArrayList<>(widthInCells * heightInCells);
+    public List<Coordinate> getAllCellsAsCoordinates(Coordinate coordinate) {
+        List<Coordinate> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                int vecX = topLeftAbsCoordinates.getXAsInt() + x * Game.TILE_SIZE;
-                int vecY = topLeftAbsCoordinates.getYAsInt() + y * Game.TILE_SIZE;
-                result.add(Vector2D.create(vecX, vecY));
+                int vecX = coordinate.getXAsInt() + x * Game.TILE_SIZE;
+                int vecY = coordinate.getYAsInt() + y * Game.TILE_SIZE;
+                result.add(Coordinate.create(vecX, vecY));
             }
         }
         return result;

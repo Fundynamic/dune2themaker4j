@@ -112,7 +112,6 @@ public class Vector2D {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
         Vector2D vector2D = (Vector2D) o;
 

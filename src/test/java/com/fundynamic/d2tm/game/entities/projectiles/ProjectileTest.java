@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class ProjectileTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        projectile = makeProjectile(create(32, 32));
+        projectile = makeProjectile(Coordinate.create(32, 32));
     }
 
     @Test
@@ -167,7 +168,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         // with a delta of 1 second
         int seconds = 2;
         Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
-        projectile.moveTo(projectile.getAbsoluteCoordinates().add(distance));
+        projectile.moveTo(projectile.getCoordinate().add(distance));
 
         projectile.update(1);
         assertThat(projectile.isDestroyed(), is(false));
@@ -191,7 +192,7 @@ public class ProjectileTest extends AbstractD2TMTest {
 
         int seconds = 1;
         Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
-        Vector2D target = projectile.getAbsoluteCoordinates().add(distance);
+        Coordinate target = projectile.getCoordinate().add(distance);
         projectile.moveTo(target);
 
         // Place unit on target, so that it will be hit!
@@ -209,7 +210,7 @@ public class ProjectileTest extends AbstractD2TMTest {
 
     @Test
     public void projectileCannotTakeDamage() {
-        Projectile projectile = makeProjectile(create(32, 32));
+        Projectile projectile = makeProjectile(Coordinate.create(32, 32));
         int hitPoints = projectile.getHitPoints();
         projectile.takeDamage(100);
 
