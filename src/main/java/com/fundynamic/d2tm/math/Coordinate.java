@@ -35,4 +35,7 @@ public class Coordinate extends Vector2D {
         return new Coordinate(super.add(vec));
     }
 
+    public Coordinate min(Vector2D vec) {
+        return new Coordinate(super.min(vec));
+    }
 }

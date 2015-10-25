@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
@@ -41,22 +40,22 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     /**
-     * Returns center of this entity
+     * Returns center of this entity as coordinate. Which basically means adding half its size to the top-left coordinate.
      *
      * @return
      */
-    public Vector2D getCenteredCoordinates() {
+    public Coordinate getCenteredCoordinate() {
         return coordinate.add(getHalfSize());
     }
 
     /**
-     * Returns distance from this entity to other
+     * Returns distance from this entity to other, using centered coordinates for both entities.
      *
      * @param other
      * @return
      */
     public float distance(Entity other) {
-        return getCenteredCoordinates().distance(other.getCenteredCoordinates());
+        return getCenteredCoordinate().distance(other.getCenteredCoordinate());
     }
 
     public int getX() {

@@ -170,8 +170,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void explodeAndDie() {
         hasSpawnedExplosions = true;
-        entityRepository.explodeAtCoordinate(coordinate, entityData.explosionId, player);
-//        entityRepository.explodeAt();
+//        entityRepository.explodeAtCoordinate(coordinate, entityData.explosionId, player);
+        entityRepository.placeExplosionWithCenterAt(getCenteredCoordinate(), player, entityData.explosionId);
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {
@@ -358,5 +358,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate().add(this.offset));
             renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate().add(this.offset));
         }
+    }
+
+    @Override
+    public Coordinate getCenteredCoordinate() {
+        return super.getCenteredCoordinate().add(offset);
     }
 }

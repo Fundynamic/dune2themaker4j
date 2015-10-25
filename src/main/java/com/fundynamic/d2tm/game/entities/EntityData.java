@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 
 import java.util.ArrayList;
@@ -202,5 +203,13 @@ public class EntityData {
             }
         }
         return result;
+    }
+
+    public Vector2D getHalfSize() {
+        return Vector2D.create(width / 2, height / 2);
+    }
+
+    public Vector2D getSize() {
+        return Vector2D.create(width, height);
     }
 }

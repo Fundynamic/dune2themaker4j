@@ -83,17 +83,18 @@ public class EntityRepository {
         placeExplosionCenteredAt(coordinate, player, origin.getWidth(), origin.getHeight(), particle);
     }
 
-    public void placeExplosionWithCenterAt(Vector2D centerCoordinate, Player player, String explosionId) {
+    public void placeExplosionWithCenterAt(Coordinate centerCoordinate, Player player, String explosionId) {
         EntityData particle = entitiesData.getParticle(explosionId);
-
+        Coordinate topLeft = centerCoordinate.min(particle.getHalfSize());
+        placeExplosion(topLeft, particle, player);
     }
 
-    public void placeExplosionCenteredAt(Coordinate coordinate, Player player, int originWidth, int originHeight, EntityData particle) {
+    public void placeExplosionCenteredAt(Coordinate topLeftCoordinate, Player player, int originWidth, int originHeight, EntityData particle) {
         // this compensates based on it comes from, so the center of the explosion is the same center
         // of the original center.
         float correctedX = (originWidth - particle.getWidth()) / 2;
         float correctedY = (originHeight - particle.getHeight()) / 2;
-        Coordinate correctedCoordinate = coordinate.add(correctedX, correctedY);
+        Coordinate correctedCoordinate = topLeftCoordinate.add(correctedX, correctedY);
         placeExplosion(correctedCoordinate, particle, player);
     }
 
