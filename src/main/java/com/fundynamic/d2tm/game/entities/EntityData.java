@@ -205,6 +205,23 @@ public class EntityData {
         return result;
     }
 
+    /**
+     * Given a topLeftX and topLeftY coordinate, calculate all cells that are being occupied by this
+     * entity and return that as a list of coordinates.
+     *
+     * The coordinates are corrected to be centered within a cell.
+     *
+     * @return
+     */
+    public List<Coordinate> getAllCellsAsCenteredCoordinates(Coordinate coordinate) {
+        List<Coordinate> result = getAllCellsAsCoordinates(coordinate);
+        List<Coordinate> centered = new ArrayList<>(result.size());
+        for (Coordinate resultCoordinate : result) {
+            centered.add(resultCoordinate.add(Game.TILE_SIZE / 2, Game.TILE_SIZE / 2));
+        }
+        return centered;
+    }
+
     public Vector2D getHalfSize() {
         return Vector2D.create(width / 2, height / 2);
     }
