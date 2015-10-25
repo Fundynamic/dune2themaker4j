@@ -294,7 +294,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             // ahh we're hit!!! lets get outta here!!
             int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
             int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-            Vector2D target = coordinate.add(correctX, correctY);
+            Vector2D target = coordinate.add(Vector2D.create(correctX, correctY));
             System.out.println("correctX: " + correctX);
             System.out.println("correctY: " + correctY);
             moveTo(target);

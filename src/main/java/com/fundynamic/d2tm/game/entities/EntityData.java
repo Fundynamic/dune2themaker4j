@@ -51,11 +51,6 @@ public class EntityData {
         this.sight = sight;
     }
 
-    public EntityData(int width, int height, int sight, float moveSpeed) {
-        this(width, height, sight);
-        this.moveSpeed = moveSpeed;
-    }
-
     public Image getFirstImage() {
         return image.getSubImage(0, 0, width, height);
     }
@@ -216,8 +211,9 @@ public class EntityData {
     public List<Coordinate> getAllCellsAsCenteredCoordinates(Coordinate coordinate) {
         List<Coordinate> result = getAllCellsAsCoordinates(coordinate);
         List<Coordinate> centered = new ArrayList<>(result.size());
+        Vector2D halfCell = Vector2D.create(Game.TILE_SIZE / 2, Game.TILE_SIZE / 2);
         for (Coordinate resultCoordinate : result) {
-            centered.add(resultCoordinate.add(Game.TILE_SIZE / 2, Game.TILE_SIZE / 2));
+            centered.add(resultCoordinate.add(halfCell));
         }
         return centered;
     }

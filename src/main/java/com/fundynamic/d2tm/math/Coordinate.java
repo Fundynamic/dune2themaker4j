@@ -27,15 +27,11 @@ public class Coordinate extends Vector2D {
         return MapCoordinate.create(getX() / Game.TILE_SIZE, getY() / Game.TILE_SIZE);
     }
 
-    public Coordinate add(float correctX, float correctY) {
-        return new Coordinate(super.add(correctX, correctY));
-    }
-
     public Coordinate add(Vector2D vec) {
         return new Coordinate(super.add(vec));
     }
 
-    public Coordinate min(Vector2D vec) {
-        return new Coordinate(super.min(vec));
+    public Coordinate min(Vector2D otherVector) {
+        return new Coordinate(super.min(otherVector));
     }
 }

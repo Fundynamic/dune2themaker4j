@@ -74,12 +74,8 @@ public class Vector2D {
         return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
     }
 
-    public Vector2D min(Vector2D vecToSubstract) {
-        return new Vector2D(vec.getX() - vecToSubstract.getX(), vec.getY() - vecToSubstract.getY());
-    }
-
-    public Vector2D min(int x, int y) {
-        return new Vector2D(vec.getX() - x, vec.getY() - y);
+    public Vector2D min(Vector2D otherVector) {
+        return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
     }
 
     public int getXAsInt() {
@@ -98,10 +94,6 @@ public class Vector2D {
     public Vector2D add(Vector2D other) {
         Vector2f added = vec.copy().add(other.vec);
         return Vector2D.create(added.getX(), added.getY());
-    }
-
-    public Vector2D add(float correctX, float correctY) {
-        return Vector2D.create(getX() + correctX, getY() + correctY);
     }
 
     public Vector2D div(float amount) {

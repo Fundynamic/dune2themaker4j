@@ -47,28 +47,6 @@ public class EntityRepository {
     }
 
     /**
-     * This is the same logic as explodeAt(), only instead of assuming the origin is an entity, we assume the
-     * cell is the origin. Used for spawning explosions of structures (which are cell based).
-     * 
-     * @param coordinate
-     * @param explosionId
-     * @param player
-     */
-    public void explodeAtCoordinate(Coordinate coordinate, String explosionId, Player player) {
-        if (EntitiesData.UNKNOWN.equals(explosionId)) return;
-
-        EntityData particle = entitiesData.getParticle(explosionId);
-
-        // The top left map coordinate is based on Game.TILE_SIZE tiles. So assumes at top-left of tile
-        // depending on the particle that will be created, we need to correct this so the explosion appears
-        // centered in that cell.
-        //
-        // Meaning, when the particle dimensions are < Game.TILE_SIZE then something needs to be added to the x and y
-        // of the coordinate. When the particle dimensions are > Game.TILE_SIZE then we need to substract.
-        placeExplosionCenteredAt(coordinate, player, Game.TILE_SIZE, Game.TILE_SIZE, particle);
-    }
-
-    /**
      * This spawns an explosion from the origin entityData, ie, this could be a projectile about to explode.
      *
      * @param centerCoordinate of explosion
@@ -84,15 +62,6 @@ public class EntityRepository {
         EntityData particle = entitiesData.getParticle(explosionId);
         Coordinate topLeft = centerCoordinate.min(particle.getHalfSize());
         placeExplosion(topLeft, particle, player);
-    }
-
-    public void placeExplosionCenteredAt(Coordinate topLeftCoordinate, Player player, int originWidth, int originHeight, EntityData particle) {
-        // this compensates based on it comes from, so the center of the explosion is the same center
-        // of the original center.
-        float correctedX = (originWidth - particle.getWidth()) / 2;
-        float correctedY = (originHeight - particle.getHeight()) / 2;
-        Coordinate correctedCoordinate = topLeftCoordinate.add(correctedX, correctedY);
-        placeExplosion(correctedCoordinate, particle, player);
     }
 
     public void placeExplosion(Coordinate coordinate, EntityData particle, Player player) {
@@ -207,13 +176,6 @@ public class EntityRepository {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
-                        vectorWithin(absoluteMapCoordinates)
-        );
-    }
-
-    public EntitiesSet findEntitiesAtVector(Vector2D absoluteMapCoordinates) {
-        return filter(
-                Predicate.builder().
                         vectorWithin(absoluteMapCoordinates)
         );
     }
