@@ -50,4 +50,15 @@ public class EntitiesSet extends HashSet<Entity> {
         if (entity == null) throw new IllegalArgumentException("Cannot add null to entity set");
         return super.add(entity);
     }
+
+    /**
+     * This method iterates over all entities within this set, and passes them to the EntityHandler handle method.
+     *
+     * @param entityHandler
+     */
+    public void each(EntityHandler entityHandler) {
+        for (Entity entity : this) {
+            entityHandler.handle(entity);
+        }
+    }
 }

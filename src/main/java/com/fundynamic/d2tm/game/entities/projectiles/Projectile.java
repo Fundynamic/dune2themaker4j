@@ -65,19 +65,20 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
         if (target.distance(coordinate) < 0.1F) {
             if (entityData.hasExplosionId()) {
-                // spawn explosion
-                entityRepository.explodeAt(coordinate, entityData, player);
+                entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
             }
 
             // do damage on cell / range of cells
             EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
-            if (entities.hasAny()) {
-                Entity entity = entities.getFirst();
-                if (entity.isDestructible()) {
-                    Destructible destructibleEntity = (Destructible) entity;
-                    destructibleEntity.takeDamage(entityData.damage);
+            entities.each(new EntityHandler() {
+                @Override
+                public void handle(Entity entity) {
+                    if (entity.isDestructible()) {
+                        Destructible destructibleEntity = (Destructible) entity;
+                        destructibleEntity.takeDamage(entityData.damage);
+                    }
                 }
-            }
+            });
             destroyed = true;
         }
     }

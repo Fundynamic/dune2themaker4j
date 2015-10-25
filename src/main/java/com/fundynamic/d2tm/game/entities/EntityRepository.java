@@ -70,17 +70,14 @@ public class EntityRepository {
 
     /**
      * This spawns an explosion from the origin entityData, ie, this could be a projectile about to explode.
-     * To make sure the center of the projectile corresponds with the center of the explosion we need to know about the
-     * width and height of the to-be-spawned explosion and correct its coordinates.
      *
-     * @param coordinate
-     * @param origin
+     * @param centerCoordinate of explosion
+     * @param origin the entityData that spawns the explosion
      * @param player
      */
-    public void explodeAt(Coordinate coordinate, EntityData origin, Player player) {
+    public void explodeAt(Coordinate centerCoordinate, EntityData origin, Player player) {
         if (!origin.hasExplosionId()) return;
-        EntityData particle = entitiesData.getParticle(origin.explosionId);
-        placeExplosionCenteredAt(coordinate, player, origin.getWidth(), origin.getHeight(), particle);
+        placeExplosionWithCenterAt(centerCoordinate, player, origin.explosionId);
     }
 
     public void placeExplosionWithCenterAt(Coordinate centerCoordinate, Player player, String explosionId) {
