@@ -21,7 +21,7 @@ public class ViewportTest extends AbstractD2TMTest {
         Graphics bufferGraphics = mock(Graphics.class);
         when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
 
-        makeUnit(player, Coordinate.create(2, 2));
+        makeUnit(player, Coordinate.create(2, 2), "QUAD");
         map.revealAllShroudFor(player);
 
         Viewport viewport = new Viewport(map, mouse, player, bufferWithGraphics);

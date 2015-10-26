@@ -364,4 +364,5 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Coordinate getCenteredCoordinate() {
         return super.getCenteredCoordinate().add(offset);
     }
+
 }

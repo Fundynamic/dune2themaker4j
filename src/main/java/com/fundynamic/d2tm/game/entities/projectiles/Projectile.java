@@ -14,7 +14,7 @@ import org.newdawn.slick.SpriteSheet;
 public class Projectile extends Entity implements Moveable, Destructible {
 
     // state
-    private Vector2D target;
+    private Coordinate target;
     private boolean destroyed;
 
     public Projectile(Coordinate mapCoordinates, SpriteSheet spriteSheet, Player player,
@@ -85,7 +85,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
     @Override
     public void moveTo(Vector2D target) {
-        this.target = target;
+        this.target = new Coordinate(target);
     }
 
     @Override
@@ -109,5 +109,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
                 "target=" + target +
                 ", destroyed=" + destroyed +
                 '}';
+    }
+
+    public Coordinate getTarget() {
+        return target;
     }
 }

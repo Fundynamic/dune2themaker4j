@@ -3,8 +3,12 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
+import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -19,6 +23,7 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -108,6 +113,30 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
+    public void firesProjectileWhenAttackingUnitInRange() {
+        Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
+        Unit playerQuad = makeUnit(player, new Coordinate(32, 32), "QUAD");
+        playerQuad.setFacing(UnitFacings.RIGHT_DOWN.getValue()); // looking at the unit below...
+
+        Unit cpuQuad = makeUnit(cpu, new Coordinate(64, 64), "QUAD");
+
+        // order to attack, it is in range, and already facing it.
+        playerQuad.attack(cpuQuad);
+
+        // update, 1 second passed. rules.ini file should have at least attack rate for QUAD < 1 second
+        // so it fires a projectile...
+        playerQuad.update(1);
+
+        Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
+        assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PROJECTILE));
+        Projectile projectile = (Projectile) lastCreatedEntity;
+
+        EntitiesSet entitiesAtVector = entityRepository.findEntitiesOfTypeAtVector(projectile.getTarget(), EntityType.UNIT);
+        Unit first = (Unit) entitiesAtVector.getFirst();
+        assertThat(first, equalTo(cpuQuad));
+    }
+
+    @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
         Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
 
@@ -131,7 +160,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void selectedUnitPutsFadingSelectionAndHealthBarOnRenderQueue() {
-        Unit unit = makeUnit(player, Coordinate.create(48, 48));
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
         unit.select();
 
         Vector2D viewportVec = Vector2D.create(32, 32);

@@ -165,20 +165,20 @@ public abstract class AbstractD2TMTest {
     }
 
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
-        Unit unit = makeUnit(player, coordinate);
+        Unit unit = makeUnit(player, coordinate, "QUAD");
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
     }
 
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Coordinate.create(0, 0));
+        return makeUnit(player, Coordinate.create(0, 0), "QUAD");
     }
 
-    public Unit makeUnit(Player player, Coordinate coordinate) {
+    public Unit makeUnit(Player player, Coordinate coordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
-        return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, "QUAD", player);
+        return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, id, player);
     }
 
     // PROJECTILE

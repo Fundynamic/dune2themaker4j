@@ -40,10 +40,10 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(makeUnit(player, Coordinate.create(320, 320)));
-        entitiesSet.add(makeUnit(player, Coordinate.create(384, 320)));
-        entitiesSet.add(makeUnit(player, Coordinate.create(320, 384)));
-        entitiesSet.add(makeUnit(player, Coordinate.create(960, 960)));
+        entitiesSet.add(makeUnit(player, Coordinate.create(320, 320), "QUAD"));
+        entitiesSet.add(makeUnit(player, Coordinate.create(384, 320), "QUAD"));
+        entitiesSet.add(makeUnit(player, Coordinate.create(320, 384), "QUAD"));
+        entitiesSet.add(makeUnit(player, Coordinate.create(960, 960), "QUAD"));
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;

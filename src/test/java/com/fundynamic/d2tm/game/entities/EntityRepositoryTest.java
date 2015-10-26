@@ -19,7 +19,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
     @Test
     public void findsUnitAtVector() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(100, 100));
+        Unit unit = makeUnit(player, Coordinate.create(100, 100), "QUAD");
 
         // find at same position
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(100, 100), EntityType.UNIT);

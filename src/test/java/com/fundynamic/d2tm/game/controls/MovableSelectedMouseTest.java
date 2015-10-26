@@ -26,7 +26,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         assertThat(unit.isSelected(), is(false));
 
         mouse.mouseMovedToCell(map.getCell(1, 1)); // equals 32, 32
@@ -38,7 +38,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
 
-        Unit unit = makeUnit(player, Coordinate.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         unit.select();
 
         // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
@@ -55,11 +55,11 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
     @Test
     public void attacksUnitOfOtherPlayer() {
         // create player for unit and select it
-        Unit unit = makeUnit(player, Coordinate.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         unit.select();
 
         Player enemy = new Player("Enemy", Recolorer.FactionColor.RED);
-        Unit enemyUnit = makeUnit(enemy, Coordinate.create(64, 64));
+        Unit enemyUnit = makeUnit(enemy, Coordinate.create(64, 64), "QUAD");
         map.revealShroudFor(enemyUnit);
 
         Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(64, 64));
