@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;

@@ -9,7 +9,6 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.Set;
 

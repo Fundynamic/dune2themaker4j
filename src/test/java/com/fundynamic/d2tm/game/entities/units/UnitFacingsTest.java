@@ -6,7 +6,8 @@ import org.junit.Test;
 import static com.fundynamic.d2tm.game.entities.units.UnitFacings.*;
 import static com.fundynamic.d2tm.math.Vector2D.create;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 
 public class UnitFacingsTest {
