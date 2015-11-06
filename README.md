@@ -8,7 +8,9 @@ This project aims to deliver a complex `Real Time Simulation Role Playing Strate
 ## Getting started
 This project is set up using [slick2d-maven](https://github.com/nguillaumin/slick2d-maven). 
 
-You need `git` and `maven` installed. Also you need to have `java` version 1.7.
+You need `git` and `maven` installed. Also you need to have `java` version 1.8.
+
+Using [jenv](https://github.com/gcuisinier/jenv)? Then you would not need to do anything particular. A `.java-version` is provided. 
 
 ## Running the game
 - `git clone` this project
