@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.newdawn.slick.Image;
@@ -24,7 +25,7 @@ public class StructureTest extends AbstractD2TMTest {
     public void constructsStructureWithProperSize() {
         int widthInCells = 3;
         int heightInCells = 2;
-        Structure structure = makeStructure(player, 100, widthInCells, heightInCells, 30, Vector2D.zero());
+        Structure structure = makeStructure(player, 100, widthInCells, heightInCells, 30, Coordinate.create(0, 0));
         assertThat(structure.getWidthInCells(), is(3));
         assertThat(structure.getHeightInCells(), is(2));
     }
@@ -44,7 +45,7 @@ public class StructureTest extends AbstractD2TMTest {
 
     @Test
     public void selectedStructurePutsFadingSelectionAndHealthBarOnRenderQueue() {
-        Structure structure = makeStructure(player, 100, Vector2D.create(48, 48));
+        Structure structure = makeStructure(player, 100, Coordinate.create(48, 48));
         structure.select();
 
         Vector2D viewportVec = Vector2D.create(32, 32);

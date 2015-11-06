@@ -41,7 +41,7 @@ public class RenderQueue {
     public void put(List<Entity> entities) {
         for (Entity entity : entities) {
             int layer = entityTypeToLayerMap.get(entity.getEntityType());
-            put(layer, entity, entity.getAbsoluteCoordinates());
+            put(layer, entity, entity.getCoordinate());
             entity.enrichRenderQueue(this);
         }
     }

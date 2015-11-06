@@ -26,15 +26,15 @@ public class CellShroudRenderer implements Renderer<Cell> {
     }
 
     protected ShroudFacing determineShroudFacing(Cell cell) {
-        if (player.isShrouded(cell.getPosition())) {
+        if (player.isShrouded(cell.getMapCoordinate())) {
             return ShroudFacing.FULL;
         }
 
         return getFacing(
-                player.isShrouded(cell.getCellAbove().getPosition()),
-                player.isShrouded(cell.getCellRight().getPosition()),
-                player.isShrouded(cell.getCellBeneath().getPosition()),
-                player.isShrouded(cell.getCellLeft().getPosition()));
+                player.isShrouded(cell.getCellAbove().getMapCoordinate()),
+                player.isShrouded(cell.getCellRight().getMapCoordinate()),
+                player.isShrouded(cell.getCellBeneath().getMapCoordinate()),
+                player.isShrouded(cell.getCellLeft().getMapCoordinate()));
     }
 
     public static ShroudFacing getFacing(boolean isTopShrouded, boolean isRightShrouded, boolean isBottomShrouded, boolean isLeftShrouded) {

@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -28,8 +28,8 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         mouse.setHoverCell(cell);
 
-        Vector2D coordinatesAsAbsoluteVector2D = cell.getCoordinatesAsAbsoluteVector2D();
-        Unit unit = makeUnit(player, coordinatesAsAbsoluteVector2D);
+        Coordinate coordinate = cell.getCoordinates();
+        Unit unit = makeUnit(player, coordinate, "QUAD");
         assertThat(unit.isSelected(), is(false));
 
         // ACT: click left

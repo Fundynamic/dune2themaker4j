@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +42,8 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
     public void draggingOverUnitsSelectsUnits() {
         EntityRepository entityRepository = mouse.getEntityRepository();
 
-        Vector2D mapCoordinate = Vector2D.create(32, 32);
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntitiesData.QUAD, player);
+        Coordinate coordinate = Coordinate.create(32, 32);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(coordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         assertFalse(entity.isSelected());
 
         mouse.draggedToCoordinates(64, 64); // == 2, 2 on map
@@ -56,8 +57,8 @@ public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
     public void whenReleasingLeftButtonDeselectAllPreviouslySelectedUnitsFirst() {
         EntityRepository entityRepository = mouse.getEntityRepository();
 
-        Vector2D mapCoordinate = Vector2D.create(1, 1);
-        Selectable entity = (Selectable) entityRepository.placeOnMap(mapCoordinate, EntityType.UNIT, EntitiesData.QUAD, player);
+        Coordinate coordinate = Coordinate.create(1, 1);
+        Selectable entity = (Selectable) entityRepository.placeOnMap(coordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         entity.select();
         assertTrue(entity.isSelected());
 

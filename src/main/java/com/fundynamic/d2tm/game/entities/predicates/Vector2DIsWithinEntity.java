@@ -16,7 +16,7 @@ public class Vector2DIsWithinEntity extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        Rectangle rectangle = Rectangle.createWithDimensions(entity.getAbsoluteCoordinates(), entity.getDimensions());
+        Rectangle rectangle = Rectangle.createWithDimensions(entity.getCoordinate(), entity.getDimensions());
         return rectangle.isVectorWithin(vector);
     }
 

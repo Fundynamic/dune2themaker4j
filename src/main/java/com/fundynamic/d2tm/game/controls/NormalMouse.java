@@ -41,7 +41,7 @@ public class NormalMouse extends AbstractMouseBehavior {
         Cell hoverCell = mouse.getHoverCell();
         if (hoverCell == null) return null;
         EntitiesSet entities = mouse.getEntityRepository().filter(Predicate.builder().
-                vectorWithin(hoverCell.getCoordinatesAsAbsoluteVector2D()).
+                vectorWithin(hoverCell.getCoordinates()).
                 isSelectable());
         Entity entity = entities.getFirst();
         if (entity == null) return null;

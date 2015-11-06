@@ -2,8 +2,11 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
+
+import java.util.List;
 
 public abstract class Entity implements Renderable, Updateable {
 
@@ -13,10 +16,10 @@ public abstract class Entity implements Renderable, Updateable {
     protected final Player player;
     protected final EntityRepository entityRepository;
 
-    protected Vector2D absoluteCoordinates;
+    protected Coordinate coordinate;
 
-    public Entity(Vector2D absoluteCoordinates, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
-        this.absoluteCoordinates = absoluteCoordinates;
+    public Entity(Coordinate coordinate, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+        this.coordinate = coordinate;
         this.spriteSheet = spriteSheet;
         this.entityData = entityData;
         this.player = player;
@@ -27,16 +30,40 @@ public abstract class Entity implements Renderable, Updateable {
         }
     }
 
-    public Vector2D getAbsoluteCoordinates() {
-        return absoluteCoordinates;
+    /**
+     * Returns the upper-left coordinate of this entity
+     *
+     * @return
+     */
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    /**
+     * Returns center of this entity as coordinate. Which basically means adding half its size to the top-left coordinate.
+     *
+     * @return
+     */
+    public Coordinate getCenteredCoordinate() {
+        return coordinate.add(getHalfSize());
+    }
+
+    /**
+     * Returns distance from this entity to other, using centered coordinates for both entities.
+     *
+     * @param other
+     * @return
+     */
+    public float distance(Entity other) {
+        return getCenteredCoordinate().distance(other.getCenteredCoordinate());
     }
 
     public int getX() {
-        return absoluteCoordinates.getXAsInt();
+        return coordinate.getXAsInt();
     }
 
     public int getY() {
-        return absoluteCoordinates.getYAsInt();
+        return coordinate.getYAsInt();
     }
 
     public int getSight() {
@@ -81,13 +108,11 @@ public abstract class Entity implements Renderable, Updateable {
     }
 
     public Vector2D getRandomPositionWithin() {
-        int topX = getX() - 16;
-        int topY = getY() - 16;
-        return Vector2D.random(topX, topX + entityData.width, topY, topY + entityData.height);
+        return Vector2D.random(getX(), getX() + entityData.getWidth(), getY(), getY() + entityData.getHeight());
     }
 
     public Vector2D getDimensions() {
-        return Vector2D.create(entityData.width, entityData.height);
+        return Vector2D.create(entityData.getWidth(), entityData.getHeight());
     }
 
     @Override
@@ -95,12 +120,8 @@ public abstract class Entity implements Renderable, Updateable {
         // by default do nothing
     }
 
-    public Vector2D getCenteredPosition() {
-        return absoluteCoordinates.add(getHalfSize());
-    }
-
     public Vector2D getHalfSize() {
-        return Vector2D.create(entityData.width / 2, entityData.height / 2);
+        return Vector2D.create(entityData.getWidth() / 2, entityData.getHeight() / 2);
     }
 
     /**
@@ -109,5 +130,17 @@ public abstract class Entity implements Renderable, Updateable {
      */
     public EntityData getEntityData() {
         return this.entityData;
+    }
+
+    public int getWidthInCells() {
+        return entityData.getWidthInCells();
+    }
+
+    public int getHeightInCells() {
+        return entityData.getHeightInCells();
+    }
+
+    public List<Coordinate> getAllCellsAsCoordinates() {
+        return entityData.getAllCellsAsCoordinates(coordinate);
     }
 }

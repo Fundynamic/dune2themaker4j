@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class Player {
     private final String name;
     private final Recolorer.FactionColor factionColor;
 
-    private Map<Vector2D, Boolean> shrouded;
+    private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
     public Player(String name, Recolorer.FactionColor factionColor) {
@@ -31,7 +32,7 @@ public class Player {
         return value != null ? value : true;
     }
 
-    public void revealShroudFor(Vector2D position) {
+    public void revealShroudFor(MapCoordinate position) {
         shrouded.put(position, false);
     }
 
@@ -55,4 +56,7 @@ public class Player {
                 '}';
     }
 
+    public boolean isCPU() {
+        return "CPU".equalsIgnoreCase(name);
+    }
 }

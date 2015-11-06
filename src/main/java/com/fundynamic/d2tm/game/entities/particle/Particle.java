@@ -6,7 +6,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -17,8 +17,8 @@ public class Particle extends Entity implements Destructible {
     private float sprite = 0;
     private float animationSpeed;
 
-    public Particle(Vector2D mapCoordinates, SpriteSheet spriteSheet, EntityData entityData, EntityRepository entityRepository) {
-        super(mapCoordinates, spriteSheet, entityData, null, entityRepository);
+    public Particle(Coordinate coordinate, SpriteSheet spriteSheet, EntityData entityData, EntityRepository entityRepository) {
+        super(coordinate, spriteSheet, entityData, null, entityRepository);
         animationSpeed = entityData.animationSpeed;
     }
 

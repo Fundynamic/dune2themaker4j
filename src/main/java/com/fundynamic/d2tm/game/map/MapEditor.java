@@ -141,8 +141,8 @@ public class MapEditor {
             position = position.add(Vector2D.create(-1 + Random.getInt(3), -1 + Random.getInt(3)));
 
             Cell cellProtected = map.getCellProtected(position.getXAsInt(), position.getYAsInt());
-            if (!cellProtected.getCoordinatesAsVector2D().equals(position)) {
-                position = cellProtected.getCoordinatesAsVector2D();
+            if (!cellProtected.getMapCoordinate().equals(position)) {
+                position = cellProtected.getMapCoordinate();
             }
 
             putTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);

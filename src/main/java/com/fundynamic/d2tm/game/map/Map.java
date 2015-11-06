@@ -1,14 +1,16 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
+
+import java.util.List;
 
 /**
  *
@@ -114,36 +116,12 @@ public class Map {
         return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
     }
 
-    public Projectile placeProjectile(Projectile projectile) {
-        Vector2D mapCoordinates = projectile.getAbsoluteCoordinates();
-        mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
-        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), projectile.getSight(), projectile.getPlayer());
-        return projectile;
-    }
-
-    public Unit placeUnit(Unit unit) {
-        Vector2D mapCoordinates = unit.getAbsoluteCoordinates();
-        mapCoordinates = mapCoordinates.div(TILE_SIZE); // translate from absolute pixels to map coordinates
-        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), unit.getSight(), unit.getPlayer());
-        return unit;
-    }
-
-    public Structure placeStructure(Structure structure) {
-        Vector2D topLeftMapCoordinates = structure.getAbsoluteCoordinates();
-
-        // translate from absolute pixels to map coordinates
-        topLeftMapCoordinates = topLeftMapCoordinates.div(TILE_SIZE);
-
-        for (int x = 0; x < structure.getWidthInCells(); x++) {
-            for (int y = 0; y < structure.getHeightInCells(); y++) {
-                int cellX = topLeftMapCoordinates.getXAsInt() + x;
-                int cellY = topLeftMapCoordinates.getYAsInt() + y;
-
-                revealShroudFor(cellX, cellY, structure.getSight(), structure.getPlayer());
-            }
+    public Entity revealShroudFor(Entity entity) {
+        List<Coordinate> allCoordinates = entity.getAllCellsAsCoordinates();
+        for (Coordinate coordinate : allCoordinates) {
+            revealShroudFor(coordinate, entity.getSight(), entity.getPlayer());
         }
-
-        return structure;
+        return entity;
     }
 
     public String getAsciiShroudMap(Player player) {
@@ -151,7 +129,7 @@ public class Map {
         for (int y = 0; y < height; y++) {
             String line = "";
             for (int x = 0; x < width; x++) {
-                if (player.isShrouded(getCell(x, y).getPosition())) {
+                if (player.isShrouded(getCell(x, y).getMapCoordinate())) {
                     line += "#";
                 } else {
                     line += ".";
@@ -194,7 +172,7 @@ public class Map {
     }
 
     public void revealShroudFor(int x, int y, Player player) {
-        player.revealShroudFor(getCell(x, y).getPosition());
+        player.revealShroudFor(getCell(x, y).getMapCoordinate());
     }
 
     public void revealShroudFor(int x, int y, int range, Player player) {
@@ -221,20 +199,20 @@ public class Map {
                 // convert back the pixel coordinates back to a cell
                 Cell cell = getCellByAbsoluteMapCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
-                player.revealShroudFor(cell.getPosition());
+                player.revealShroudFor(cell.getMapCoordinate());
             }
         }
     }
 
-    public void revealShroudFor(Vector2D absoluteCoordinates, int range, Player player) {
-        Vector2D mapCoordinates = absoluteCoordinates.div(32F);
+    public void revealShroudFor(Coordinate coordinate, int range, Player player) {
+        MapCoordinate mapCoordinates = coordinate.toMapCoordinate();
         revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range, player);
     }
 
     public void revealAllShroudFor(Player player) {
         for (Cell[] cellsRow : cells) {
             for (Cell cell : cellsRow) {
-                player.revealShroudFor(cell.getPosition());
+                player.revealShroudFor(cell.getMapCoordinate());
             }
         }
     }

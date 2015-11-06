@@ -53,7 +53,6 @@ public class Mouse {
 
     public void init() {
         this.mouseBehavior = new NormalMouse(this);
-        this.hoverCell = null;
     }
 
     // TODO make mouse implement Renderable interface?

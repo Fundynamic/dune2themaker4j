@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {
-        Unit unit = makeUnit(player, Vector2D.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         assertThat(unit.isSelected(), is(false));
 
         mouse.mouseMovedToCell(map.getCell(1, 1)); // equals 32, 32
@@ -37,7 +38,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
 
-        Unit unit = makeUnit(player, Vector2D.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         unit.select();
 
         // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
@@ -54,12 +55,12 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
     @Test
     public void attacksUnitOfOtherPlayer() {
         // create player for unit and select it
-        Unit unit = makeUnit(player, Vector2D.create(32, 32));
+        Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         unit.select();
 
         Player enemy = new Player("Enemy", Recolorer.FactionColor.RED);
-        Unit enemyUnit = makeUnit(enemy, Vector2D.create(64, 64));
-        map.placeUnit(enemyUnit);
+        Unit enemyUnit = makeUnit(enemy, Coordinate.create(64, 64), "QUAD");
+        map.revealShroudFor(enemyUnit);
 
         Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(64, 64));
         mouse.mouseMovedToCell(cell);

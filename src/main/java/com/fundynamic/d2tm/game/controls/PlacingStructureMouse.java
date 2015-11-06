@@ -23,7 +23,7 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
     @Override
     public void leftClicked() {
         Cell hoverCell = mouse.getHoverCell();
-        entityRepository.placeOnMap(hoverCell.getCoordinatesAsAbsoluteVector2D(), entityToPlace, mouse.getControllingPlayer());
+        entityRepository.placeOnMap(hoverCell.getCoordinates(), entityToPlace, mouse.getControllingPlayer());
         selectRandomlySomethingToPlace();
     }
 
@@ -40,11 +40,11 @@ public class PlacingStructureMouse extends AbstractMouseBehavior {
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.green);
         graphics.setLineWidth(1.1f);
-        graphics.drawRect(x, y, entityToPlace.width, entityToPlace.height);
+        graphics.drawRect(x, y, entityToPlace.getWidth(), entityToPlace.getHeight());
     }
 
     private void selectRandomlySomethingToPlace() {
-        entityToPlace = entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.TRIKE);
+        entityToPlace = entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
         if (entityToPlace != null) {
             mouse.setMouseImage(entityToPlace.getFirstImage(), 16, 16);
         }

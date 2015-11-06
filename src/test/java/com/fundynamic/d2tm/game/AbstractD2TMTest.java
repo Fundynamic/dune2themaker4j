@@ -15,6 +15,7 @@ import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -131,17 +132,17 @@ public abstract class AbstractD2TMTest {
     // STRUCTURES
     ////////////////////////////////////////////////////////////////////////////////
     public Structure makeStructure(Player player, int hitPoints) {
-        return makeStructure(player, hitPoints, 2, 3, 5, Vector2D.create(32, 32));
+        return makeStructure(player, hitPoints, 2, 3, 5, Coordinate.create(32, 32));
     }
 
-    public Structure makeStructure(Player player, int hitPoints, Vector2D absoluteCoordinates) {
-        return makeStructure(player, hitPoints, 2, 3, 5, absoluteCoordinates);
+    public Structure makeStructure(Player player, int hitPoints, Coordinate coordinate) {
+        return makeStructure(player, hitPoints, 2, 3, 5, coordinate);
     }
 
-    public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Vector2D absoluteMapCoordinates) {
+    public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Coordinate coordinate) {
         EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
         entityData.hitPoints = hitPoints;
-        return new Structure(absoluteMapCoordinates, mock(Image.class), player, entityData, entityRepository) {
+        return new Structure(coordinate, mock(Image.class), player, entityData, entityRepository) {
 
             @Override
             public boolean isDestroyed() {
@@ -159,31 +160,31 @@ public abstract class AbstractD2TMTest {
 
     // UNIT
     ////////////////////////////////////////////////////////////////////////////////
-    public Unit makeUnit(UnitFacings facing, Vector2D unitAbsoluteMapCoordinates) {
-        return makeUnit(facing, unitAbsoluteMapCoordinates, Vector2D.zero());
+    public Unit makeUnit(UnitFacings facing, Coordinate coordinate) {
+        return makeUnit(facing, coordinate, Vector2D.zero());
     }
 
-    public Unit makeUnit(UnitFacings facing, Vector2D unitAbsoluteMapCoordinates, Vector2D offset) {
-        Unit unit = makeUnit(player, unitAbsoluteMapCoordinates);
+    public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
+        Unit unit = makeUnit(player, coordinate, "QUAD");
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
     }
 
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Vector2D.zero());
+        return makeUnit(player, Coordinate.create(0, 0), "QUAD");
     }
 
-    public Unit makeUnit(Player player, Vector2D absoluteMapCoordinates) {
+    public Unit makeUnit(Player player, Coordinate coordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
-        return (Unit) entityRepository.placeOnMap(absoluteMapCoordinates, EntityType.UNIT, "QUAD", player);
+        return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, id, player);
     }
 
     // PROJECTILE
     ////////////////////////////////////////////////////////////////////////////////
-    public Projectile makeProjectile(Vector2D absoluteCoordinates) {
-        return (Projectile) entityRepository.placeProjectile(absoluteCoordinates, "LARGE_ROCKET", player);
+    public Projectile makeProjectile(Coordinate coordinate) {
+        return entityRepository.placeProjectile(coordinate, "LARGE_ROCKET", player);
     }
 
 

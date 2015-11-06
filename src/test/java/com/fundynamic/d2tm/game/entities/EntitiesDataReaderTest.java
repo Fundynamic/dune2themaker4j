@@ -33,8 +33,8 @@ public class EntitiesDataReaderTest {
         assertThat(constyard, is(not(nullValue())));
         assertThat(constyard.hitPoints, is(230));
         assertThat(constyard.image, is(not(nullValue())));
-        assertThat(constyard.width, is(64));
-        assertThat(constyard.height, is(64));
+        assertThat(constyard.getWidth(), is(64));
+        assertThat(constyard.getHeight(), is(64));
         assertThat(constyard.sight, is(4));
         assertThat(constyard.explosionId, is("BOOM"));
     }
@@ -48,8 +48,10 @@ public class EntitiesDataReaderTest {
         assertThat(quad.hitPoints, is(434));
         assertThat(quad.moveSpeed, is(1.5F));
         assertThat(quad.turnSpeed, is(0.75F));
-        assertThat(quad.width, is(32));
-        assertThat(quad.height, is(32));
+        assertThat(quad.attackRate, is(2.3F));
+        assertThat(quad.attackRange, is(96F));
+        assertThat(quad.getWidth(), is(32));
+        assertThat(quad.getHeight(), is(32));
         assertThat(quad.sight, is(7));
         assertThat(quad.explosionId, is("BOOM"));
         assertThat(quad.weaponId, is("RIFLE"));
@@ -61,8 +63,8 @@ public class EntitiesDataReaderTest {
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
-        assertThat(rifle.width, is(6));
-        assertThat(rifle.height, is(6));
+        assertThat(rifle.getWidth(), is(6));
+        assertThat(rifle.getHeight(), is(6));
         assertThat(rifle.explosionId, is("BOOM"));
         assertThat(rifle.moveSpeed, is(160f));
         assertThat(rifle.damage, is(28));
@@ -74,8 +76,8 @@ public class EntitiesDataReaderTest {
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
         assertThat(boom.image, is(not(nullValue())));
-        assertThat(boom.width, is(48));
-        assertThat(boom.height, is(48));
+        assertThat(boom.getWidth(), is(48));
+        assertThat(boom.getHeight(), is(48));
     }
 
     @Test

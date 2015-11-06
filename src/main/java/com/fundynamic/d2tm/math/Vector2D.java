@@ -74,12 +74,8 @@ public class Vector2D {
         return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
     }
 
-    public Vector2D min(Vector2D vecToSubstract) {
-        return new Vector2D(vec.getX() - vecToSubstract.getX(), vec.getY() - vecToSubstract.getY());
-    }
-
-    public Vector2D min(int x, int y) {
-        return new Vector2D(vec.getX() - x, vec.getY() - y);
+    public Vector2D min(Vector2D otherVector) {
+        return new Vector2D(vec.getX() - otherVector.getX(), vec.getY() - otherVector.getY());
     }
 
     public int getXAsInt() {
@@ -100,10 +96,6 @@ public class Vector2D {
         return Vector2D.create(added.getX(), added.getY());
     }
 
-    public Vector2D add(int correctX, int correctY) {
-        return Vector2D.create(getX() + correctX, getY() + correctY);
-    }
-
     public Vector2D div(float amount) {
         Vector2f scaled = vec.copy().scale(1F / amount);
         return Vector2D.create(scaled.getX(), scaled.getY());
@@ -112,7 +104,6 @@ public class Vector2D {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
         Vector2D vector2D = (Vector2D) o;
 

@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class ProjectileTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        projectile = makeProjectile(Vector2D.create(32, 32));
+        projectile = makeProjectile(Coordinate.create(32, 32));
     }
 
     @Test
@@ -166,8 +167,8 @@ public class ProjectileTest extends AbstractD2TMTest {
         // movespeed is per second, so we emulate that we want to travel a distance per 2 seconds (ie, 2 update cycles
         // with a delta of 1 second
         int seconds = 2;
-        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
-        projectile.moveTo(projectile.getAbsoluteCoordinates().add(distance));
+        Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        projectile.moveTo(projectile.getCoordinate().add(distance));
 
         projectile.update(1);
         assertThat(projectile.isDestroyed(), is(false));
@@ -175,7 +176,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         projectile.update(1);
         assertThat(projectile.isDestroyed(), is(false)); // it is very close, or at target, next update will 'destroy' it
 
-        projectile.update(1); // destroys projectile, spawns explosion if given
+        projectile.update(1); // destroys projectile, spawns explosion
         assertThat(projectile.isDestroyed(), is(true));
 
         // check that an explosion is created (assuming it is not UNKNOWN, large rocket should not have that)
@@ -190,8 +191,8 @@ public class ProjectileTest extends AbstractD2TMTest {
         EntityData entityData = projectile.getEntityData();
 
         int seconds = 1;
-        Vector2D distance = Vector2D.create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
-        Vector2D target = projectile.getAbsoluteCoordinates().add(distance);
+        Vector2D distance = create(entityData.moveSpeed, entityData.moveSpeed).scale(seconds);
+        Coordinate target = projectile.getCoordinate().add(distance);
         projectile.moveTo(target);
 
         // Place unit on target, so that it will be hit!
@@ -209,7 +210,7 @@ public class ProjectileTest extends AbstractD2TMTest {
 
     @Test
     public void projectileCannotTakeDamage() {
-        Projectile projectile = makeProjectile(Vector2D.create(32, 32));
+        Projectile projectile = makeProjectile(Coordinate.create(32, 32));
         int hitPoints = projectile.getHitPoints();
         projectile.takeDamage(100);
 

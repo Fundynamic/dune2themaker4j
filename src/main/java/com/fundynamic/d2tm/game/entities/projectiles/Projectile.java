@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -13,10 +14,10 @@ import org.newdawn.slick.SpriteSheet;
 public class Projectile extends Entity implements Moveable, Destructible {
 
     // state
-    private Vector2D target;
+    private Coordinate target;
     private boolean destroyed;
 
-    public Projectile(Vector2D mapCoordinates, SpriteSheet spriteSheet, Player player,
+    public Projectile(Coordinate mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
         super(mapCoordinates, spriteSheet, entityData, player, entityRepository);
         target = mapCoordinates;
@@ -36,7 +37,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite(getFacing(absoluteCoordinates, target), 0);
+        return spriteSheet.getSprite(getFacing(coordinate, target), 0);
     }
 
     public int getFacing(Vector2D from, Vector2D to) {
@@ -49,41 +50,42 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (target != absoluteCoordinates) {
+        if (target != coordinate) {
             float timeCorrectedSpeed = entityData.getRelativeMoveSpeed(deltaInSeconds);
-            Vector2D direction = target.min(absoluteCoordinates);
+            Vector2D direction = target.min(coordinate);
             Vector2D normalised = direction.normalise();
 
             // make sure we don't overshoot
-            float distance = absoluteCoordinates.distance(target);
+            float distance = coordinate.distance(target);
             if (distance < timeCorrectedSpeed) timeCorrectedSpeed = distance;
 
             Vector2D delta = normalised.scale(timeCorrectedSpeed);
-            absoluteCoordinates = absoluteCoordinates.add(delta);
+            coordinate = coordinate.add(delta);
         }
 
-        if (target.distance(absoluteCoordinates) < 0.1F) {
+        if (target.distance(coordinate) < 0.1F) {
             if (entityData.hasExplosionId()) {
-                // spawn explosion
-                entityRepository.explodeAt(absoluteCoordinates, entityData, player);
+                entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
             }
 
             // do damage on cell / range of cells
-            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(absoluteCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
-            if (entities.hasAny()) {
-                Entity entity = entities.getFirst();
-                if (entity.isDestructible()) {
-                    Destructible destructibleEntity = (Destructible) entity;
-                    destructibleEntity.takeDamage(entityData.damage);
+            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
+            entities.each(new EntityHandler() {
+                @Override
+                public void handle(Entity entity) {
+                    if (entity.isDestructible()) {
+                        Destructible destructibleEntity = (Destructible) entity;
+                        destructibleEntity.takeDamage(entityData.damage);
+                    }
                 }
-            }
+            });
             destroyed = true;
         }
     }
 
     @Override
     public void moveTo(Vector2D target) {
-        this.target = target;
+        this.target = new Coordinate(target);
     }
 
     @Override
@@ -107,5 +109,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
                 "target=" + target +
                 ", destroyed=" + destroyed +
                 '}';
+    }
+
+    public Coordinate getTarget() {
+        return target;
     }
 }
