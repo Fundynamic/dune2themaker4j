@@ -90,6 +90,16 @@ public class Structure extends Entity implements Selectable, Destructible {
     }
 
     @Override
+    public void getsFocus() {
+        fadingSelection.getsFocus();
+    }
+
+    @Override
+    public void lostFocus() {
+        fadingSelection.lostFocus();
+    }
+
+    @Override
     public String toString() {
         return "Structure{" +
                 "fadingSelection=" + fadingSelection +
@@ -119,6 +129,10 @@ public class Structure extends Entity implements Selectable, Destructible {
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate());
             renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());
+        } else {
+            if (fadingSelection.hasFocus()) {
+                renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());
+            }
         }
     }
 

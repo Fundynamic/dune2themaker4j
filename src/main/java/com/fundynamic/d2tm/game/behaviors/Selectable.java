@@ -8,4 +8,7 @@ public interface Selectable {
 
     boolean isSelected();
 
+    void getsFocus();
+
+    void lostFocus();
 }

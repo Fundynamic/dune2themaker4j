@@ -62,7 +62,7 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
         Unit enemyUnit = makeUnit(enemy, Coordinate.create(64, 64), "QUAD");
         map.revealShroudFor(enemyUnit);
 
-        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(64, 64));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(64, 64));
         mouse.mouseMovedToCell(cell);
         mouse.leftClicked();
     }

@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.terrain.impl.Rock;
 import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
 import com.fundynamic.d2tm.graphics.Theme;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,13 +70,13 @@ public class MapTest extends AbstractD2TMTest {
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapTopLeftOfCell() {
-        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(0, 0));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(0, 0));
         assertTrue(cell.getTerrain() instanceof Sand);
     }
 
     @Test
     public void returnsCellForPixelCoordinatesTopLeftOfMapMiddleOfCell() {
-        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(TILE_SIZE / 2, TILE_SIZE / 2));
         assertTrue(cell.getTerrain() instanceof Sand);
     }
 
@@ -89,7 +90,7 @@ public class MapTest extends AbstractD2TMTest {
         pixelX += (TILE_SIZE - 1);
         pixelY += (TILE_SIZE - 1);
 
-        Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create(pixelX, pixelY));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(pixelX, pixelY));
         assertTrue(cell.getTerrain() instanceof Spice);
     }
 

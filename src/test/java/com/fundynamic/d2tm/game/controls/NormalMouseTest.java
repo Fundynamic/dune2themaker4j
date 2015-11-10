@@ -47,6 +47,29 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
     }
 
     @Test
+    public void mouseMovedToCellWithUnitGivesFocusToUnit() {
+        Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
+
+        Coordinate coordinate = cell.getCoordinates();
+        Unit unit = makeUnit(player, coordinate, "QUAD");
+        assertThat(unit.hasFocus(), is(false));
+
+        // ACT: move to
+        mouse.mouseMovedToCell(cell);
+
+        // ASSERT: the unit we hover over has focus
+        assertTrue(unit.hasFocus());
+
+        Cell otherCell = new Cell(map, mock(Terrain.class), 1, 2);
+
+        // ACT: move to other cell without unit
+        mouse.mouseMovedToCell(otherCell);
+
+        // ASSERT: the unit should have no focus anymore
+        assertFalse(unit.hasFocus());
+    }
+
+    @Test
     public void render() {
         mouse.render(graphics);
     }

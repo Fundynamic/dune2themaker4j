@@ -8,6 +8,8 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Rectangle;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -195,8 +197,8 @@ public class Viewport implements Renderable {
         }
     }
 
-    public Vector2D translateScreenToAbsoluteMapPixels(Vector2D positionOnScreen) {
-        return positionOnScreen.add(viewingVector);
+    public Coordinate translateScreenToAbsoluteMapPixels(Vector2D positionOnScreen) {
+        return new Coordinate(positionOnScreen.add(viewingVector));
     }
 
     public void toggleDrawDebugMode() {

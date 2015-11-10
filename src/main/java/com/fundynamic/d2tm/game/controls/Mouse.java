@@ -1,11 +1,11 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.graphics.ImageRepository;
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -81,6 +81,17 @@ public class Mouse {
      */
     public void mouseMovedToCell(Cell cell) {
         mouseBehavior.mouseMovedToCell(cell);
+    }
+
+    public Entity hoveringOverSelectableEntity() {
+        if (hoverCell == null) return null;
+        EntitiesSet entities = entityRepository.filter(Predicate.builder().
+                vectorWithin(hoverCell.getCoordinates()).
+                isSelectable());
+        Entity entity = entities.getFirst();
+        if (entity == null) return null;
+        if (!entity.isSelectable()) return null;
+        return entity;
     }
 
     public void setMouseBehavior(MouseBehavior mouseBehavior) {
@@ -172,8 +183,8 @@ public class Mouse {
         viewport.tellAboutNewMousePositions(position.getXAsInt(), position.getYAsInt());
 
         com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
-        Vector2D coordinates = viewport.translateScreenToAbsoluteMapPixels(position);
-        mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(coordinates));
+        Coordinate absoluteMapCoordinates = viewport.translateScreenToAbsoluteMapPixels(position);
+        mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
     }
 
 }

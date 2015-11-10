@@ -16,6 +16,9 @@ import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.Game.TILE_SIZE;
 
+/**
+ * Should become observable with RxJava!
+ */
 public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
 
     // Behaviors
@@ -279,6 +282,16 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
+    public void getsFocus() {
+        fadingSelection.getsFocus();
+    }
+
+    @Override
+    public void lostFocus() {
+        fadingSelection.lostFocus();
+    }
+
+    @Override
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         this.entityToAttack = null; // forget about attacking
@@ -355,14 +368,26 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
-            renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate().add(this.offset));
-            renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate().add(this.offset));
+            renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
+            renderQueue.putEntityGui(this.fadingSelection, getCoordinateWithOffset());
+        } else {
+            if (fadingSelection.hasFocus()) {
+                renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
+            }
         }
+    }
+
+    public Coordinate getCoordinateWithOffset() {
+        return this.getCoordinate().add(this.offset);
     }
 
     @Override
     public Coordinate getCenteredCoordinate() {
         return super.getCenteredCoordinate().add(offset);
+    }
+
+    public boolean hasFocus() {
+        return fadingSelection.hasFocus();
     }
 
 }

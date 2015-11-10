@@ -8,6 +8,7 @@ package com.fundynamic.d2tm.game.behaviors;
 public class SimpleSelectLogic implements Selectable {
 
     protected boolean selected;
+    protected boolean focus;
 
     public void select() {
         selected = true;
@@ -19,6 +20,20 @@ public class SimpleSelectLogic implements Selectable {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    @Override
+    public void getsFocus() {
+        focus = true;
+    }
+
+    @Override
+    public void lostFocus() {
+        focus = false;
+    }
+
+    public boolean hasFocus() {
+        return focus;
     }
 
 }

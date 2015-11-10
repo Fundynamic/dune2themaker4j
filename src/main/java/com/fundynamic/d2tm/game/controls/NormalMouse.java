@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.controls;
 
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
@@ -38,15 +37,7 @@ public class NormalMouse extends AbstractMouseBehavior {
     }
 
     protected Entity hoveringOverSelectableEntity() {
-        Cell hoverCell = mouse.getHoverCell();
-        if (hoverCell == null) return null;
-        EntitiesSet entities = mouse.getEntityRepository().filter(Predicate.builder().
-                vectorWithin(hoverCell.getCoordinates()).
-                isSelectable());
-        Entity entity = entities.getFirst();
-        if (entity == null) return null;
-        if (!entity.isSelectable()) return null;
-        return entity;
+        return mouse.hoveringOverSelectableEntity();
     }
 
     @Override
@@ -77,10 +68,22 @@ public class NormalMouse extends AbstractMouseBehavior {
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
+        Entity previousHoveringEntity = hoveringOverSelectableEntity();
         mouse.setHoverCell(cell);
         Entity entity = hoveringOverSelectableEntity();
-        if (entity != null && entity.belongsToPlayer(mouse.getControllingPlayer())) {
+        if (entity != previousHoveringEntity) {
+            // shifted focus from one entity to another (or to nothing)
+            if (previousHoveringEntity != null && previousHoveringEntity.isSelectable()) {
+                ((Selectable) previousHoveringEntity).lostFocus();
+            }
+        }
+        if (entity != null) {
+//            if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
             mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
+            if (entity.isSelectable()) {
+                ((Selectable) entity).getsFocus();
+            }
+//            }
         } else {
             mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
         }

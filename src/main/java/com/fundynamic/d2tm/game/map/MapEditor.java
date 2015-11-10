@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
@@ -126,7 +127,7 @@ public class MapEditor {
                 double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
                 // convert back the pixel coordinates back to a cell
-                Cell cell = map.getCellByAbsoluteMapCoordinates(Vector2D.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
+                Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
                 putTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
             }
