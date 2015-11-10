@@ -20,7 +20,7 @@ public class NormalMouse extends AbstractMouseBehavior {
 
     @Override
     public void leftClicked() {
-        Entity entity = hoveringOverSelectableEntity();
+        Entity entity = mouse.hoveringOverSelectableEntity();
         if (entity == null) return;
 
         selectEntity(entity);
@@ -34,10 +34,6 @@ public class NormalMouse extends AbstractMouseBehavior {
         deselectCurrentlySelectedEntity();
         mouse.setLastSelectedEntity(entity);
         ((Selectable) entity).select();
-    }
-
-    protected Entity hoveringOverSelectableEntity() {
-        return mouse.hoveringOverSelectableEntity();
     }
 
     @Override
@@ -68,22 +64,19 @@ public class NormalMouse extends AbstractMouseBehavior {
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
-        Entity previousHoveringEntity = hoveringOverSelectableEntity();
+        Entity previousHoveringEntity = mouse.hoveringOverSelectableEntity();
         mouse.setHoverCell(cell);
-        Entity entity = hoveringOverSelectableEntity();
+
+        Entity entity = mouse.hoveringOverSelectableEntity();
         if (entity != previousHoveringEntity) {
             // shifted focus from one entity to another (or to nothing)
-            if (previousHoveringEntity != null && previousHoveringEntity.isSelectable()) {
+            if (previousHoveringEntity.isSelectable()) {
                 ((Selectable) previousHoveringEntity).lostFocus();
             }
         }
-        if (entity != null) {
-//            if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
+        if (entity.isSelectable()) {
             mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
-            if (entity.isSelectable()) {
-                ((Selectable) entity).getsFocus();
-            }
-//            }
+            ((Selectable) entity).getsFocus();
         } else {
             mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
         }

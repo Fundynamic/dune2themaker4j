@@ -37,7 +37,6 @@ public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
 
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
-
         Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         unit.select();
 

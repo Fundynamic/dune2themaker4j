@@ -84,13 +84,13 @@ public class Mouse {
     }
 
     public Entity hoveringOverSelectableEntity() {
-        if (hoverCell == null) return null;
+        if (hoverCell == null) return NullEntity.INSTANCE;
         EntitiesSet entities = entityRepository.filter(Predicate.builder().
                 vectorWithin(hoverCell.getCoordinates()).
                 isSelectable());
         Entity entity = entities.getFirst();
-        if (entity == null) return null;
-        if (!entity.isSelectable()) return null;
+        if (entity == null) return NullEntity.INSTANCE;
+        if (!entity.isSelectable()) return NullEntity.INSTANCE;
         return entity;
     }
 

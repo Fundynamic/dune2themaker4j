@@ -3,10 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Destroyer;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
 
@@ -31,10 +28,10 @@ public class MovableSelectedMouse extends NormalMouse {
 
     @Override
     public void leftClicked() {
-        Entity hoveringOverEntity = hoveringOverSelectableEntity();
+        Entity hoveringOverEntity = mouse.hoveringOverSelectableEntity();
 
         // hovering over an entity and visible for player
-        if (hoveringOverEntity != null && mouse.getHoverCell().isVisibleFor(player)) {
+        if (!NullEntity.is(hoveringOverEntity) && mouse.getHoverCell().isVisibleFor(player)) {
             // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
                 deselectCurrentlySelectedEntity();
@@ -69,11 +66,14 @@ public class MovableSelectedMouse extends NormalMouse {
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
         mouse.setHoverCell(cell);
-        Entity entity = hoveringOverSelectableEntity();
-        if (entity == null) {
+        Entity entity = mouse.hoveringOverSelectableEntity();
+
+        // no entity on the cell we're hovering over, so we can move
+        if (NullEntity.is(entity)) {
             mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
             return;
         }
+
         if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
             mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
         } else if(cell.isVisibleFor(player)) {
