@@ -142,7 +142,7 @@ public abstract class AbstractD2TMTest {
     public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Coordinate coordinate) {
         EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
         entityData.hitPoints = hitPoints;
-        return new Structure(coordinate, mock(Image.class), player, entityData, entityRepository) {
+        Structure structure = new Structure(coordinate, mock(Image.class), player, entityData, entityRepository) {
 
             @Override
             public boolean isDestroyed() {
@@ -156,6 +156,8 @@ public abstract class AbstractD2TMTest {
                 return mock(Image.class);
             }
         };
+        entityRepository.placeOnMap(structure);
+        return structure;
     }
 
     // UNIT

@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
@@ -67,6 +69,29 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
 
         // ASSERT: the unit should have no focus anymore
         assertFalse(unit.hasFocus());
+    }
+
+    @Test
+    public void mouseMovedToCellWithUnitGivesFocusToStructure() {
+        Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
+
+        Coordinate coordinate = cell.getCoordinates();
+        Structure structure = makeStructure(player, 1000, coordinate);
+        assertThat(structure.hasFocus(), is(false));
+
+        // ACT: move to
+        mouse.mouseMovedToCell(cell);
+
+        // ASSERT: the structure we hover over has focus
+        assertTrue(structure.hasFocus());
+
+        Cell otherCell = new Cell(map, mock(Terrain.class), 10, 10); // make sure we are way out of range due structure width/height
+
+        // ACT: move to other cell without structure
+        mouse.mouseMovedToCell(otherCell);
+
+        // ASSERT: the structure should have no focus anymore
+        assertFalse(structure.hasFocus());
     }
 
     @Test

@@ -82,23 +82,27 @@ public class EntityRepository {
         if (entityData.isTypeStructure()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Structure(coordinate, recoloredImage, player, entityData, this);
-            return addEntityToList(map.revealShroudFor(createdEntity));
+            return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
             createdEntity = new Unit(map, coordinate, spriteSheet, player, entityData, this);
-            return addEntityToList(map.revealShroudFor(createdEntity));
+            return placeOnMap(createdEntity);
         } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
             createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
-            return addEntityToList(map.revealShroudFor(createdEntity));
+            return placeOnMap(createdEntity);
         }  else if (entityData.isTypeParticle()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
             createdEntity = new Particle(coordinate, spriteSheet, entityData, this);
-            return addEntityToList(map.revealShroudFor(createdEntity));
+            return placeOnMap(createdEntity);
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
+    }
+
+    public Entity placeOnMap(Entity createdEntity) {
+        return addEntityToList(map.revealShroudFor(createdEntity));
     }
 
     public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {

@@ -31,4 +31,8 @@ public class NullEntity extends Entity {
     public void update(float deltaInSeconds) {
 
     }
+
+    public static boolean is(Entity entity) {
+        return NullEntity.INSTANCE.equals(entity) || entity instanceof NullEntity;
+    }
 }

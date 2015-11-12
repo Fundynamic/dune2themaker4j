@@ -136,4 +136,7 @@ public class Structure extends Entity implements Selectable, Destructible {
         }
     }
 
+    public boolean hasFocus() {
+        return fadingSelection.hasFocus();
+    }
 }
