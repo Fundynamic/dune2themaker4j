@@ -96,7 +96,7 @@ public class Mouse {
 
     public void setMouseBehavior(MouseBehavior mouseBehavior) {
         if (mouseBehavior == null) throw new IllegalArgumentException("MouseBehavior argument may not be null!");
-        System.out.println("Mouse behavior changed into " + mouseBehavior);
+//        System.out.println("Mouse behavior changed into " + mouseBehavior);
         this.mouseBehavior = mouseBehavior;
     }
 
