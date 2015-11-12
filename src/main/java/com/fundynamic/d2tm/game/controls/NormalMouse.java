@@ -31,6 +31,7 @@ public class NormalMouse extends AbstractMouseBehavior {
     }
 
     protected void selectEntity(Entity entity) {
+        if (!entity.isSelectable()) return;
         deselectCurrentlySelectedEntity();
         mouse.setLastSelectedEntity(entity);
         ((Selectable) entity).select();
@@ -74,6 +75,7 @@ public class NormalMouse extends AbstractMouseBehavior {
                 ((Selectable) previousHoveringEntity).lostFocus();
             }
         }
+
         if (entity.isSelectable()) {
             mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
             ((Selectable) entity).getsFocus();
