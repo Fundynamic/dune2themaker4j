@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
-public class MovableSelectedMouseTest extends AbstractMouseBehaviorTest {
+public class MovableSelectedMouseTest extends AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {

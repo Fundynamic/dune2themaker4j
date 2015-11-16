@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 
 
-public class DraggingSelectionBoxMouseTest extends AbstractMouseBehaviorTest {
+public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {

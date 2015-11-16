@@ -12,6 +12,7 @@ import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -48,7 +49,9 @@ public abstract class AbstractD2TMTest {
 
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Map map;
+    protected Viewport viewport;
 
+    protected Mouse mouse;
 
     @Before
     public void setUp() throws SlickException {
@@ -57,6 +60,11 @@ public abstract class AbstractD2TMTest {
         entitiesDataReader = makeEntitiesDataReader();
         entitiesData = entitiesDataReader.fromRulesIni();
         entityRepository = makeTestableEntityRepository(map, entitiesData);
+
+        mouse = makeTestableMouse(player, entityRepository);
+        viewport = new Viewport(map, mouse, player, mock(Image.class));
+
+        mouse.setViewport(viewport);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
@@ -98,10 +106,11 @@ public abstract class AbstractD2TMTest {
      * Creates mouse with TestableEntityRepository and TestableImageRepository
      *
      * @param player - used in TestableMouse
+     * @param entityRepository
      * @return
      * @throws SlickException
      */
-    public Mouse makeTestableMouse(Player player) throws SlickException {
+    public Mouse makeTestableMouse(Player player, EntityRepository entityRepository) throws SlickException {
         GameContainer gameContainer = mock(GameContainer.class);
         return new TestableMouse(player, gameContainer, entityRepository);
     }

@@ -1,11 +1,12 @@
 package com.fundynamic.d2tm.game.controls;
 
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
-public class PlacingParticleMouseTest extends AbstractMouseBehaviorTest {
+public class PlacingParticleMouseTest extends AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {

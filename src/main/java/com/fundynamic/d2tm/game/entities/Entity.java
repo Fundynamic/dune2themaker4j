@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -143,4 +145,13 @@ public abstract class Entity implements Renderable, Updateable {
     public List<Coordinate> getAllCellsAsCoordinates() {
         return entityData.getAllCellsAsCoordinates(coordinate);
     }
+
+    public boolean isVisibleFor(Player player, Map map) {
+        List<Cell> allCellsOccupiedByEntity = map.getAllCellsOccupiedByEntity(this);
+        for (Cell cell : allCellsOccupiedByEntity) {
+            if (cell.isVisibleFor(player)) return true;
+        }
+        return false;
+    }
+
 }

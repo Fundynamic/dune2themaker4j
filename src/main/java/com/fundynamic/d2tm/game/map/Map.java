@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
@@ -10,6 +11,7 @@ import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,6 +108,17 @@ public class Map {
 
     public Shroud getShroud() {
         return shroud;
+    }
+
+    public List<Cell> getAllCellsOccupiedByEntity(Entity entity) {
+        List<Cell> result = new ArrayList<>(entity.getWidthInCells() * entity.getWidthInCells());
+        MapCoordinate mapCoordinate = entity.getCoordinate().toMapCoordinate();
+        for (int x = 0; x < entity.getWidthInCells(); x++) {
+            for (int y = 0; y < entity.getWidthInCells(); y++) {
+                result.add(this.getCell(mapCoordinate.getXAsInt() + x, mapCoordinate.getYAsInt() + y));
+            }
+        }
+        return result;
     }
 
     public Cell getCellByAbsoluteMapCoordinates(Coordinate coordinates) {

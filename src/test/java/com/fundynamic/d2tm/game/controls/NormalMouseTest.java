@@ -1,12 +1,12 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 
-public class NormalMouseTest extends AbstractMouseBehaviorTest {
+public class NormalMouseTest extends AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {
@@ -72,7 +72,7 @@ public class NormalMouseTest extends AbstractMouseBehaviorTest {
     }
 
     @Test
-    public void mouseMovedToCellWithUnitGivesFocusToStructure() {
+    public void mouseMovedToCellWithUnitGivesFocusToVisibleStructure() {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
 
         Coordinate coordinate = cell.getCoordinates();

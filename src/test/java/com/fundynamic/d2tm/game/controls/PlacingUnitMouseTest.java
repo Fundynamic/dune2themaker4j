@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityType;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 
-public class PlacingUnitMouseTest extends AbstractMouseBehaviorTest {
+public class PlacingUnitMouseTest extends AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {

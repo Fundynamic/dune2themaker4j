@@ -35,7 +35,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     public void setUp() throws SlickException {
         super.setUp();
         map = makeMap(WIDTH_OF_MAP, HEIGHT_OF_MAP);
-        this.mouse = makeTestableMouse(player);
+        this.mouse = makeTestableMouse(player, entityRepository);
         this.mouse.init();
 
         viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);

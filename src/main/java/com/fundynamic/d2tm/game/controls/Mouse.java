@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.Viewport;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -91,7 +90,13 @@ public class Mouse {
         Entity entity = entities.getFirst();
         if (entity == null) return NullEntity.INSTANCE;
         if (!entity.isSelectable()) return NullEntity.INSTANCE;
+        if (!hoveringOverVisibleEntity(entity)) return NullEntity.INSTANCE;
         return entity;
+    }
+
+    public boolean hoveringOverVisibleEntity(Entity entity) {
+        com.fundynamic.d2tm.game.map.Map map = this.viewport.getMap();
+        return entity.isVisibleFor(getControllingPlayer(), map);
     }
 
     public void setMouseBehavior(MouseBehavior mouseBehavior) {
