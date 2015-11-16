@@ -131,7 +131,7 @@ public class Structure extends Entity implements Selectable, Destructible {
             renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());
         } else {
             if (fadingSelection.hasFocus()) {
-                renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());
+                renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate());
             }
         }
     }
