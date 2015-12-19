@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.behaviors.Destroyer;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
+import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -65,8 +66,20 @@ public class MovableSelectedMouse extends NormalMouse {
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
+        Entity previousHoveringEntity = mouse.hoveringOverSelectableEntity();
         mouse.setHoverCell(cell);
         Entity entity = mouse.hoveringOverSelectableEntity();
+
+        if (entity != previousHoveringEntity) {
+            // shifted focus from one entity to another (or to nothing)
+            if (previousHoveringEntity.isSelectable()) {
+                ((Selectable) previousHoveringEntity).lostFocus();
+            }
+        }
+
+        if (entity.isSelectable()) {
+            ((Selectable) entity).getsFocus();
+        }
 
         // no entity on the cell we're hovering over, so we can move
         if (NullEntity.is(entity)) {
