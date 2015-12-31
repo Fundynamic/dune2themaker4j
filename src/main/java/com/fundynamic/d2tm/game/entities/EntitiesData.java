@@ -13,6 +13,7 @@ public class EntitiesData {
     // units
     public static String TRIKE = "TRIKE";
     public static String QUAD = "QUAD";
+    public static String TANK = "TANK";
 
     // structures
     public static String CONSTRUCTION_YARD = "CONSTYARD";

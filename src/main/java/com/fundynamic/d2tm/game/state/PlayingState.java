@@ -130,7 +130,7 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
         entityRepository.placeStructureOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
 
-        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.QUAD, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TANK, human);
         entityRepository.placeUnitOnMap(Coordinate.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.QUAD, human);
         entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TRIKE, human);
         entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TRIKE, human);
