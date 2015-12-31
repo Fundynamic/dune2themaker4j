@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -32,7 +33,7 @@ public class EntitiesData {
     }
 
     public void addProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
+        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
         entity.damage = damage;
         entity.explosionId = explosionId;
         entity.setFacingsAndCalculateChops(facings);
@@ -49,7 +50,7 @@ public class EntitiesData {
      * @throws SlickException
      */
     public void addParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
+        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
         entity.animationSpeed = framesPerSecond;
     }
 
@@ -66,7 +67,7 @@ public class EntitiesData {
      * @throws SlickException
      */
     public void addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
 
         if (!idProvided(explosionId)) {
             if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
@@ -76,8 +77,8 @@ public class EntitiesData {
         }
     }
 
-    public void addUnit(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
+    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
+        EntityData entity = createEntity(id, pathToImage, pathToBarrelImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
 
         entity.attackRate = attackRate;
         entity.attackRange = attackRange;
@@ -101,12 +102,13 @@ public class EntitiesData {
         return UNKNOWN.equals(weaponId);
     }
 
-    private EntityData createEntity(String id, String pathToImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
+    private EntityData createEntity(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
         if (tryGetEntityData(entityType, id)) {
             throw new IllegalArgumentException("Entity of type " + entityType + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
         }
         EntityData entityData = new EntityData();
         entityData.image = loadImage(pathToImage);
+        entityData.barrelImage = loadImage(pathToBarrelImage);
         entityData.setWidth(widthInPixels);
         entityData.setHeight(heightInPixels);
         entityData.type = entityType;
@@ -119,6 +121,9 @@ public class EntitiesData {
     }
 
     protected Image loadImage(String pathToImage) throws SlickException {
+        if (StringUtils.isEmpty(pathToImage)) {
+            return null;
+        }
         return new Image(pathToImage);
     }
 

@@ -16,7 +16,8 @@ public class EntityData {
 
     public EntityType type;
 
-    public Image image;
+    public Image image; // base image
+    public Image barrelImage; // barrelImage (top image)
 
     private int width;   // in pixels
     private int height;  // in pixels
@@ -89,6 +90,7 @@ public class EntityData {
                 ", type=" + type +
                 ", halfChop=" + halfChop +
                 ", image=" + image +
+                ", barrelImage=" + barrelImage +
                 ", width=" + width +
                 ", height=" + height +
                 ", sight=" + sight +

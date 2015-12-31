@@ -75,6 +75,7 @@ public class EntitiesDataReader {
             Profile.Section struct = units.getChild(id);
             entitiesData.addUnit(id,
                     struct.get("image", String.class, "no-image-provided"),
+                    struct.get("barrel", String.class, null),
                     struct.get("width", Integer.class, 1),
                     struct.get("height", Integer.class, 1),
                     struct.get("sight", Integer.class, 1),
