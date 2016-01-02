@@ -21,18 +21,27 @@ import org.newdawn.slick.SpriteSheet;
 public class RenderableWithFacingLogic extends SpriteSheet implements Renderable, Updateable {
 
     private int possibleFacings = 0;
+    private int maxFrames = 0;
 
     private float facing;
     private int desiredFacing;
 
     private float turnSpeed;
+    private float animationSpeed;
+
+    private float frame;
 
     public RenderableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData.getWidth(), entityData.getHeight());
         this.turnSpeed = turnSpeed;
+        this.animationSpeed = entityData.animationSpeed;
 
         this.possibleFacings = getHorizontalCount();
+        this.maxFrames = getVerticalCount();
+
+        this.frame = Random.getRandomBetween(0, maxFrames);
         this.facing = Random.getRandomBetween(0, possibleFacings);
+
         this.desiredFacing = (int) facing;
     }
 
@@ -48,7 +57,7 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
     }
 
     public Image getBodyFacing(float facing) {
-        return getSprite((int) facing, 0);
+        return getSprite((int) facing, (int) frame);
     }
 
     public boolean isFacingDesiredFacing() {
@@ -80,5 +89,12 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
     // usually, when we have a cannon, it is required to face the enemy before we can shoot
     public boolean isRequiredToFaceEnemyBeforeShooting() {
         return true;
+    }
+
+    public void updateAnimation(float deltaInSeconds) {
+        frame += EntityData.getRelativeSpeed(animationSpeed, deltaInSeconds);
+        if (frame >= maxFrames) {
+            frame -= maxFrames;
+        }
     }
 }

@@ -174,7 +174,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void explodeAndDie() {
         hasSpawnedExplosions = true;
-//        entityRepository.explodeAtCoordinate(coordinate, entityData.explosionId, player);
         entityRepository.placeExplosionWithCenterAt(getCenteredCoordinate(), player, entityData.explosionId);
     }
 
@@ -209,6 +208,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (!vecToAdd.equals(Vector2D.zero())) {
             moveToCell(coordinate.add(vecToAdd));
         }
+
+        bodyFacing.updateAnimation(deltaInSeconds);
+
         offset = Vector2D.create(offsetX, offsetY);
     }
 

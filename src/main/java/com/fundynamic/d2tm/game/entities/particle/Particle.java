@@ -40,7 +40,7 @@ public class Particle extends Entity implements Destructible {
 
     @Override
     public void update(float deltaInSeconds) {
-        sprite += animationSpeed * deltaInSeconds;
+        sprite += EntityData.getRelativeSpeed(animationSpeed, deltaInSeconds);
 
         if (sprite >= spritesheet.getHorizontalCount()) {
             destroyed = true;

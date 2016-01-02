@@ -45,6 +45,8 @@ public class EntityData {
     public float animationSpeed; // in frames per second
     public String key; // key used in HashMap
 
+    public boolean recolor; // if 'true' then the particle will be recolorred (into team color) before spawned
+
     public EntityData() {
     }
 
@@ -88,20 +90,28 @@ public class EntityData {
     public String toString() {
         return "EntityData{" +
                 "chop=" + chop +
-                ", type=" + type +
                 ", halfChop=" + halfChop +
+                ", type=" + type +
                 ", image=" + image +
                 ", barrelImage=" + barrelImage +
                 ", width=" + width +
                 ", height=" + height +
+                ", widthInCells=" + widthInCells +
+                ", heightInCells=" + heightInCells +
                 ", sight=" + sight +
                 ", moveSpeed=" + moveSpeed +
+                ", turnSpeed=" + turnSpeed +
+                ", turnSpeedCannon=" + turnSpeedCannon +
+                ", attackRate=" + attackRate +
+                ", attackRange=" + attackRange +
                 ", hitPoints=" + hitPoints +
                 ", facings=" + facings +
                 ", damage=" + damage +
                 ", explosionId='" + explosionId + '\'' +
                 ", weaponId='" + weaponId + '\'' +
                 ", animationSpeed=" + animationSpeed +
+                ", key='" + key + '\'' +
+                ", recolor=" + recolor +
                 '}';
     }
 

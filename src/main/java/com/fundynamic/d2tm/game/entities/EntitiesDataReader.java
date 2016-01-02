@@ -79,6 +79,7 @@ public class EntitiesDataReader {
                     struct.get("width", Integer.class, 1),
                     struct.get("height", Integer.class, 1),
                     struct.get("sight", Integer.class, 1),
+                    struct.get("fps", Float.class, 0f),
                     struct.get("movespeed", Float.class, 0f),
                     struct.get("turnspeed", Float.class, 0f),
                     struct.get("turnspeedcannon", Float.class, 0f),
@@ -99,7 +100,8 @@ public class EntitiesDataReader {
                     struct.get("image", String.class),
                     struct.get("width", Integer.class),
                     struct.get("height", Integer.class),
-                    struct.get("fps", Float.class));
+                    struct.get("fps", Float.class),
+                    struct.get("recolor", Boolean.class, false));
         }
     }
 

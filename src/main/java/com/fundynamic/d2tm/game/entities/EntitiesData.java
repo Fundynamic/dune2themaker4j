@@ -15,6 +15,8 @@ public class EntitiesData {
     public static String TRIKE = "TRIKE";
     public static String QUAD = "QUAD";
     public static String TANK = "TANK";
+    public static String SOLDIER = "SOLDIER";
+    public static String INFANTRY = "INFANTRY";
 
     // structures
     public static String CONSTRUCTION_YARD = "CONSTYARD";
@@ -49,9 +51,10 @@ public class EntitiesData {
      * @param framesPerSecond
      * @throws SlickException
      */
-    public void addParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond) throws SlickException {
+    public void addParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond, boolean recolor) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
         entity.animationSpeed = framesPerSecond;
+        entity.recolor = recolor;
     }
 
     /**
@@ -77,13 +80,14 @@ public class EntitiesData {
         }
     }
 
-    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
+    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float animationSpeed, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, pathToBarrelImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
 
         entity.attackRate = attackRate;
         entity.attackRange = attackRange;
         entity.turnSpeed = turnSpeed;
         entity.turnSpeedCannon = turnSpeedCannon;
+        entity.animationSpeed = animationSpeed;
 
         if (!idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {

@@ -130,19 +130,24 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
         entityRepository.placeStructureOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
 
-        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TANK, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.QUAD, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TRIKE, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.SOLDIER, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.INFANTRY, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TANK, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TANK, human);
+
+        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 15 * TILE_SIZE), EntitiesData.SOLDIER, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(16 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.INFANTRY, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(19 * TILE_SIZE, 15 * TILE_SIZE), EntitiesData.QUAD, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(20 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.TANK, cpu);
 
         // cpu entities
         entityRepository.placeStructureOnMap(Coordinate.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntitiesData.REFINERY, cpu);
         entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
 
-        entityRepository.placeUnitOnMap(Coordinate.create(50 * TILE_SIZE, 50 * TILE_SIZE), EntitiesData.QUAD, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(49 * TILE_SIZE, 49 * TILE_SIZE), EntitiesData.QUAD, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(52 * TILE_SIZE, 52 * TILE_SIZE), EntitiesData.TRIKE, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(53 * TILE_SIZE, 53 * TILE_SIZE), EntitiesData.TRIKE, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(50 * TILE_SIZE, 50 * TILE_SIZE), EntitiesData.TANK, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(49 * TILE_SIZE, 49 * TILE_SIZE), EntitiesData.TANK, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(52 * TILE_SIZE, 52 * TILE_SIZE), EntitiesData.TANK, cpu);
+        entityRepository.placeUnitOnMap(Coordinate.create(53 * TILE_SIZE, 53 * TILE_SIZE), EntitiesData.TANK, cpu);
 
     }
 
