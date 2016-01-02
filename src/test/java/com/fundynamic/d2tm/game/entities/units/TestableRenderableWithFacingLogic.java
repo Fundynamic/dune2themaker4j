@@ -14,4 +14,14 @@ public class TestableRenderableWithFacingLogic extends RenderableWithFacingLogic
     public Image getSprite(int x, int y) {
         return Mockito.mock(Image.class);
     }
+
+    @Override
+    public int getVerticalCount() {
+        return 0;
+    }
+
+    @Override
+    public int getHorizontalCount() {
+        return 0;
+    }
 }
