@@ -25,4 +25,11 @@ public class NullRenderableWithFacingLogic extends RenderableWithFacingLogic {
     public void enrichRenderQueue(RenderQueue renderQueue) {
         // don't do anything
     }
+
+    // since this is a null object (no cannon available) it is NOT required to 'face' the enemy with a cannon, because
+    // hence there is none
+    @Override
+    public boolean isRequiredToFaceEnemyBeforeShooting() {
+        return false;
+    }
 }

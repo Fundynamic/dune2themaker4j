@@ -61,7 +61,9 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
 
     @Override
     public void update(float deltaInSeconds) {
-        facing = UnitFacings.turnTo(facing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
+        if (!isFacingDesiredFacing()) {
+            facing = UnitFacings.turnTo(facing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
+        }
     }
 
     // set the desire where to face to (which requires turning to happen, in the update() method)
@@ -73,5 +75,10 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
     public void faceTowards(int desiredFacing) {
         this.desiredFacing = desiredFacing;
         this.facing = desiredFacing;
+    }
+
+    // usually, when we have a cannon, it is required to face the enemy before we can shoot
+    public boolean isRequiredToFaceEnemyBeforeShooting() {
+        return true;
     }
 }

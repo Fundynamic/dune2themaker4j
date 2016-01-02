@@ -124,14 +124,22 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (distance(entityToAttack) < attackRange) {
             // in range!!
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
+            barrelFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 // target is destroyed, so stop attacking...
                 entityToAttack = null;
             } else {
                 // target is not yet destroyed
+                boolean readyToFire = false;
 
-                if (bodyFacing.isFacingDesiredFacing()) { // unit is facing target, commence attacking
+                if (barrelFacing.isRequiredToFaceEnemyBeforeShooting()) {
+                    readyToFire = barrelFacing.isFacingDesiredFacing();
+                } else if (bodyFacing.isRequiredToFaceEnemyBeforeShooting()) {
+                    readyToFire = bodyFacing.isFacingDesiredFacing();
+                }
+
+                if (readyToFire) { // unit is facing target, commence attacking
 
                     // weird check here, but we should have a weapon before we can fire...
                     if (entityData.hasWeaponId()) {
