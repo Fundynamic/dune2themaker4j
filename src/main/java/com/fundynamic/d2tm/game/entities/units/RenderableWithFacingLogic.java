@@ -2,11 +2,9 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
-import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Random;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -27,11 +25,11 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
     private float facing;
     private int desiredFacing;
 
-    private EntityData entityData;
+    private float turnSpeed;
 
-    public RenderableWithFacingLogic(Image image, EntityData entityData) {
+    public RenderableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData.getWidth(), entityData.getHeight());
-        this.entityData = entityData;
+        this.turnSpeed = turnSpeed;
 
         this.possibleFacings = getHorizontalCount();
         this.facing = Random.getRandomBetween(0, possibleFacings);
@@ -46,7 +44,7 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
-        // barrel logic? because it goes over all other things?
+        // nothing to do here
     }
 
     public Image getBodyFacing(float facing) {
@@ -63,10 +61,17 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
 
     @Override
     public void update(float deltaInSeconds) {
-        facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+        facing = UnitFacings.turnTo(facing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
     }
 
+    // set the desire where to face to (which requires turning to happen, in the update() method)
+    public void desireToFaceTo(int desiredFacing) {
+        this.desiredFacing = desiredFacing;
+    }
+
+    // set facing, desired == facing == given value
     public void faceTowards(int desiredFacing) {
         this.desiredFacing = desiredFacing;
+        this.facing = desiredFacing;
     }
 }

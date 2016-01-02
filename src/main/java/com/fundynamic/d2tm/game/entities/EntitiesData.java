@@ -77,12 +77,14 @@ public class EntitiesData {
         }
     }
 
-    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
+    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, pathToBarrelImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
 
         entity.attackRate = attackRate;
         entity.attackRange = attackRange;
         entity.turnSpeed = turnSpeed;
+        entity.turnSpeedCannon = turnSpeedCannon;
+
         if (!idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
                 throw new IllegalArgumentException("unit " + id + " [weapon] refers to non-existing [WEAPONS/" + weaponId + "]");

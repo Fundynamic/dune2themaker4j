@@ -30,11 +30,12 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         int sight = 2;
         float moveSpeed = 1.0F;
         float turnSpeed = 2.0F;
+        float turnSpeedCannon = 2.1F;
         float attackRate = 2.2F;
         float attackRange = 82F;
         String weaponId = "UNKNOWN";
         String explosionId = "UNKNOWN";
-        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", widthInPixels, heightInPixels, sight, moveSpeed, turnSpeed, attackRate, attackRange, hitPoints, weaponId, explosionId);
+        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", widthInPixels, heightInPixels, sight, moveSpeed, turnSpeed, turnSpeedCannon, attackRate, attackRange, hitPoints, weaponId, explosionId);
 
         EntityData data = entitiesData.getEntityData(EntityType.UNIT, idOfEntity);
 
@@ -46,6 +47,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(sight, data.sight);
         assertThat(moveSpeed, is(data.moveSpeed));
         assertThat(turnSpeed, is(data.turnSpeed));
+        assertThat(turnSpeedCannon, is(data.turnSpeedCannon));
         assertThat(attackRate, is(data.attackRate));
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
@@ -55,8 +57,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", 32, 32, 2, 1.0F, 1.0F, 1.1F, 2.2F, 100, "0", "1"); // success!
-        entitiesData.addUnit(idOfEntity, "this is irrelevant", "barrel.png", 32, 32, 3, 1.0F, 1.0F, 1.1F, 3.2F, 100, "0", "1"); // boom!
+        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", 32, 32, 2, 1.0F, 1.0F, 1.2F, 1.1F, 2.2F, 100, "0", "1"); // success!
+        entitiesData.addUnit(idOfEntity, "this is irrelevant", "barrel.png", 32, 32, 3, 1.0F, 1.0F, 1.2F, 1.1F, 3.2F, 100, "0", "1"); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)

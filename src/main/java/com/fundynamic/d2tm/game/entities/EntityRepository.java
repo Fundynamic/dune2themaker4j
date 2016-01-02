@@ -1,10 +1,14 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.units.NullRenderableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
@@ -81,11 +85,28 @@ public class EntityRepository {
 
         if (entityData.isTypeStructure()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-            createdEntity = new Structure(coordinate, recoloredImage, player, entityData, this);
+            createdEntity = new Structure(
+                    coordinate,
+                    makeSpriteSheet(entityData, recoloredImage),
+                    player,
+                    entityData,
+                    this
+            );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-            createdEntity = new Unit(map, coordinate, recoloredImage, recoloredImage, player, entityData, this);
+
+            createdEntity = new Unit(
+                    map,
+                    coordinate,
+                    makeRenderableWithFacingLogic(entityData, recoloredImage, entityData.turnSpeed),
+                    makeRenderableWithFacingLogic(entityData, entityData.barrelImage, entityData.turnSpeedCannon),
+                    new FadingSelection(entityData.getWidth(), entityData.getHeight()),
+                    new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
+                    player,
+                    entityData,
+                    this
+            );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
@@ -102,10 +123,6 @@ public class EntityRepository {
 
     public Entity placeOnMap(Entity createdEntity) {
         return addEntityToList(map.revealShroudFor(createdEntity));
-    }
-
-    public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
-        return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
     }
 
     public Entity addEntityToList(Entity entity) {
@@ -197,4 +214,19 @@ public class EntityRepository {
     public Projectile placeProjectile(Coordinate coordinate, String id, Player player) {
         return (Projectile) placeOnMap(coordinate, EntityType.PROJECTILE, id, player);
     }
+
+    public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
+        return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
+    }
+
+    protected RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
+        if (recoloredImage == null)
+            try {
+                return new NullRenderableWithFacingLogic(entityData);
+            } catch (SlickException e) {
+                throw new IllegalStateException("Could not create NullRenderableWithFacingLogic() : " + e);
+            }
+        return new RenderableWithFacingLogic(recoloredImage, entityData, turnSpeed);
+    }
+
 }

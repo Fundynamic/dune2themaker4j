@@ -9,6 +9,7 @@ import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SpriteSheet;
 
 public class Structure extends Entity implements Selectable, Destructible {
 
@@ -23,9 +24,9 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     private boolean hasSpawnedExplosions;
 
-    public Structure(Coordinate coordinate, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Structure(Coordinate coordinate, SpriteSheet spritesheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate,
-                makeSpriteSheet(entityData, imageOfStructure),
+                spritesheet,
                 entityData,
                 player,
                 entityRepository

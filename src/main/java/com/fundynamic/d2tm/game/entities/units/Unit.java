@@ -27,6 +27,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     private RenderableWithFacingLogic bodyFacing;
+    private RenderableWithFacingLogic barrelFacing;
 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
@@ -42,25 +43,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private boolean hasSpawnedExplosions;
 
-    public Unit(Map map, Coordinate coordinate, Image unitImage, Image barrelImage, Player player, EntityData entityData, EntityRepository entityRepository) {
-        this(
-                map,
-                coordinate,
-                makeRenderableWithFacingLogic(entityData, unitImage),
-                makeRenderableWithFacingLogic(entityData, barrelImage),
-                new FadingSelection(entityData.getWidth(), entityData.getHeight()),
-                new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
-                player,
-                entityData,
-                entityRepository
-        );
-    }
-
-    // TODO: Simplify constructor
     public Unit(Map map, Coordinate coordinate, RenderableWithFacingLogic unitSpriteSheet, RenderableWithFacingLogic barrelSpriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate, unitSpriteSheet, entityData, player, entityRepository);
         this.map = map;
         this.bodyFacing = unitSpriteSheet;
+        this.barrelFacing = barrelSpriteSheet;
 
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
@@ -81,8 +68,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
         bodyFacing.render(graphics, drawX, drawY);
-
-        // draw any barrel if present?
+        barrelFacing.render(graphics, drawX, drawY);
     }
 
 
@@ -102,6 +88,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (shouldExplode()) {
             explodeAndDie();
+        }
+
+        if (!barrelFacing.isFacingDesiredFacing()) {
+            barrelFacing.update(deltaInSeconds);
         }
 
         fadingSelection.update(deltaInSeconds);
@@ -133,7 +123,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // ok, we don't need to move, so lets see if we are in range
         if (distance(entityToAttack) < attackRange) {
             // in range!!
-            bodyFacing.faceTowards(UnitFacings.getFacingInt(this, entityToAttack));
+            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 // target is destroyed, so stop attacking...
@@ -227,8 +217,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT);
 
         if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
-            this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
-            this.bodyFacing.faceTowards(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
+            nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
+            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
             return intendedMapCoordinatesToMoveTo;
         }
@@ -239,11 +229,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return nextTargetToMoveTo == coordinate;
     }
 
-    private void moveToCell(Coordinate coordinate) {
-        this.coordinate = coordinate;
-        this.nextTargetToMoveTo = coordinate;
+    private void moveToCell(Coordinate coordinateToMoveTo) {
+        this.coordinate = coordinateToMoveTo;
+        this.nextTargetToMoveTo = coordinateToMoveTo;
 
-        UnitMoveIntents.removeIntent(coordinate);
+        UnitMoveIntents.removeIntent(coordinateToMoveTo);
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
@@ -293,6 +283,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         this.entityToAttack = null; // forget about attacking
+        this.barrelFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
     }
 
     @Override
@@ -382,5 +373,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void setFacing(int facing) {
         this.bodyFacing.faceTowards(facing);
+        this.barrelFacing.faceTowards(facing);
     }
 }

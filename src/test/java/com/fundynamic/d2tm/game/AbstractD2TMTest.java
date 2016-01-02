@@ -7,6 +7,8 @@ import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.TestableRenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -151,7 +153,7 @@ public abstract class AbstractD2TMTest {
     public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Coordinate coordinate) {
         EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
         entityData.hitPoints = hitPoints;
-        Structure structure = new Structure(coordinate, mock(Image.class), player, entityData, entityRepository) {
+        Structure structure = new Structure(coordinate, mock(SpriteSheet.class), player, entityData, entityRepository) {
 
             @Override
             public boolean isDestroyed() {
@@ -208,9 +210,15 @@ public abstract class AbstractD2TMTest {
         Recolorer recolorer = mock(Recolorer.class);
         when(recolorer.recolorToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
         return new EntityRepository(map, recolorer, entitiesData) {
+            // used by Projectile and Particle
             @Override
             public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
                 return mock(SpriteSheet.class);
+            }
+
+            @Override
+            protected RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
+                return new TestableRenderableWithFacingLogic(recoloredImage, entityData, turnSpeed);
             }
         };
     }

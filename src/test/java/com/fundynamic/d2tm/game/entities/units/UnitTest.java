@@ -60,7 +60,7 @@ public class UnitTest extends AbstractD2TMTest {
         int expectedDrawX = drawX + offsetX;
         int expectedDrawY = drawY + offsetY;
 
-        verify(graphics).drawImage((Image) anyObject(), eq((float) expectedDrawX), eq((float) expectedDrawY));
+        verify(graphics, times(2)).drawImage(anyObject(), eq((float) expectedDrawX), eq((float) expectedDrawY));
     }
 
     @Test

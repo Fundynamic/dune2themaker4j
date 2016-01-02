@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
+import com.fundynamic.d2tm.game.entities.units.NullRenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -8,6 +9,7 @@ import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
@@ -154,14 +156,6 @@ public abstract class Entity implements Renderable, Updateable {
             if (cell.isVisibleFor(player)) return true;
         }
         return false;
-    }
-
-    protected static SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
-        return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
-    }
-
-    protected static RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage) {
-        return new RenderableWithFacingLogic(recoloredImage, entityData);
     }
 
 }

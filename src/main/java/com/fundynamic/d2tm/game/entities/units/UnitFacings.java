@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities.units;
 
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.HashMap;
@@ -10,6 +9,10 @@ import java.util.Map;
 
 import static java.lang.Math.abs;
 
+/**
+ * This class represents all possible Dune 2 facings. So we don't support C&C sprites. If we want to do so we need to
+ * make sure the amount of facings should be dynamic (8 or more).
+ */
 public enum UnitFacings {
     RIGHT(0),
     RIGHT_UP(1),
@@ -42,6 +45,18 @@ public enum UnitFacings {
         return facingsById.get(id);
     }
 
+    /**
+     * A very straightforward method to determine the facing given a 'from' and 'to' position
+     *
+     * This is using the UnitFacings class (enum values). The method getFacingInt is more flexible.
+     *
+     * @deprecated getFacingInt is favored over this.
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    @Deprecated
     public static UnitFacings determine(Vector2D from, Vector2D to) {
         boolean left = to.getXAsInt() < from.getXAsInt();
         boolean right = to.getXAsInt() > from.getXAsInt();
@@ -60,6 +75,7 @@ public enum UnitFacings {
         return UnitFacings.RIGHT;
     }
 
+    @Deprecated // it is still based on 8 facings
     public static int nextFacing(int current, int desired) {
         // Decide what the nextId (facing) should be
         int newId = current + facingDirection(current, desired);
@@ -130,6 +146,17 @@ public enum UnitFacings {
         return (int) (angle / chop) % facings;
     }
 
+    /**
+     * Given the current facing (float) param, the desired (int) facing and a given turnspeed. Turn towards the
+     * desired facing with the given turn speed. Returns the new facing (float).
+     *
+     * Makes sure flipping from facing 7 to 0 (or the other way around) happens.
+     *
+     * @param facing
+     * @param desiredFacing
+     * @param turnSpeed
+     * @return
+     */
     public static float turnTo(float facing, int desiredFacing, float turnSpeed) {
         float newFacing = facing + (facingDirection((int) facing, desiredFacing) * turnSpeed);
         if (newFacing < 0) newFacing = 7;

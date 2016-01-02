@@ -27,8 +27,9 @@ public class EntityData {
     public int sight;
 
     public float moveSpeed;   // the speed a unit moves: value is pixels in seconds.
-    public float turnSpeed;   // the speed a unit turns: value is facing angles in seconds. < 1 means
-    public float attackRate;  // the speed a unit attacks: the value is times per second
+    public float turnSpeed;   // the speed a unit turns: value is facing angles in seconds. < 1 means the value is times per second
+    public float turnSpeedCannon; // the speed a unit's barrel turns: value is facing angles in seconds. < 1 means the value is times per second
+    public float attackRate;  // the speed a unit attacks: < 1 means the value is times per second
 
     public float attackRange; // the range for a unit to attack in pixels
 
@@ -162,11 +163,15 @@ public class EntityData {
      * @return
      */
     public float getRelativeTurnSpeed(float deltaInSeconds) {
-        return turnSpeed * deltaInSeconds;
+        return getRelativeSpeed(turnSpeed, deltaInSeconds);
+    }
+
+    public static float getRelativeSpeed(float speed, float deltaInSeconds) {
+        return speed * deltaInSeconds;
     }
 
     public float getRelativeAttackRate(float deltaInSeconds) {
-        return attackRate * deltaInSeconds;
+        return getRelativeSpeed(attackRate, deltaInSeconds);
     }
 
     public boolean isTypeStructure() {

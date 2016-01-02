@@ -81,6 +81,7 @@ public class EntitiesDataReader {
                     struct.get("sight", Integer.class, 1),
                     struct.get("movespeed", Float.class, 0f),
                     struct.get("turnspeed", Float.class, 0f),
+                    struct.get("turnspeedcannon", Float.class, 0f),
                     struct.get("attackrate", Float.class, 0f),
                     struct.get("attackrange", Float.class, 0f),
                     struct.get("hitpoints", Integer.class, 0),
