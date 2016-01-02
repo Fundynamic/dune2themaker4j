@@ -40,7 +40,7 @@ public class HitPointBasedDestructibility implements Renderable {
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.white);
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x - 1, y - 7, widthInPixels + 2, 6);
+        graphics.fillRect(x - 1, y - 7, widthInPixels + 2, 7);
 
         graphics.setColor(Color.black);
         graphics.setLineWidth(1.1f);
