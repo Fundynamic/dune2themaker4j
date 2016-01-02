@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.HashMap;
@@ -102,6 +104,22 @@ public enum UnitFacings {
         return byId(calculateFacingSpriteIndex(from, to, facings));
     }
 
+    public static UnitFacings getFacing(Entity from, Entity to) {
+        return getFacing(from.getCenteredCoordinate(), to.getCenteredCoordinate());
+    }
+
+    public static int getFacingInt(Entity from, Entity to) {
+        return getFacing(from.getCenteredCoordinate(), to.getCenteredCoordinate()).getValue();
+    }
+
+    public static int getFacingInt(Entity from, Vector2D to) {
+        return getFacing(from.getCenteredCoordinate(), to).getValue();
+    }
+
+    public static int getFacingInt(Vector2D from, Vector2D to) {
+        return getFacing(from, to).getValue();
+    }
+
     public static int calculateFacingSpriteIndex(Vector2D from, Vector2D to, int facings) {
         return calculateFacingSpriteIndex(from, to, facings, 360F / facings);
     }
@@ -118,4 +136,5 @@ public enum UnitFacings {
         if (newFacing > 7) newFacing = 0;
         return newFacing;
     }
+
 }

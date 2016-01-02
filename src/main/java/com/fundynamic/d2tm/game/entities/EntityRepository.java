@@ -85,8 +85,7 @@ public class EntityRepository {
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
-            SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
-            createdEntity = new Unit(map, coordinate, spriteSheet, player, entityData, this);
+            createdEntity = new Unit(map, coordinate, recoloredImage, recoloredImage, player, entityData, this);
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);

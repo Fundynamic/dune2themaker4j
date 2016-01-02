@@ -12,7 +12,6 @@ import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
 
 import static com.fundynamic.d2tm.Game.TILE_SIZE;
 
@@ -27,6 +26,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
+    private RenderableWithFacingLogic bodyFacing;
+
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
 
@@ -35,19 +36,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // Drawing 'movement' from cell to cell
     private Vector2D offset;
-    private float facing;
-    private int desiredFacing;
 
     private Entity entityToAttack;
     private float attackTimer; // needed for attackRate
 
     private boolean hasSpawnedExplosions;
 
-    public Unit(Map map, Coordinate coordinate, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Unit(Map map, Coordinate coordinate, Image unitImage, Image barrelImage, Player player, EntityData entityData, EntityRepository entityRepository) {
         this(
                 map,
                 coordinate,
-                spriteSheet,
+                makeRenderableWithFacingLogic(entityData, unitImage),
+                makeRenderableWithFacingLogic(entityData, barrelImage),
                 new FadingSelection(entityData.getWidth(), entityData.getHeight()),
                 new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
                 player,
@@ -57,13 +57,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     // TODO: Simplify constructor
-    public Unit(Map map, Coordinate coordinate, SpriteSheet spriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
-        super(coordinate, spriteSheet, entityData, player, entityRepository);
+    public Unit(Map map, Coordinate coordinate, RenderableWithFacingLogic unitSpriteSheet, RenderableWithFacingLogic barrelSpriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
+        super(coordinate, unitSpriteSheet, entityData, player, entityRepository);
         this.map = map;
+        this.bodyFacing = unitSpriteSheet;
 
-        int possibleFacings = spriteSheet.getHorizontalCount();
-        this.facing = Random.getRandomBetween(0, possibleFacings);
-        this.desiredFacing = (int) facing;
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = coordinate;
@@ -77,12 +75,16 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
-        Image sprite = getSprite();
-        // todo: GET RID OF OFFSET
+
+        // Todo: get rid of offset, because those are used for cell-by-cell movements. This could
+        // perhaps be optimized? (without any offsets?)
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
-        graphics.drawImage(sprite, drawX, drawY);
+        bodyFacing.render(graphics, drawX, drawY);
+
+        // draw any barrel if present?
     }
+
 
     @Override
     public void update(float deltaInSeconds) {
@@ -118,10 +120,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (hasNoNextCellToMoveTo()) {
             decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(target);
         } else {
-            if (desiredFacing == (int) facing) {
+            if (bodyFacing.isFacingDesiredFacing()) {
                 moveToNextCellPixelByPixel(deltaInSeconds);
             } else {
-                facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                bodyFacing.update(deltaInSeconds);
             }
         }
     }
@@ -131,15 +133,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // ok, we don't need to move, so lets see if we are in range
         if (distance(entityToAttack) < attackRange) {
             // in range!!
-            this.desiredFacing = determineFacingFor(entityToAttack.getCoordinate()).getValue();
+            bodyFacing.faceTowards(UnitFacings.getFacingInt(this, entityToAttack));
+
             if (((Destructible) entityToAttack).isDestroyed()) {
                 // target is destroyed, so stop attacking...
                 entityToAttack = null;
             } else {
                 // target is not yet destroyed
 
-                // face target first
-                if (desiredFacing == (int) facing) {
+                if (bodyFacing.isFacingDesiredFacing()) { // unit is facing target, commence attacking
 
                     // weird check here, but we should have a weapon before we can fire...
                     if (entityData.hasWeaponId()) {
@@ -155,7 +157,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         }
                     }
                 } else {
-                    facing = UnitFacings.turnTo(facing, desiredFacing, entityData.getRelativeTurnSpeed(deltaInSeconds));
+                    // not facing yet, turn towards it
+                    bodyFacing.update(deltaInSeconds);
                 }
             }
         } else {
@@ -225,7 +228,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
             this.nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
-            this.desiredFacing = determineFacingFor(nextTargetToMoveTo).getValue();
+            this.bodyFacing.faceTowards(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
             UnitMoveIntents.addIntent(nextTargetToMoveTo);
             return intendedMapCoordinatesToMoveTo;
         }
@@ -247,16 +250,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         map.revealShroudFor(this.coordinate, getSight(), player);
     }
 
-    public Image getSprite() {
-        return spriteSheet.getSprite((int) facing, 0);
-    }
-
     @Override
     public String toString() {
         return "Unit [" +
                 "sight=" + getSight() +
                 ", player=" + super.player +
-                ", facing=" + facing +
                 ", hitPoints=" + hitPointBasedDestructibility +
                 ", coordinate=" + super.coordinate +
                 "]\n";
@@ -295,10 +293,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         this.entityToAttack = null; // forget about attacking
-    }
-
-    private UnitFacings determineFacingFor(Vector2D coordinatesToFaceTo) {
-       return UnitFacings.getFacing(coordinate, coordinatesToFaceTo);
     }
 
     @Override
@@ -353,10 +347,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return EntityType.UNIT;
     }
 
-    public void setFacing(int facing) {
-        this.facing = facing;
-    }
-
     public void setOffset(Vector2D offset) {
         this.offset = offset;
     }
@@ -390,4 +380,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return fadingSelection.hasFocus();
     }
 
+    public void setFacing(int facing) {
+        this.bodyFacing.faceTowards(facing);
+    }
 }

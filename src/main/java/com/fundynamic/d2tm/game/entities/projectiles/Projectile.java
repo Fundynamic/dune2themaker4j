@@ -37,7 +37,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite(getFacing(coordinate, target), 0);
+        return spritesheet.getSprite(getFacing(coordinate, target), 0);
     }
 
     public int getFacing(Vector2D from, Vector2D to) {

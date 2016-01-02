@@ -9,7 +9,7 @@ public class Theme {
 
     private SpriteSheet spriteSheet;
 
-    // needed for spriteSheet
+    // needed for spritesheet
     private final Image image;
     private int tileSize;
 

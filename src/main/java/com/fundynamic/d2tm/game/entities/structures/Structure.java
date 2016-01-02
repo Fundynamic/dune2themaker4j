@@ -9,7 +9,6 @@ import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
 
 public class Structure extends Entity implements Selectable, Destructible {
 
@@ -25,17 +24,12 @@ public class Structure extends Entity implements Selectable, Destructible {
     private boolean hasSpawnedExplosions;
 
     public Structure(Coordinate coordinate, Image imageOfStructure, Player player, EntityData entityData, EntityRepository entityRepository) {
-        this(
-                coordinate,
-                new SpriteSheet(imageOfStructure, entityData.getWidth(), entityData.getHeight()),
-                player,
+        super(coordinate,
+                makeSpriteSheet(entityData, imageOfStructure),
                 entityData,
+                player,
                 entityRepository
         );
-    }
-
-    public Structure(Coordinate coordinate, SpriteSheet spriteSheet, Player player, EntityData entityData, EntityRepository entityRepository) {
-        super(coordinate, spriteSheet, entityData, player, entityRepository);
 
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
@@ -43,7 +37,7 @@ public class Structure extends Entity implements Selectable, Destructible {
 
     public Image getSprite() {
         int animationFrame = (int)animationTimer;
-        return spriteSheet.getSprite(0, animationFrame);
+        return spritesheet.getSprite(0, animationFrame);
     }
 
     public void update(float deltaInSeconds) {

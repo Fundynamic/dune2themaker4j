@@ -1,11 +1,13 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
+import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
@@ -14,15 +16,15 @@ public abstract class Entity implements Renderable, Updateable {
 
     // Final properties of unit
     protected final EntityData entityData;
-    protected final SpriteSheet spriteSheet;
+    protected final SpriteSheet spritesheet;
     protected final Player player;
     protected final EntityRepository entityRepository;
 
     protected Coordinate coordinate;
 
-    public Entity(Coordinate coordinate, SpriteSheet spriteSheet, EntityData entityData, Player player, EntityRepository entityRepository) {
+    public Entity(Coordinate coordinate, SpriteSheet spritesheet, EntityData entityData, Player player, EntityRepository entityRepository) {
         this.coordinate = coordinate;
-        this.spriteSheet = spriteSheet;
+        this.spritesheet = spritesheet;
         this.entityData = entityData;
         this.player = player;
         this.entityRepository = entityRepository;
@@ -152,6 +154,14 @@ public abstract class Entity implements Renderable, Updateable {
             if (cell.isVisibleFor(player)) return true;
         }
         return false;
+    }
+
+    protected static SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
+        return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
+    }
+
+    protected static RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage) {
+        return new RenderableWithFacingLogic(recoloredImage, entityData);
     }
 
 }

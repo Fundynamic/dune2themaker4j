@@ -35,14 +35,14 @@ public class Particle extends Entity implements Destructible {
     }
 
     public Image getSprite() {
-        return spriteSheet.getSprite((int) sprite, 0);
+        return spritesheet.getSprite((int) sprite, 0);
     }
 
     @Override
     public void update(float deltaInSeconds) {
         sprite += animationSpeed * deltaInSeconds;
 
-        if (sprite >= spriteSheet.getHorizontalCount()) {
+        if (sprite >= spritesheet.getHorizontalCount()) {
             destroyed = true;
         }
     }

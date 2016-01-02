@@ -8,7 +8,7 @@ public class Shroud {
 
     private SpriteSheet spriteSheet;
 
-    // needed for spriteSheet
+    // needed for spritesheet
     private final Image image;
     private int tileSize;
 
