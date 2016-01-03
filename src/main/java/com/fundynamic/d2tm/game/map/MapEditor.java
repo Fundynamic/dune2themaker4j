@@ -86,7 +86,7 @@ public class MapEditor {
             Vector2D randomVec = Vector2D.random(15, 45, 15, 45);
             createCircularField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 6);
             createField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 100);
-            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, 25);
+//            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, 25);
         }
 
     }
