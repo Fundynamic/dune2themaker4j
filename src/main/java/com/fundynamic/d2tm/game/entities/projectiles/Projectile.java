@@ -28,7 +28,6 @@ public class Projectile extends Entity implements Moveable, Destructible {
         return EntityType.PROJECTILE;
     }
 
-
     @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
@@ -75,7 +74,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
                 public void handle(Entity entity) {
                     if (entity.isDestructible()) {
                         Destructible destructibleEntity = (Destructible) entity;
-                        destructibleEntity.takeDamage(entityData.damage);
+                        destructibleEntity.takeDamage(entityData.damage, origin);
                     }
                 }
             });
@@ -89,7 +88,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     @Override
-    public void takeDamage(int hitPoints) {
+    public void takeDamage(int hitPoints, Entity origin) {
         // a projectile cannot take damage (yet?, we could somehow make it possible that projectiles can get intercepted?)
     }
 

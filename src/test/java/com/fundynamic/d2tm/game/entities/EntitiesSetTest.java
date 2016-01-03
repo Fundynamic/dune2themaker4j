@@ -164,7 +164,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         }
 
         @Override
-        public void takeDamage(int hitPoints) {
+        public void takeDamage(int hitPoints, Entity origin) {
             // leave empty because we don't need to test damage taking logic
         }
 

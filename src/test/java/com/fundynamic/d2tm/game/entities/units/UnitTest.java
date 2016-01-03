@@ -78,7 +78,7 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void whenUnitDiesItSpawnsAnExplosion() {
         Unit unit = makeUnit(player);
-        unit.takeDamage(unit.getHitPoints());
+        unit.takeDamage(unit.getHitPoints(), null);
 
         unit.update(1);
 

@@ -48,7 +48,7 @@ public class Particle extends Entity implements Destructible {
     }
 
     @Override
-    public void takeDamage(int hitPoints) {
+    public void takeDamage(int hitPoints, Entity origin) {
         // particles can't take damage...
     }
 

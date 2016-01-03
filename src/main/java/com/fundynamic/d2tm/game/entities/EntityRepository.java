@@ -79,6 +79,12 @@ public class EntityRepository {
         return placeOnMap(coordinate, entityData, player);
     }
 
+    public Entity placeOnMap(Coordinate coordinate, EntityType entityType, String id, Entity origin) {
+        EntityData entityData = entitiesData.getEntityData(entityType, id);
+        Entity entity = placeOnMap(coordinate, entityData, origin.player);
+        return entity.setOrigin(origin);
+    }
+
     public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {
         Entity createdEntity;
         Image originalImage = entityData.image;
@@ -212,6 +218,10 @@ public class EntityRepository {
 
     public Entity getLastCreatedEntity() {
         return lastCreatedEntity;
+    }
+
+    public Projectile placeProjectile(Coordinate coordinate, String id, Entity origin) {
+        return (Projectile) placeOnMap(coordinate, EntityType.PROJECTILE, id, origin);
     }
 
     public Projectile placeProjectile(Coordinate coordinate, String id, Player player) {

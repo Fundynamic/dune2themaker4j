@@ -1,15 +1,11 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
-import com.fundynamic.d2tm.game.entities.units.NullRenderableWithFacingLogic;
-import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
@@ -21,6 +17,8 @@ public abstract class Entity implements Renderable, Updateable {
     protected final SpriteSheet spritesheet;
     protected final Player player;
     protected final EntityRepository entityRepository;
+
+    protected Entity origin; // which entity created this entity? (if applicable)
 
     protected Coordinate coordinate;
 
@@ -158,4 +156,8 @@ public abstract class Entity implements Renderable, Updateable {
         return false;
     }
 
+    public Entity setOrigin(Entity origin) {
+        this.origin = origin;
+        return this;
+    }
 }

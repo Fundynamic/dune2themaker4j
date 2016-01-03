@@ -39,7 +39,7 @@ public class PlayerTest extends AbstractD2TMTest {
     @Test
     public void hasNoAliveEntitiesWhenUnitIsDestroyed() {
         Unit unit = makeUnit(player);
-        unit.takeDamage(unit.getHitPoints()); // destroys unit
+        unit.takeDamage(unit.getHitPoints(), null); // destroys unit
         unit.update(1); // updates internal state so it really is marked destroyed
 
         player.addEntity(unit);

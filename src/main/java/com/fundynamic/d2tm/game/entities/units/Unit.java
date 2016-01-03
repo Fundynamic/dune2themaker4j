@@ -12,7 +12,6 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 
 import static com.fundynamic.d2tm.Game.TILE_SIZE;
 
@@ -144,13 +143,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
                     // weird check here, but we should have a weapon before we can fire...
                     if (entityData.hasWeaponId()) {
-
                         attackTimer += entityData.getRelativeAttackRate(deltaInSeconds);
 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
                         while(attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, player);
+                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
                         }
@@ -299,15 +297,19 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
-    public void takeDamage(int hitPoints) {
+    public void takeDamage(int hitPoints, Entity origin) {
         if (player.isCPU()) {
-            // ahh we're hit!!! lets get outta here!!
-            int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-            int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-            Vector2D target = coordinate.add(Vector2D.create(correctX, correctY));
-            System.out.println("correctX: " + correctX);
-            System.out.println("correctY: " + correctY);
-            moveTo(target);
+            if (origin == null) {
+                // we're hit and we don't have an idea where it came from
+                int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+                int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+                Vector2D target = coordinate.add(Vector2D.create(correctX, correctY));
+                moveTo(target);
+            } else {
+                if (entityToAttack == null) {
+                    attack(origin);
+                }
+            }
         }
         hitPointBasedDestructibility.takeDamage(hitPoints);
     }

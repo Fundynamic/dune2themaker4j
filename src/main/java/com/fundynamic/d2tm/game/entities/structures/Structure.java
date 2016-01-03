@@ -104,7 +104,7 @@ public class Structure extends Entity implements Selectable, Destructible {
     }
 
     @Override
-    public void takeDamage(int hitPoints) {
+    public void takeDamage(int hitPoints, Entity origin) {
         hitPointBasedDestructibility.takeDamage(hitPoints);
         System.out.println("I took damage " + hitPointBasedDestructibility);
     }

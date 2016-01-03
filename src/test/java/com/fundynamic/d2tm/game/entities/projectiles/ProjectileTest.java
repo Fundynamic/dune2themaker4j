@@ -212,7 +212,7 @@ public class ProjectileTest extends AbstractD2TMTest {
     public void projectileCannotTakeDamage() {
         Projectile projectile = makeProjectile(Coordinate.create(32, 32));
         int hitPoints = projectile.getHitPoints();
-        projectile.takeDamage(100);
+        projectile.takeDamage(100, null);
 
         // damage does nothing
         assertThat(projectile.getHitPoints(), is(hitPoints));
