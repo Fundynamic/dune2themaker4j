@@ -121,7 +121,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void chaseOrAttack(float deltaInSeconds) {
         float attackRange = entityData.attackRange;
         // ok, we don't need to move, so lets see if we are in range
-        if (distance(entityToAttack) < attackRange) {
+        if (distance(entityToAttack) <= attackRange) {
             // in range!!
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
             barrelFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
@@ -224,7 +224,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
 
-        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT);
+        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
 
         if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
             nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
