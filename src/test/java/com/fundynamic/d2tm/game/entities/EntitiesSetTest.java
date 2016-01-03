@@ -2,6 +2,9 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
+import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
+import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.rendering.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -69,8 +72,16 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     @Test
     public void filtersForPlayer() {
-        Set<Entity> result = entitiesSet.filter(Predicate.builder().forPlayer(player));
+        Set<Entity> result = entitiesSet.filter(new BelongsToPlayer(player));
         assertEquals(playerOneStructureCount + playerOneUnitCount + playerOneBareEntitiesCount, result.size());
+    }
+
+    @Test
+    public void filtersNotForPlayer() {
+        // get everything except player one
+        Set<Entity> result = entitiesSet.filter(new NotPredicate(new BelongsToPlayer(player)));
+        // player 2 has 6 entities
+        assertEquals(6, result.size());
     }
 
     @Test

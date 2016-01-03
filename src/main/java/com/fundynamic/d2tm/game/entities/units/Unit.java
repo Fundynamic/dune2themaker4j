@@ -3,6 +3,8 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
+import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -20,6 +22,7 @@ import static com.fundynamic.d2tm.Game.TILE_SIZE;
  */
 public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
 
+    public static final int GUARD_TIMER_INTERVAL = 5;
     // Behaviors
     private FadingSelection fadingSelection;
 
@@ -43,6 +46,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private boolean hasSpawnedExplosions;
 
+    // give units a bit more intelligence
+    private float guardTimer = 0;
+
     public Unit(Map map, Coordinate coordinate, RenderableWithFacingLogic unitSpriteSheet, RenderableWithFacingLogic barrelSpriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate, unitSpriteSheet, entityData, player, entityRepository);
         this.map = map;
@@ -54,6 +60,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = coordinate;
         this.nextTargetToMoveTo = coordinate;
         this.offset = Vector2D.zero();
+        this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
@@ -92,6 +99,24 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (!barrelFacing.isFacingDesiredFacing()) {
             barrelFacing.update(deltaInSeconds);
+        }
+
+        if (!shouldMove() && !shouldAttack()) {
+            guardTimer += deltaInSeconds;
+            if (guardTimer > GUARD_TIMER_INTERVAL) {
+                guardTimer = 0F;
+
+                // scan environment within range for enemies
+                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
+
+                EntitiesSet enemyEntities = entities.filter(new NotPredicate(new BelongsToPlayer(player)));
+
+                if (enemyEntities.isEmpty()) {
+                    // help out my friends of anyone is attacking someone?
+                } else {
+                    attack(enemyEntities.getFirst());
+                }
+            }
         }
 
         fadingSelection.update(deltaInSeconds);
@@ -254,6 +279,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public String toString() {
         return "Unit [" +
                 "sight=" + getSight() +
+                "entityType=" + getEntityType() +
+                "image=" + getEntityData().image +
                 ", player=" + super.player +
                 ", hitPoints=" + hitPointBasedDestructibility +
                 ", coordinate=" + super.coordinate +

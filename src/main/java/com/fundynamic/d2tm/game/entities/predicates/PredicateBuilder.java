@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.predicates;
 
 
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.LinkedList;
@@ -107,6 +108,11 @@ public class PredicateBuilder {
 
     public PredicateBuilder ofTypes(EntityType[] types) {
         predicates.add(Predicate.ofTypes(types));
+        return this;
+    }
+
+    public PredicateBuilder withinRange(Coordinate coordinate, float range) {
+        predicates.add(new DistanceToEntity(coordinate, range));
         return this;
     }
 }

@@ -208,6 +208,14 @@ public class EntityRepository {
         );
     }
 
+    public EntitiesSet findEntitiesOfTypeAtVectorWithinDistance(Coordinate coordinate, float range, EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        withinRange(coordinate, range)
+        );
+    }
+
     public EntityData getEntityData(EntityType entityType, String id) {
         return entitiesData.getEntityData(entityType, id);
     }
