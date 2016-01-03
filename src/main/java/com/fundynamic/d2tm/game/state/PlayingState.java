@@ -13,6 +13,7 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -135,7 +136,15 @@ public class PlayingState extends BasicGameState {
         entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TANK, human);
         entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TANK, human);
 
-//        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 15 * TILE_SIZE), EntitiesData.SOLDIER, cpu);
+        for (int row = 0; row < 30; row += 5) {
+            for (int i = 0; i < 62; i++) {
+                entityRepository.placeUnitOnMap(Coordinate.create(i * TILE_SIZE, (15 + row) * TILE_SIZE), EntitiesData.TANK, human);
+            }
+            for (int i = 0; i < 62; i++) {
+                entityRepository.placeUnitOnMap(Coordinate.create(i * TILE_SIZE, (18 + row) * TILE_SIZE), EntitiesData.TANK, cpu);
+            }
+        }
+
 //        entityRepository.placeUnitOnMap(Coordinate.create(16 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.INFANTRY, cpu);
 //        entityRepository.placeUnitOnMap(Coordinate.create(19 * TILE_SIZE, 15 * TILE_SIZE), EntitiesData.QUAD, cpu);
 //        entityRepository.placeUnitOnMap(Coordinate.create(20 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.TANK, cpu);

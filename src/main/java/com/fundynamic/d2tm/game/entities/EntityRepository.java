@@ -143,8 +143,8 @@ public class EntityRepository {
     public void removeEntities(Predicate predicate) {
         Set<Entity> entitiesToRemove = filter(predicate);
         if (entitiesToRemove.size() == 0) return;
-        System.out.println("Size of all entities: " + entitiesSet.size());
-        System.out.println("Removing following entities: " + entitiesToRemove);
+//        System.out.println("Size of all entities: " + entitiesSet.size());
+//        System.out.println("Removing following entities: " + entitiesToRemove);
 
         for (Entity entity : entitiesToRemove) {
             entity.removeFromPlayerSet(entity);

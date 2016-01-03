@@ -58,6 +58,8 @@ public class Structure extends Entity implements Selectable, Destructible {
                 entityRepository.explodeAt(centeredPos, entityData, player);
             }
         }
+
+
     }
 
     @Override

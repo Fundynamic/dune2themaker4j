@@ -112,7 +112,46 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 EntitiesSet enemyEntities = entities.filter(new NotPredicate(new BelongsToPlayer(player)));
 
                 if (enemyEntities.isEmpty()) {
-                    // help out my friends of anyone is attacking someone?
+                    if (this.getPlayer().isCPU()) {
+                        float distance = 131072; // 64X64X32
+                        Entity enemyToAttack = null;
+                        for (Entity entity : entities) {
+                            if (!(entity instanceof Unit)) continue;
+                            Unit unit = (Unit) entity;
+                            if (!unit.hasEnemyToAttack()) continue;
+
+                            float distanceToEnemyOfFriend = unit.getEntityToAttack().distance(this);
+                            if (distanceToEnemyOfFriend < distance) {
+                                distance = distanceToEnemyOfFriend;
+                                enemyToAttack = unit.getEntityToAttack();
+                            }
+                        }
+
+                        if (enemyToAttack != null) {
+                            attack(enemyToAttack);
+                        } else {
+                            EntitiesSet allUnits = entityRepository.allUnits();
+                            enemyEntities = allUnits.filter(new NotPredicate(new BelongsToPlayer(player)));
+
+                            distance = 131072; // 64X64X32
+                            enemyToAttack = null;
+                            for (Entity entity : enemyEntities) {
+                                if (!(entity instanceof Unit)) continue;
+                                Unit unit = (Unit) entity;
+
+                                float distanceToEnemyUnit = unit.distance(this);
+                                if (distanceToEnemyUnit < distance) {
+                                    distance = distanceToEnemyUnit;
+                                    enemyToAttack = unit;
+                                }
+                            }
+
+                            if (enemyToAttack != null) {
+                                attack(enemyToAttack);
+                            }
+                        }
+                    } // HACK HACK: CPU thing here
+
                 } else {
                     attack(enemyEntities.getFirst());
                 }
@@ -128,7 +167,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public boolean shouldAttack() {
         // we consider attacking when we have stopped moving, and when we have some entity to attack
-        return !shouldMove() && entityToAttack != null;
+        return !shouldMove() && hasEnemyToAttack();
+    }
+
+    public boolean hasEnemyToAttack() {
+        return entityToAttack != null;
     }
 
     public void moveCloserToTarget(float deltaInSeconds) {
@@ -184,7 +227,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         } else {
-            target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
+            if (((Destructible) entityToAttack).isDestroyed()) {
+                entityToAttack = null;
+            } else {
+                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
+            }
         }
     }
 
@@ -239,6 +286,26 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private Vector2D decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
+        Vector2D nextIntendedCoordinatesToMoveTo = getNextIntendedCellToMoveToTarget(target);
+
+        if (canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
+            nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
+            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
+            UnitMoveIntents.addIntent(nextTargetToMoveTo);
+            return nextIntendedCoordinatesToMoveTo;
+        }
+
+        return coordinate;
+    }
+
+    private boolean canMoveToCell(Vector2D intendedMapCoordinatesToMoveTo) {
+        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
+        Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
+
+        return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
+    }
+
+    private Vector2D getNextIntendedCellToMoveToTarget(Vector2D target) {
         int nextXCoordinate = coordinate.getXAsInt();
         int nextYCoordinate = coordinate.getYAsInt();
         if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
@@ -246,18 +313,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (target.getYAsInt() < coordinate.getYAsInt()) nextYCoordinate -= TILE_SIZE;
         if (target.getYAsInt() > coordinate.getYAsInt()) nextYCoordinate += TILE_SIZE;
 
-        Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
-
-        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
-        Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
-
-        if (entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
-            nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
-            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
-            UnitMoveIntents.addIntent(nextTargetToMoveTo);
-            return intendedMapCoordinatesToMoveTo;
-        }
-        return coordinate;
+        return new Vector2D(nextXCoordinate, nextYCoordinate);
     }
 
     private boolean hasNoNextCellToMoveTo() {
@@ -415,5 +471,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void setFacing(int facing) {
         this.bodyFacing.faceTowards(facing);
         this.barrelFacing.faceTowards(facing);
+    }
+
+    public Entity getEntityToAttack() {
+        return entityToAttack;
     }
 }

@@ -64,7 +64,7 @@ public class EntitiesDataReader {
                     struct.get("height", Integer.class),
                     struct.get("sight", Integer.class),
                     struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class, "UNKNOWN"));
+                    struct.get("explosion", String.class, UNKNOWN));
         }
     }
 
