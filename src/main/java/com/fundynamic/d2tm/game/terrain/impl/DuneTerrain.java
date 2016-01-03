@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.Theme;
@@ -51,5 +52,10 @@ public abstract class DuneTerrain implements Terrain {
 
     private Image makeTileImage(MapEditor.TerrainFacing terrainFacing) {
         return theme.getFacingTile(getTerrainType(), terrainFacing);
+    }
+
+    @Override
+    public boolean isPassable(Entity entity) {
+        return true;
     }
 }

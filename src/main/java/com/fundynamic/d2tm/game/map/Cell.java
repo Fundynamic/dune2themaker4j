@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.map;
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -92,4 +94,7 @@ public class Cell {
         return !controllingPlayer.isShrouded(mapCoordinate);
     }
 
+    public boolean isPassable(Entity entity) {
+        return terrain.isPassable(entity);
+    }
 }

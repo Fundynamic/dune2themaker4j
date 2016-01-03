@@ -25,4 +25,5 @@ public class Rock extends DuneTerrain implements ConstructionGround {
     public int getTerrainType() {
         return TERRAIN_ROCK;
     }
+
 }

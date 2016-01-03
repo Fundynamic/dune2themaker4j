@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -225,8 +226,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         Vector2D intendedMapCoordinatesToMoveTo = new Vector2D(nextXCoordinate, nextYCoordinate);
 
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
+        Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
 
-        if (entities.isEmpty() && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
+        if (entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo)) {
             nextTargetToMoveTo = intendedMapCoordinatesToMoveTo;
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
             UnitMoveIntents.addIntent(nextTargetToMoveTo);

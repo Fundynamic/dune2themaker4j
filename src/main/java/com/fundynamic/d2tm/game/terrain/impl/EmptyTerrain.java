@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.terrain.impl;
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.newdawn.slick.Color;
@@ -54,6 +56,11 @@ public class EmptyTerrain implements Terrain {
     @Override
     public MapEditor.TerrainFacing getTerrainFacing() {
         return MapEditor.TerrainFacing.FULL;
+    }
+
+    @Override
+    public boolean isPassable(Entity entity) {
+        return true;
     }
 
 }

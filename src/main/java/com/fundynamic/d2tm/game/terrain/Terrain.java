@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.terrain;
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import org.newdawn.slick.Image;
 
@@ -14,5 +15,7 @@ public interface Terrain {
     int getTerrainType();
 
     MapEditor.TerrainFacing getTerrainFacing();
+
+    boolean isPassable(Entity entity);
 
 }
