@@ -30,7 +30,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
     private RenderableWithFacingLogic bodyFacing;
-    private RenderableWithFacingLogic barrelFacing;
+    private RenderableWithFacingLogic cannonFacing;
 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
@@ -53,7 +53,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         super(coordinate, unitSpriteSheet, entityData, player, entityRepository);
         this.map = map;
         this.bodyFacing = unitSpriteSheet;
-        this.barrelFacing = barrelSpriteSheet;
+        this.cannonFacing = barrelSpriteSheet;
 
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
@@ -75,7 +75,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
         bodyFacing.render(graphics, drawX, drawY);
-        barrelFacing.render(graphics, drawX, drawY);
+        cannonFacing.render(graphics, drawX, drawY);
     }
 
 
@@ -97,8 +97,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             explodeAndDie();
         }
 
-        if (!barrelFacing.isFacingDesiredFacing()) {
-            barrelFacing.update(deltaInSeconds);
+        if (!cannonFacing.isFacingDesiredFacing()) {
+            cannonFacing.update(deltaInSeconds);
         }
 
         if (!shouldMove() && !shouldAttack()) {
@@ -192,7 +192,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (distance(entityToAttack) <= attackRange) {
             // in range!!
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
-            barrelFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
+            cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 // target is destroyed, so stop attacking...
@@ -201,8 +201,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 // target is not yet destroyed
                 boolean readyToFire = false;
 
-                if (barrelFacing.isRequiredToFaceEnemyBeforeShooting()) {
-                    readyToFire = barrelFacing.isFacingDesiredFacing();
+                if (cannonFacing.isRequiredToFaceEnemyBeforeShooting()) {
+                    readyToFire = cannonFacing.isFacingDesiredFacing();
                 } else if (bodyFacing.isRequiredToFaceEnemyBeforeShooting()) {
                     readyToFire = bodyFacing.isFacingDesiredFacing();
                 }
@@ -376,7 +376,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         this.entityToAttack = null; // forget about attacking
-        this.barrelFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+        this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
     }
 
     @Override
@@ -470,7 +470,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void setFacing(int facing) {
         this.bodyFacing.faceTowards(facing);
-        this.barrelFacing.faceTowards(facing);
+        this.cannonFacing.faceTowards(facing);
     }
 
     public Entity getEntityToAttack() {
