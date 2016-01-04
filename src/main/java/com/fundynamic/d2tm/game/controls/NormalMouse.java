@@ -85,8 +85,10 @@ public class NormalMouse extends AbstractMouseBehavior {
     }
 
     @Override
-    public void draggedToCoordinates(Vector2D coordinates) {
-        mouse.setMouseBehavior(new DraggingSelectionBoxMouse(mouse, coordinates));
+    public void draggedToCoordinates(Vector2D viewportCoordinates) {
+        if (viewportCoordinates != null) {
+            mouse.setMouseBehavior(new DraggingSelectionBoxMouse(mouse, viewportCoordinates));
+        }
     }
 
     protected boolean selectedEntityBelongsToControllingPlayer() {

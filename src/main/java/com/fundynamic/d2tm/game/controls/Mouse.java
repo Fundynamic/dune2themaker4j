@@ -130,7 +130,28 @@ public class Mouse {
     }
 
     public void draggedToCoordinates(int newX, int newY) {
-        mouseBehavior.draggedToCoordinates(Vector2D.create(newX, newY));
+        Vector2D coordinates = Vector2D.create(newX, newY);
+        Vector2D viewportCoordinates = viewport.translateScreenToViewportCoordinate(coordinates);
+
+        if (viewportCoordinates == null) {
+            Vector2D drawingVector = viewport.getDrawingVector();
+            Vector2D viewportDimensions = viewport.getViewportDimensions();
+
+            int snappedX = Math.min(
+                                Math.max(newX, drawingVector.getXAsInt()),
+                                viewportDimensions.getXAsInt() + drawingVector.getXAsInt()
+                            );
+
+            int snappedY = Math.min(
+                                Math.max(newY, drawingVector.getYAsInt()),
+                                viewportDimensions.getYAsInt() + drawingVector.getYAsInt()
+                            );
+
+            Vector2D snappedCoordinates = Vector2D.create(snappedX, snappedY);
+            viewportCoordinates = viewport.translateScreenToViewportCoordinate(snappedCoordinates);
+        }
+
+        mouseBehavior.draggedToCoordinates(viewportCoordinates);
     }
 
     public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
@@ -184,12 +205,18 @@ public class Mouse {
         this.viewport = viewport;
     }
 
-    public void movedTo(Vector2D position) {
-        viewport.tellAboutNewMousePositions(position.getXAsInt(), position.getYAsInt());
+    public void movedTo(Vector2D screenPosition) {
+        // TODO: this method should deal with viewport dimensions instead of window dimensions
+        viewport.tellAboutNewMousePositions(screenPosition.getXAsInt(), screenPosition.getYAsInt());
 
-        com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
-        Coordinate absoluteMapCoordinates = viewport.translateScreenToAbsoluteMapPixels(position);
-        mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
+        Vector2D viewportPosition = viewport.translateScreenToViewportCoordinate(screenPosition);
+        if (viewportPosition != null) {
+            com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
+            Coordinate absoluteMapCoordinates = viewport.translateViewportCoordinateToAbsoluteMapCoordinate(viewportPosition);
+            mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
+        } else {
+//            System.out.println("Lost focus!");
+        }
     }
 
 }

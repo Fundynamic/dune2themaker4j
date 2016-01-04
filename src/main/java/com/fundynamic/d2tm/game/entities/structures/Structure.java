@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
@@ -7,6 +8,7 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.rendering.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -58,8 +60,6 @@ public class Structure extends Entity implements Selectable, Destructible {
                 entityRepository.explodeAt(centeredPos, entityData, player);
             }
         }
-
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
@@ -13,7 +14,6 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -74,12 +74,18 @@ public class PlayingState extends BasicGameState {
 
         try {
             float moveSpeed = 30 * tileSize;
-            Vector2D viewportDrawingPosition = Vector2D.zero();
             Vector2D viewingVector = Vector2D.create(32, 32);
 //            Vector2D half = screenResolution.min(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
 
+            int guiThingyHeight = 100;
+            Vector2D viewportResolution = getResolution().min(Vector2D.create(0, guiThingyHeight));
+
+            Vector2D viewportDrawingPosition = Vector2D.zero();
+
+            viewportDrawingPosition = viewportDrawingPosition.add(Vector2D.create(0, guiThingyHeight));
+
             Viewport viewport = new Viewport(
-                    screenResolution,
+                    viewportResolution,
                     viewportDrawingPosition,
                     viewingVector,
                     map,
@@ -128,36 +134,9 @@ public class PlayingState extends BasicGameState {
 
         //TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.REFINERY, human);
-        entityRepository.placeStructureOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
 
-        entityRepository.placeUnitOnMap(Coordinate.create(10 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.SOLDIER, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(11 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.INFANTRY, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(14 * TILE_SIZE, 10 * TILE_SIZE), EntitiesData.TANK, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(15 * TILE_SIZE, 11 * TILE_SIZE), EntitiesData.TANK, human);
-
-        for (int row = 0; row < 30; row += 5) {
-            for (int i = 0; i < 62; i++) {
-                entityRepository.placeUnitOnMap(Coordinate.create(i * TILE_SIZE, (15 + row) * TILE_SIZE), EntitiesData.TANK, human);
-            }
-            for (int i = 0; i < 62; i++) {
-                entityRepository.placeUnitOnMap(Coordinate.create(i * TILE_SIZE, (18 + row) * TILE_SIZE), EntitiesData.TANK, cpu);
-            }
-        }
-
-//        entityRepository.placeUnitOnMap(Coordinate.create(16 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.INFANTRY, cpu);
-//        entityRepository.placeUnitOnMap(Coordinate.create(19 * TILE_SIZE, 15 * TILE_SIZE), EntitiesData.QUAD, cpu);
-//        entityRepository.placeUnitOnMap(Coordinate.create(20 * TILE_SIZE, 16 * TILE_SIZE), EntitiesData.TANK, cpu);
-
-        // cpu entities
-        entityRepository.placeStructureOnMap(Coordinate.create(55 * TILE_SIZE, 55 * TILE_SIZE), EntitiesData.REFINERY, cpu);
         entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
-
-        entityRepository.placeUnitOnMap(Coordinate.create(50 * TILE_SIZE, 50 * TILE_SIZE), EntitiesData.TANK, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(49 * TILE_SIZE, 49 * TILE_SIZE), EntitiesData.TANK, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(52 * TILE_SIZE, 52 * TILE_SIZE), EntitiesData.SOLDIER, cpu);
-        entityRepository.placeUnitOnMap(Coordinate.create(53 * TILE_SIZE, 53 * TILE_SIZE), EntitiesData.INFANTRY, cpu);
-
     }
 
     @Override
@@ -166,10 +145,18 @@ public class PlayingState extends BasicGameState {
             viewport.render(graphics);
         }
 
-        Font font = graphics.getFont();
+        Entity lastSelectedEntity = viewports.get(0).getMouse().getLastSelectedEntity();
+        if (lastSelectedEntity != null && lastSelectedEntity.getEntityType().equals(EntityType.STRUCTURE)) {
+            graphics.setColor(Color.white);
+            int y = 16;
+            int maxWidth = Game.SCREEN_WIDTH;
+            for (int x = 16; x < maxWidth; x += 64) {
+                graphics.drawRect(x, y, x + 48, y + 48);
+            }
+        }
 
-        font.drawString(540, 20, "Human entity count: " + human.aliveEntities(), Color.red);
-        font.drawString(540, 40, "Enemy entity count: " + cpu.aliveEntities(), Color.green);
+
+        Font font = graphics.getFont();
 
         if (cpu.aliveEntities() < 1) {
             // why like this!?

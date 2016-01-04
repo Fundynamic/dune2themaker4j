@@ -6,8 +6,8 @@ public class Rectangle {
 
     private float width;
     private float height;
-    private Vector2D src;
-    private Vector2D dest;
+    private Vector2D topLeft;
+    private Vector2D bottomRight;
 
     public static Rectangle create(Vector2D absTopLeftInPixels, Vector2D absBottomRightInPixels) {
         return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
@@ -18,8 +18,8 @@ public class Rectangle {
     }
 
     public Rectangle(float srcX, float srcY, float destX, float destY) {
-        this.src = Vector2D.create(Math.min(srcX, destX), Math.min(srcY, destY));
-        this.dest = Vector2D.create(Math.max(srcX, destX), Math.max(srcY, destY));
+        this.topLeft = Vector2D.create(Math.min(srcX, destX), Math.min(srcY, destY));
+        this.bottomRight = Vector2D.create(Math.max(srcX, destX), Math.max(srcY, destY));
         this.width = Math.abs(srcX - destX);
         this.height = Math.abs(srcY - destY);
     }
@@ -33,7 +33,7 @@ public class Rectangle {
     }
 
     public boolean isVectorWithin(Vector2D vec) {
-        boolean result = vec.getX() >= src.getX() && vec.getX() < dest.getX() && vec.getY() >= src.getY() && vec.getY() < dest.getY();
+        boolean result = vec.getX() >= topLeft.getX() && vec.getX() < bottomRight.getX() && vec.getY() >= topLeft.getY() && vec.getY() < bottomRight.getY();
 //        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
         return result;
     }
@@ -43,8 +43,8 @@ public class Rectangle {
         return "Rectangle{" +
                 "width=" + width +
                 ", height=" + height +
-                ", src=" + src +
-                ", dest=" + dest +
+                ", topLeft=" + topLeft +
+                ", bottomRight=" + bottomRight +
                 '}';
     }
 }

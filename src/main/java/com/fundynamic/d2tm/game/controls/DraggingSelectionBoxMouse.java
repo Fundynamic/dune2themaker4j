@@ -24,9 +24,9 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     public DraggingSelectionBoxMouse(Mouse mouse, Vector2D startingCoordinates) {
         super(mouse);
+        this.viewport = mouse.getViewport();
         this.startingCoordinates = startingCoordinates;
         this.dragCoordinates = startingCoordinates;
-        this.viewport = mouse.getViewport();
         this.entityRepository = mouse.getEntityRepository();
     }
 
@@ -46,13 +46,14 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
     }
 
     @Override
-    public void draggedToCoordinates(Vector2D coordinates) {
-        this.dragCoordinates = coordinates;
+    public void draggedToCoordinates(Vector2D viewportCoordinates) {
+        if (viewportCoordinates != null) {
+            this.dragCoordinates = viewportCoordinates;
+        }
     }
 
     @Override
     public void leftButtonReleased() {
-
         deselectEverything();
 
         Set<Entity> entities = getEntitiesWithinDraggedRectangle(entityRepository);
@@ -69,8 +70,8 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
     }
 
     private Set<Entity> getEntitiesWithinDraggedRectangle(EntityRepository entityRepository) {
-        Vector2D absDragVec = viewport.translateScreenToAbsoluteMapPixels(dragCoordinates);
-        Vector2D absStartingVec = viewport.translateScreenToAbsoluteMapPixels(startingCoordinates);
+        Vector2D absDragVec = viewport.translateViewportCoordinateToAbsoluteMapCoordinate(dragCoordinates);
+        Vector2D absStartingVec = viewport.translateViewportCoordinateToAbsoluteMapCoordinate(startingCoordinates);
         final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
 
         return entityRepository.findMovableWithinRectangleForPlayer(mouse.getControllingPlayer(), rectangle);
@@ -91,6 +92,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
     public void render(Graphics g) {
         g.setColor(Color.white);
 
+//        System.out.println("starting coords = " + startingCoordinates + " drag = " + dragCoordinates);
         // we need to do all this stuff because there is only one way to draw a rect (with width and height)
         // and you cannot pass it a negative number for width and height (it behaves weird)...
         int dragX = dragCoordinates.getXAsInt();

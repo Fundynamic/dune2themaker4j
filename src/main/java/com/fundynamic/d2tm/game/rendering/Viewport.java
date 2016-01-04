@@ -9,7 +9,6 @@ import com.fundynamic.d2tm.game.entities.Rectangle;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -19,12 +18,11 @@ public class Viewport implements Renderable {
 
     private static final int PIXELS_NEAR_BORDER = 2;
 
-    private final Vector2D viewportDimensions;
 
     private final Image buffer;
 
     private final Vector2D drawingVector;
-
+    private final Vector2D viewportDimensions;
     private final Perimeter viewingVectorPerimeter;
 
     private final EntityRepository entityRepository;
@@ -197,12 +195,29 @@ public class Viewport implements Renderable {
         }
     }
 
-    public Coordinate translateScreenToAbsoluteMapPixels(Vector2D positionOnScreen) {
-        return new Coordinate(positionOnScreen.add(viewingVector));
+    public Coordinate translateViewportCoordinateToAbsoluteMapCoordinate(Vector2D positionOnViewport) {
+        return new Coordinate(positionOnViewport.add(viewingVector));
     }
 
     public void toggleDrawDebugMode() {
         drawDebugInfo = !drawDebugInfo;
     }
 
+    public Vector2D getDrawingVector() {
+        return drawingVector;
+    }
+
+    public Vector2D getViewportDimensions() {
+        return viewportDimensions;
+    }
+
+    public Coordinate translateScreenToViewportCoordinate(Vector2D screenPosition) {
+        Rectangle rect = Rectangle.createWithDimensions(drawingVector, viewportDimensions);
+        if (!rect.isVectorWithin(screenPosition)) return null; // outside our viewport!
+        return new Coordinate(screenPosition.min(drawingVector));
+    }
+
+    public Mouse getMouse() {
+        return mouse;
+    }
 }
