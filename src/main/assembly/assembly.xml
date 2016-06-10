@@ -9,12 +9,12 @@
 	<files>
 		<file>
 			<source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>${file.separator}</outputDirectory>
 		</file>
 	</files>
 	<fileSets>
 		<fileSet>
-			<directory>target/natives</directory>
+			<directory>target${file.separator}natives</directory>
 			<outputDirectory>lib</outputDirectory>
 			<includes>
 				<include>*.dll</include>
@@ -25,7 +25,7 @@
 
 		<fileSet>
 			<directory>src/main/scripts</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>${file.separator}</outputDirectory>
 			<includes>
 				<include>*.sh</include>
 				<include>*.bat</include>
