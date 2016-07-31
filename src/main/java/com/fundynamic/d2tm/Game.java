@@ -37,6 +37,7 @@ public class Game extends StateBasedGame {
                 )
         );
 
+        container.setShowFPS(false);
         container.setVSync(true);
 
         PlayingState playingState = new PlayingState(
