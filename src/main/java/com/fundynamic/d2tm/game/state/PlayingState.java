@@ -19,9 +19,6 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.fundynamic.d2tm.Game.TILE_SIZE;
 import static com.fundynamic.d2tm.Game.getResolution;
 
@@ -39,7 +36,9 @@ public class PlayingState extends BasicGameState {
     private Player human;
     private Player cpu;
 
-    private List<Viewport> viewports = new ArrayList<>();
+    // GUI element: the rendering of the battlefield
+    private Viewport battlefield;
+
     private EntityRepository entityRepository;
     private ImageRepository imageRepository;
 
@@ -84,7 +83,7 @@ public class PlayingState extends BasicGameState {
 
             viewportDrawingPosition = viewportDrawingPosition.add(Vector2D.create(0, guiThingyHeight));
 
-            Viewport viewport = new Viewport(
+            battlefield = new Viewport(
                     viewportResolution,
                     viewportDrawingPosition,
                     viewingVector,
@@ -95,7 +94,7 @@ public class PlayingState extends BasicGameState {
                     human,
                     imageRepository.createImage(screenResolution));
 
-            // here we can create a new viewport
+            // here we can create a new battlefield
 //            Vector2D viewportDrawingPosition2 = viewportDrawingPosition.add(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
 //
 //            Viewport viewport2 = new Viewport(
@@ -109,15 +108,13 @@ public class PlayingState extends BasicGameState {
 //                    mouse,
 //                    human);
 
-            // Add listener for this viewport
+            // Add listener for this battlefield
             // THIS WON'T WORK, BECAUSE FOR NOW WE GET VIEWPORT FROM MOUSE IN MOUSE/VIEWPORT LOGIC!
             input.addMouseListener(new MouseInViewportListener(mouse));
 
-            viewports.add(viewport);
-
-            input.addKeyListener(new DebugKeysListener(mouse, viewport, entityRepository, human));
+            input.addKeyListener(new DebugKeysListener(mouse, battlefield, entityRepository, human));
         } catch (SlickException e) {
-            throw new IllegalStateException("Unable to create new viewport!", e);
+            throw new IllegalStateException("Unable to create new battlefield!", e);
         }
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
@@ -141,20 +138,14 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
-        for (Viewport viewport : viewports) {
-            viewport.render(graphics);
-        }
+        // Render all GUI elements
+        battlefield.render(graphics);
 
-        Entity lastSelectedEntity = viewports.get(0).getMouse().getLastSelectedEntity();
-        if (lastSelectedEntity != null && lastSelectedEntity.getEntityType().equals(EntityType.STRUCTURE)) {
-            graphics.setColor(Color.white);
-            int y = 16;
-            int maxWidth = Game.SCREEN_WIDTH;
-            for (int x = 16; x < maxWidth; x += 64) {
-                graphics.drawRect(x, y, x + 48, y + 48);
-            }
-        }
-
+        // TODO:
+        // 1. top bar (buttons, credits, resources, etc)
+        // 2. sidebar (for interacting with selected unit(s), structure(s), etc)
+        // 3. minimap
+        // 4. bottom bar (messages bar)
 
         Font font = graphics.getFont();
 
@@ -179,9 +170,7 @@ public class PlayingState extends BasicGameState {
 
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 
-        for (Viewport viewport : viewports) {
-            viewport.update(deltaInSeconds);
-        }
+        battlefield.update(deltaInSeconds);
     }
 
     private Predicate<Entity> updatableEntitiesPredicate() {
