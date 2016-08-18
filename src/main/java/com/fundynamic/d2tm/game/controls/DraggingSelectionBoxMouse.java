@@ -24,7 +24,7 @@ public class DraggingSelectionBoxMouse extends AbstractMouseBehavior {
 
     public DraggingSelectionBoxMouse(Mouse mouse, Vector2D startingCoordinates) {
         super(mouse);
-        this.viewport = mouse.getViewport();
+        this.viewport = mouse.getBattlefield();
         this.startingCoordinates = startingCoordinates;
         this.dragCoordinates = startingCoordinates;
         this.entityRepository = mouse.getEntityRepository();

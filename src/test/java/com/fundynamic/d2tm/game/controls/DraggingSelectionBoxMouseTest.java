@@ -25,7 +25,7 @@ public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
         super.setUp();
 
         Viewport viewport = new Viewport(map, mouse, player, mock(Image.class));
-        mouse.setViewport(viewport);
+        mouse.setBattlefield(viewport);
 
         // start dragging from 0,0
         DraggingSelectionBoxMouse draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(mouse, Vector2D.zero());

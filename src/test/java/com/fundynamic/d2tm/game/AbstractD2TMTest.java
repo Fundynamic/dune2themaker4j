@@ -66,7 +66,7 @@ public abstract class AbstractD2TMTest {
         mouse = makeTestableMouse(player, entityRepository);
         viewport = new Viewport(map, mouse, player, mock(Image.class));
 
-        mouse.setViewport(viewport);
+        mouse.setBattlefield(viewport);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);

@@ -82,7 +82,7 @@ public class Viewport implements Renderable {
 
         this.entityRepository = mouse.getEntityRepository();
         this.mouse = mouse;
-        this.mouse.setViewport(this); // TODO: <-- THIS IS BAD! (get rid of this cyclic reference)
+        this.mouse.setBattlefield(this); // TODO: <-- THIS IS BAD! (get rid of this cyclic reference)
     }
 
     public void render(Graphics graphics) {
