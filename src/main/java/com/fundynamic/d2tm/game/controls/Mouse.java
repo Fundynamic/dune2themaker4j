@@ -21,13 +21,24 @@ public class Mouse {
         NORMAL, HOVER_OVER_SELECTABLE_ENTITY, MOVE, ATTACK, CUSTOM
     }
 
+    // where is the mouse located and what kind of UI area is being acted upon ?
+    public enum MouseGuiArea {
+        BATTLEFIELD, TOPBAR, SIDEBAR, MINIMAP, BOTTOMBAR
+    }
+
     private final Player controllingPlayer;
     private final GameContainer gameContainer;
     private final EntityRepository entityRepository;
 
-    private Viewport viewport;
+    // Gui elements references to interact with
+    private Viewport battlefield;
 
-    private MouseBehavior mouseBehavior;
+    // The gui element we are currently focussing on
+    private MouseGuiArea mouseGuiArea = MouseGuiArea.BATTLEFIELD;
+
+    // mouse behavior is per 'gui' area
+    private Map<MouseGuiArea, MouseBehavior> mouseBehaviorPerGuiArea = new HashMap<>();
+
     private Entity lastSelectedEntity;
     private Cell hoverCell;
     private MouseImages currentImage;
@@ -51,26 +62,26 @@ public class Mouse {
     }
 
     public void init() {
-        this.mouseBehavior = new NormalMouse(this);
+        setMouseBehavior(new NormalMouse(this));
     }
 
     // TODO make mouse implement Renderable interface?
     public void render(Graphics graphics) {
-        mouseBehavior.render(graphics);
+        getMouseBehaviorForGuiArea().render(graphics);
     }
 
     /**
      * When a left click (== press and release) has been detected, this method is called.
      */
     public void leftClicked() {
-        mouseBehavior.leftClicked();
+        getMouseBehaviorForGuiArea().leftClicked();
     }
 
     /**
      * When a right click (== press and release) has been detected, this method is called.
      */
     public void rightClicked() {
-        mouseBehavior.rightClicked();
+        getMouseBehaviorForGuiArea().rightClicked();
     }
 
     /**
@@ -79,7 +90,7 @@ public class Mouse {
      * @param cell
      */
     public void mouseMovedToCell(Cell cell) {
-        mouseBehavior.mouseMovedToCell(cell);
+        getMouseBehaviorForGuiArea().mouseMovedToCell(cell);
     }
 
     public Entity hoveringOverSelectableEntity() {
@@ -95,14 +106,13 @@ public class Mouse {
     }
 
     public boolean hoveringOverVisibleEntity(Entity entity) {
-        com.fundynamic.d2tm.game.map.Map map = this.viewport.getMap();
+        com.fundynamic.d2tm.game.map.Map map = this.battlefield.getMap();
         return entity.isVisibleFor(getControllingPlayer(), map);
     }
 
     public void setMouseBehavior(MouseBehavior mouseBehavior) {
         if (mouseBehavior == null) throw new IllegalArgumentException("MouseBehavior argument may not be null!");
-//        System.out.println("Mouse behavior changed into " + mouseBehavior);
-        this.mouseBehavior = mouseBehavior;
+        this.mouseBehaviorPerGuiArea.put(mouseGuiArea, mouseBehavior);
     }
 
     public Entity getLastSelectedEntity() {
@@ -126,16 +136,20 @@ public class Mouse {
     }
 
     public void leftButtonReleased() {
-        mouseBehavior.leftButtonReleased();
+        getMouseBehaviorForGuiArea().leftButtonReleased();
+    }
+
+    public MouseBehavior getMouseBehaviorForGuiArea() {
+        return this.mouseBehaviorPerGuiArea.get(mouseGuiArea);
     }
 
     public void draggedToCoordinates(int newX, int newY) {
         Vector2D coordinates = Vector2D.create(newX, newY);
-        Vector2D viewportCoordinates = viewport.translateScreenToViewportCoordinate(coordinates);
+        Vector2D viewportCoordinates = battlefield.translateScreenToViewportCoordinate(coordinates);
 
         if (viewportCoordinates == null) {
-            Vector2D drawingVector = viewport.getDrawingVector();
-            Vector2D viewportDimensions = viewport.getViewportDimensions();
+            Vector2D drawingVector = battlefield.getDrawingVector();
+            Vector2D viewportDimensions = battlefield.getViewportDimensions();
 
             int snappedX = Math.min(
                                 Math.max(newX, drawingVector.getXAsInt()),
@@ -148,10 +162,10 @@ public class Mouse {
                             );
 
             Vector2D snappedCoordinates = Vector2D.create(snappedX, snappedY);
-            viewportCoordinates = viewport.translateScreenToViewportCoordinate(snappedCoordinates);
+            viewportCoordinates = battlefield.translateScreenToViewportCoordinate(snappedCoordinates);
         }
 
-        mouseBehavior.draggedToCoordinates(viewportCoordinates);
+        getMouseBehaviorForGuiArea().draggedToCoordinates(viewportCoordinates);
     }
 
     public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
@@ -190,29 +204,29 @@ public class Mouse {
     }
 
     public MouseBehavior getMouseBehavior() {
-        return this.mouseBehavior;
+        return getMouseBehaviorForGuiArea();
     }
 
     public EntityRepository getEntityRepository() {
         return entityRepository;
     }
 
-    public Viewport getViewport() {
-        return viewport;
+    public Viewport getBattlefield() {
+        return battlefield;
     }
 
-    public void setViewport(Viewport viewport) {
-        this.viewport = viewport;
+    public void setBattlefield(Viewport battlefield) {
+        this.battlefield = battlefield;
     }
 
     public void movedTo(Vector2D screenPosition) {
-        // TODO: this method should deal with viewport dimensions instead of window dimensions
-        viewport.tellAboutNewMousePositions(screenPosition.getXAsInt(), screenPosition.getYAsInt());
+        // TODO: this method should deal with battlefield dimensions instead of window dimensions
+        battlefield.tellAboutNewMousePositions(screenPosition.getXAsInt(), screenPosition.getYAsInt());
 
-        Vector2D viewportPosition = viewport.translateScreenToViewportCoordinate(screenPosition);
+        Vector2D viewportPosition = battlefield.translateScreenToViewportCoordinate(screenPosition);
         if (viewportPosition != null) {
-            com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
-            Coordinate absoluteMapCoordinates = viewport.translateViewportCoordinateToAbsoluteMapCoordinate(viewportPosition);
+            com.fundynamic.d2tm.game.map.Map map = battlefield.getMap();
+            Coordinate absoluteMapCoordinates = battlefield.translateViewportCoordinateToAbsoluteMapCoordinate(viewportPosition);
             mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
         } else {
 //            System.out.println("Lost focus!");
