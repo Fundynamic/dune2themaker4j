@@ -225,10 +225,13 @@ public class Mouse {
 
         Vector2D viewportPosition = battlefield.translateScreenToViewportCoordinate(screenPosition);
         if (viewportPosition != null) {
+            this.mouseGuiArea = MouseGuiArea.BATTLEFIELD;
+
             com.fundynamic.d2tm.game.map.Map map = battlefield.getMap();
             Coordinate absoluteMapCoordinates = battlefield.translateViewportCoordinateToAbsoluteMapCoordinate(viewportPosition);
             mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
         } else {
+
 //            System.out.println("Lost focus!");
         }
     }

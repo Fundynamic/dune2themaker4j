@@ -56,8 +56,8 @@ public class MovableSelectedMouse extends NormalMouse {
                             selectedMovableForPlayer(player)
             );
 
+            Coordinate target = mouse.getHoverCell().getMapCoordinate().toCoordinate();
             for (Entity entity : selectedMovableEntities) {
-                Coordinate target = mouse.getHoverCell().getMapCoordinate().toCoordinate();
                 ((Moveable) entity).moveTo(target);
             }
         }

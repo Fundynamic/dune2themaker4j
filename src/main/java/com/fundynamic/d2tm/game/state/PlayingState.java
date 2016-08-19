@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.state;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
@@ -74,14 +73,17 @@ public class PlayingState extends BasicGameState {
         try {
             float moveSpeed = 30 * tileSize;
             Vector2D viewingVector = Vector2D.create(32, 32);
-//            Vector2D half = screenResolution.min(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
 
-            int guiThingyHeight = 100;
-            Vector2D viewportResolution = getResolution().min(Vector2D.create(0, guiThingyHeight));
 
-            Vector2D viewportDrawingPosition = Vector2D.zero();
+            int heightOfTopBar = 42; // pixels
+            int bottomBar = 32; // pixels
+            int widthOfSidebar = 160;
 
-            viewportDrawingPosition = viewportDrawingPosition.add(Vector2D.create(0, guiThingyHeight));
+            Vector2D guiAreas = Vector2D.create(widthOfSidebar, (heightOfTopBar + bottomBar));
+            Vector2D viewportResolution = getResolution().min(guiAreas);
+
+            // start drawing below the top gui bar
+            Vector2D viewportDrawingPosition = Vector2D.zero().add(Vector2D.create(0, heightOfTopBar));
 
             battlefield = new Viewport(
                     viewportResolution,
@@ -93,20 +95,6 @@ public class PlayingState extends BasicGameState {
                     mouse,
                     human,
                     imageRepository.createImage(screenResolution));
-
-            // here we can create a new battlefield
-//            Vector2D viewportDrawingPosition2 = viewportDrawingPosition.add(Vector2D.create(Game.SCREEN_WIDTH / 2, 0));
-//
-//            Viewport viewport2 = new Viewport(
-//                    half,
-//                    viewportDrawingPosition2,
-//                    viewingVector,
-//                    map,
-//                    moveSpeed,
-//                    tileSize,
-//                    tileHeight,
-//                    mouse,
-//                    human);
 
             // Add listener for this battlefield
             // THIS WON'T WORK, BECAUSE FOR NOW WE GET VIEWPORT FROM MOUSE IN MOUSE/VIEWPORT LOGIC!
@@ -141,11 +129,25 @@ public class PlayingState extends BasicGameState {
         // Render all GUI elements
         battlefield.render(graphics);
 
+        Vector2D resolution = getResolution();
+
         // TODO:
         // 1. top bar (buttons, credits, resources, etc)
+        graphics.setColor(Color.yellow);
+        graphics.fillRect(0, 0, resolution.getXAsInt(), 42);
+
         // 2. sidebar (for interacting with selected unit(s), structure(s), etc)
+        graphics.setColor(Color.red);
+        graphics.fillRect(resolution.getXAsInt() - 160, 0, resolution.getXAsInt(), resolution.getYAsInt());
+
         // 3. minimap
+        graphics.setColor(Color.green);
+        graphics.fillRect(resolution.getXAsInt() - 129, resolution.getYAsInt() - 129, resolution.getXAsInt() - 1, resolution.getYAsInt() - 1);
+
+
         // 4. bottom bar (messages bar)
+        graphics.setColor(Color.blue);
+        graphics.fillRect(0, resolution.getYAsInt() - 32, resolution.getXAsInt(), resolution.getYAsInt());
 
         Font font = graphics.getFont();
 
