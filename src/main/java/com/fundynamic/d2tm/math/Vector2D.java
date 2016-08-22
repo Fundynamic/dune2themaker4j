@@ -10,6 +10,7 @@ public class Vector2D {
         return new Vector2D(0, 0);
     }
 
+    //TODO: Make all vectors cached that we create?
     public static Vector2D create(float x, float y) {
         return new Vector2D(x, y);
     }
@@ -65,8 +66,8 @@ public class Vector2D {
     @Override
     public String toString() {
         return "Vector2D{" +
-                "x=" + vec.getX() +
-                ", y=" + vec.getY() +
+                "screenX=" + vec.getX() +
+                ", screenY=" + vec.getY() +
                 '}';
     }
 

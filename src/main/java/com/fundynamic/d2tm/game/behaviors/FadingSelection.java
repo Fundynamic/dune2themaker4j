@@ -1,13 +1,13 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 /**
  * An implementation of selecting / deselecting something + with drawing effects
  */
-public class FadingSelection extends SimpleSelectLogic implements Renderable, Updateable {
+public class FadingSelection extends SimpleSelectLogic implements EnrichableAbsoluteRenderable, Updateable {
 
     private float selectedIntensity;
     private boolean selectedDarkening;

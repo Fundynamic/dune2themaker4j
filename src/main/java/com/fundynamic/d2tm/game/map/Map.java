@@ -56,7 +56,7 @@ public class Map {
     }
 
     /**
-     * Get the exact cell on x,y directly from the internals. Only should be used for drawing (not for game logic).
+     * Get the exact cell on screenX,screenY directly from the internals. Only should be used for drawing (not for game logic).
      * The map class has an 'invisible border'. So a map of 64x64 is actually 66x66.
      *
      * @param x
@@ -68,7 +68,7 @@ public class Map {
             return cells[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException("You're going out of bounds!\n" +
-                    "Parameters given: x = " + x + ", y = " + y + ".\n" +
+                    "Parameters given: screenX = " + x + ", screenY = " + y + ".\n" +
                     "You must keep within the dimensions:\n" +
                     "Width: 0 to (not on or over!) " + widthWithInvisibleBorder + "\n" +
                     "Height: 0 to (not on or over!) " + heightWithInvisibleBorder);

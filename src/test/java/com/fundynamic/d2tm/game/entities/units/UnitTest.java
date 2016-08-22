@@ -8,8 +8,8 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -171,14 +171,14 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(thingsToRender.size(), is(2));
 
         RenderQueue.ThingToRender first = thingsToRender.get(0);
-        assertThat(first.renderable, is(instanceOf(HitPointBasedDestructibility.class)));
-        assertThat(first.x, is(16)); // unitX - viewportVecX
-        assertThat(first.y, is(16)); // unitY - viewportVecY
+        assertThat(first.renderQueueEnrichable, is(instanceOf(HitPointBasedDestructibility.class)));
+        assertThat(first.screenX, is(16)); // unitX - viewportVecX
+        assertThat(first.screenY, is(16)); // unitY - viewportVecY
 
         RenderQueue.ThingToRender second = thingsToRender.get(1);
-        assertThat(second.renderable, is(instanceOf(FadingSelection.class)));
-        assertThat(second.x, is(16)); // unitX - viewportVecX
-        assertThat(second.y, is(16)); // unitY - viewportVecY
+        assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
+        assertThat(second.screenX, is(16)); // unitX - viewportVecX
+        assertThat(second.screenY, is(16)); // unitY - viewportVecY
     }
 
     public static SpriteSheet makeSpriteSheet() {

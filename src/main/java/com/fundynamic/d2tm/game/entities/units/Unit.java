@@ -9,7 +9,7 @@ import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -20,17 +20,18 @@ import static com.fundynamic.d2tm.Game.TILE_SIZE;
 /**
  * Should become observable with RxJava!
  */
-public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer {
+public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable {
 
     public static final int GUARD_TIMER_INTERVAL = 5;
+
     // Behaviors
     private FadingSelection fadingSelection;
 
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
-    private RenderableWithFacingLogic bodyFacing;
-    private RenderableWithFacingLogic cannonFacing;
+    private RenderQueueEnrichableWithFacingLogic bodyFacing;
+    private RenderQueueEnrichableWithFacingLogic cannonFacing;
 
     private Vector2D target;
     private Vector2D nextTargetToMoveTo;
@@ -49,7 +50,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     // give units a bit more intelligence
     private float guardTimer = 0;
 
-    public Unit(Map map, Coordinate coordinate, RenderableWithFacingLogic unitSpriteSheet, RenderableWithFacingLogic barrelSpriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
+    public Unit(Map map, Coordinate coordinate, RenderQueueEnrichableWithFacingLogic unitSpriteSheet, RenderQueueEnrichableWithFacingLogic barrelSpriteSheet, FadingSelection fadingSelection, HitPointBasedDestructibility hitPointBasedDestructibility, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate, unitSpriteSheet, entityData, player, entityRepository);
         this.map = map;
         this.bodyFacing = unitSpriteSheet;
@@ -77,7 +78,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.render(graphics, drawX, drawY);
         cannonFacing.render(graphics, drawX, drawY);
     }
-
 
     @Override
     public void update(float deltaInSeconds) {

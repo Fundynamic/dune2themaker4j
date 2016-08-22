@@ -4,7 +4,7 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
@@ -56,13 +56,13 @@ public class StructureTest extends AbstractD2TMTest {
         assertThat(thingsToRender.size(), is(2));
 
         RenderQueue.ThingToRender first = thingsToRender.get(0);
-        assertThat(first.renderable, is(instanceOf(HitPointBasedDestructibility.class)));
-        assertThat(first.x, is(16)); // structureX - viewportVecX
-        assertThat(first.y, is(16)); // structureY - viewportVecY
+        assertThat(first.renderQueueEnrichable, is(instanceOf(HitPointBasedDestructibility.class)));
+        assertThat(first.screenX, is(16)); // structureX - viewportVecX
+        assertThat(first.screenY, is(16)); // structureY - viewportVecY
 
         RenderQueue.ThingToRender second = thingsToRender.get(1);
-        assertThat(second.renderable, is(instanceOf(FadingSelection.class)));
-        assertThat(second.x, is(16)); // structureX - viewportVecX
-        assertThat(second.y, is(16)); // structureY - viewportVecY
+        assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
+        assertThat(second.screenX, is(16)); // structureX - viewportVecX
+        assertThat(second.screenY, is(16)); // structureY - viewportVecY
     }
 }

@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.rendering;
+package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;

@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 

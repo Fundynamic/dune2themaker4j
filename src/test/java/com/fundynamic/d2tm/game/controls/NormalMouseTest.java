@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -18,31 +20,33 @@ import static org.mockito.Mockito.mock;
 
 public class NormalMouseTest extends AbstractD2TMTest {
 
+    private NormalMouse normalMouse;
+
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        NormalMouse normalMouse = new NormalMouse(mouse);
-        mouse.setMouseBehavior(normalMouse);
+        normalMouse = new NormalMouse(battleField);
+        battleField.setMouseBehavior(normalMouse);
     }
 
     @Test
     public void leftClickSelectsEntityOnHoverCell() throws SlickException {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
-        mouse.setHoverCell(cell);
+        normalMouse.setHoverCell(cell);
 
         Coordinate coordinate = cell.getCoordinates();
         Unit unit = makeUnit(player, coordinate, "QUAD");
         assertThat(unit.isSelected(), is(false));
 
         // ACT: click left
-        mouse.leftClicked();
+        normalMouse.leftClicked();
 
         // ASSERT: the unit we hover over should be selected
         assertTrue(unit.isSelected());
-        assertThat(mouse.getMouseBehavior(), is(instanceOf(MovableSelectedMouse.class)));
+        assertThat(battleField.getMouseBehavior(), is(instanceOf(MovableSelectedMouse.class)));
 
         // ACT: right click
-        mouse.rightClicked();
+        normalMouse.rightClicked();
 
         // ASSERT: the unit should be deselected again
         assertFalse(unit.isSelected());
@@ -57,7 +61,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         assertThat(unit.hasFocus(), is(false));
 
         // ACT: move to
-        mouse.mouseMovedToCell(cell);
+        normalMouse.mouseMovedToCell(cell);
 
         // ASSERT: the unit we hover over has focus
         assertTrue(unit.hasFocus());
@@ -65,7 +69,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         Cell otherCell = new Cell(map, mock(Terrain.class), 1, 2);
 
         // ACT: move to other cell without unit
-        mouse.mouseMovedToCell(otherCell);
+        normalMouse.mouseMovedToCell(otherCell);
 
         // ASSERT: the unit should have no focus anymore
         assertFalse(unit.hasFocus());
@@ -80,7 +84,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         assertThat(structure.hasFocus(), is(false));
 
         // ACT: move to
-        mouse.mouseMovedToCell(cell);
+        normalMouse.mouseMovedToCell(cell);
 
         // ASSERT: the structure we hover over has focus
         assertTrue(structure.hasFocus());
@@ -88,7 +92,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         Cell otherCell = new Cell(map, mock(Terrain.class), 10, 10); // make sure we are way out of range due structure width/height
 
         // ACT: move to other cell without structure
-        mouse.mouseMovedToCell(otherCell);
+        normalMouse.mouseMovedToCell(otherCell);
 
         // ASSERT: the structure should have no focus anymore
         assertFalse(structure.hasFocus());
@@ -96,7 +100,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
 
     @Test
     public void render() {
-        mouse.render(graphics);
+        normalMouse.render(graphics);
     }
 
 }

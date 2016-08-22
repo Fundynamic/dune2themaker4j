@@ -3,14 +3,28 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
-public abstract class Entity implements Renderable, Updateable {
+/**
+ * <p>
+ * An entity has knowledge where it is on the world map (ie Coordinate).
+ * </p>
+ *
+ * <b>Rendering:</b>
+ * <p>
+ * An entity is told where on screen it should be rendered by a {@link RenderQueue}.
+ *
+ * This is because the translation
+ * from Map to screen position is done by a {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField} or
+ * Viewport (To be built).
+ * </p>
+ */
+public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable {
 
     // Final properties of unit
     protected final EntityData entityData;
@@ -102,6 +116,10 @@ public abstract class Entity implements Renderable, Updateable {
         return this instanceof Destroyer;
     }
 
+    public boolean isFocusable() {
+        return this instanceof Focusable;
+    }
+
     public abstract EntityType getEntityType();
 
     public boolean removeFromPlayerSet(Entity entity) {
@@ -160,4 +178,5 @@ public abstract class Entity implements Renderable, Updateable {
         this.origin = origin;
         return this;
     }
+
 }

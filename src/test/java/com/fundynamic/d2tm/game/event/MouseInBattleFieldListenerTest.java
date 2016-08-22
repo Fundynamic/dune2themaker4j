@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.newdawn.slick.SlickException;
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.*;
 
-public class MouseInViewportListenerTest extends AbstractD2TMTest {
+public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
     public static final float MOVE_SPEED = 2.0F;
 
     public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
@@ -24,27 +24,34 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     public static int HEIGHT_OF_MAP = 40;
     public static int WIDTH_OF_MAP = 46;
 
-    private Viewport viewport;
-    private MouseInViewportListener listener;
+    private BattleField battleField;
+    private MouseListener listener;
 
     private Vector2D screenResolution = Vector2D.create(800, 600);
-
-    private Mouse mouse;
 
     @Before
     public void setUp() throws SlickException {
         super.setUp();
         map = makeMap(WIDTH_OF_MAP, HEIGHT_OF_MAP);
-        this.mouse = makeTestableMouse(player, entityRepository);
-        this.mouse.init();
 
-        viewport = makeDrawableViewPort(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
+        battleField = makeDrawableBattleField(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
 
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
     }
 
-    private Viewport makeDrawableViewPort(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new Viewport(screenResolution, Vector2D.zero(), Vector2D.create(viewportX, viewportY), map, moveSpeed, TILE_SIZE, mouse, player, mock(Image.class));
+    private BattleField makeDrawableBattleField(float viewportX, float viewportY, float moveSpeed) throws SlickException {
+        return new BattleField(
+                screenResolution,
+                Vector2D.zero(),
+                Vector2D.create(viewportX, viewportY),
+                map,
+                mouse,
+                moveSpeed,
+                TILE_SIZE,
+                player,
+                mock(Image.class),
+                entityRepository
+        );
     }
 
     @Test
@@ -96,7 +103,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
         updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = viewport.getViewingVector();
+        Vector2D tickOneViewportVector = battleField.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
@@ -113,7 +120,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
         // this updates viewport coordinates one move up and to the left
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), screenResolution.getYAsInt());
         updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = viewport.getViewingVector();
+        Vector2D tickOneViewportVector = battleField.getViewingVector();
 
         // move back to the middle
         listener.mouseMoved(screenResolution.getXAsInt(), screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
@@ -155,8 +162,8 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
 
         float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_SIZE) - TILE_SIZE)- screenResolution.getY();
 
-        viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new MouseInViewportListener(mouse);
+        battleField = makeDrawableBattleField(viewportX, viewportY, moveSpeed);
+        listener = new MouseListener(mouse);
 
         listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
         updateAndRender();
@@ -175,8 +182,8 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
 
         float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_SIZE) - TILE_SIZE) - screenResolution.getX();
 
-        viewport = makeDrawableViewPort(viewportX, viewportY, moveSpeed);
-        listener = new MouseInViewportListener(mouse);
+        battleField = makeDrawableBattleField(viewportX, viewportY, moveSpeed);
+        listener = new MouseListener(mouse);
 
         listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
         updateAndRender();
@@ -188,7 +195,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     @Test
     public void whenLeftMouseButtonClickedOnceExecuteLogicInMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
 
         int clickCount = 1;
 
@@ -200,7 +207,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     @Test
     public void whenRightMouseButtonClickedOnceExecuteLogicInMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
 
         int clickCount = 1;
 
@@ -212,7 +219,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     @Test
     public void whenLeftMouseButtonIsReleasedPropagateToMouseClass() {
         Mouse mouse = mock(Mouse.class);
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
 
         listener.mouseReleased(Input.MOUSE_LEFT_BUTTON, 0, 0);
 
@@ -222,7 +229,7 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     @Test
     public void propagateDragging() {
         Mouse mouse = mock(Mouse.class);
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
 
         int oldX = 0;
         int oldY = 0;
@@ -231,13 +238,13 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
 
         listener.mouseDragged(oldX, oldY, newX, newY);
 
-        verify(mouse).draggedToCoordinates(newX, newY);
+        verify(mouse).draggedToCoordinates(Vector2D.create(newX, newY));
     }
 
     @Test
     public void whenRightMouseButtonIsReleasedNothingHappens() {
         Mouse mouse = mock(Mouse.class);
-        listener = new MouseInViewportListener(mouse);
+        listener = new MouseListener(mouse);
 
         listener.mouseReleased(Input.MOUSE_RIGHT_BUTTON, 0, 0);
 
@@ -262,12 +269,12 @@ public class MouseInViewportListenerTest extends AbstractD2TMTest {
     }
 
     private void updateAndRender() throws SlickException {
-        viewport.update(ONE_FRAME_PER_SECOND_DELTA);
-        viewport.render(graphics);
+        battleField.update(ONE_FRAME_PER_SECOND_DELTA);
+        battleField.render(graphics);
     }
 
     private Vector2D getLastCalledViewport() throws SlickException {
-        return viewport.getViewingVector();
+        return battleField.getViewingVector();
     }
 
 }

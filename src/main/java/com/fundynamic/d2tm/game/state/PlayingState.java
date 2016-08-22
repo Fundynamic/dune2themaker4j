@@ -3,12 +3,14 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
-import com.fundynamic.d2tm.game.event.MouseInViewportListener;
+import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
+import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -18,8 +20,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import static com.fundynamic.d2tm.Game.TILE_SIZE;
-import static com.fundynamic.d2tm.Game.getResolution;
+import static com.fundynamic.d2tm.Game.*;
 
 public class PlayingState extends BasicGameState {
 
@@ -35,14 +36,16 @@ public class PlayingState extends BasicGameState {
     private Player human;
     private Player cpu;
 
-    // GUI element: the rendering of the battlefield
-    private Viewport battlefield;
+    private GuiComposite guiComposite;
 
     private EntityRepository entityRepository;
     private ImageRepository imageRepository;
 
     private Predicate updatableEntitiesPredicate;
-    private Predicate destroyedEntitiesPredicate;
+    private Predicate destroyedEntitiesPredicate;// pixels
+    public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
+    public static final int HEIGHT_OF_BOTTOM_BAR = 32;
+    public static final int WIDTH_OF_SIDEBAR = 160;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileSize) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -68,45 +71,60 @@ public class PlayingState extends BasicGameState {
 
         entityRepository = createEntityRepository(map);
 
-        Mouse mouse = Mouse.create(human, gameContainer, entityRepository, imageRepository);
+        guiComposite = new GuiComposite();
+
+        Mouse mouse = Mouse.create(
+                human,
+                gameContainer,
+                imageRepository,
+                guiComposite
+        );
+
+        BattleField battlefield = makeBattleField(human, map, mouse);
+
+        guiComposite.addGuiElement(battlefield);
+
+        guiComposite.addGuiElement(new DummyGuiElement(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR));
+        guiComposite.addGuiElement(new DummyGuiElement(SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR, WIDTH_OF_SIDEBAR, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR));
+        guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
+
+        input.addMouseListener(new MouseListener(mouse));
+        input.addKeyListener(new DebugKeysListener(battlefield, human));
+        input.addKeyListener(new QuitGameKeyListener(gameContainer));
+
+        initializeMap(entityRepository, human, cpu);
+    }
+
+    public BattleField makeBattleField(Player human, Map map, Mouse mouse) {
+        // GUI element: the rendering of the battlefield
+        BattleField battlefield;
 
         try {
             float moveSpeed = 30 * tileSize;
             Vector2D viewingVector = Vector2D.create(32, 32);
 
-
-            int heightOfTopBar = 42; // pixels
-            int bottomBar = 32; // pixels
-            int widthOfSidebar = 160;
-
-            Vector2D guiAreas = Vector2D.create(widthOfSidebar, (heightOfTopBar + bottomBar));
+            Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, (HEIGHT_OF_TOP_BAR + HEIGHT_OF_BOTTOM_BAR));
             Vector2D viewportResolution = getResolution().min(guiAreas);
 
             // start drawing below the top gui bar
-            Vector2D viewportDrawingPosition = Vector2D.zero().add(Vector2D.create(0, heightOfTopBar));
+            Vector2D viewportDrawingPosition = Vector2D.create(0, HEIGHT_OF_TOP_BAR);
 
-            battlefield = new Viewport(
+            battlefield = new BattleField(
                     viewportResolution,
                     viewportDrawingPosition,
                     viewingVector,
                     map,
+                    mouse,
                     moveSpeed,
                     tileSize,
-                    mouse,
                     human,
-                    imageRepository.createImage(screenResolution));
+                    imageRepository.createImage(screenResolution),
+                    entityRepository);
 
-            // Add listener for this battlefield
-            // THIS WON'T WORK, BECAUSE FOR NOW WE GET VIEWPORT FROM MOUSE IN MOUSE/VIEWPORT LOGIC!
-            input.addMouseListener(new MouseInViewportListener(mouse));
-
-            input.addKeyListener(new DebugKeysListener(mouse, battlefield, entityRepository, human));
         } catch (SlickException e) {
             throw new IllegalStateException("Unable to create new battlefield!", e);
         }
-        input.addKeyListener(new QuitGameKeyListener(gameContainer));
-
-        initializeMap(entityRepository, human, cpu);
+        return battlefield;
     }
 
     public EntityRepository createEntityRepository(Map map) throws SlickException {
@@ -120,34 +138,18 @@ public class PlayingState extends BasicGameState {
         //TODO: read from SCENARIO.INI file
         // human entities
         entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TANK, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(4 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(Coordinate.create(5 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.QUAD, human);
 
+        // cpu entities
         entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
         // Render all GUI elements
-        battlefield.render(graphics);
-
-        Vector2D resolution = getResolution();
-
-        // TODO:
-        // 1. top bar (buttons, credits, resources, etc)
-        graphics.setColor(Color.yellow);
-        graphics.fillRect(0, 0, resolution.getXAsInt(), 42);
-
-        // 2. sidebar (for interacting with selected unit(s), structure(s), etc)
-        graphics.setColor(Color.red);
-        graphics.fillRect(resolution.getXAsInt() - 160, 0, resolution.getXAsInt(), resolution.getYAsInt());
-
-        // 3. minimap
-        graphics.setColor(Color.green);
-        graphics.fillRect(resolution.getXAsInt() - 129, resolution.getYAsInt() - 129, resolution.getXAsInt() - 1, resolution.getYAsInt() - 1);
-
-
-        // 4. bottom bar (messages bar)
-        graphics.setColor(Color.blue);
-        graphics.fillRect(0, resolution.getYAsInt() - 32, resolution.getXAsInt(), resolution.getYAsInt());
+        guiComposite.render(graphics);
 
         Font font = graphics.getFont();
 
@@ -172,7 +174,7 @@ public class PlayingState extends BasicGameState {
 
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 
-        battlefield.update(deltaInSeconds);
+        guiComposite.update(deltaInSeconds);
     }
 
     private Predicate<Entity> updatableEntitiesPredicate() {

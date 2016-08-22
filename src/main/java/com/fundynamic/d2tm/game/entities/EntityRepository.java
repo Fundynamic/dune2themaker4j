@@ -7,11 +7,11 @@ import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.units.NullRenderableWithFacingLogic;
-import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.NullRenderQueueEnrichableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -240,14 +240,14 @@ public class EntityRepository {
         return new SpriteSheet(recoloredImage, entityData.getWidth(), entityData.getHeight());
     }
 
-    protected RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
+    protected RenderQueueEnrichableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
         if (recoloredImage == null)
             try {
-                return new NullRenderableWithFacingLogic(entityData);
+                return new NullRenderQueueEnrichableWithFacingLogic(entityData);
             } catch (SlickException e) {
                 throw new IllegalStateException("Could not create NullRenderableWithFacingLogic() : " + e);
             }
-        return new RenderableWithFacingLogic(recoloredImage, entityData, turnSpeed);
+        return new RenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
     }
 
 }

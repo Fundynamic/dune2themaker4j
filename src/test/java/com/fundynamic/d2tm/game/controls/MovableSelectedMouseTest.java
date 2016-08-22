@@ -1,10 +1,11 @@
 package com.fundynamic.d2tm.game.controls;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -18,11 +19,12 @@ import static org.junit.Assert.assertThat;
 
 public class MovableSelectedMouseTest extends AbstractD2TMTest {
 
+    private MovableSelectedMouse movableSelectedMouse;
+
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        MovableSelectedMouse movableSelectedMouse = new MovableSelectedMouse(mouse, entityRepository);
-        mouse.setMouseBehavior(movableSelectedMouse);
+        movableSelectedMouse = new MovableSelectedMouse(battleField);
     }
 
     @Test
@@ -30,9 +32,9 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
         Unit unit = makeUnit(player, Coordinate.create(32, 32), "QUAD");
         assertThat(unit.isSelected(), is(false));
 
-        mouse.mouseMovedToCell(map.getCell(1, 1)); // equals 32, 32
+        movableSelectedMouse.mouseMovedToCell(map.getCell(1, 1)); // equals 32, 32
 
-        mouse.leftClicked();
+        movableSelectedMouse.leftClicked();
         assertThat(unit.isSelected(), is(true));
     }
 
@@ -44,8 +46,8 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
         // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
         assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(32, 32));
 
-        mouse.mouseMovedToCell(map.getCell(2, 2)); // equals 64, 64
-        mouse.leftClicked();
+        movableSelectedMouse.mouseMovedToCell(map.getCell(2, 2)); // equals 64, 64
+        movableSelectedMouse.leftClicked();
 
         unit.update(1);
 
@@ -63,13 +65,13 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
         map.revealShroudFor(enemyUnit);
 
         Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(64, 64));
-        mouse.mouseMovedToCell(cell);
+        movableSelectedMouse.mouseMovedToCell(cell);
         mouse.leftClicked();
     }
 
     @Test
     public void render() {
-        mouse.render(graphics);
+        movableSelectedMouse.render(graphics);
     }
 
 }

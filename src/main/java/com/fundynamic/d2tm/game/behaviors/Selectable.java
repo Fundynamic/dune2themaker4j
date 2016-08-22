@@ -1,6 +1,9 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-public interface Selectable {
+/**
+ * Something that can be selected and deselected.
+ */
+public interface Selectable extends Focusable {
 
     void select();
 
@@ -8,7 +11,4 @@ public interface Selectable {
 
     boolean isSelected();
 
-    void getsFocus();
-
-    void lostFocus();
 }

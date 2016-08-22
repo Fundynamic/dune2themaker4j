@@ -20,7 +20,7 @@ public class Game extends StateBasedGame {
     public static final int TILE_SIZE = 32;
 
     public static Vector2D getResolution() {
-        return new Vector2D(SCREEN_WIDTH, SCREEN_HEIGHT);
+        return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     public Game(String title) {

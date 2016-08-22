@@ -1,9 +1,10 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.game.behaviors.Renderable;
+import com.fundynamic.d2tm.game.behaviors.EnrichableAbsoluteRenderable;
+import com.fundynamic.d2tm.game.behaviors.RenderQueueEnrichable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Random;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -18,7 +19,7 @@ import org.newdawn.slick.SpriteSheet;
  *
  * It also can be rendered
  */
-public class RenderableWithFacingLogic extends SpriteSheet implements Renderable, Updateable {
+public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements EnrichableAbsoluteRenderable, Updateable {
 
     private int possibleFacings = 0;
     private int maxFrames = 0;
@@ -31,7 +32,7 @@ public class RenderableWithFacingLogic extends SpriteSheet implements Renderable
 
     private float frame;
 
-    public RenderableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
+    public RenderQueueEnrichableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData.getWidth(), entityData.getHeight());
         this.turnSpeed = turnSpeed;
         this.animationSpeed = entityData.animationSpeed;

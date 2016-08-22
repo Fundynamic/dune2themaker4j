@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.entities.units;
 
 
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -10,9 +10,9 @@ import org.newdawn.slick.SlickException;
 /**
  * Null object for renderable with facing logic. So we don't need to put if statements everywhere with null checks *
  */
-public class NullRenderableWithFacingLogic extends RenderableWithFacingLogic {
+public class NullRenderQueueEnrichableWithFacingLogic extends RenderQueueEnrichableWithFacingLogic {
 
-    public NullRenderableWithFacingLogic(EntityData entityData) throws SlickException {
+    public NullRenderQueueEnrichableWithFacingLogic(EntityData entityData) throws SlickException {
         super(new Image(32, 32), entityData, 1F); // create dummy image
     }
 

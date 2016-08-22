@@ -3,8 +3,8 @@ package com.fundynamic.d2tm.game.map.renderer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.fundynamic.d2tm.game.rendering.CellShroudRenderer.ShroudFacing.*;
-import static com.fundynamic.d2tm.game.rendering.CellShroudRenderer.getFacing;
+import static com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer.ShroudFacing.*;
+import static com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer.getFacing;
 import static org.junit.Assert.assertEquals;
 
 public class CellShroudRendererTest {

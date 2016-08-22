@@ -1,8 +1,10 @@
 package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.Assert;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,11 +14,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class ViewportTest extends AbstractD2TMTest {
+public class BattleFieldTest extends AbstractD2TMTest {
 
     @Test
     public void renderSmokeTest() throws SlickException {
-        Mouse mouse = Mouse.create(player, gameContainer, entityRepository, imageRepository);
         Image bufferWithGraphics = mock(Image.class);
         Graphics bufferGraphics = mock(Graphics.class);
         when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
@@ -24,12 +25,19 @@ public class ViewportTest extends AbstractD2TMTest {
         makeUnit(player, Coordinate.create(2, 2), "QUAD");
         map.revealAllShroudFor(player);
 
-        Viewport viewport = new Viewport(map, mouse, player, bufferWithGraphics);
+        battleField.render(graphics);
+    }
 
-        // make sure we draw debug stuff too
-        viewport.toggleDrawDebugMode();
+    @Test
+    public void translatesScreenCoordinatesIntoAbsoluteMapCoordinates() {
+        Vector2D mouseCoordinates = Vector2D.create(87, 73);
+        battleField.movedTo(mouseCoordinates);
 
-        viewport.render(graphics);
+        Cell hoverCell = battleField.getHoverCell();
+        // Y = (73 - 42) / 32 = 0.96 == 1
+        // X = (87 - 0) / 32 = 2,71 = 3
+        Assert.assertEquals(3, hoverCell.getX());
+        Assert.assertEquals(1, hoverCell.getY());
     }
 
 }

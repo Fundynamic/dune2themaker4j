@@ -7,14 +7,15 @@ import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
-import com.fundynamic.d2tm.game.entities.units.TestableRenderableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.TestableRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -33,6 +34,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractD2TMTest {
 
+    public static Vector2D battlefieldSize = Vector2D.create(320, 200);
+    public static Vector2D battlefieldViewingVector = Vector2D.create(32, 32);
+    public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, 42);
+    public static float battleFieldMoveSpeed = (float)Game.TILE_SIZE * 30;
+    public static int battleFieldTileSize = Game.TILE_SIZE;
+
     public static int TILE_SIZE = 32;
 
     public static int MAP_WIDTH = 64;
@@ -49,9 +56,12 @@ public abstract class AbstractD2TMTest {
     protected EntityRepository entityRepository;
     protected EntitiesData entitiesData;
 
+    protected GuiComposite guiComposite;
+
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Map map;
-    protected Viewport viewport;
+    protected BattleField battleField;
+
 
     protected Mouse mouse;
 
@@ -63,10 +73,25 @@ public abstract class AbstractD2TMTest {
         entitiesData = entitiesDataReader.fromRulesIni();
         entityRepository = makeTestableEntityRepository(map, entitiesData);
 
-        mouse = makeTestableMouse(player, entityRepository);
-        viewport = new Viewport(map, mouse, player, mock(Image.class));
+        // Nice little circular dependency here...
+        guiComposite = new GuiComposite();
+        mouse = makeTestableMouse(player, guiComposite);
 
-        mouse.setBattlefield(viewport);
+        battleField = new BattleField(
+                battlefieldSize,
+                battleFieldDrawingPosition,
+                battlefieldViewingVector,
+                map,
+                mouse,
+                battleFieldMoveSpeed,
+                battleFieldTileSize,
+                player,
+                mock(Image.class),
+                entityRepository
+        );
+
+        guiComposite.addGuiElement(battleField);
+
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
@@ -107,14 +132,14 @@ public abstract class AbstractD2TMTest {
     /**
      * Creates mouse with TestableEntityRepository and TestableImageRepository
      *
-     * @param player - used in TestableMouse
-     * @param entityRepository
+     * @param player
+     * @param guiComposite
      * @return
      * @throws SlickException
      */
-    public Mouse makeTestableMouse(Player player, EntityRepository entityRepository) throws SlickException {
+    public Mouse makeTestableMouse(Player player, GuiComposite guiComposite) throws SlickException {
         GameContainer gameContainer = mock(GameContainer.class);
-        return new TestableMouse(player, gameContainer, entityRepository);
+        return new TestableMouse(player, gameContainer, guiComposite);
     }
 
     // MAP
@@ -217,8 +242,8 @@ public abstract class AbstractD2TMTest {
             }
 
             @Override
-            protected RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
-                return new TestableRenderableWithFacingLogic(recoloredImage, entityData, turnSpeed);
+            protected RenderQueueEnrichableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
+                return new TestableRenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
             }
         };
     }

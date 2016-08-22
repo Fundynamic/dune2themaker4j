@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.graphics;
 
-import com.fundynamic.d2tm.game.rendering.CellShroudRenderer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
