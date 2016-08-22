@@ -23,16 +23,15 @@ public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
         super.setUp();
 
         // start dragging from 0,0
-        draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(battleField, entityRepository, Vector2D.zero());
-        battleField.setMouseBehavior(draggingSelectionBoxMouse);
-
+        Vector2D startingCoordinates = Vector2D.zero();
+        draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(battleField, entityRepository, startingCoordinates);
     }
 
     @Test
     public void draggingOverNothingSelectsNoUnits() throws SlickException {
-        mouse.draggedToCoordinates(Vector2D.create(10, 10));
+        draggingSelectionBoxMouse.draggedToCoordinates(Vector2D.create(10, 10));
 
-        mouse.leftButtonReleased();
+        draggingSelectionBoxMouse.leftButtonReleased();
     }
 
     @Test
@@ -41,9 +40,9 @@ public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
         Selectable entity = (Selectable) entityRepository.placeOnMap(coordinate, EntityType.UNIT, EntitiesData.QUAD, player);
         assertFalse(entity.isSelected());
 
-        mouse.draggedToCoordinates(Vector2D.create(64, 64)); // == 2, 2 on map
+        draggingSelectionBoxMouse.draggedToCoordinates(Vector2D.create(64, 64)); // == 2, 2 on map
 
-        mouse.leftButtonReleased();
+        draggingSelectionBoxMouse.leftButtonReleased();
 
         assertTrue(entity.isSelected());
     }
@@ -55,10 +54,10 @@ public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
         entity.select();
         assertTrue(entity.isSelected());
 
-        mouse.draggedToCoordinates(Vector2D.create(0, 0));
+        draggingSelectionBoxMouse.draggedToCoordinates(Vector2D.create(0, 0));
 
         // this will select nothing
-        mouse.leftButtonReleased();
+        draggingSelectionBoxMouse.leftButtonReleased();
 
         assertFalse(entity.isSelected());
     }
