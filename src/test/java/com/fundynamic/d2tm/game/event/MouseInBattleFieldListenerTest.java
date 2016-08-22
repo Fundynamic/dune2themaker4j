@@ -10,16 +10,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
 import static org.mockito.Mockito.*;
 
 public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
-    public static final float MOVE_SPEED = 2.0F;
 
-    public static final int ANY_COORDINATE_NOT_NEAR_BORDER = 100;
     public static final float INITIAL_VIEWPORT_X = 34F;
     public static final float INITIAL_VIEWPORT_Y = 34F;
-    public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
 
     public static int HEIGHT_OF_MAP = 40;
     public static int WIDTH_OF_MAP = 46;
@@ -34,7 +30,7 @@ public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
         super.setUp();
         map = makeMap(WIDTH_OF_MAP, HEIGHT_OF_MAP);
 
-        battleField = makeDrawableBattleField(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, MOVE_SPEED);
+        battleField = makeDrawableBattleField(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, battleFieldMoveSpeed);
 
         listener = new MouseListener(mouse);
     }
@@ -52,144 +48,6 @@ public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
                 mock(Image.class),
                 entityRepository
         );
-    }
-
-    @Test
-    public void mouseHittingLeftBorderOfScreenMovesViewportToLeft() throws SlickException {
-        // moved to 2 pixels close to the left of the screen
-        listener.mouseMoved(3, ANY_COORDINATE_NOT_NEAR_BORDER, 2, ANY_COORDINATE_NOT_NEAR_BORDER);
-
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
-
-        assertFloatEquals(INITIAL_VIEWPORT_X - MOVE_SPEED, viewportVector.getX());
-        assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
-    }
-
-    @Test
-    public void mouseHittingRightBorderOfScreenMovesViewportToRight() throws SlickException {
-        // moved to 2 pixels close to the right of the screen
-        listener.mouseMoved(screenResolution.getXAsInt() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt() - 2, ANY_COORDINATE_NOT_NEAR_BORDER);
-
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
-
-        assertFloatEquals(INITIAL_VIEWPORT_X + MOVE_SPEED, viewportVector.getX());
-        assertFloatEquals(INITIAL_VIEWPORT_Y, viewportVector.getY());
-    }
-
-    @Test
-    public void mouseHittingTopOfScreenMovesViewportUp() throws SlickException {
-        // moved to 2 pixels close to the top of the screen
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 3, ANY_COORDINATE_NOT_NEAR_BORDER, 2);
-
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
-
-        assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
-        assertFloatEquals(INITIAL_VIEWPORT_Y - MOVE_SPEED, viewportVector.getY());
-    }
-
-    @Test
-    public void mouseHittingBottomOfScreenMovesViewportDown() throws SlickException {
-        // moved to 2 pixels close to the bottom of the screen
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt() - 3, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt() - 2);
-
-        Vector2D viewportVector = updateAndRenderAndReturnNewViewportVector();
-
-        assertFloatEquals(INITIAL_VIEWPORT_X, viewportVector.getX());
-        assertFloatEquals(INITIAL_VIEWPORT_Y + MOVE_SPEED, viewportVector.getY());
-    }
-
-    @Test
-    public void mouseFromTopLeftToNoBorderStopsMoving() throws SlickException {
-        // this updates viewport coordinates one move up and to the left
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, 0, 0);
-        updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = battleField.getViewingVector();
-
-        // move back to the middle
-        listener.mouseMoved(0, 0, ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
-        updateAndRender(); // and stop moving
-
-        // Check that the viewport stopped moving
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
-        assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
-    }
-
-    @Test
-    public void mouseFromBottomRightToNoBorderStopsMoving() throws SlickException {
-        // this updates viewport coordinates one move up and to the left
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), screenResolution.getYAsInt());
-        updateAndRender(); // and move the viewport
-        Vector2D tickOneViewportVector = battleField.getViewingVector();
-
-        // move back to the middle
-        listener.mouseMoved(screenResolution.getXAsInt(), screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, ANY_COORDINATE_NOT_NEAR_BORDER);
-        updateAndRender(); // and stop moving
-
-        // Check that the viewport stopped moving
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("Y position moved while expected to have stopped", tickOneViewportVector.getY(), viewportVector.getY());
-        assertFloatEquals("X position moved while expected to have stopped", tickOneViewportVector.getX(), viewportVector.getX());
-    }
-
-    @Test
-    public void stopsMovingLeftWhenAtTheLeftEdge() throws SlickException {
-        listener.mouseMoved(0, ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER); // move left
-        updateAndRender();
-        updateAndRender();
-        updateAndRender();
-
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("X position moved over the edge", 32F, viewportVector.getX());
-    }
-
-    @Test
-    public void stopsMovingUpWhenAtTheUpperEdge() throws SlickException {
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, 0, ANY_COORDINATE_NOT_NEAR_BORDER, 0); // move up
-        updateAndRender();
-        updateAndRender();
-        updateAndRender();
-
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("Y position moved over the edge", 32F, viewportVector.getY());
-    }
-
-    @Test
-    public void stopsMovingDownWhenAtTheBottomEdge() throws SlickException {
-        int viewportX = 0;
-        int viewportY = 608;
-        float moveSpeed = 16F;
-
-        float maxYViewportPosition = ((HEIGHT_OF_MAP * TILE_SIZE) - TILE_SIZE)- screenResolution.getY();
-
-        battleField = makeDrawableBattleField(viewportX, viewportY, moveSpeed);
-        listener = new MouseListener(mouse);
-
-        listener.mouseMoved(ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getYAsInt()); // move down
-        updateAndRender();
-        updateAndRender();
-        updateAndRender();
-
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("Y position moved over the bottom", maxYViewportPosition, viewportVector.getY());
-    }
-
-    @Test
-    public void stopsMovingRightWhenAtTheRightEdge() throws SlickException {
-        int viewportX = 640;
-        int viewportY = 0;
-        float moveSpeed = 32F;
-
-        float maxXViewportPosition = ((WIDTH_OF_MAP * TILE_SIZE) - TILE_SIZE) - screenResolution.getX();
-
-        battleField = makeDrawableBattleField(viewportX, viewportY, moveSpeed);
-        listener = new MouseListener(mouse);
-
-        listener.mouseMoved(screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER, screenResolution.getXAsInt(), ANY_COORDINATE_NOT_NEAR_BORDER); // move right
-        updateAndRender();
-
-        Vector2D viewportVector = getLastCalledViewport();
-        assertFloatEquals("X position moved over the right", maxXViewportPosition, viewportVector.getX());
     }
 
     @Test

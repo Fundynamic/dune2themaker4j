@@ -262,4 +262,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
     public Cell getHoverCell() {
         return mouseBehavior.getHoverCell();
     }
+
+    public void setViewingVector(Vector2D viewingVector) {
+        this.viewingVector = viewingVector;
+    }
 }

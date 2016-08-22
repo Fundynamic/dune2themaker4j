@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class GuiComposite implements Renderable, Updateable, MouseBehavior {
 
-    private static final int PIXELS_NEAR_BORDER = 2;
+    public static final int PIXELS_NEAR_BORDER = 2;
 
     // Gui elements references to interact with
     private List<GuiElement> guiElements = new ArrayList<>();
@@ -58,26 +58,6 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
         for (GuiElement guiElement : guiElements) {
             guiElement.render(graphics);
         }
-
-//        Vector2D resolution = getResolution();
-//
-//        // TODO:
-//        // 1. top bar (buttons, credits, resources, etc)
-//        graphics.setColor(Color.yellow);
-//        graphics.fillRect(0, 0, resolution.getXAsInt(), 42);
-//
-//        // 2. sidebar (for interacting with selected unit(s), structure(s), etc)
-//        graphics.setColor(Color.red);
-//        graphics.fillRect(resolution.getXAsInt() - 160, 0, resolution.getXAsInt(), resolution.getYAsInt());
-//
-//        // 3. minimap
-//        graphics.setColor(Color.green);
-//        graphics.fillRect(resolution.getXAsInt() - 129, resolution.getYAsInt() - 129, resolution.getXAsInt() - 1, resolution.getYAsInt() - 1);
-//
-//
-//        // 4. bottom bar (messages bar)
-//        graphics.setColor(Color.blue);
-//        graphics.fillRect(0, resolution.getYAsInt() - 32, resolution.getXAsInt(), resolution.getYAsInt());
     }
 
     @Override
@@ -97,8 +77,6 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
         activeGuiElement.movedTo(screenPosition);
 
         // Scroll the battlefield by hitting the borders of the screen
-        // TODO: this feels awkward, but also awkward to keep it within the Battlefield class somehow
-        // perhaps move to a Camera like class?
         if (battleField != null) {
             int newx = screenPosition.getXAsInt();
             int newy = screenPosition.getYAsInt();

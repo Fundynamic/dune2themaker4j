@@ -11,6 +11,8 @@ import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLo
 import com.fundynamic.d2tm.game.entities.units.TestableRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
+import com.fundynamic.d2tm.game.event.*;
+import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
@@ -34,10 +36,14 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractD2TMTest {
 
+    public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
+
+    public static Vector2D screenResolution = Game.getResolution();
+
     public static Vector2D battlefieldSize = Vector2D.create(320, 200);
     public static Vector2D battlefieldViewingVector = Vector2D.create(32, 32);
     public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, 42);
-    public static float battleFieldMoveSpeed = (float)Game.TILE_SIZE * 30;
+    public static float battleFieldMoveSpeed = 2.0F;
     public static int battleFieldTileSize = Game.TILE_SIZE;
 
     public static int TILE_SIZE = 32;
@@ -64,6 +70,7 @@ public abstract class AbstractD2TMTest {
 
 
     protected Mouse mouse;
+    protected MouseListener listener;
 
     @Before
     public void setUp() throws SlickException {
@@ -76,6 +83,8 @@ public abstract class AbstractD2TMTest {
         // Nice little circular dependency here...
         guiComposite = new GuiComposite();
         mouse = makeTestableMouse(player, guiComposite);
+
+        listener = new MouseListener(mouse);
 
         battleField = new BattleField(
                 battlefieldSize,
