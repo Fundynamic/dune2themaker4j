@@ -53,15 +53,6 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         setLastSelectedEntity(null);
     }
 
-    @Override
-    public void render(Graphics graphics) {
-        Cell cell = getHoverCell();
-        if (cell != null) {
-            graphics.setColor(Color.orange);
-            graphics.drawString("Cell [" + cell.getX() + "," + cell.getY() + "]", mouseCoordinates.getXAsInt(), mouseCoordinates.getYAsInt());
-        }
-    }
-
     protected void deselectCurrentlySelectedEntity() {
         Set<Entity> entities = entityRepository.filter(
                 Predicate.builder().
