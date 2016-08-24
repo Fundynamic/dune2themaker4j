@@ -1,11 +1,12 @@
 package com.fundynamic.d2tm.game.controls;
 
 
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Graphics;
 
-public abstract class AbstractMouseBehavior implements MouseBehavior {
+/**
+ * An AbstractMouseBehavior is a MouseBehavior with a relation to Mouse
+ */
+public abstract class AbstractMouseBehavior<T> implements MouseBehavior {
     protected final Mouse mouse;
 
     public AbstractMouseBehavior(Mouse mouse) {
@@ -16,11 +17,7 @@ public abstract class AbstractMouseBehavior implements MouseBehavior {
 
     public abstract void rightClicked();
 
-    public abstract void mouseMovedToCell(Cell cell);
-
-    public void render(Graphics g) {
-        // DO NOTHING
-    }
+    public abstract void setMouseBehavior(T mouseBehavior);
 
     public void draggedToCoordinates(Vector2D coordinates) {
         // DO NOTHING

@@ -1,46 +1,45 @@
-package com.fundynamic.d2tm.game.controls;
+package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
-import org.newdawn.slick.Color;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import org.newdawn.slick.Graphics;
 
-public class PlacingStructureMouse extends AbstractMouseBehavior {
+public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
-    private final EntityRepository entityRepository;
     private EntityData entityToPlace;
 
-    public PlacingStructureMouse(Mouse mouse, EntityRepository entityRepository) {
-        super(mouse);
-        this.entityRepository = entityRepository;
+    public PlacingStructureMouse(BattleField battleField) {
+        super(battleField);
         selectRandomlySomethingToPlace();
     }
 
     @Override
     public void leftClicked() {
-        Cell hoverCell = mouse.getHoverCell();
+        Cell hoverCell = getHoverCell();
         entityRepository.placeOnMap(hoverCell.getCoordinates(), entityToPlace, mouse.getControllingPlayer());
         selectRandomlySomethingToPlace();
     }
 
     @Override
     public void rightClicked() {
-        mouse.setMouseBehavior(new NormalMouse(mouse));
+        setMouseBehavior(new NormalMouse(battleField));
     }
 
     @Override
     public void mouseMovedToCell(Cell cell) {
-        mouse.setHoverCell(cell);
+        setHoverCell(cell);
     }
 
-    public void render(Graphics graphics, int x, int y) {
-        graphics.setColor(Color.green);
-        graphics.setLineWidth(1.1f);
-        graphics.drawRect(x, y, entityToPlace.getWidth(), entityToPlace.getHeight());
+    @Override
+    public void render(Graphics graphics) {
+//        graphics.setColor(Color.green);
+//        graphics.setLineWidth(1.1f);
+//        graphics.drawRect(x, y, entityToPlace.getWidth(), entityToPlace.getHeight());
+        graphics.drawImage(entityToPlace.image, mouseCoordinates.getXAsInt(), mouseCoordinates.getYAsInt());
     }
 
     private void selectRandomlySomethingToPlace() {

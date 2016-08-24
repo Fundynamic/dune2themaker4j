@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.rendering;
+package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
@@ -25,7 +25,7 @@ public class CellShroudRenderer implements Renderer<Cell> {
         }
     }
 
-    protected ShroudFacing determineShroudFacing(Cell cell) {
+    public ShroudFacing determineShroudFacing(Cell cell) {
         if (player.isShrouded(cell.getMapCoordinate())) {
             return ShroudFacing.FULL;
         }

@@ -1,9 +1,9 @@
-package com.fundynamic.d2tm.game.rendering;
+package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -24,7 +24,9 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
         cellsThatFitVertically = (windowDimensions.getYAsInt() / tileSize) + 1;
     }
 
-    public void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<Cell> renderer) throws SlickException {
+    public void render(Graphics graphics, Vector2D viewingVector, Renderer<Cell> renderer) throws SlickException {
+        if (graphics == null) throw new IllegalArgumentException("Graphics cannot be null");
+
         int startCellX = viewingVector.getXAsInt() / tileSize;
         int startCellY = viewingVector.getYAsInt() / tileSize;
 
@@ -38,7 +40,7 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
 
                 // TODO: 2 responsibilities happening here, one is culling, one is drawing
                 // it is better to separate the two
-                renderer.draw(imageToDrawOn.getGraphics(), map.getCell(x, y), drawX, drawY);
+                renderer.draw(graphics, map.getCell(x, y), drawX, drawY);
             }
         }
     }

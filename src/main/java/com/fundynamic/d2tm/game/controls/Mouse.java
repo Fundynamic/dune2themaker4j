@@ -1,157 +1,83 @@
 package com.fundynamic.d2tm.game.controls;
 
-import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.graphics.ImageRepository;
-import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <h1>General</h1>
+ * <p>
+ *     This class represents the mouse and functions as an abstraction between hardware inputs and rendering
+ *     logic. It propagates all mouse events to its related {@link GuiComposite}.
+ * </p>
+ * <h2>Rendering</h2>
+ * <p>
+ *     This class does not implement the Renderable interface because its rendering
+ *     is done outside the rendering logic by Slick.
+ * </p>
+ * <h2>Mouse images</h2>
+ * <p>
+ *     The image of the mouse to render is set by {@link #setMouseImage(Image, int, int)} (and other)
+ *     methods.
+ * </p>
+ * <h2>Propagating {@link MouseBehavior} events</h2>
+ * <p>
+ *     This class listens to mouse behavior events, which are passed down by the {@link com.fundynamic.d2tm.game.event.MouseListener}.
+ * </p>
+ * <p>
+ *     This class propagates the mouse behavior events to its related {@link GuiComposite}.
+ * </p>
+ */
+public class Mouse implements MouseBehavior {
 
-public class Mouse {
-
+    // RENDERING
     public enum MouseImages {
-        NORMAL, HOVER_OVER_SELECTABLE_ENTITY, MOVE, ATTACK, CUSTOM
+        NORMAL,
+        HOVER_OVER_SELECTABLE_ENTITY,
+        MOVE,
+        ATTACK,
+        // and other images we can think of (ie, they are not GUI area specific, these are ALL definitions)
+        CUSTOM
     }
-
-    private final Player controllingPlayer;
-    private final GameContainer gameContainer;
-    private final EntityRepository entityRepository;
-
-    private Viewport viewport;
-
-    private MouseBehavior mouseBehavior;
-    private Entity lastSelectedEntity;
-    private Cell hoverCell;
     private MouseImages currentImage;
-
     private Map<MouseImages, Image> mouseImages = new HashMap<>();
 
-    Mouse(Player controllingPlayer, GameContainer gameContainer, EntityRepository entityRepository) {
+    // STATE
+    private final Player controllingPlayer;
+
+    private final GameContainer gameContainer;
+
+    // GUI IT INTERACTS WITH
+    private MouseBehavior guiComposite;
+
+    Mouse(Player controllingPlayer, GameContainer gameContainer, GuiComposite guiComposite) {
         this.controllingPlayer = controllingPlayer;
-        this.entityRepository = entityRepository;
         this.gameContainer = gameContainer;
+        this.guiComposite = guiComposite;
     }
 
-    public static Mouse create(Player player, GameContainer gameContainer, EntityRepository entityRepository, ImageRepository imageRepository) throws SlickException {
-        Mouse mouse = new Mouse(player, gameContainer, entityRepository);
-        mouse.addMouseImage(Mouse.MouseImages.NORMAL, imageRepository.loadAndCache("mouse/mouse_normal.png"));
-        mouse.addMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, imageRepository.loadAndCache("mouse/mouse_pick.png"));
-        mouse.addMouseImage(Mouse.MouseImages.MOVE, imageRepository.loadAndCache("mouse/mouse_move.png"));
-        mouse.addMouseImage(Mouse.MouseImages.ATTACK, imageRepository.loadAndCache("mouse/mouse_attack.png"));
-        mouse.init();
+    public static Mouse create(Player player, GameContainer gameContainer, ImageRepository imageRepository, GuiComposite guiComposite) throws SlickException {
+        Mouse mouse = new Mouse(player, gameContainer, guiComposite);
+        mouse.setupMouseImage(Mouse.MouseImages.NORMAL, imageRepository.loadAndCache("mouse/mouse_normal.png"));
+        mouse.setupMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, imageRepository.loadAndCache("mouse/mouse_pick.png"));
+        mouse.setupMouseImage(Mouse.MouseImages.MOVE, imageRepository.loadAndCache("mouse/mouse_move.png"));
+        mouse.setupMouseImage(Mouse.MouseImages.ATTACK, imageRepository.loadAndCache("mouse/mouse_attack.png"));
         return mouse;
     }
 
     public void init() {
-        this.mouseBehavior = new NormalMouse(this);
-    }
-
-    // TODO make mouse implement Renderable interface?
-    public void render(Graphics graphics) {
-        mouseBehavior.render(graphics);
-    }
-
-    /**
-     * When a left click (== press and release) has been detected, this method is called.
-     */
-    public void leftClicked() {
-        mouseBehavior.leftClicked();
-    }
-
-    /**
-     * When a right click (== press and release) has been detected, this method is called.
-     */
-    public void rightClicked() {
-        mouseBehavior.rightClicked();
-    }
-
-    /**
-     * This method is called to update the mouse (and its associated behavior) state. Notifying that
-     * the mouse has been moved to the given cell.
-     * @param cell
-     */
-    public void mouseMovedToCell(Cell cell) {
-        mouseBehavior.mouseMovedToCell(cell);
-    }
-
-    public Entity hoveringOverSelectableEntity() {
-        if (hoverCell == null) return NullEntity.INSTANCE;
-        EntitiesSet entities = entityRepository.filter(Predicate.builder().
-                vectorWithin(hoverCell.getCoordinates()).
-                isSelectable());
-        Entity entity = entities.getFirst();
-        if (entity == null) return NullEntity.INSTANCE;
-        if (!entity.isSelectable()) return NullEntity.INSTANCE;
-        if (!hoveringOverVisibleEntity(entity)) return NullEntity.INSTANCE;
-        return entity;
-    }
-
-    public boolean hoveringOverVisibleEntity(Entity entity) {
-        com.fundynamic.d2tm.game.map.Map map = this.viewport.getMap();
-        return entity.isVisibleFor(getControllingPlayer(), map);
-    }
-
-    public void setMouseBehavior(MouseBehavior mouseBehavior) {
-        if (mouseBehavior == null) throw new IllegalArgumentException("MouseBehavior argument may not be null!");
-//        System.out.println("Mouse behavior changed into " + mouseBehavior);
-        this.mouseBehavior = mouseBehavior;
-    }
-
-    public Entity getLastSelectedEntity() {
-        return lastSelectedEntity;
-    }
-
-    public void setLastSelectedEntity(Entity lastSelectedEntity) {
-        this.lastSelectedEntity = lastSelectedEntity;
-    }
-
-    public Cell getHoverCell() {
-        return hoverCell;
-    }
-
-    public void setHoverCell(Cell hoverCell) {
-        this.hoverCell = hoverCell;
+        this.guiComposite = new GuiComposite();
     }
 
     public Player getControllingPlayer() {
         return controllingPlayer;
-    }
-
-    public void leftButtonReleased() {
-        mouseBehavior.leftButtonReleased();
-    }
-
-    public void draggedToCoordinates(int newX, int newY) {
-        Vector2D coordinates = Vector2D.create(newX, newY);
-        Vector2D viewportCoordinates = viewport.translateScreenToViewportCoordinate(coordinates);
-
-        if (viewportCoordinates == null) {
-            Vector2D drawingVector = viewport.getDrawingVector();
-            Vector2D viewportDimensions = viewport.getViewportDimensions();
-
-            int snappedX = Math.min(
-                                Math.max(newX, drawingVector.getXAsInt()),
-                                viewportDimensions.getXAsInt() + drawingVector.getXAsInt()
-                            );
-
-            int snappedY = Math.min(
-                                Math.max(newY, drawingVector.getYAsInt()),
-                                viewportDimensions.getYAsInt() + drawingVector.getYAsInt()
-                            );
-
-            Vector2D snappedCoordinates = Vector2D.create(snappedX, snappedY);
-            viewportCoordinates = viewport.translateScreenToViewportCoordinate(snappedCoordinates);
-        }
-
-        mouseBehavior.draggedToCoordinates(viewportCoordinates);
     }
 
     public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
@@ -184,39 +110,37 @@ public class Mouse {
         setMouseImage(mouseImages.get(key), hotSpotX, hotSpotY);
     }
 
-    public void addMouseImage(MouseImages key, Image image) {
-        if (image == null) throw new IllegalArgumentException("Image for mouse images cannot be null!");
+    public void setupMouseImage(MouseImages key, Image image) {
+        if (image == null) throw new IllegalArgumentException("Image for MouseImages [" + key + "] may not be null!");
         this.mouseImages.put(key, image);
     }
 
-    public MouseBehavior getMouseBehavior() {
-        return this.mouseBehavior;
+    @Override
+    public void draggedToCoordinates(Vector2D coordinates) {
+        guiComposite.draggedToCoordinates(coordinates);
     }
 
-    public EntityRepository getEntityRepository() {
-        return entityRepository;
+    /**
+     * When a left click (== press and release) has been detected, this method is called.
+     */
+    public void leftClicked() {
+        guiComposite.leftClicked();
     }
 
-    public Viewport getViewport() {
-        return viewport;
-    }
-
-    public void setViewport(Viewport viewport) {
-        this.viewport = viewport;
+    /**
+     * When a right click (== press and release) has been detected, this method is called.
+     */
+    public void rightClicked() {
+        guiComposite.rightClicked();
     }
 
     public void movedTo(Vector2D screenPosition) {
-        // TODO: this method should deal with viewport dimensions instead of window dimensions
-        viewport.tellAboutNewMousePositions(screenPosition.getXAsInt(), screenPosition.getYAsInt());
+        guiComposite.movedTo(screenPosition);
+    }
 
-        Vector2D viewportPosition = viewport.translateScreenToViewportCoordinate(screenPosition);
-        if (viewportPosition != null) {
-            com.fundynamic.d2tm.game.map.Map map = viewport.getMap();
-            Coordinate absoluteMapCoordinates = viewport.translateViewportCoordinateToAbsoluteMapCoordinate(viewportPosition);
-            mouseMovedToCell(map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinates));
-        } else {
-//            System.out.println("Lost focus!");
-        }
+    @Override
+    public void leftButtonReleased() {
+        guiComposite.leftButtonReleased();
     }
 
 }

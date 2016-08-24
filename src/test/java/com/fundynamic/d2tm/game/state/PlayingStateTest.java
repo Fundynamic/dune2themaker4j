@@ -1,11 +1,14 @@
 package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.map.MapEditor;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -37,10 +40,32 @@ public class PlayingStateTest extends AbstractD2TMTest {
         TerrainFactory terrainFactory = new DuneTerrainFactory(new Theme(mock(Image.class), TILE_SIZE));
         Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE);
 
+        final Map originalMap = map;
+
         playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE) {
             @Override
-            public EntityRepository createEntityRepository(Map map) throws SlickException {
-                return getTestableEntityRepository();
+            public EntityRepository createEntityRepository() throws SlickException {
+                return entityRepository;
+            }
+
+            @Override
+            public Map getMap() {
+                return map;
+            }
+
+            @Override
+            public MapEditor getMapEditor() {
+                return new MapEditor(terrainFactory) {
+                    @Override
+                    public Map generateRandom(Map map) {
+                        return originalMap;
+                    }
+                };
+            }
+
+            @Override
+            public BattleField makeBattleField(Player human, Mouse mouse) {
+                return battleField;
             }
         };
 
@@ -52,7 +77,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
     @Test
     public void testInitInitialGame() throws SlickException {
-//        EntityRepository entityRepository = mock(EntityRepository.class);
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
         Player human = new Player("human", Recolorer.FactionColor.BLUE);
 
@@ -66,11 +90,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
         Font font = mock(Font.class);
 
         when(graphics.getFont()).thenReturn(font);
-
-        Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
-        Player human = new Player("human", Recolorer.FactionColor.BLUE);
-
-        playingState.initializeMap(entityRepository, human, cpu);
 
         playingState.render(gameContainer, game, graphics);
     }

@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.rendering;
 
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Color;

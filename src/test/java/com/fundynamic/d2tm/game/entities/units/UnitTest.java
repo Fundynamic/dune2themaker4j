@@ -3,16 +3,14 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.EntitiesSet;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +38,40 @@ public class UnitTest extends AbstractD2TMTest {
     public void setUp() throws SlickException {
         super.setUp();
         unitAbsoluteMapCoordinates = MapCoordinate.create(10, 10).toCoordinate();
+    }
+
+    @Test
+    public void takingDamageReducesHitpoints() {
+        Unit unit = makeUnit(player);
+        int hitPoints = unit.getHitPoints();
+
+        int damageInHitpoints = 5;
+        unit.takeDamage(damageInHitpoints, null);
+
+        Assert.assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
+    }
+
+    @Test
+    public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
+        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Assert.assertFalse(unit.shouldMove());
+
+        unit.takeDamage(1, null); // null means unknown entity
+
+        Assert.assertTrue(unit.shouldMove());
+    }
+
+    @Test
+    public void cpuUnitAttacksBackTheEntityItTookDamageFrom() {
+        Unit humanUnit = makeUnit(player);
+
+        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Assert.assertFalse(unit.shouldAttack());
+
+        unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
+
+        Assert.assertTrue(unit.shouldAttack());
+        Assert.assertEquals(humanUnit, unit.getEntityToAttack());
     }
 
     @Test
@@ -81,6 +113,7 @@ public class UnitTest extends AbstractD2TMTest {
         unit.takeDamage(unit.getHitPoints(), null);
 
         unit.update(1);
+
 
         Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
         assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PARTICLE));
@@ -171,14 +204,14 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(thingsToRender.size(), is(2));
 
         RenderQueue.ThingToRender first = thingsToRender.get(0);
-        assertThat(first.renderable, is(instanceOf(HitPointBasedDestructibility.class)));
-        assertThat(first.x, is(16)); // unitX - viewportVecX
-        assertThat(first.y, is(16)); // unitY - viewportVecY
+        assertThat(first.renderQueueEnrichable, is(instanceOf(HitPointBasedDestructibility.class)));
+        assertThat(first.screenX, is(16)); // unitX - viewportVecX
+        assertThat(first.screenY, is(16)); // unitY - viewportVecY
 
         RenderQueue.ThingToRender second = thingsToRender.get(1);
-        assertThat(second.renderable, is(instanceOf(FadingSelection.class)));
-        assertThat(second.x, is(16)); // unitX - viewportVecX
-        assertThat(second.y, is(16)); // unitY - viewportVecY
+        assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
+        assertThat(second.screenX, is(16)); // unitX - viewportVecX
+        assertThat(second.screenY, is(16)); // unitY - viewportVecY
     }
 
     public static SpriteSheet makeSpriteSheet() {

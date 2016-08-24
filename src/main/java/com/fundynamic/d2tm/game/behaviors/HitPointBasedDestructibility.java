@@ -1,10 +1,10 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-import com.fundynamic.d2tm.game.rendering.RenderQueue;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-public class HitPointBasedDestructibility implements Renderable {
+public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderable {
 
     private int maxHitpoints;
     private int widthInPixels;
@@ -36,7 +36,6 @@ public class HitPointBasedDestructibility implements Renderable {
         return hitPoints;
     }
 
-    @Override
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.white);
         graphics.setLineWidth(1.1f);

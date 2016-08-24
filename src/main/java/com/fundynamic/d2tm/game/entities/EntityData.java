@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;

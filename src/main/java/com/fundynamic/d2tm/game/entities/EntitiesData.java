@@ -12,9 +12,22 @@ public class EntitiesData {
     public static final String UNKNOWN = "UNKNOWN";
 
     // units
+
+    /**
+     * ID of TRIKE unit
+     */
     public static String TRIKE = "TRIKE";
+
+    /**
+     * ID of QUAD unit
+     */
     public static String QUAD = "QUAD";
+
+    /**
+     * ID of TANK unit
+     */
     public static String TANK = "TANK";
+
     public static String SOLDIER = "SOLDIER";
     public static String INFANTRY = "INFANTRY";
 
@@ -24,6 +37,11 @@ public class EntitiesData {
 
     // projectiles
     public static String BULLET = "RIFLE";
+
+    /**
+     * ID of large rocket
+     */
+    public static final String LARGE_ROCKET = "LARGE_ROCKET";
 
     // explosions
     public static String EXPLOSION_SMALL_UNIT = "WHEELED";

@@ -5,8 +5,8 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import org.mockito.Mockito;
 import org.newdawn.slick.Image;
 
-public class TestableRenderableWithFacingLogic extends RenderableWithFacingLogic {
-    public TestableRenderableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
+public class TestableRenderQueueEnrichableWithFacingLogic extends RenderQueueEnrichableWithFacingLogic {
+    public TestableRenderQueueEnrichableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData, turnSpeed);
     }
 

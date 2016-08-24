@@ -6,6 +6,7 @@ public class Rectangle {
 
     private float width;
     private float height;
+
     private Vector2D topLeft;
     private Vector2D bottomRight;
 
@@ -15,6 +16,12 @@ public class Rectangle {
 
     public static Rectangle createWithDimensions(Vector2D absTopLeftInPixels, Vector2D dimensions) {
         return create(absTopLeftInPixels, absTopLeftInPixels.add(dimensions));
+    }
+
+    public Rectangle(int x, int y, int width, int height) {
+        // cast one to float so the compiler knows we call the constructor below
+        // and prevent a circular constructor calling
+        this((float) x, y, x + width, y + height);
     }
 
     public Rectangle(float srcX, float srcY, float destX, float destY) {
@@ -36,6 +43,14 @@ public class Rectangle {
         boolean result = vec.getX() >= topLeft.getX() && vec.getX() < bottomRight.getX() && vec.getY() >= topLeft.getY() && vec.getY() < bottomRight.getY();
 //        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
         return result;
+    }
+
+    public Vector2D getTopLeft() {
+        return topLeft;
+    }
+
+    public Vector2D getSize() {
+        return Vector2D.create(width, height);
     }
 
     @Override

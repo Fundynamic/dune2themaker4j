@@ -1,17 +1,47 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static com.fundynamic.d2tm.game.rendering.CellShroudRenderer.ShroudFacing.*;
-import static com.fundynamic.d2tm.game.rendering.CellShroudRenderer.getFacing;
+import static com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer.ShroudFacing.*;
+import static com.fundynamic.d2tm.game.rendering.gui.battlefield.CellShroudRenderer.getFacing;
 import static org.junit.Assert.assertEquals;
 
-public class CellShroudRendererTest {
+public class CellShroudRendererTest extends AbstractD2TMTest {
 
     @Test
     public void middle() throws Exception {
         assertEquals(MIDDLE, getFacing(true, true, true, true));
+    }
+
+    @Test
+    public void determineShroudFacingReturnsFULLwhenCellIsShrouded() {
+        CellShroudRenderer cellShroudRenderer = new CellShroudRenderer(player, shroud);
+
+        Cell cell = map.getCell(60, 60);
+
+        // shroud the cell
+        player.shroud(cell.getMapCoordinate());
+
+        // we expect this to be a FULL cell when shrouded
+        assertEquals(FULL, cellShroudRenderer.determineShroudFacing(cell));
+    }
+
+
+    @Test
+    public void determineShroudFacingReturnsNonFULLWhenCellIsNotShrouded() {
+        CellShroudRenderer cellShroudRenderer = new CellShroudRenderer(player, shroud);
+
+        Cell cell = map.getCell(60, 60);
+
+        // remove shroud
+        player.revealShroudFor(cell.getMapCoordinate());
+
+        // we expect this to be a MIDDLE cell when this cell is revealed, but around it is shrouded
+        assertEquals(MIDDLE, cellShroudRenderer.determineShroudFacing(cell));
     }
 
     @Test

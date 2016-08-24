@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
     @Test
     public void findsUnitAtVector() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(100, 100), "QUAD");
+        Unit unit = makeUnit(player, Coordinate.create(100, 100), EntitiesData.QUAD);
 
         // find at same position
         EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(100, 100), EntityType.UNIT);
@@ -40,9 +40,20 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         assertThat(entities, is(empty()));
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void throwsExceptionWhenTryingToCreateExplosionOutOfNonParticle() {
+        EntityData entityData = entitiesData.getEntityData(EntityType.UNIT, EntitiesData.QUAD);
+        entityRepository.placeExplosion(Coordinate.create(0, 0), entityData, player);
+    }
+
     @Test (expected = EntityNotFoundException.class)
     public void placeOnMapThrowsEntityNotFoundExceptionWhenAskingForUnknownEntity() {
         entityRepository.placeOnMap(Coordinate.create(0, 0), EntityType.UNIT, "93232", player);
+    }
+
+    @Test
+    public void removeEntities() {
+        makeUnit(player);
     }
 
     @Test

@@ -1,7 +1,7 @@
-package com.fundynamic.d2tm.game.rendering;
+package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -20,6 +20,6 @@ import org.newdawn.slick.SlickException;
  */
 public interface ViewportRenderer<T> {
 
-    void render(Image imageToDrawOn, Vector2D viewingVector, Renderer<T> renderer) throws SlickException;
+    void render(Graphics graphics, Vector2D viewingVector, Renderer<T> renderer) throws SlickException;
 
 }

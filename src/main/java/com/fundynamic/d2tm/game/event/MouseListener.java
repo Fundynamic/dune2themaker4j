@@ -5,11 +5,14 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Input;
 
-public class MouseInViewportListener extends AbstractMouseListener {
+/**
+ * Listens to mouse events and passes them to our mouse class.
+ */
+public class MouseListener extends AbstractMouseListener {
 
     private final Mouse mouse;
 
-    public MouseInViewportListener(Mouse mouse) {
+    public MouseListener(Mouse mouse) {
         this.mouse = mouse;
     }
 
@@ -48,7 +51,7 @@ public class MouseInViewportListener extends AbstractMouseListener {
 
     @Override
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
-        mouse.draggedToCoordinates(newx, newy);
+        mouse.draggedToCoordinates(Vector2D.create(newx, newy));
     }
 
 }

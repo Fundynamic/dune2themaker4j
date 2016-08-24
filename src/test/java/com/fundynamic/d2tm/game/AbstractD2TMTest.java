@@ -7,14 +7,16 @@ import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
-import com.fundynamic.d2tm.game.entities.units.RenderableWithFacingLogic;
-import com.fundynamic.d2tm.game.entities.units.TestableRenderableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
+import com.fundynamic.d2tm.game.entities.units.TestableRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
+import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.rendering.Recolorer;
-import com.fundynamic.d2tm.game.rendering.Viewport;
+import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -33,6 +35,16 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractD2TMTest {
 
+    public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
+
+    public static Vector2D screenResolution = Game.getResolution();
+
+    public static Vector2D battlefieldSize = Vector2D.create(320, 200);
+    public static Vector2D battlefieldViewingVector = Vector2D.create(32, 32);
+    public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, 42);
+    public static float battleFieldMoveSpeed = 2.0F;
+    public static int battleFieldTileSize = Game.TILE_SIZE;
+
     public static int TILE_SIZE = 32;
 
     public static int MAP_WIDTH = 64;
@@ -49,24 +61,58 @@ public abstract class AbstractD2TMTest {
     protected EntityRepository entityRepository;
     protected EntitiesData entitiesData;
 
+    protected GuiComposite guiComposite;
+
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
+    protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
     protected Map map;
-    protected Viewport viewport;
+    protected BattleField battleField;
+
 
     protected Mouse mouse;
+    protected MouseListener listener;
+    protected Shroud shroud;
 
     @Before
     public void setUp() throws SlickException {
+        shroud = new Shroud(null, Game.TILE_SIZE) {
+            @Override
+            public SpriteSheet createSpriteSheetFromImage() {
+                return mock(SpriteSheet.class);
+            }
+        };
+
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
         entitiesDataReader = makeEntitiesDataReader();
         entitiesData = entitiesDataReader.fromRulesIni();
         entityRepository = makeTestableEntityRepository(map, entitiesData);
 
-        mouse = makeTestableMouse(player, entityRepository);
-        viewport = new Viewport(map, mouse, player, mock(Image.class));
+        // Nice little circular dependency here...
+        guiComposite = new GuiComposite();
+        mouse = makeTestableMouse(player, guiComposite);
 
-        mouse.setViewport(viewport);
+        listener = new MouseListener(mouse);
+
+        Image bufferWithGraphics = mock(Image.class);
+        Graphics bufferGraphics = mock(Graphics.class);
+        when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
+
+        battleField = new BattleField(
+                battlefieldSize,
+                battleFieldDrawingPosition,
+                battlefieldViewingVector,
+                map,
+                mouse,
+                battleFieldMoveSpeed,
+                battleFieldTileSize,
+                player,
+                bufferWithGraphics,
+                entityRepository
+        );
+
+        guiComposite.addGuiElement(battleField);
+
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
@@ -107,29 +153,28 @@ public abstract class AbstractD2TMTest {
     /**
      * Creates mouse with TestableEntityRepository and TestableImageRepository
      *
-     * @param player - used in TestableMouse
-     * @param entityRepository
+     * @param player
+     * @param guiComposite
      * @return
      * @throws SlickException
      */
-    public Mouse makeTestableMouse(Player player, EntityRepository entityRepository) throws SlickException {
+    public Mouse makeTestableMouse(Player player, GuiComposite guiComposite) throws SlickException {
         GameContainer gameContainer = mock(GameContainer.class);
-        return new TestableMouse(player, gameContainer, entityRepository);
+        return new TestableMouse(player, gameContainer, guiComposite);
     }
 
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
-        return new Map(new Shroud(null, Game.TILE_SIZE) {
-            @Override
-            public SpriteSheet createSpriteSheetFromImage() {
-                return mock(SpriteSheet.class);
-            }
-        }, width, height) {
+        final Image mockedImage = mock(Image.class);
+        final Graphics mockedImageGraphics = mock(Graphics.class);
+        when(mockedImage.getGraphics()).thenReturn(mockedImageGraphics);
+        return new Map(shroud, width, height) {
             @Override
             public Cell getCell(int x, int y) {
                 Cell cell = super.getCell(x, y);
-                cell.setTileImage(mock(Image.class)); // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                cell.setTileImage(mockedImage);
                 return cell;
             }
         };
@@ -173,21 +218,60 @@ public abstract class AbstractD2TMTest {
 
     // UNIT
     ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} with a given {@link UnitFacings} on a specified coordinate.
+     * </p>
+     * @param facing
+     * @param coordinate
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate) {
         return makeUnit(facing, coordinate, Vector2D.zero());
     }
 
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} with a given {@link UnitFacings} on a specified coordinate with given
+     *     offset (from the coordinate).
+     * </p>
+     * @param facing
+     * @param coordinate
+     * @param offset
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
-        Unit unit = makeUnit(player, coordinate, "QUAD");
+        Unit unit = makeUnit(player, coordinate, EntitiesData.QUAD);
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
     }
 
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} unit at 0,0
+     * </p>
+     * <p>
+     *     Use this when you do not care about any location or type of unit.
+     * </p>
+     * @param player
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Coordinate.create(0, 0), "QUAD");
+        return makeUnit(player, Coordinate.create(0, 0), EntitiesData.QUAD);
     }
 
+    /**
+     * <p>
+     *     Creates a unit for player at coordinate and given ID. Where ID is the string representation
+     *     of an {@link EntityData}.
+     * </p>
+     * @param player
+     * @param coordinate
+     * @param id
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(Player player, Coordinate coordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
@@ -196,13 +280,24 @@ public abstract class AbstractD2TMTest {
 
     // PROJECTILE
     ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Constructs a {@link EntitiesData#LARGE_ROCKET} on given {@link Coordinate} for Human {@link Player}
+     * @param coordinate
+     * @return the {@link Projectile} constructed
+     */
     public Projectile makeProjectile(Coordinate coordinate) {
-        return entityRepository.placeProjectile(coordinate, "LARGE_ROCKET", player);
+        return makeProjectile(player, coordinate);
     }
 
-
-    public EntityRepository getTestableEntityRepository() {
-        return entityRepository;
+    /**
+     * Constructs a {@link EntitiesData#LARGE_ROCKET} on given {@link Coordinate} and {@link Player}
+     * @param player
+     * @param coordinate
+     * @return the {@link Projectile} constructed
+     */
+    public Projectile makeProjectile(Player player,  Coordinate coordinate) {
+        return entityRepository.placeProjectile(coordinate, EntitiesData.LARGE_ROCKET, player);
     }
 
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
@@ -217,8 +312,8 @@ public abstract class AbstractD2TMTest {
             }
 
             @Override
-            protected RenderableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
-                return new TestableRenderableWithFacingLogic(recoloredImage, entityData, turnSpeed);
+            protected RenderQueueEnrichableWithFacingLogic makeRenderableWithFacingLogic(EntityData entityData, Image recoloredImage, float turnSpeed) {
+                return new TestableRenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
             }
         };
     }

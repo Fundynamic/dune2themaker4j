@@ -13,6 +13,6 @@ public class NotPredicate extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return predicateToNegate.test(entity) == false;
+        return !predicateToNegate.test(entity);
     }
 }

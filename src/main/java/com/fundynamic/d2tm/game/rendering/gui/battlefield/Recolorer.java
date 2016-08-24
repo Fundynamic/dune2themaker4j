@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.rendering;
+package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
@@ -51,6 +51,7 @@ public class Recolorer {
             return new Color(src.getGreen(), src.getRed(), src.getBlue(), src.getAlpha());
           case BLUE:
             return new Color(src.getBlue(), src.getGreen(), src.getRed(), src.getAlpha());
+          // TODO: factions? Configurable in INI file? etc
           default:
             return src;
         }

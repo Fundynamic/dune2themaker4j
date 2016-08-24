@@ -45,7 +45,7 @@ public class MapEditor {
 
     public Map generateRandom(Shroud shroud, int width, int height) {
         try {
-            System.out.println("Generating random map sized " + width + "x" + height);
+            System.out.println("Generating random map sized " + width + "screenX" + height);
             Map map = new Map(shroud, width, height);
             fillMapWithRandomTerrainTypeFields(map);
             smooth(map);
@@ -56,9 +56,15 @@ public class MapEditor {
         }
     }
 
+    public Map generateRandom(Map map) {
+        fillMapWithRandomTerrainTypeFields(map);
+        smooth(map);
+        return map;
+    }
+
     public Map create(Shroud shroud, int width, int height, int terrainType) {
         try {
-            System.out.println("Generating random map sized " + width + "x" + height);
+            System.out.println("Generating random map sized " + width + "screenX" + height);
             Map map = new Map(shroud, width, height);
             fillMapWithTerrain(map, terrainType);
             return map;
