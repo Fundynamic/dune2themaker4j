@@ -48,6 +48,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
 
     // MOUSE BEHAVIOR RELATED
     private AbstractBattleFieldMouseBehavior mouseBehavior;
+    private Graphics bufferGraphics;
 
     public BattleField(Vector2D size,
                        Vector2D drawingPosition,
@@ -72,23 +73,20 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
 
         this.moveSpeed = moveSpeed;
 
-        this.buffer = buffer;
         this.viewingVector = viewingVector;
         this.cellViewportRenderer = new CellViewportRenderer(map, tileSize, size);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(player, map.getShroud());
+
+        this.buffer = buffer;
+        this.bufferGraphics = buffer.getGraphics();
     }
 
     @Override
     public void render(Graphics graphics) {
         try {
-            final Graphics bufferGraphics = this.buffer.getGraphics();
-
-            if (bufferGraphics == null)
-                return; // HACK HACK: this makes sure our tests are happy by not having to stub all the way down these methods...
-
             // TODO: Merge the culling into this viewport class(?)
-            cellViewportRenderer.render(buffer, viewingVector, cellTerrainRenderer);
+            cellViewportRenderer.render(bufferGraphics, viewingVector, cellTerrainRenderer);
 
             // 1) Select entities to draw
             // 2) Decide if there is more to draw (from the entities)
@@ -96,7 +94,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
             RenderQueue renderQueue = getEntitiesToDraw();
             renderQueue.render(bufferGraphics);
 
-            cellViewportRenderer.render(buffer, viewingVector, cellShroudRenderer);
+            cellViewportRenderer.render(bufferGraphics, viewingVector, cellShroudRenderer);
 
             mouseBehavior.render(bufferGraphics);
 

@@ -24,7 +24,7 @@ public class CellBattleFieldRendererTest extends AbstractD2TMTest {
         Vector2D viewingVector = Vector2D.zero();
 
         Renderer renderer = mock(Renderer.class);
-        cellViewportRenderer.render(mock(Image.class), viewingVector, renderer);
+        cellViewportRenderer.render(graphics, viewingVector, renderer);
 
         int cellsToDrawHorizontally = (screenWidth / TILE_SIZE) + 2; // 2 extra for 'rounding' purposes at right
         int cellsToDrawVertically = (screenHeight / TILE_SIZE) + 2; // 2 extra for 'rounding' purposes at bottom

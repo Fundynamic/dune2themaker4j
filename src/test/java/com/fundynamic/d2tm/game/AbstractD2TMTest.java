@@ -94,6 +94,10 @@ public abstract class AbstractD2TMTest {
 
         listener = new MouseListener(mouse);
 
+        Image bufferWithGraphics = mock(Image.class);
+        Graphics bufferGraphics = mock(Graphics.class);
+        when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
+
         battleField = new BattleField(
                 battlefieldSize,
                 battleFieldDrawingPosition,
@@ -103,7 +107,7 @@ public abstract class AbstractD2TMTest {
                 battleFieldMoveSpeed,
                 battleFieldTileSize,
                 player,
-                mock(Image.class),
+                bufferWithGraphics,
                 entityRepository
         );
 
@@ -162,11 +166,15 @@ public abstract class AbstractD2TMTest {
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
+        final Image mockedImage = mock(Image.class);
+        final Graphics mockedImageGraphics = mock(Graphics.class);
+        when(mockedImage.getGraphics()).thenReturn(mockedImageGraphics);
         return new Map(shroud, width, height) {
             @Override
             public Cell getCell(int x, int y) {
                 Cell cell = super.getCell(x, y);
-                cell.setTileImage(mock(Image.class)); // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                cell.setTileImage(mockedImage);
                 return cell;
             }
         };

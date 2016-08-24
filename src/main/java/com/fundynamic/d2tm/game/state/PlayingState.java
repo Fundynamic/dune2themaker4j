@@ -46,6 +46,8 @@ public class PlayingState extends BasicGameState {
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
     public static final int HEIGHT_OF_BOTTOM_BAR = 32;
     public static final int WIDTH_OF_SIDEBAR = 160;
+    private MapEditor mapEditor;
+    private Map map;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileSize) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -66,10 +68,10 @@ public class PlayingState extends BasicGameState {
         Player human = new Player("Human", Recolorer.FactionColor.RED);
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
-        MapEditor mapEditor = new MapEditor(terrainFactory);
-        Map map = mapEditor.generateRandom(shroud, 64, 64);
+        mapEditor = new MapEditor(terrainFactory);
+        map = new Map(shroud, 64, 64);
 
-        entityRepository = createEntityRepository(map);
+        entityRepository = createEntityRepository();
 
         guiComposite = new GuiComposite();
 
@@ -80,7 +82,7 @@ public class PlayingState extends BasicGameState {
                 guiComposite
         );
 
-        BattleField battlefield = makeBattleField(human, map, mouse);
+        BattleField battlefield = makeBattleField(human, mouse);
 
         guiComposite.addGuiElement(battlefield);
 
@@ -95,7 +97,7 @@ public class PlayingState extends BasicGameState {
         initializeMap(entityRepository, human, cpu);
     }
 
-    public BattleField makeBattleField(Player human, Map map, Mouse mouse) {
+    public BattleField makeBattleField(Player human, Mouse mouse) {
         // GUI element: the rendering of the battlefield
         BattleField battlefield;
 
@@ -109,16 +111,18 @@ public class PlayingState extends BasicGameState {
             // start drawing below the top gui bar
             Vector2D viewportDrawingPosition = Vector2D.create(0, HEIGHT_OF_TOP_BAR);
 
+            Image image = imageRepository.createImage(screenResolution);
+
             battlefield = new BattleField(
                     viewportResolution,
                     viewportDrawingPosition,
                     viewingVector,
-                    map,
+                    getMap(),
                     mouse,
                     moveSpeed,
                     tileSize,
                     human,
-                    imageRepository.createImage(screenResolution),
+                    image,
                     entityRepository);
 
         } catch (SlickException e) {
@@ -127,11 +131,21 @@ public class PlayingState extends BasicGameState {
         return battlefield;
     }
 
-    public EntityRepository createEntityRepository(Map map) throws SlickException {
-        return new EntityRepository(map, new Recolorer(), new EntitiesDataReader().fromRulesIni());
+    public Map getMap() {
+        return map;
+    }
+
+    public MapEditor getMapEditor() {
+        return mapEditor;
+    }
+
+    public EntityRepository createEntityRepository() throws SlickException {
+        return new EntityRepository(getMap(), new Recolorer(), new EntitiesDataReader().fromRulesIni());
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
+        map = getMapEditor().generateRandom(map);
+
         this.human = human;
         this.cpu = cpu;
 

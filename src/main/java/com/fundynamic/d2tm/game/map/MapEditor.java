@@ -56,6 +56,12 @@ public class MapEditor {
         }
     }
 
+    public Map generateRandom(Map map) {
+        fillMapWithRandomTerrainTypeFields(map);
+        smooth(map);
+        return map;
+    }
+
     public Map create(Shroud shroud, int width, int height, int terrainType) {
         try {
             System.out.println("Generating random map sized " + width + "screenX" + height);

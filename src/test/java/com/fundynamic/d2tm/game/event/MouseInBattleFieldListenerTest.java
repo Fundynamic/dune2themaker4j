@@ -14,40 +14,13 @@ import static org.mockito.Mockito.*;
 
 public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
 
-    public static final float INITIAL_VIEWPORT_X = 34F;
-    public static final float INITIAL_VIEWPORT_Y = 34F;
-
-    public static int HEIGHT_OF_MAP = 40;
-    public static int WIDTH_OF_MAP = 46;
-
-    private BattleField battleField;
     private MouseListener listener;
-
-    private Vector2D screenResolution = Vector2D.create(800, 600);
 
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        map = makeMap(WIDTH_OF_MAP, HEIGHT_OF_MAP);
-
-        battleField = makeDrawableBattleField(INITIAL_VIEWPORT_X, INITIAL_VIEWPORT_Y, battleFieldMoveSpeed);
 
         listener = new MouseListener(mouse);
-    }
-
-    private BattleField makeDrawableBattleField(float viewportX, float viewportY, float moveSpeed) throws SlickException {
-        return new BattleField(
-                screenResolution,
-                Vector2D.zero(),
-                Vector2D.create(viewportX, viewportY),
-                map,
-                mouse,
-                moveSpeed,
-                TILE_SIZE,
-                player,
-                mock(Image.class),
-                entityRepository
-        );
     }
 
     @Test
