@@ -32,6 +32,11 @@ public class Player {
         return value != null ? value : true;
     }
 
+    /**
+     * Removes shroud for {@link MapCoordinate}.
+     *
+     * @param position
+     */
     public void revealShroudFor(MapCoordinate position) {
         shrouded.put(position, false);
     }
@@ -58,5 +63,14 @@ public class Player {
 
     public boolean isCPU() {
         return "CPU".equalsIgnoreCase(name);
+    }
+
+    /**
+     * Make this {@link MapCoordinate} shrouded.
+     *
+     * @param mapCoordinate
+     */
+    public void shroud(MapCoordinate mapCoordinate) {
+        shrouded.put(mapCoordinate, true);
     }
 }

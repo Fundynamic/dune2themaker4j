@@ -10,11 +10,17 @@ import java.util.Arrays;
 
 public class RenderQueueTest extends AbstractD2TMTest {
 
-
     @Test
     public void putListOfEntities() {
         RenderQueue renderQueue = new RenderQueue(Vector2D.create(10, 10));
         renderQueue.put(Arrays.asList(new NullEntity()));
+    }
+
+    @Test
+    public void render() {
+        RenderQueue renderQueue = new RenderQueue(Vector2D.create(10, 10));
+        renderQueue.put(Arrays.asList(new NullEntity()));
+        renderQueue.render(graphics);
     }
 
 }

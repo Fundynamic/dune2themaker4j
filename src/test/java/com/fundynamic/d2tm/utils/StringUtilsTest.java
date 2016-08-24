@@ -9,6 +9,12 @@ import static org.hamcrest.core.Is.is;
 public class StringUtilsTest {
 
     @Test
+    public void constructorTest() {
+        // ok this is just for coverage :'(
+        new StringUtils();
+    }
+
+    @Test
     public void nullIsEmpty() {
         Assert.assertThat(StringUtils.isEmpty(null), is(true));
     }

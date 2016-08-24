@@ -25,7 +25,7 @@ public class CellShroudRenderer implements Renderer<Cell> {
         }
     }
 
-    protected ShroudFacing determineShroudFacing(Cell cell) {
+    public ShroudFacing determineShroudFacing(Cell cell) {
         if (player.isShrouded(cell.getMapCoordinate())) {
             return ShroudFacing.FULL;
         }

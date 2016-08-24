@@ -40,7 +40,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
         playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE) {
             @Override
             public EntityRepository createEntityRepository(Map map) throws SlickException {
-                return getTestableEntityRepository();
+                return entityRepository;
             }
         };
 
@@ -52,7 +52,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
     @Test
     public void testInitInitialGame() throws SlickException {
-//        EntityRepository entityRepository = mock(EntityRepository.class);
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
         Player human = new Player("human", Recolorer.FactionColor.BLUE);
 

@@ -71,9 +71,17 @@ public abstract class AbstractD2TMTest {
 
     protected Mouse mouse;
     protected MouseListener listener;
+    protected Shroud shroud;
 
     @Before
     public void setUp() throws SlickException {
+        shroud = new Shroud(null, Game.TILE_SIZE) {
+            @Override
+            public SpriteSheet createSpriteSheetFromImage() {
+                return mock(SpriteSheet.class);
+            }
+        };
+
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
         imageRepository = makeImageRepository();
         entitiesDataReader = makeEntitiesDataReader();
@@ -154,12 +162,7 @@ public abstract class AbstractD2TMTest {
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
     public Map makeMap(int width, int height) throws SlickException {
-        return new Map(new Shroud(null, Game.TILE_SIZE) {
-            @Override
-            public SpriteSheet createSpriteSheetFromImage() {
-                return mock(SpriteSheet.class);
-            }
-        }, width, height) {
+        return new Map(shroud, width, height) {
             @Override
             public Cell getCell(int x, int y) {
                 Cell cell = super.getCell(x, y);
@@ -207,21 +210,60 @@ public abstract class AbstractD2TMTest {
 
     // UNIT
     ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} with a given {@link UnitFacings} on a specified coordinate.
+     * </p>
+     * @param facing
+     * @param coordinate
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate) {
         return makeUnit(facing, coordinate, Vector2D.zero());
     }
 
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} with a given {@link UnitFacings} on a specified coordinate with given
+     *     offset (from the coordinate).
+     * </p>
+     * @param facing
+     * @param coordinate
+     * @param offset
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
-        Unit unit = makeUnit(player, coordinate, "QUAD");
+        Unit unit = makeUnit(player, coordinate, EntitiesData.QUAD);
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
     }
 
+    /**
+     * <p>
+     *     Creates a {@link EntitiesData#QUAD} unit at 0,0
+     * </p>
+     * <p>
+     *     Use this when you do not care about any location or type of unit.
+     * </p>
+     * @param player
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Coordinate.create(0, 0), "QUAD");
+        return makeUnit(player, Coordinate.create(0, 0), EntitiesData.QUAD);
     }
 
+    /**
+     * <p>
+     *     Creates a unit for player at coordinate and given ID. Where ID is the string representation
+     *     of an {@link EntityData}.
+     * </p>
+     * @param player
+     * @param coordinate
+     * @param id
+     * @return {@link Unit} constructed
+     */
     public Unit makeUnit(Player player, Coordinate coordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
@@ -232,11 +274,6 @@ public abstract class AbstractD2TMTest {
     ////////////////////////////////////////////////////////////////////////////////
     public Projectile makeProjectile(Coordinate coordinate) {
         return entityRepository.placeProjectile(coordinate, "LARGE_ROCKET", player);
-    }
-
-
-    public EntityRepository getTestableEntityRepository() {
-        return entityRepository;
     }
 
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
