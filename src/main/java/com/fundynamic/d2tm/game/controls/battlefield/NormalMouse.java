@@ -75,7 +75,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         setHoverCell(cell);
 
         Entity entity = hoveringOverSelectableEntity();
-        if (entity != previousHoveringEntity) {
+        if (!entity.equals(previousHoveringEntity)) {
             // shifted focus from one entity to another (or to nothing)
             if (previousHoveringEntity.isSelectable()) {
                 ((Selectable) previousHoveringEntity).lostFocus();
