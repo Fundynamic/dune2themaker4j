@@ -64,6 +64,7 @@ public abstract class AbstractD2TMTest {
     protected GuiComposite guiComposite;
 
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
+    protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
     protected Map map;
     protected BattleField battleField;
 
@@ -279,8 +280,24 @@ public abstract class AbstractD2TMTest {
 
     // PROJECTILE
     ////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Constructs a {@link EntitiesData#LARGE_ROCKET} on given {@link Coordinate} for Human {@link Player}
+     * @param coordinate
+     * @return the {@link Projectile} constructed
+     */
     public Projectile makeProjectile(Coordinate coordinate) {
-        return entityRepository.placeProjectile(coordinate, "LARGE_ROCKET", player);
+        return makeProjectile(player, coordinate);
+    }
+
+    /**
+     * Constructs a {@link EntitiesData#LARGE_ROCKET} on given {@link Coordinate} and {@link Player}
+     * @param player
+     * @param coordinate
+     * @return the {@link Projectile} constructed
+     */
+    public Projectile makeProjectile(Player player,  Coordinate coordinate) {
+        return entityRepository.placeProjectile(coordinate, EntitiesData.LARGE_ROCKET, player);
     }
 
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
