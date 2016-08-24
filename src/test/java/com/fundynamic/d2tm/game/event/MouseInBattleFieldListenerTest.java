@@ -2,11 +2,9 @@ package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
