@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -149,4 +150,12 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
         }
     }
 
+    public void entityBuilderSelected(Entity entityBuilder) {
+        if (!entityBuilder.isEntityBuilder()) {
+            throw new IllegalArgumentException("Can only select entities which implement entity builder from here on");
+        }
+        if (entityBuilder.isEntityTypeStructure()) {
+            sidebar.showEntityBuilderGuiFor(entityBuilder);
+        }
+    }
 }

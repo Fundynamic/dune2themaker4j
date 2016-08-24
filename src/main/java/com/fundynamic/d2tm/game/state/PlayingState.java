@@ -46,6 +46,7 @@ public class PlayingState extends BasicGameState {
     private Predicate destroyedEntitiesPredicate;// pixels
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
     public static final int HEIGHT_OF_BOTTOM_BAR = 32;
+    public static final int HEIGHT_OF_MINIMAP = 128;
     public static final int WIDTH_OF_SIDEBAR = 160;
     private MapEditor mapEditor;
     private Map map;
@@ -87,10 +88,30 @@ public class PlayingState extends BasicGameState {
 
         guiComposite.addGuiElement(battlefield);
 
+        // topbar
         guiComposite.addGuiElement(new DummyGuiElement(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR));
 
-        guiComposite.addGuiElement(new Sidebar(SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR, WIDTH_OF_SIDEBAR, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR));
+        // sidebar
+        guiComposite.addGuiElement(
+                new Sidebar(
+                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
+                        HEIGHT_OF_TOP_BAR,
+                        WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP)
+                )
+        );
 
+        // minimap
+        guiComposite.addGuiElement(
+                new DummyGuiElement(
+                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
+                        WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR
+                )
+        );
+
+        // bottombar
         guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));

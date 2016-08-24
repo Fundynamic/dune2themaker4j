@@ -8,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends Entity implements Selectable, Destructible, Focusable {
+public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
 
     // Behaviors
     private final FadingSelection fadingSelection;

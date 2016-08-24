@@ -120,7 +120,15 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return this instanceof Focusable;
     }
 
+    public boolean isEntityBuilder() {
+        return this instanceof EntityBuilder;
+    }
+
     public abstract EntityType getEntityType();
+
+    public boolean isEntityTypeStructure() {
+        return getEntityType().equals(EntityType.STRUCTURE);
+    }
 
     public boolean removeFromPlayerSet(Entity entity) {
         if (player != null) {

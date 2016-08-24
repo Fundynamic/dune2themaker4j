@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
@@ -17,6 +19,8 @@ import org.newdawn.slick.Graphics;
  */
 public class Sidebar extends GuiElement {
 
+    private GuiElement guiElement;
+
     public Sidebar(int x, int y, int width, int height) {
         super(x, y, width, height);
     }
@@ -31,11 +35,14 @@ public class Sidebar extends GuiElement {
         }
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
         graphics.setColor(Color.white);
+
+        if (guiElement != null) {
+            guiElement.render(graphics);
+        }
     }
 
     @Override
     public void leftClicked() {
-
     }
 
     @Override
@@ -50,7 +57,13 @@ public class Sidebar extends GuiElement {
 
     @Override
     public void movedTo(Vector2D coordinates) {
-
+        if (guiElement != null) {
+            if (guiElement.isVectorWithin(coordinates)) {
+                guiElement.getsFocus();
+            } else {
+                guiElement.lostFocus();
+            }
+        }
     }
 
     @Override
@@ -60,6 +73,28 @@ public class Sidebar extends GuiElement {
 
     @Override
     public void update(float deltaInSeconds) {
+        if (guiElement != null) {
+            guiElement.update(deltaInSeconds);
+        }
+    }
 
+    @Override
+    public void lostFocus() {
+        super.lostFocus();
+        if (guiElement != null) {
+            guiElement.lostFocus();
+        }
+    }
+
+    /**
+     * playing around still, I suppose this triggers a certain kind of 'gui element' to be drawn
+     * which needs an Entity reference to show progress of and also base its offerings?
+     * @param entityBuilder
+     */
+    public void showEntityBuilderGuiFor(Entity entityBuilder) {
+        int parentX = getTopLeft().getXAsInt();
+        int parentY = getTopLeft().getYAsInt();
+
+        this.guiElement = new SidebarSelectBuildableEntityGuiElement (parentX + 10, parentY + 10, getWidthAsInt() - 10, getHeightAsInt() - 200);
     }
 }

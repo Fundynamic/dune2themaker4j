@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.controls;
+package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
@@ -6,10 +6,7 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Predicate;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -73,6 +70,9 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
 
         // ... and set mouse behavior
         battleField.setMouseBehavior(new MovableSelectedMouse(battleField));
+
+        // and tell the battleField which units got selected
+        battleField.entitiesSelected(EntitiesSet.fromSet(entities));
     }
 
     private Set<Entity> getEntitiesWithinDraggedRectangle(EntityRepository entityRepository) {
