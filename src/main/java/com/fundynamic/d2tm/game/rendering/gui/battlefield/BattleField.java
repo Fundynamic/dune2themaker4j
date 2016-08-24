@@ -4,13 +4,10 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.CellBasedMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
-import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -25,7 +22,7 @@ import org.newdawn.slick.SlickException;
  * </p>
  *
  */
-public class BattleField extends GuiElement implements CellBasedMouseBehavior {
+public class BattleField extends GuiElement implements CellBasedMouseBehavior, EntityEventsListener {
 
     // DATA RELATED
     private Map map;
@@ -264,5 +261,15 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
 
     public void setViewingVector(Vector2D viewingVector) {
         this.viewingVector = viewingVector;
+    }
+
+    @Override
+    public void entitiesSelected(EntitiesSet entities) {
+        System.out.println("Battlefield gets told that " + entities + " are selected");
+    }
+
+    @Override
+    public void entitiesDeselected(EntitiesSet entities) {
+        System.out.println("Battlefield gets told that " + entities + " are de-selected");
     }
 }

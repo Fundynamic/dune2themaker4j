@@ -16,18 +16,20 @@ import java.util.Set;
 
 /**
  *
- * When activated?
- * ---------------
+ * <h2>When activated?</h2>
+ * <p>
  * Whenever entities are being selected that are movable or able to attack this behavior gets
  * activated.
- *
- * What does this do?
- * ------------------
- * Left-click:
+ * </p>
+ * <h2>What does this do?</h2>
+ * <h3>Left-click</h3>
+ * <p>
  * Orders upon the selected units to attack or move to the cell the mouse hovers on.
- *
- * Right-click:
+ * </p>
+ * <h3>Right-click</h3>
+ * <p>
  * Deselects all selected entities and goes back to NormalMouse mode.
+ * </p>
  *
  */
 public class MovableSelectedMouse extends NormalMouse {
@@ -45,20 +47,10 @@ public class MovableSelectedMouse extends NormalMouse {
         if (!NullEntity.is(hoveringOverEntity) && getHoverCell().isVisibleFor(player)) {
             // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
-                deselectCurrentlySelectedEntity();
                 selectEntity(hoveringOverEntity);
             } else {
-                // does not belong to player; that can only mean 'attack'!
-                if (hoveringOverEntity.isDestructible()) {
-                    Set<Entity> selectedDestroyersEntities = entityRepository.filter(
-                            Predicate.builder().
-                                    selectedDestroyersForPlayer(player)
-                    );
+                attackDestructibleIfApplicable(hoveringOverEntity);
 
-                    for (Entity entity : selectedDestroyersEntities) {
-                        ((Destroyer) entity).attack(hoveringOverEntity);
-                    }
-                }
             }
         } else {
             Set<Entity> selectedMovableEntities = entityRepository.filter(
@@ -69,6 +61,20 @@ public class MovableSelectedMouse extends NormalMouse {
             Coordinate target = getHoverCell().getMapCoordinate().toCoordinate();
             for (Entity entity : selectedMovableEntities) {
                 ((Moveable) entity).moveTo(target);
+            }
+        }
+    }
+
+    public void attackDestructibleIfApplicable(Entity hoveringOverEntity) {
+        // does not belong to player; that can only mean 'attack'!
+        if (hoveringOverEntity.isDestructible()) {
+            Set<Entity> selectedDestroyersEntities = entityRepository.filter(
+                    Predicate.builder().
+                            selectedDestroyersForPlayer(player)
+            );
+
+            for (Entity entity : selectedDestroyersEntities) {
+                ((Destroyer) entity).attack(hoveringOverEntity);
             }
         }
     }
