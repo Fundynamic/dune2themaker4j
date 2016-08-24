@@ -8,8 +8,31 @@ import org.newdawn.slick.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Overview</h1>
+ * This is an object representation of an Entity within a `rules.ini` file. The {@link EntitiesData} class contains
+ * all objects after reading the rules.ini file. The interpretation of the file and the construction of an {@link EntityData} class
+ * is done by the {@link EntitiesDataReader}.
+ *
+ * <h2>Structures</h2>
+ * <p>Example piece of rules.ini file for structures:</p>
+ * <pre>
+ *     [STRUCTURES]
+ *
+ *      [STRUCTURES/CONSTYARD]
+ *      image=structures/2x2_constyard.png
+ *      hitpoints=2000
+ *      width=64
+ *      height=64
+ *      sight=5
+ *      explosion=BOOM
+ *
+ * </pre>
+ * <p>The structure has a reference to EXPLOSIONS which is implemented by (#{@link com.fundynamic.d2tm.game.entities.particle.Particle}</p>
+ */
 public class EntityData {
 
+    public static final String UNKNOWN = "UNKNOWN";
     private float chop = -1f;
     private float halfChop = -1f;
 
@@ -137,11 +160,11 @@ public class EntityData {
     }
 
     public boolean hasExplosionId() {
-        return !"UNKNOWN".equals(explosionId);
+        return !UNKNOWN.equals(explosionId);
     }
 
     public boolean hasWeaponId() {
-        return !"UNKNOWN".equals(weaponId);
+        return !UNKNOWN.equals(weaponId);
     }
 
     public String getWeaponIdKey() {

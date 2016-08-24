@@ -95,6 +95,6 @@ public class Sidebar extends GuiElement {
         int parentX = getTopLeft().getXAsInt();
         int parentY = getTopLeft().getYAsInt();
 
-        this.guiElement = new SidebarSelectBuildableEntityGuiElement (parentX + 10, parentY + 10, getWidthAsInt() - 10, getHeightAsInt() - 200);
+        this.guiElement = new SidebarSelectBuildableEntityGuiElement (parentX + 10, parentY + 10, getWidthAsInt() - 20, getHeightAsInt() - 20);
     }
 }

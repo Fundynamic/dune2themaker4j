@@ -97,7 +97,7 @@ public class PlayingState extends BasicGameState {
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_TOP_BAR,
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP)
+                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
                 )
         );
 
