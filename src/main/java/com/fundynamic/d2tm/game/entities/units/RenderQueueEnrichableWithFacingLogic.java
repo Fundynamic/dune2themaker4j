@@ -20,7 +20,6 @@ import org.newdawn.slick.SpriteSheet;
  */
 public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements EnrichableAbsoluteRenderable, Updateable {
 
-    private int possibleFacings = 0;
     private int maxFrames = 0;
 
     private float facing;
@@ -36,7 +35,7 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         this.turnSpeed = turnSpeed;
         this.animationSpeed = entityData.animationSpeed;
 
-        this.possibleFacings = getHorizontalCount();
+        int possibleFacings = getHorizontalCount();
         this.maxFrames = getVerticalCount();
 
         this.frame = Random.getRandomBetween(0, maxFrames);

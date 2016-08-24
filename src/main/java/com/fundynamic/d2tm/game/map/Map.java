@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;

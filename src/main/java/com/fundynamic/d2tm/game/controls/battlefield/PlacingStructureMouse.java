@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {

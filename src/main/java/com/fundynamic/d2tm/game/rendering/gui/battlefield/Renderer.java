@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.ViewportRenderer;
 import org.newdawn.slick.Graphics;
 
 /**

@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 /**
