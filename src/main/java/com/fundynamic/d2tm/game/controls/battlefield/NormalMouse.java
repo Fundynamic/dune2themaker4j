@@ -1,8 +1,6 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 
-import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.behaviors.Focusable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.DraggingSelectionBoxMouse;
 import com.fundynamic.d2tm.game.controls.Mouse;
@@ -12,8 +10,6 @@ import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
 
 import java.util.Set;
 

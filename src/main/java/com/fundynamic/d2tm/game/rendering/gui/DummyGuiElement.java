@@ -26,31 +26,31 @@ public class DummyGuiElement extends GuiElement {
 
     @Override
     public void leftClicked() {
-
+        // do nothing because Dummy element
     }
 
     @Override
     public void rightClicked() {
-
+        // do nothing because Dummy element
     }
 
     @Override
     public void draggedToCoordinates(Vector2D coordinates) {
-
+        // do nothing because Dummy element
     }
 
     @Override
     public void movedTo(Vector2D coordinates) {
-
+        // do nothing because Dummy element
     }
 
     @Override
     public void leftButtonReleased() {
-
+        // do nothing because Dummy element
     }
 
     @Override
     public void update(float deltaInSeconds) {
-
+        // do nothing because Dummy element
     }
 }

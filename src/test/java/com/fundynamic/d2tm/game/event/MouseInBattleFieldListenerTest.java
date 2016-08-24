@@ -121,18 +121,4 @@ public class MouseInBattleFieldListenerTest extends AbstractD2TMTest {
         listener.mouseClicked(Input.MOUSE_RIGHT_BUTTON, 0, 0, clickCount);
     }
 
-    private Vector2D updateAndRenderAndReturnNewViewportVector() throws SlickException {
-        updateAndRender();
-        return getLastCalledViewport();
-    }
-
-    private void updateAndRender() throws SlickException {
-        battleField.update(ONE_FRAME_PER_SECOND_DELTA);
-        battleField.render(graphics);
-    }
-
-    private Vector2D getLastCalledViewport() throws SlickException {
-        return battleField.getViewingVector();
-    }
-
 }

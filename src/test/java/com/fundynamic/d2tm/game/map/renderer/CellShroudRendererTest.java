@@ -18,7 +18,7 @@ public class CellShroudRendererTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void determineShroudFacingReturns_FULL_whenCellIsShrouded() {
+    public void determineShroudFacingReturnsFULLwhenCellIsShrouded() {
         CellShroudRenderer cellShroudRenderer = new CellShroudRenderer(player, shroud);
 
         Cell cell = map.getCell(60, 60);
@@ -27,12 +27,12 @@ public class CellShroudRendererTest extends AbstractD2TMTest {
         player.shroud(cell.getMapCoordinate());
 
         // we expect this to be a FULL cell when shrouded
-        Assert.assertEquals(FULL, cellShroudRenderer.determineShroudFacing(cell));
+        assertEquals(FULL, cellShroudRenderer.determineShroudFacing(cell));
     }
 
 
     @Test
-    public void determineShroudFacingReturns_nonFULL_WhenCell_IsNotShrouded() {
+    public void determineShroudFacingReturnsNonFULLWhenCellIsNotShrouded() {
         CellShroudRenderer cellShroudRenderer = new CellShroudRenderer(player, shroud);
 
         Cell cell = map.getCell(60, 60);
@@ -41,7 +41,7 @@ public class CellShroudRendererTest extends AbstractD2TMTest {
         player.revealShroudFor(cell.getMapCoordinate());
 
         // we expect this to be a MIDDLE cell when this cell is revealed, but around it is shrouded
-        Assert.assertEquals(MIDDLE, cellShroudRenderer.determineShroudFacing(cell));
+        assertEquals(MIDDLE, cellShroudRenderer.determineShroudFacing(cell));
     }
 
     @Test

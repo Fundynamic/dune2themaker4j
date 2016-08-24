@@ -47,11 +47,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
      **/
     private GuiElement activeGuiElement = NullGuiElement.getInstance();
 
-    private BattleField battleField = null;
-
-    public GuiComposite() {
-
-    }
+    private BattleField battleField;
 
     @Override
     public void render(Graphics graphics) {

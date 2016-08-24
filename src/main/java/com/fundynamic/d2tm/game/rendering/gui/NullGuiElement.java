@@ -23,36 +23,36 @@ public class NullGuiElement extends GuiElement {
 
     @Override
     public void leftClicked() {
-
+        // do nothing because null element
     }
 
     @Override
     public void rightClicked() {
-
+        // do nothing because null element
     }
 
     @Override
     public void draggedToCoordinates(Vector2D coordinates) {
-
+        // do nothing because null element
     }
 
     @Override
     public void movedTo(Vector2D coordinates) {
-
+        // do nothing because null element
     }
 
     @Override
     public void leftButtonReleased() {
-
+        // do nothing because null element
     }
 
     @Override
     public void update(float deltaInSeconds) {
-
+        // do nothing because null element
     }
 
     @Override
     public void render(Graphics graphics) {
-
+        // do nothing because null element
     }
 }
