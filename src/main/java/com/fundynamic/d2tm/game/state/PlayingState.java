@@ -11,6 +11,7 @@ import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -87,7 +88,9 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(battlefield);
 
         guiComposite.addGuiElement(new DummyGuiElement(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR));
-        guiComposite.addGuiElement(new DummyGuiElement(SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR, WIDTH_OF_SIDEBAR, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR));
+
+        guiComposite.addGuiElement(new Sidebar(SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR, WIDTH_OF_SIDEBAR, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR));
+
         guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));

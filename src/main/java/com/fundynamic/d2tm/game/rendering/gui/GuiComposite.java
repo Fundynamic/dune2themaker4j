@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
@@ -48,6 +49,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
     private GuiElement activeGuiElement = NullGuiElement.getInstance();
 
     private BattleField battleField;
+    private Sidebar sidebar;
 
     @Override
     public void render(Graphics graphics) {
@@ -122,13 +124,29 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
     }
 
     public void addGuiElement(GuiElement guiElement) {
+        assignBattlefieldPropertyIfApplicable(guiElement);
+        assignSidebarPropertyIfApplicable(guiElement);
+
+        guiElement.setGuiComposite(this);
+        guiElements.add(guiElement);
+    }
+
+    public void assignSidebarPropertyIfApplicable(GuiElement guiElement) {
+        if (guiElement instanceof Sidebar) {
+            if (sidebar != null) {
+                throw new IllegalArgumentException("There cannot be more than one sidebar gui element");
+            }
+            sidebar = (Sidebar) guiElement;
+        }
+    }
+
+    public void assignBattlefieldPropertyIfApplicable(GuiElement guiElement) {
         if (guiElement instanceof BattleField) {
             if (battleField != null) {
                 throw new IllegalArgumentException("There cannot be more than one battlefield gui element");
             }
             battleField = (BattleField) guiElement;
         }
-        guiElements.add(guiElement);
     }
 
 }

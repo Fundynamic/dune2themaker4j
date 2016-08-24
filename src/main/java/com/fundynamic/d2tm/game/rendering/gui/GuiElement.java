@@ -13,11 +13,21 @@ import com.fundynamic.d2tm.game.entities.Rectangle;
  */
 public abstract class GuiElement extends Rectangle implements MouseBehavior, Updateable, Renderable, Focusable {
 
+    /**
+     * A guiElement belongs to a GuiComposite, and it needs this reference to communicate to other
+     * GuiElements via the GuiComposite.
+     */
+    protected GuiComposite guiComposite;
+
     protected boolean hasFocus;
 
     public GuiElement(int x, int y, int width, int height) {
         super(x, y, width, height);
         this.hasFocus = false;
+    }
+
+    public void setGuiComposite(GuiComposite guiComposite) {
+        this.guiComposite = guiComposite;
     }
 
     @Override
