@@ -20,7 +20,7 @@ import java.util.Map;
  * </p>
  * <b>How it works</b>
  * <p>
- *     When new entities are added {@link #put(int, EnrichableAbsoluteRenderable)} to the queue a few things happen:
+ *     When new entities are added {@link #put(int, EnrichableAbsoluteRenderable, Coordinate)} to the queue a few things happen:
  * </p>
  * <ol>
  *     <li>the layer is determined by the {@link EntityType}</li>
@@ -49,6 +49,7 @@ public class RenderQueue {
     private static Map<EntityType, Integer> entityTypeToLayerMap = new HashMap<>();
 
     static {
+        entityTypeToLayerMap.put(EntityType.NONE, 0);
         entityTypeToLayerMap.put(EntityType.UNIT, 1);
         entityTypeToLayerMap.put(EntityType.STRUCTURE, 1);
         entityTypeToLayerMap.put(EntityType.PROJECTILE, 3);

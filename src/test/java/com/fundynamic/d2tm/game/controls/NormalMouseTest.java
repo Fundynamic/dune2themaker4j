@@ -39,14 +39,14 @@ public class NormalMouseTest extends AbstractD2TMTest {
         assertThat(unit.isSelected(), is(false));
 
         // ACT: click left
-        normalMouse.leftClicked();
+        battleField.leftClicked();
 
         // ASSERT: the unit we hover over should be selected
         assertTrue(unit.isSelected());
         assertThat(battleField.getMouseBehavior(), is(instanceOf(MovableSelectedMouse.class)));
 
         // ACT: right click
-        normalMouse.rightClicked();
+        battleField.rightClicked();
 
         // ASSERT: the unit should be deselected again
         assertFalse(unit.isSelected());
@@ -61,7 +61,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         assertThat(unit.hasFocus(), is(false));
 
         // ACT: move to
-        normalMouse.mouseMovedToCell(cell);
+        battleField.mouseMovedToCell(cell);
 
         // ASSERT: the unit we hover over has focus
         assertTrue(unit.hasFocus());
@@ -69,7 +69,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         Cell otherCell = new Cell(map, mock(Terrain.class), 1, 2);
 
         // ACT: move to other cell without unit
-        normalMouse.mouseMovedToCell(otherCell);
+        battleField.mouseMovedToCell(otherCell);
 
         // ASSERT: the unit should have no focus anymore
         assertFalse(unit.hasFocus());
@@ -84,7 +84,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         assertThat(structure.hasFocus(), is(false));
 
         // ACT: move to
-        normalMouse.mouseMovedToCell(cell);
+        battleField.mouseMovedToCell(cell);
 
         // ASSERT: the structure we hover over has focus
         assertTrue(structure.hasFocus());
@@ -92,7 +92,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         Cell otherCell = new Cell(map, mock(Terrain.class), 10, 10); // make sure we are way out of range due structure width/height
 
         // ACT: move to other cell without structure
-        normalMouse.mouseMovedToCell(otherCell);
+        battleField.mouseMovedToCell(otherCell);
 
         // ASSERT: the structure should have no focus anymore
         assertFalse(structure.hasFocus());
