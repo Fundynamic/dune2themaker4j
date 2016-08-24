@@ -104,6 +104,8 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
     @Override
     public void render(Graphics graphics) {
         graphics.setColor(Color.white);
+        float original = graphics.getLineWidth();
+        graphics.setLineWidth(1);
 
 //        System.out.println("starting coords = " + startingCoordinates + " drag = " + dragCoordinates);
         // we need to do all this stuff because there is only one way to draw a rect (with width and height)
@@ -120,5 +122,6 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
         int height = Math.abs(startingY - dragY);
 
         graphics.drawRect(startX, startY, width, height);
+        graphics.setLineWidth(original);
     }
 }
