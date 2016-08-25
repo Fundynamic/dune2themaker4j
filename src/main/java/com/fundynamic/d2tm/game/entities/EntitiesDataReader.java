@@ -59,12 +59,14 @@ public class EntitiesDataReader {
         for (String id : strings) {
             Profile.Section struct = structures.getChild(id);
             entitiesData.addStructure(id,
-                    struct.get("image", String.class),
+                    struct.get("image", String.class, null),
                     struct.get("width", Integer.class),
                     struct.get("height", Integer.class),
                     struct.get("sight", Integer.class),
                     struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class, UNKNOWN));
+                    struct.get("explosion", String.class, UNKNOWN),
+                    struct.get("buildIcon", String.class, null)
+            );
         }
     }
 

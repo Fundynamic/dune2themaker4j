@@ -29,7 +29,8 @@ public class EntitiesDataReaderTest {
     @Test
     public void readsStructureFromIniFile() {
         readFromTestRulesIni();
-        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, "CONSTYARD");
+
+        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
         assertThat(constyard, is(not(nullValue())));
         assertThat(constyard.hitPoints, is(230));
         assertThat(constyard.image, is(not(nullValue())));
@@ -37,11 +38,13 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.getHeight(), is(64));
         assertThat(constyard.sight, is(4));
         assertThat(constyard.explosionId, is("BOOM"));
+        assertThat(constyard.buildIcon, is(not(nullValue())));
     }
 
     @Test
     public void readsUnitFromIniFile() {
         readFromTestRulesIni();
+
         EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
         assertThat(quad, is(not(nullValue())));
         assertThat(quad.image, is(not(nullValue())));
@@ -60,6 +63,7 @@ public class EntitiesDataReaderTest {
     @Test
     public void readsWeaponsFromIniFile() {
         readFromTestRulesIni();
+
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
@@ -73,6 +77,7 @@ public class EntitiesDataReaderTest {
     @Test
     public void readsExplosionFromIniFile() {
         readFromTestRulesIni();
+
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
         assertThat(boom.image, is(not(nullValue())));

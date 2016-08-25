@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import org.newdawn.slick.Image;
 
 public class TestableRenderQueueEnrichableWithFacingLogic extends RenderQueueEnrichableWithFacingLogic {
+
     public TestableRenderQueueEnrichableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData, turnSpeed);
     }

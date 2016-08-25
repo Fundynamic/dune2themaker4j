@@ -87,7 +87,7 @@ public class EntitiesData {
      * @param explosionId
      * @throws SlickException
      */
-    public void addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
+    public EntityData addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId, String pathToBuildIcon) throws SlickException {
         EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
 
         if (!idProvided(explosionId)) {
@@ -96,6 +96,8 @@ public class EntitiesData {
             }
             entity.explosionId = explosionId;
         }
+        entity.buildIcon = loadImage(pathToBuildIcon);
+        return entity;
     }
 
     public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float animationSpeed, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
@@ -148,9 +150,12 @@ public class EntitiesData {
         if (StringUtils.isEmpty(pathToImage)) {
             return null;
         }
-        return new Image(pathToImage);
+        return createSlickImage(pathToImage);
     }
 
+    protected Image createSlickImage(String pathToImage) throws SlickException {
+        return new Image(pathToImage);
+    }
 
     public EntityData getParticle(String id) {
         return getEntityData(EntityType.PARTICLE, id);
@@ -171,7 +176,7 @@ public class EntitiesData {
             getEntityData(entityType, id);
             return true;
         } catch (EntityNotFoundException e) {
-//            System.out.println(e);
+//            System.err.println(e);
             return false;
         }
     }

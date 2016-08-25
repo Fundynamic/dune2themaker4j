@@ -123,10 +123,12 @@ public abstract class AbstractD2TMTest {
             @Override
             public EntitiesData createNewEntitiesData() {
                 return new EntitiesData() {
+
                     @Override
                     protected Image loadImage(String pathToImage) throws SlickException {
                         return mock(Image.class);
                     }
+
                 };
             }
         };

@@ -19,7 +19,7 @@ public class EntityDataTest extends AbstractD2TMTest {
 
     @Test
     public void getAllCellsAsVectorsReturnsListOfOneVectorForEntityQUAD() {
-        Unit quad = entityRepository.placeUnitOnMap(Coordinate.create(10, 15), "QUAD", player);
+        Unit quad = entityRepository.placeUnitOnMap(Coordinate.create(10, 15), EntitiesData.QUAD, player);
         List<Coordinate> allCellsAsVectors = quad.getAllCellsAsCoordinates();
         assertThat(allCellsAsVectors.size(), is(1));
 
@@ -28,7 +28,7 @@ public class EntityDataTest extends AbstractD2TMTest {
 
     @Test
     public void getAllCellsAsVectorsReturnsListOfOneVectorForEntityTRIKE() {
-        Unit trike = entityRepository.placeUnitOnMap(Coordinate.create(10, 15), "TRIKE", player);
+        Unit trike = entityRepository.placeUnitOnMap(Coordinate.create(10, 15), EntitiesData.TRIKE, player);
         List<Coordinate> allCellsAsVectors = trike.getAllCellsAsCoordinates();
         assertThat(allCellsAsVectors.size(), is(1));
 
@@ -37,7 +37,7 @@ public class EntityDataTest extends AbstractD2TMTest {
 
     @Test
     public void getAllCellsAsVectorsReturnsListOfSixVectorsForEntityREFINERY() {
-        Structure refinery = entityRepository.placeStructureOnMap(Coordinate.create(15, 20), "REFINERY", player);
+        Structure refinery = entityRepository.placeStructureOnMap(Coordinate.create(15, 20), EntitiesData.REFINERY, player);
         List<Coordinate> allCellsAsVectors = refinery.getAllCellsAsCoordinates();
         assertThat(allCellsAsVectors.size(), is(6));
 

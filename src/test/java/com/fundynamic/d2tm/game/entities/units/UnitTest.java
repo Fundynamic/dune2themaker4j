@@ -53,12 +53,12 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
-        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(unit.shouldMove());
+        Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Assert.assertFalse(cpuUnit.shouldMove());
 
-        unit.takeDamage(1, null); // null means unknown entity
+        cpuUnit.takeDamage(1, null); // null means unknown entity
 
-        Assert.assertTrue(unit.shouldMove());
+        Assert.assertTrue(cpuUnit.shouldMove());
     }
 
     @Test

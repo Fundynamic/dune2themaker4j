@@ -40,6 +40,7 @@ public class EntityData {
 
     public Image image; // base image
     public Image barrelImage; // barrelImage (top image)
+    public Image buildIcon; // build icon
 
     private int width;   // in pixels
     private int height;  // in pixels

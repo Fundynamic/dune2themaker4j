@@ -78,8 +78,11 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String idOfEntity = "1";
         int sight = 3;
         String explosionId = "UNKNOWN";
-        entitiesData.addStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000, explosionId);
 
+        // add
+        entitiesData.addStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000, explosionId, "icon_constyard.bmp");
+
+        // get & assert
         EntityData data = entitiesData.getEntityData(EntityType.STRUCTURE, idOfEntity);
 
         assertEquals(EntityType.STRUCTURE, data.type);
@@ -95,8 +98,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1"); // success!
-        entitiesData.addStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1"); // boom!
+        entitiesData.addStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp"); // success!
+        entitiesData.addStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp"); // boom!
     }
 
 
