@@ -2,11 +2,15 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
 
@@ -131,4 +135,21 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public boolean hasFocus() {
         return fadingSelection.hasFocus();
     }
+
+    private List<BuildableEntity> buildableEntities;
+
+    @Override
+    public List<BuildableEntity> getBuildList() {
+        // TODO: Move to EntityBuilder logic class thingy later
+        if (buildableEntities == null) {
+            buildableEntities = new ArrayList<>();
+            // TODO: load somehow what kind of entities can be build, from entity Data I suppose!?
+
+            // const yard can build refinery
+            buildableEntities.add(new BuildableEntity(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY)));
+            buildableEntities.add(new BuildableEntity(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP)));
+        }
+        return buildableEntities;
+    }
+    
 }

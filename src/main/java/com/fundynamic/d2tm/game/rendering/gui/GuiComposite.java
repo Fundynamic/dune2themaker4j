@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.rendering.gui;
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
@@ -155,7 +156,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
             throw new IllegalArgumentException("Can only select entities which implement entity builder from here on");
         }
         if (entityBuilder.isEntityTypeStructure()) {
-            sidebar.showEntityBuilderGuiFor(entityBuilder);
+            sidebar.showEntityBuilderGuiFor((EntityBuilder) entityBuilder);
         }
     }
 }

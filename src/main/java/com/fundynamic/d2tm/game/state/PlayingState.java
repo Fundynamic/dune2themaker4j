@@ -173,9 +173,11 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
-        //TODO: read from SCENARIO.INI file
+        // TODO: read from SCENARIO.INI file
         // human entities
         entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 7 * TILE_SIZE), EntitiesData.REFINERY, human);
+        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 9 * TILE_SIZE), EntitiesData.WINDTRAP, human);
         entityRepository.placeUnitOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TANK, human);
         entityRepository.placeUnitOnMap(Coordinate.create(4 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TRIKE, human);
         entityRepository.placeUnitOnMap(Coordinate.create(5 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.QUAD, human);

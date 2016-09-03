@@ -34,6 +34,7 @@ public class EntitiesData {
     // structures
     public static String CONSTRUCTION_YARD = "CONSTYARD";
     public static String REFINERY = "REFINERY";
+    public static String WINDTRAP = "WINDTRAP";
 
     // projectiles
     public static String BULLET = "RIFLE";

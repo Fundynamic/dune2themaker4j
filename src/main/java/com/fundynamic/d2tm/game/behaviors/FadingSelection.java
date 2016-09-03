@@ -14,10 +14,16 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
 
     private final int width;
     private final int height;
+    private float lineWidth;
 
     public FadingSelection(int width, int height) {
+        this(width, height, 2.0f);
+    }
+
+    public FadingSelection(int width, int height, float lineWidth) {
         this.width = width;
         this.height = height;
+        this.lineWidth = lineWidth;
         resetFading();
     }
 
@@ -55,10 +61,16 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
     @Override
     public void render(Graphics graphics, int drawX, int drawY) {
         if (selected) {
-            graphics.setColor(new Color(selectedIntensity, selectedIntensity, selectedIntensity));
-            graphics.setLineWidth(2.f);
+            float lineWidth = graphics.getLineWidth();
+            graphics.setColor(getFadingColor(selectedIntensity));
+            graphics.setLineWidth(this.lineWidth);
             graphics.drawRect(drawX, drawY, width, height - 1);
+            graphics.setLineWidth(lineWidth);
         }
+    }
+
+    public Color getFadingColor(float selectedIntensity) {
+        return new Color(selectedIntensity, this.selectedIntensity, this.selectedIntensity);
     }
 
     @Override

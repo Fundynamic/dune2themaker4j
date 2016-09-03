@@ -45,6 +45,14 @@ public class Rectangle {
         return result;
     }
 
+    public int getTopLeftXAsInt() {
+        return topLeft.getXAsInt();
+    }
+
+    public int getTopLeftYAsInt() {
+        return topLeft.getYAsInt();
+    }
+
     public Vector2D getTopLeft() {
         return topLeft;
     }

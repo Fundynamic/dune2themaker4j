@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 
+import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
@@ -28,11 +29,12 @@ public class Sidebar extends GuiElement {
     @Override
     public void render(Graphics graphics) {
         Vector2D topLeft = getTopLeft();
-        if (hasFocus) {
-            graphics.setColor(Color.red);
-        } else {
-            graphics.setColor(Color.darkGray);
-        }
+//        if (hasFocus) {
+//            graphics.setColor(Color.red);
+//        } else {
+//            graphics.setColor(Color.darkGray);
+//        }
+        graphics.setColor(Color.darkGray);
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
         graphics.setColor(Color.white);
 
@@ -43,16 +45,21 @@ public class Sidebar extends GuiElement {
 
     @Override
     public void leftClicked() {
+        if (guiElement != null) {
+            guiElement.leftClicked();
+        }
     }
 
     @Override
     public void rightClicked() {
-
+        if (guiElement != null) {
+            guiElement.rightClicked();
+        }
     }
 
     @Override
     public void draggedToCoordinates(Vector2D coordinates) {
-
+        // nothing to do here
     }
 
     @Override
@@ -63,12 +70,15 @@ public class Sidebar extends GuiElement {
             } else {
                 guiElement.lostFocus();
             }
+            guiElement.movedTo(coordinates);
         }
     }
 
     @Override
     public void leftButtonReleased() {
-
+        if (guiElement != null) {
+            guiElement.leftButtonReleased();
+        }
     }
 
     @Override
@@ -91,10 +101,17 @@ public class Sidebar extends GuiElement {
      * which needs an Entity reference to show progress of and also base its offerings?
      * @param entityBuilder
      */
-    public void showEntityBuilderGuiFor(Entity entityBuilder) {
+    public void showEntityBuilderGuiFor(EntityBuilder entityBuilder) {
         int parentX = getTopLeft().getXAsInt();
         int parentY = getTopLeft().getYAsInt();
 
-        this.guiElement = new SidebarSelectBuildableEntityGuiElement (parentX + 10, parentY + 10, getWidthAsInt() - 20, getHeightAsInt() - 20);
+        this.guiElement =
+                new SidebarSelectBuildableEntityGuiElement (
+                        parentX + 10,
+                        parentY + 10,
+                        getWidthAsInt() - 20,
+                        getHeightAsInt() - 20,
+                        entityBuilder
+                );
     }
 }
