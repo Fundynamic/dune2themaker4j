@@ -84,16 +84,19 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     public void render(Graphics graphics) {
         try {
             // TODO: Merge the culling into this viewport class(?)
+
+            // render terrain
             cellViewportRenderer.render(bufferGraphics, viewingVector, cellTerrainRenderer);
 
-            // 1) Select entities to draw
-            // 2) Decide if there is more to draw (from the entities)
-            // 3) draw!
-            RenderQueue renderQueue = getEntitiesToDraw();
+            RenderQueue renderQueue = getEntitiesToDraw(); // decide which entities to draw
+
+            // draw entities
             renderQueue.render(bufferGraphics);
 
+            // Render shroud
             cellViewportRenderer.render(bufferGraphics, viewingVector, cellShroudRenderer);
 
+            // Draw mouse
             mouseBehavior.render(bufferGraphics);
 
             if (hasFocus) {
@@ -160,14 +163,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
 
-    // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
-    // least not the use them in the non-test code.
-    public Vector2D getViewingVector() {
-        return viewingVector;
-    }
-
-    public Map getMap() {
-        return this.map;
+    public Coordinate translateAbsoluteMapCoordinateToViewportCoordinate(Coordinate absoluteMapCoordinate) {
+        return new Coordinate(absoluteMapCoordinate.min(viewingVector));
     }
 
     public Coordinate translateViewportCoordinateToAbsoluteMapCoordinate(Vector2D positionOnViewport) {
@@ -277,5 +274,23 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     @Override
     public void entitiesDeselected(EntitiesSet entities) {
         System.out.println("Battlefield gets told that " + entities + " are de-selected");
+    }
+
+    // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
+    // least not the use them in the non-test code.
+    public Vector2D getViewingVector() {
+        return viewingVector;
+    }
+
+    public Map getMap() {
+        return this.map;
+    }
+
+    /**
+     * Event: An entity is placed on the map.
+     * @param entity
+     */
+    public void entityPlacedOnMap(Entity entity) {
+        guiComposite.entityPlacedOnMap(entity);
     }
 }

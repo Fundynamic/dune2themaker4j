@@ -70,6 +70,7 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
     }
 
     public Color getFadingColor(float selectedIntensity) {
+        // todo: CACHING of colors
         return new Color(selectedIntensity, this.selectedIntensity, this.selectedIntensity);
     }
 

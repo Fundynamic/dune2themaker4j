@@ -37,6 +37,7 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
         // dependencies from dependencies from battlefield :/
         this.player = mouse.getControllingPlayer();
+        this.mouseCoordinates = Vector2D.zero();
     }
 
     public abstract void leftClicked();
@@ -72,6 +73,10 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
         this.lastSelectedEntity = lastSelectedEntity;
     }
 
+    /**
+     * Returns the cell that the mouse is 'hovering over'. This method may return NULL!
+     * @return
+     */
     public Cell getHoverCell() {
         return hoverCell;
     }

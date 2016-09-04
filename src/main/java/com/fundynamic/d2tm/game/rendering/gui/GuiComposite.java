@@ -5,7 +5,10 @@ import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -37,7 +40,7 @@ import java.util.List;
  *     are propagated to {@link #activeGuiElement}.
  * </p>
  */
-public class GuiComposite implements Renderable, Updateable, MouseBehavior {
+public class GuiComposite implements Renderable, Updateable, MouseBehavior, BattleFieldInteractable {
 
     public static final int PIXELS_NEAR_BORDER = 2;
 
@@ -151,6 +154,10 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
         }
     }
 
+    /**
+     * Event: An entity builder is selected
+     * @param entityBuilder
+     */
     public void entityBuilderSelected(Entity entityBuilder) {
         if (!entityBuilder.isEntityBuilder()) {
             throw new IllegalArgumentException("Can only select entities which implement entity builder from here on");
@@ -158,5 +165,22 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
         if (entityBuilder.isEntityTypeStructure()) {
             sidebar.showEntityBuilderGuiFor((EntityBuilder) entityBuilder);
         }
+    }
+
+    /**
+     * Event: a buildable Entity which should be placed is selected.
+     * @param buildableEntity
+     */
+    public void wantsToPlaceBuildableEntityOnBattlefield(BuildableEntity buildableEntity) {
+        battleField.setMouseBehavior(new PlacingStructureMouse(battleField, buildableEntity.getEntityData()));
+    }
+
+    /**
+     * Event: an entity is placed on the map
+     * @param entity
+     */
+    public void entityPlacedOnMap(Entity entity) {
+        sidebar.entityPlacedOnMap(entity);
+        battleField.setMouseBehavior(new NormalMouse(battleField));
     }
 }

@@ -136,6 +136,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         return fadingSelection.hasFocus();
     }
 
+    private BuildableEntity buildingEntity = null;
     private List<BuildableEntity> buildableEntities;
 
     @Override
@@ -151,5 +152,40 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         }
         return buildableEntities;
     }
-    
+
+    @Override
+    public boolean isBuildingEntity() {
+        return buildingEntity != null;
+    }
+
+    @Override
+    public void buildEntity(BuildableEntity buildableEntity) {
+        this.buildingEntity = buildableEntity;
+        // disable all buildable entities
+        for (BuildableEntity be : buildableEntities) {
+            be.disable();
+        }
+        // except this one, build it!
+        this.buildingEntity.startBuilding();
+    }
+
+    @Override
+    public boolean isAwaitingPlacement() {
+        return isBuildingEntity();
+    }
+
+    @Override
+    public void entityIsDelivered(Entity entity) {
+        buildingEntity = null;
+        // enable all buildable entities again
+        for (BuildableEntity be : buildableEntities) {
+            be.enable();
+        }
+    }
+
+    @Override
+    public boolean isBuildingEntity(BuildableEntity buildableEntity) {
+        return buildingEntity.equals(buildableEntity);
+    }
+
 }

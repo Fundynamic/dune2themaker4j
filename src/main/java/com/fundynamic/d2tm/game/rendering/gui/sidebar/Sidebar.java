@@ -18,9 +18,9 @@ import org.newdawn.slick.Graphics;
  *
  * </p>
  */
-public class Sidebar extends GuiElement {
+public class Sidebar extends BattlefieldInteractableGuiElement {
 
-    private GuiElement guiElement;
+    private BattlefieldInteractableGuiElement guiElement;
 
     public Sidebar(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -111,7 +111,17 @@ public class Sidebar extends GuiElement {
                         parentY + 10,
                         getWidthAsInt() - 20,
                         getHeightAsInt() - 20,
-                        entityBuilder
+                        entityBuilder,
+                        guiComposite
                 );
+    }
+
+    /**
+     * Entity is placed on map.
+     *
+     * @param entity
+     */
+    public void entityPlacedOnMap(Entity entity) {
+        guiElement.entityPlacedOnMap(entity);
     }
 }

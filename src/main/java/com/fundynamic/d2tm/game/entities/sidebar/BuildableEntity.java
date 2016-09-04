@@ -21,8 +21,14 @@ public class BuildableEntity {
      */
     private EntityData entityData;
 
+    public BuildableState buildableState;
+
     public BuildableEntity(EntityData entityData) {
         this.entityData = entityData;
+    }
+
+    public EntityData getEntityData() {
+        return entityData;
     }
 
     public boolean hasBuildIcon() {
@@ -31,5 +37,21 @@ public class BuildableEntity {
 
     public Image getBuildIcon() {
         return entityData.buildIcon;
+    }
+
+    public void startBuilding() {
+        buildableState = BuildableState.BUILDING;
+    }
+
+    public void disable() {
+        buildableState = BuildableState.DISABLED;
+    }
+
+    public void enable() {
+        buildableState = BuildableState.SELECTABLE;
+    }
+
+    public BuildableState getBuildableState() {
+        return buildableState;
     }
 }

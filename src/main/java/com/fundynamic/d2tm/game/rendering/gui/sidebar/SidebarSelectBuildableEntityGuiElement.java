@@ -2,9 +2,10 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
-import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
+import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -13,22 +14,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SidebarSelectBuildableEntityGuiElement extends GuiElement {
+public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
+    // the entity that is building other entities
     private EntityBuilder entityBuilder;
+
+    // requires communication with BattleField so that we can instantiate the 'place structure mouse' at the battlefield
+    // once construction is completed.
+    private GuiComposite guiComposite;
+
+    private RenderableBuildableEntity focussedRenderableBuildableEntity;
+
     private List<RenderableBuildableEntity> renderableBuildableEntities;
 
-    public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, EntityBuilder entityBuilder) {
+    public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, EntityBuilder entityBuilder, GuiComposite guiComposite) {
         super(x, y, width, height);
         this.entityBuilder = entityBuilder;
+        this.guiComposite = guiComposite;
 
         List<BuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
         this.renderableBuildableEntities = new ArrayList<>(buildList.size());
+
         // make renderable versions for the GUI
-        int drawY = getTopLeftYAsInt();
+        int drawY = getTopLeftYAsInt() + 4; // arbitrary amount down to start
         for (BuildableEntity buildableEntity : buildList) {
-            renderableBuildableEntities.add(new RenderableBuildableEntity(buildableEntity, getTopLeftXAsInt() + 5, drawY));
-            drawY += 50;
+
+            renderableBuildableEntities.add(
+                    new RenderableBuildableEntity(
+                            buildableEntity,
+                            getTopLeftXAsInt() + 10, // arbitrary amount to the right
+                            drawY)
+            );
+            drawY += 51; // height of icon + 3 extra pixels
         }
 
     }
@@ -36,11 +53,7 @@ public class SidebarSelectBuildableEntityGuiElement extends GuiElement {
     @Override
     public void render(Graphics graphics) {
         Vector2D topLeft = getTopLeft();
-//        if (hasFocus) {
-//            graphics.setColor(Color.blue);
-//        } else {
-//            graphics.setColor(Color.gray);
-//        }
+
         graphics.setColor(Color.gray);
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
         graphics.setColor(Color.white);
@@ -51,35 +64,74 @@ public class SidebarSelectBuildableEntityGuiElement extends GuiElement {
 
     @Override
     public void leftClicked() {
-        // do nothing because Dummy element
+        if (focussedRenderableBuildableEntity != null) {
+
+            if (!entityBuilder.isBuildingEntity()) {
+                // construct it:
+                // 1. tell it to construct
+                entityBuilder.buildEntity(focussedRenderableBuildableEntity.getBuildableEntity());
+            } else {
+                // TODO: Is done constructing.
+                if (entityBuilder.isAwaitingPlacement()) {
+                    // TODO move to BattlefieldInteractable interface?!
+                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(focussedRenderableBuildableEntity.getBuildableEntity());
+                }
+            }
+
+            // update state of this entity
+            focussedRenderableBuildableEntity.leftClicked();
+        }
     }
 
     @Override
     public void rightClicked() {
-        // do nothing because Dummy element
+        for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
+            renderableBuildableEntity.rightClicked();
+        }
     }
 
     @Override
     public void draggedToCoordinates(Vector2D coordinates) {
-        // do nothing because Dummy element
+        // do nothing here
     }
 
     @Override
     public void movedTo(Vector2D coordinates) {
+        // clear focus
+        focussedRenderableBuildableEntity = null;
+
+        // tell all entities that mouse has moved, let entity decide etc
+        // and based on focus state remember that the mouse is moving over a specific icon, which is needed for
+        // constructing later (see {@link #leftClicked()})
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.movedTo(coordinates);
+            if (renderableBuildableEntity.hasFocus()) {
+                focussedRenderableBuildableEntity = renderableBuildableEntity;
+            }
         }
     }
 
     @Override
     public void leftButtonReleased() {
-        // do nothing because Dummy element
+        // nothing to do here
     }
 
     @Override
     public void update(float deltaInSeconds) {
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.update(deltaInSeconds);
+        }
+    }
+
+    @Override
+    public void entityPlacedOnMap(Entity entity) {
+        if (!entityBuilder.isBuildingEntity()) {
+            // not building anything, that is weird?
+            throw new IllegalStateException("Did not expect this");
+        } else {
+            if (entityBuilder.isAwaitingPlacement()) {
+                entityBuilder.entityIsDelivered(entity);
+            }
         }
     }
 }
