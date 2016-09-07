@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -51,19 +52,13 @@ public class RenderableBuildableEntity extends GuiElement {
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(new Color(255,255,255, 128)); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            graphics.setColor(Color.black);
-            graphics.drawString("BUILDING", xAsInt + 3, yAsInt + 17);
-            graphics.setColor(Color.white);
-            graphics.drawString("BUILDING", xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawShadowedText(graphics, Color.white, "BUILDING", xAsInt + 2, yAsInt + 16);
         }
 
         if (buildableState == BuildableState.AWAITSPLACEMENT) {
             graphics.setColor(new Color(255,255,255, 128)); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            graphics.setColor(Color.black);
-            graphics.drawString("PLACE", xAsInt + 3, yAsInt + 17);
-            graphics.setColor(Color.white);
-            graphics.drawString("PLACE", xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawShadowedText(graphics, Color.white, "PLACE", xAsInt + 2, yAsInt + 16);
         }
 
         if (hasFocus) {

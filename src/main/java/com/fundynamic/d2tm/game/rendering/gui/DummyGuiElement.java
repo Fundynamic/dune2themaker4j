@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.rendering.gui;
 
 
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -23,8 +24,7 @@ public class DummyGuiElement extends GuiElement {
             graphics.setColor(Color.gray);
         }
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
-        graphics.setColor(Color.white);
-        graphics.drawString("DUMMY", topLeft.getXAsInt(), topLeft.getYAsInt());
+        SlickUtils.drawText(graphics, Color.white, "DUMMY", topLeft.getXAsInt(), topLeft.getYAsInt());
     }
 
     @Override
