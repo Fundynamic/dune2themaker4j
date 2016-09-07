@@ -52,6 +52,15 @@ public class RenderableBuildableEntity extends GuiElement {
             graphics.setColor(new Color(255,255,255, 128)); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
             graphics.setColor(Color.black);
+            graphics.drawString("BUILDING", xAsInt + 3, yAsInt + 17);
+            graphics.setColor(Color.white);
+            graphics.drawString("BUILDING", xAsInt + 2, yAsInt + 16);
+        }
+
+        if (buildableState == BuildableState.AWAITSPLACEMENT) {
+            graphics.setColor(new Color(255,255,255, 128)); // ugly way of letting know we are building this
+            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.setColor(Color.black);
             graphics.drawString("PLACE", xAsInt + 3, yAsInt + 17);
             graphics.setColor(Color.white);
             graphics.drawString("PLACE", xAsInt + 2, yAsInt + 16);

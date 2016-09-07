@@ -47,6 +47,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
         float offset = deltaInSeconds * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
@@ -58,6 +59,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
                 entityRepository.explodeAt(centeredPos, entityData, player);
             }
+        }
+
+        if (isBuildingEntity()) {
+            buildingEntity.update(deltaInSeconds);
         }
     }
 
@@ -171,7 +176,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     @Override
     public boolean isAwaitingPlacement() {
-        return isBuildingEntity();
+        return isBuildingEntity() && buildingEntity.awaitsPlacement();
     }
 
     @Override
