@@ -69,6 +69,7 @@ public class EntityData {
     public String key; // key used in HashMap
 
     public boolean recolor; // if 'true' then the particle will be recolorred (into team color) before spawned
+    public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
 
     public EntityData() {
     }
@@ -266,4 +267,5 @@ public class EntityData {
     public Vector2D getSize() {
         return Vector2D.create(width, height);
     }
+
 }

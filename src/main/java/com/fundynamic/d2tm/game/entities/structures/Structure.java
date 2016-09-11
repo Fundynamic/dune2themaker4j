@@ -2,6 +2,8 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
+import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
+
+    private EntityBuilder entityBuilder;
 
     // Behaviors
     private final FadingSelection fadingSelection;
@@ -35,6 +39,18 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
+
+        switch (entityData.entityBuilderType) {
+            case STRUCTURE_BUILDER:
+                List<EntityData> entityDatas = new ArrayList<>();
+                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY));
+                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP));
+
+                this.entityBuilder = new EntityBuilderImpl(entityDatas);
+                break;
+            default:
+                this.entityBuilder = new NullEntityBuilder();
+        }
     }
 
     public Image getSprite() {
@@ -62,7 +78,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         }
 
         if (isBuildingEntity()) {
-            buildingEntity.update(deltaInSeconds);
+            this.entityBuilder.update(deltaInSeconds);
         }
     }
 
@@ -141,56 +157,33 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         return fadingSelection.hasFocus();
     }
 
-    private BuildableEntity buildingEntity = null;
-    private List<BuildableEntity> buildableEntities;
-
     @Override
     public List<BuildableEntity> getBuildList() {
-        // TODO: Move to EntityBuilder logic class thingy later
-        if (buildableEntities == null) {
-            buildableEntities = new ArrayList<>();
-            // TODO: load somehow what kind of entities can be build, from entity Data I suppose!?
-
-            // const yard can build refinery
-            buildableEntities.add(new BuildableEntity(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY)));
-            buildableEntities.add(new BuildableEntity(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP)));
-        }
-        return buildableEntities;
+        return this.entityBuilder.getBuildList();
     }
 
     @Override
     public boolean isBuildingEntity() {
-        return buildingEntity != null;
+        return this.entityBuilder.isBuildingEntity();
     }
 
     @Override
     public void buildEntity(BuildableEntity buildableEntity) {
-        this.buildingEntity = buildableEntity;
-        // disable all buildable entities
-        for (BuildableEntity be : buildableEntities) {
-            be.disable();
-        }
-        // except this one, build it!
-        this.buildingEntity.startBuilding();
+        this.entityBuilder.buildEntity(buildableEntity);
     }
 
     @Override
     public boolean isAwaitingPlacement() {
-        return isBuildingEntity() && buildingEntity.awaitsPlacement();
+        return this.entityBuilder.isAwaitingPlacement();
     }
 
     @Override
     public void entityIsDelivered(Entity entity) {
-        buildingEntity = null;
-        // enable all buildable entities again
-        for (BuildableEntity be : buildableEntities) {
-            be.enable();
-        }
+        this.entityBuilder.entityIsDelivered(entity);
     }
 
     @Override
     public boolean isBuildingEntity(BuildableEntity buildableEntity) {
-        return buildingEntity.equals(buildableEntity);
+        return this.entityBuilder.isBuildingEntity(buildableEntity);
     }
-
 }

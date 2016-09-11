@@ -89,16 +89,20 @@ public class EntitiesData {
      * @throws SlickException
      */
     public EntityData addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId, String pathToBuildIcon) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+        EntityData entityData = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+
+        if (id.equals(EntitiesData.CONSTRUCTION_YARD)) {
+            entityData.entityBuilderType = EntityBuilderType.STRUCTURE_BUILDER;
+        }
 
         if (!idProvided(explosionId)) {
             if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
                 throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
             }
-            entity.explosionId = explosionId;
+            entityData.explosionId = explosionId;
         }
-        entity.buildIcon = loadImage(pathToBuildIcon);
-        return entity;
+        entityData.buildIcon = loadImage(pathToBuildIcon);
+        return entityData;
     }
 
     public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float animationSpeed, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
