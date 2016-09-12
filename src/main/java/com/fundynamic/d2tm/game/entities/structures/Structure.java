@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
 import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;

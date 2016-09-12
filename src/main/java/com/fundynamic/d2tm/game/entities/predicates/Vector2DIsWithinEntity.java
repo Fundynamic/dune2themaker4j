@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.entities.predicates;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Predicate;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 
 

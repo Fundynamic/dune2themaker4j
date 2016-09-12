@@ -2,6 +2,8 @@ package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;

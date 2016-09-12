@@ -1,8 +1,6 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 
-import com.fundynamic.d2tm.game.entities.EntitiesData;
-import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;

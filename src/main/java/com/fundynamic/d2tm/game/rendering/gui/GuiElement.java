@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Focusable;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.math.Rectangle;
 
 /**
  * A gui element has a drawing position (topleft) and size (width/height) - which basically is a rectangle.

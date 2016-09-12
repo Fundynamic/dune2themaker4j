@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * An entities set is an extension of a {@link HashSet} with type {@link Entity}. It provides easy to use methods
+ * and filters.
+ */
 public class EntitiesSet extends HashSet<Entity> {
 
     public static EntitiesSet fromSet(Set<Entity> entities) {

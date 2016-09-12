@@ -1,6 +1,9 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;

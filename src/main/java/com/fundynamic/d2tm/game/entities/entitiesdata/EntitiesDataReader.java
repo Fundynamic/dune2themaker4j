@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import org.ini4j.Ini;
@@ -7,8 +7,6 @@ import org.newdawn.slick.SlickException;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import static com.fundynamic.d2tm.game.entities.EntitiesData.UNKNOWN;
 
 /**
  * Reads the 'rules.ini' file and extracts an EntitiesData data structure.
@@ -64,7 +62,7 @@ public class EntitiesDataReader {
                     struct.get("height", Integer.class),
                     struct.get("sight", Integer.class),
                     struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class, UNKNOWN),
+                    struct.get("explosion", String.class, EntitiesData.UNKNOWN),
                     struct.get("buildIcon", String.class, null)
             );
         }
@@ -88,7 +86,7 @@ public class EntitiesDataReader {
                     struct.get("attackrate", Float.class, 0f),
                     struct.get("attackrange", Float.class, 0f),
                     struct.get("hitpoints", Integer.class, 0),
-                    struct.get("weapon", String.class, UNKNOWN),
+                    struct.get("weapon", String.class, EntitiesData.UNKNOWN),
                     struct.get("explosion", String.class));
         }
     }

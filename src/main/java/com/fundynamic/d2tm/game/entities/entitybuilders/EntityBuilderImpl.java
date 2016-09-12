@@ -2,10 +2,8 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
-import com.fundynamic.d2tm.game.entities.EntitiesData;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 
 import java.util.ArrayList;

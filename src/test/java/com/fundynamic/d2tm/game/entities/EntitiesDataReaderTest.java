@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;

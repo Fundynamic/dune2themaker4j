@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 public enum EntityBuilderType {

@@ -1,13 +1,8 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
 
-import com.fundynamic.d2tm.game.behaviors.AbsoluteRenderable;
-import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.Rectangle;
-import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 /**

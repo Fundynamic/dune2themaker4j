@@ -3,12 +3,10 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBehavior;
-import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
-import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

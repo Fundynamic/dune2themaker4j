@@ -3,7 +3,8 @@ package com.fundynamic.d2tm.game.entities;
 /**
  * <h1>General purpose</h1>
  * <p>
- *     The implementing class reacts to events happening to entities.
+ *     The implementing class reacts to events happening to one or more entities. This is meant to be on a gui/abstract
+ *     level. For instance: "one or more entities have been selected".
  * </p>
  * <h2>Selecting/deselectiny entities</h2>
  * <p>

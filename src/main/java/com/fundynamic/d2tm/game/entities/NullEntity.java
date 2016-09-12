@@ -4,6 +4,9 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 
+/**
+ * A null entity to prevent 'null checks'. But rather have an entity doing nothing. See also the Null Object Pattern.
+ */
 public class NullEntity extends Entity {
 
     public static NullEntity INSTANCE = new NullEntity();

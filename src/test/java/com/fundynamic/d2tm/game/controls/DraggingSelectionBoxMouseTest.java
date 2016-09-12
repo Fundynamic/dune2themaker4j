@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.battlefield.DraggingSelectionBoxMouse;
-import com.fundynamic.d2tm.game.entities.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;

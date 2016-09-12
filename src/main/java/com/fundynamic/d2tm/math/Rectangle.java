@@ -1,6 +1,4 @@
-package com.fundynamic.d2tm.game.entities;
-
-import com.fundynamic.d2tm.math.Vector2D;
+package com.fundynamic.d2tm.math;
 
 public class Rectangle {
 

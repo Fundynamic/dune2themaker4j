@@ -6,16 +6,22 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
 
 /**
  * <p>
- * An entity has knowledge where it is on the world map (ie Coordinate).
+ *     An entity is a 'thing' that 'lives' on the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
  * </p>
- *
- * <b>Rendering:</b>
+ * <h2>State</h2>
+ * <p>
+ *     An entity has state, usually a lifespan or somesort, therefor it is {@link Updateable}. The {@link #update(float)} method
+ *     is called by the {@link com.fundynamic.d2tm.game.state.PlayingState#update(GameContainer, StateBasedGame, int)} method.
+ * </p>
+ * <h2>Rendering:</h2>
  * <p>
  * An entity is told where on screen it should be rendered by a {@link RenderQueue}.
  *

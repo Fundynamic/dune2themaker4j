@@ -1,6 +1,10 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
