@@ -42,7 +42,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
 
         switch (entityData.entityBuilderType) {
-            case STRUCTURE_BUILDER:
+            case STRUCTURES:
                 List<EntityData> entityDatas = new ArrayList<>();
                 entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY));
                 entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP));

@@ -1,8 +1,13 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -80,7 +85,19 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String explosionId = "UNKNOWN";
 
         // add
-        entitiesData.addStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000, explosionId, "icon_constyard.bmp");
+        entitiesData.addStructure(
+                new IniDataStructure(
+                        idOfEntity,
+                        "constyard.png",
+                        widthInPixels,
+                        heightInPixels,
+                        sight,
+                        1000,
+                        explosionId,
+                        "icon_constyard.bmp",
+                        ""
+                )
+        );
 
         // get & assert
         EntityData data = entitiesData.getEntityData(EntityType.STRUCTURE, idOfEntity);
@@ -93,13 +110,14 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(sight, data.sight);
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
+        assertEquals(EntityBuilderType.NONE, data.entityBuilderType);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp"); // success!
-        entitiesData.addStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp"); // boom!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp", "")); // success!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp", "")); // boom!
     }
 
 

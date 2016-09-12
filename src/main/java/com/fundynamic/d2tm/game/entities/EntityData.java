@@ -71,7 +71,7 @@ public class EntityData {
     public float animationSpeed; // in frames per second
     public String key; // key used in HashMap
 
-    public boolean recolor; // if 'true' then the particle will be recolorred (into team color) before spawned
+    public boolean recolor; // if 'true' then the particle will be recolored (into team color) before spawned
     public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
 
     public EntityData() {

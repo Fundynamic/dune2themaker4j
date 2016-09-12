@@ -1,7 +1,8 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -29,7 +30,7 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsStructureFromIniFile() {
+    public void readsBuildingStructureFromIniFile() {
         readFromTestRulesIni();
 
         EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
@@ -41,6 +42,23 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.sight, is(4));
         assertThat(constyard.explosionId, is("BOOM"));
         assertThat(constyard.buildIcon, is(not(nullValue())));
+        assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
+    }
+
+    @Test
+    public void readsSimpleStructureFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
+        assertThat(constyard, is(not(nullValue())));
+        assertThat(constyard.hitPoints, is(283));
+        assertThat(constyard.image, is(not(nullValue())));
+        assertThat(constyard.getWidth(), is(64));
+        assertThat(constyard.getHeight(), is(64));
+        assertThat(constyard.sight, is(4));
+        assertThat(constyard.explosionId, is("BOOM"));
+        assertThat(constyard.buildIcon, is(not(nullValue())));
+        assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
@@ -81,31 +82,31 @@ public class EntitiesData {
     }
 
     /**
-     * Create and add structure to this collection.
+     * Create and add a Structure EntityData to this collection.
      *
-     * @param id
-     * @param pathToImage
-     * @param widthInPixels
-     * @param heightInPixels
-     * @param sight
-     * @param hitPoints
-     * @param explosionId
      * @throws SlickException
      */
-    public EntityData addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId, String pathToBuildIcon) throws SlickException {
-        EntityData entityData = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+    public EntityData addStructure(IniDataStructure iniDataStructure) throws SlickException {
+        EntityData entityData = createEntity(
+                iniDataStructure.id,
+                iniDataStructure.image,
+                null,
+                iniDataStructure.width,
+                iniDataStructure.height,
+                EntityType.STRUCTURE,
+                iniDataStructure.sight,
+                0F,
+                iniDataStructure.hitpoints);
 
-        if (id.equals(EntitiesData.CONSTRUCTION_YARD)) {
-            entityData.entityBuilderType = EntityBuilderType.STRUCTURE_BUILDER;
-        }
+        entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
 
-        if (!idProvided(explosionId)) {
-            if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
-                throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
+        if (!idProvided(iniDataStructure.explosion)) {
+            if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
+                throw new IllegalArgumentException("structure " + iniDataStructure.id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
             }
-            entityData.explosionId = explosionId;
+            entityData.explosionId = iniDataStructure.explosion;
         }
-        entityData.buildIcon = loadImage(pathToBuildIcon);
+        entityData.buildIcon = loadImage(iniDataStructure.buildIcon);
         return entityData;
     }
 

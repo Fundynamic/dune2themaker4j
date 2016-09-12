@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
@@ -56,14 +57,18 @@ public class EntitiesDataReader {
         String[] strings = structures.childrenNames();
         for (String id : strings) {
             Profile.Section struct = structures.getChild(id);
-            entitiesData.addStructure(id,
-                    struct.get("image", String.class, null),
-                    struct.get("width", Integer.class),
-                    struct.get("height", Integer.class),
-                    struct.get("sight", Integer.class),
-                    struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class, EntitiesData.UNKNOWN),
-                    struct.get("buildIcon", String.class, null)
+            entitiesData.addStructure(
+                    new IniDataStructure(
+                        id,
+                        struct.get("image", String.class, null),
+                        struct.get("width", Integer.class),
+                        struct.get("height", Integer.class),
+                        struct.get("sight", Integer.class),
+                        struct.get("hitpoints", Integer.class),
+                        struct.get("explosion", String.class, EntitiesData.UNKNOWN),
+                        struct.get("buildIcon", String.class, null),
+                        struct.get("builds", String.class, "")
+                    )
             );
         }
     }
