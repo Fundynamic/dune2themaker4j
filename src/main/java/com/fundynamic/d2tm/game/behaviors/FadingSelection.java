@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.behaviors;
 
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.utils.Colors;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -9,6 +10,7 @@ import org.newdawn.slick.Graphics;
  */
 public class FadingSelection extends SimpleSelectLogic implements EnrichableAbsoluteRenderable, Updateable {
 
+    public static final float DEFAULT_LINE_THICKNESS = 2.0f;
     private float selectedIntensity;
     private boolean selectedDarkening;
 
@@ -17,7 +19,7 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
     private float lineWidth;
 
     public FadingSelection(int width, int height) {
-        this(width, height, 2.0f);
+        this(width, height, DEFAULT_LINE_THICKNESS);
     }
 
     public FadingSelection(int width, int height, float lineWidth) {
@@ -70,8 +72,7 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
     }
 
     public Color getFadingColor(float selectedIntensity) {
-        // todo: CACHING of colors
-        return new Color(selectedIntensity, this.selectedIntensity, this.selectedIntensity);
+        return Colors.create(selectedIntensity, this.selectedIntensity, this.selectedIntensity);
     }
 
     @Override
