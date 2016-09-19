@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
 import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
@@ -44,8 +43,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         switch (entityData.entityBuilderType) {
             case STRUCTURES:
                 List<EntityData> entityDatas = new ArrayList<>();
-                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY));
-                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP));
+                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                    entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
+                }
 
                 this.entityBuilder = new EntityBuilderImpl(entityDatas);
                 break;

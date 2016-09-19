@@ -6,10 +6,10 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * <h1>Overview</h1>
@@ -74,6 +74,7 @@ public class EntityData {
 
     public boolean recolor; // if 'true' then the particle will be recolored (into team color) before spawned
     public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
+    public String buildList = "";
 
     public EntityData() {
     }
@@ -272,4 +273,7 @@ public class EntityData {
         return Vector2D.create(width, height);
     }
 
+    public List<String> getEntityDataKeysToBuild() {
+        return StringUtils.splitLenientToList(buildList, ",");
+    }
 }

@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.math.Coordinate;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -50,6 +51,57 @@ public class EntityDataTest extends AbstractD2TMTest {
         assertThat(allCellsAsVectors, hasItem(create(15, 20 + Game.TILE_SIZE)));
         assertThat(allCellsAsVectors, hasItem(create(15 + Game.TILE_SIZE, 20 + Game.TILE_SIZE)));
         assertThat(allCellsAsVectors, hasItem(create(15 + Game.TILE_SIZE + Game.TILE_SIZE, 20 + Game.TILE_SIZE)));
+    }
+
+    @Test
+    public void emptyBuildList() {
+        EntityData entityData = new EntityData();
+        entityData.buildList = "";
+
+        List<String> entityDataKeysToBuild = entityData.getEntityDataKeysToBuild();
+        Assert.assertEquals(0, entityDataKeysToBuild.size());
+    }
+
+    @Test
+    public void singleBuildList() {
+        EntityData entityData = new EntityData();
+        entityData.buildList = "WINDTRAP";
+
+        List<String> entityDataKeysToBuild = entityData.getEntityDataKeysToBuild();
+        Assert.assertEquals(1, entityDataKeysToBuild.size());
+        Assert.assertEquals("WINDTRAP", entityDataKeysToBuild.get(0));
+    }
+
+    @Test
+    public void multipleBuildList() {
+        EntityData entityData = new EntityData();
+        entityData.buildList = "WINDTRAP,REFINERY";
+
+        List<String> entityDataKeysToBuild = entityData.getEntityDataKeysToBuild();
+        Assert.assertEquals(2, entityDataKeysToBuild.size());
+        Assert.assertEquals("WINDTRAP", entityDataKeysToBuild.get(0));
+        Assert.assertEquals("REFINERY", entityDataKeysToBuild.get(1));
+    }
+
+    @Test
+    public void singleBuildListWithSpaces() {
+        EntityData entityData = new EntityData();
+        entityData.buildList = "  WINDTRAP  ";
+
+        List<String> entityDataKeysToBuild = entityData.getEntityDataKeysToBuild();
+        Assert.assertEquals(1, entityDataKeysToBuild.size());
+        Assert.assertEquals("WINDTRAP", entityDataKeysToBuild.get(0));
+    }
+
+    @Test
+    public void multipleBuildListWithSpaces() {
+        EntityData entityData = new EntityData();
+        entityData.buildList = " WINDTRAP , REFINERY ";
+
+        List<String> entityDataKeysToBuild = entityData.getEntityDataKeysToBuild();
+        Assert.assertEquals(2, entityDataKeysToBuild.size());
+        Assert.assertEquals("WINDTRAP", entityDataKeysToBuild.get(0));
+        Assert.assertEquals("REFINERY", entityDataKeysToBuild.get(1));
     }
 
 }

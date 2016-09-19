@@ -68,7 +68,8 @@ public class EntitiesDataReader {
                         struct.get("explosion", String.class, EntitiesData.UNKNOWN),
                         struct.get("buildIcon", String.class, null),
                         struct.get("builds", String.class, ""),
-                        struct.get("buildtime", Float.class, 0F)
+                        struct.get("buildtime", Float.class, 0F),
+                        struct.get("buildlist", String.class, "")
                     )
             );
         }

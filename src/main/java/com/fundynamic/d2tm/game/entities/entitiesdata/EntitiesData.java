@@ -101,6 +101,7 @@ public class EntitiesData {
 
         entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
         entityData.buildTimeInSeconds = iniDataStructure.buildTimeInSeconds;
+        entityData.buildList = iniDataStructure.buildList;
 
         if (!idProvided(iniDataStructure.explosion)) {
             if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
