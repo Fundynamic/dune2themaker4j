@@ -73,7 +73,7 @@ public class BuildableEntity implements Updateable {
      * @return
      */
     public float getProgress() {
-        return entityData.buildTimeInSeconds / secondsToBuildInMs;
+        return (entityData.buildTimeInSeconds - secondsToBuildInMs) / entityData.buildTimeInSeconds;
     }
 
 }

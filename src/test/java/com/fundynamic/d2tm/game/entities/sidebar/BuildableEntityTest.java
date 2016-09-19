@@ -35,4 +35,17 @@ public class BuildableEntityTest {
         Assert.assertTrue(buildableEntity.awaitsPlacement());
     }
 
+    @Test
+    public void progress() {
+        BuildableEntity buildableEntity = new BuildableEntity(entityData);
+        buildableEntity.startBuilding();
+        Assert.assertEquals(0.0F, buildableEntity.getProgress(), 000.1f);
+
+        buildableEntity.update(entityData.buildTimeInSeconds / 2);
+        Assert.assertEquals(0.5F, buildableEntity.getProgress(), 000.1f);
+
+        buildableEntity.update(entityData.buildTimeInSeconds / 2);
+        Assert.assertEquals(1.0F, buildableEntity.getProgress(), 000.1f);
+    }
+
 }

@@ -6,6 +6,17 @@ import org.newdawn.slick.Graphics;
 
 public class SlickUtils {
 
+    public static void drawPercentage(Graphics graphics, Color color, float percentageAsFloat, int x, int y) {
+        int progress = (int)(percentageAsFloat * 100F);
+        if (progress < 10) {
+            drawShadowedText(graphics, color, "00" + progress + " %", x, y);
+        } else if (progress < 100) {
+            drawShadowedText(graphics, color, "0" + progress + " %", x, y);
+        } else if (progress < 1000) {
+            drawShadowedText(graphics, color, "" + progress + " %", x, y);
+        }
+    }
+
     /**
      * Draws a text with shadow
      */

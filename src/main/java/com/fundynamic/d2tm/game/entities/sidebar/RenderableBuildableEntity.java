@@ -53,8 +53,7 @@ public class RenderableBuildableEntity extends GuiElement {
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            buildableEntity.getProgress();
-            SlickUtils.drawShadowedText(graphics, Color.white, "BUILDING", xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawPercentage(graphics, Color.white, buildableEntity.getProgress(), xAsInt + 2, yAsInt + 16);
         }
 
         if (buildableState == BuildableState.AWAITSPLACEMENT) {
