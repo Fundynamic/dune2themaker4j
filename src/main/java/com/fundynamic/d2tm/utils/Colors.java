@@ -57,6 +57,10 @@ public class Colors {
      * @return
      */
     public static Color create(float r, float g, float b) {
-        return create((int)r, (int)g, (int)b, -1);
+        return create((int)(r * 255.0f), (int)(g * 255.0f), (int)(b * 255.0f), -1);
+    }
+
+    public static String toString(Color c) {
+        return "Color(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue() + "," + c.getAlpha() + ")";
     }
 }
