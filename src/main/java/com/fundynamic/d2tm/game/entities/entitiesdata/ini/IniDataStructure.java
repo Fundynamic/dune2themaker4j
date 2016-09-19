@@ -8,7 +8,7 @@ import com.fundynamic.d2tm.utils.StringUtils;
  */
 public class IniDataStructure {
 
-    public IniDataStructure(String id, String image, int width, int height, int sight, int hitpoints, String explosion, String buildIcon, String entityBuilderType) {
+    public IniDataStructure(String id, String image, int width, int height, int sight, int hitpoints, String explosion, String buildIcon, String entityBuilderType, float buildTimeInSeconds) {
         this.id = id;
         this.image = image;
         this.width = width;
@@ -18,6 +18,7 @@ public class IniDataStructure {
         this.explosion = explosion;
         this.buildIcon = buildIcon;
         this.entityBuilderType = entityBuilderType;
+        this.buildTimeInSeconds = buildTimeInSeconds;
     }
 
     public String id;
@@ -29,6 +30,7 @@ public class IniDataStructure {
     public String explosion;
     public String buildIcon;
     public String entityBuilderType;
+    public float buildTimeInSeconds;
 
     public EntityBuilderType getEntityBuilderType() {
         try {

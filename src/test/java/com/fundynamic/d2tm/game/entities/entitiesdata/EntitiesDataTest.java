@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -95,7 +96,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
                         1000,
                         explosionId,
                         "icon_constyard.bmp",
-                        ""
+                        "",
+                        1.0F
                 )
         );
 
@@ -111,13 +113,14 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
         assertEquals(EntityBuilderType.NONE, data.entityBuilderType);
+        assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addStructure(new IniDataStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp", "")); // success!
-        entitiesData.addStructure(new IniDataStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp", "")); // boom!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp", "", 1.0F)); // success!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp", "", 1.0F)); // boom!
     }
 
 

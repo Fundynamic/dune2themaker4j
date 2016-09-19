@@ -59,6 +59,7 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.explosionId, is("BOOM"));
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(constyard.buildTimeInSeconds, is(5.0f));
     }
 
     @Test

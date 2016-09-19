@@ -96,9 +96,11 @@ public class EntitiesData {
                 EntityType.STRUCTURE,
                 iniDataStructure.sight,
                 0F,
-                iniDataStructure.hitpoints);
+                iniDataStructure.hitpoints
+        );
 
         entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
+        entityData.buildTimeInSeconds = iniDataStructure.buildTimeInSeconds;
 
         if (!idProvided(iniDataStructure.explosion)) {
             if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
@@ -107,6 +109,7 @@ public class EntitiesData {
             entityData.explosionId = iniDataStructure.explosion;
         }
         entityData.buildIcon = loadImage(iniDataStructure.buildIcon);
+
         return entityData;
     }
 

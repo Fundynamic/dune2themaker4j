@@ -85,7 +85,8 @@ public class RenderableBuildableEntity extends GuiElement {
     @Override
     public void movedTo(Vector2D coordinates) {
         hasFocus = isVectorWithin(coordinates);
-        // HACK HACK: because only then it will show
+
+        // HACK HACK: fadingSelection renders only upon selected, and not on focus by default
         if (hasFocus) {
             fadingSelection.select();
         } else {
