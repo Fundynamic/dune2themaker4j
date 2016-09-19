@@ -264,11 +264,15 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     @Override
     public void entitiesSelected(EntitiesSet entities) {
         System.out.println("Battlefield gets told that " + entities + " are selected");
-        if (entities.size() == 1) {
+        EntitiesSet entityBuilders = entities.filter(Predicate.isEntityBuilder());
+
+        if (entityBuilders.size() == 1) {
             Entity first = entities.getFirst();
             if (first.isEntityBuilder()) {
                 guiComposite.entityBuilderSelected(first);
             }
+        } else {
+            guiComposite.allEntityBuildersDeSelected();
         }
     }
 

@@ -38,6 +38,7 @@ public class EntityData {
     public static final String UNKNOWN = "UNKNOWN";
     private float chop = -1f;
     private float halfChop = -1f;
+    public float buildTimeInSeconds = 5.0F;
 
     public EntityType type;
 

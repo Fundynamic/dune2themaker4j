@@ -183,4 +183,8 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
         sidebar.entityPlacedOnMap(entity);
         battleField.setMouseBehavior(new NormalMouse(battleField));
     }
+
+    public void allEntityBuildersDeSelected() {
+        sidebar.hideEntityBuilderGui();
+    }
 }

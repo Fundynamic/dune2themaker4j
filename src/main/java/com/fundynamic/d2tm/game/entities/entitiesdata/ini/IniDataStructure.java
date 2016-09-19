@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.utils.StringUtils;
 
 /**
  * Object representation of a STRUCTURE entry in the INI file.
@@ -31,6 +32,9 @@ public class IniDataStructure {
 
     public EntityBuilderType getEntityBuilderType() {
         try {
+            if (StringUtils.isEmpty(entityBuilderType)) {
+                return EntityBuilderType.NONE;
+            }
             return EntityBuilderType.valueOf(entityBuilderType);
         } catch (Exception e) {
             System.err.println("Unable to convert 'builds' property with value [" + entityBuilderType + "] into enum EntityBuilderType. Valid values are " + EntityBuilderType.getValues());

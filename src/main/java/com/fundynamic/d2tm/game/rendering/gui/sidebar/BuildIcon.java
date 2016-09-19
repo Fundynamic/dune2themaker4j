@@ -12,11 +12,6 @@ public class BuildIcon extends GuiElement {
         super(x, y, width, height);
     }
 
-//    public BuildIcon(int x, int y, EntityData entityData) {
-//        entityData.buildIcon;
-//        super(x, y, width, height);
-//    }
-
     @Override
     public void render(Graphics graphics) {
 

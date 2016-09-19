@@ -19,6 +19,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -30,6 +31,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
+import static com.fundynamic.d2tm.Game.SCREEN_HEIGHT;
+import static com.fundynamic.d2tm.Game.SCREEN_WIDTH;
+import static com.fundynamic.d2tm.game.state.PlayingState.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -69,6 +73,7 @@ public abstract class AbstractD2TMTest {
     protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
     protected Map map;
     protected BattleField battleField;
+    protected Sidebar sidebar;
 
 
     protected Mouse mouse;
@@ -92,6 +97,7 @@ public abstract class AbstractD2TMTest {
 
         // Nice little circular dependency here...
         guiComposite = new GuiComposite();
+
         mouse = makeTestableMouse(player, guiComposite);
 
         listener = new MouseListener(mouse);
@@ -115,6 +121,14 @@ public abstract class AbstractD2TMTest {
 
         guiComposite.addGuiElement(battleField);
 
+        sidebar = new Sidebar(
+                screenResolution.getXAsInt() - WIDTH_OF_SIDEBAR,
+                HEIGHT_OF_TOP_BAR,
+                WIDTH_OF_SIDEBAR,
+                screenResolution.getYAsInt() - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
+        );
+
+        guiComposite.addGuiElement(sidebar);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);

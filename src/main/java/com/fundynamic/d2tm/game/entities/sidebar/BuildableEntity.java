@@ -17,12 +17,13 @@ public class BuildableEntity implements Updateable {
      */
     private EntityData entityData;
 
-    private float secondsToBuildInMs = 5.0f; // 5 seconds
+    private float secondsToBuildInMs;
 
-    public BuildableState buildableState;
+    public BuildableState buildableState = BuildableState.SELECTABLE;
 
     public BuildableEntity(EntityData entityData) {
         this.entityData = entityData;
+        secondsToBuildInMs = entityData.buildTimeInSeconds;
     }
 
     public EntityData getEntityData() {
@@ -38,7 +39,7 @@ public class BuildableEntity implements Updateable {
     }
 
     public void startBuilding() {
-        secondsToBuildInMs = 5.0f;
+        secondsToBuildInMs = entityData.buildTimeInSeconds;
         buildableState = BuildableState.BUILDING;
     }
 
@@ -65,4 +66,14 @@ public class BuildableEntity implements Updateable {
     public boolean awaitsPlacement() {
         return buildableState == BuildableState.AWAITSPLACEMENT;
     }
+
+    /**
+     * Returns a number between 0.0 (started) and 1.0 (completed).
+     *
+     * @return
+     */
+    public float getProgress() {
+        return entityData.buildTimeInSeconds / secondsToBuildInMs;
+    }
+
 }
