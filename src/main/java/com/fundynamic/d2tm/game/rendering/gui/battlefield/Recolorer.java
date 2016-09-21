@@ -56,9 +56,9 @@ public class Recolorer {
 
         switch (factionColor) {
           case GREEN:
-            return new Color(srcGreen, srcRed, srcBlue, srcAlpha);
+            return Colors.create(srcGreen, srcRed, srcBlue, srcAlpha);
           case BLUE:
-            return new Color(srcBlue, srcGreen, srcRed, srcAlpha);
+            return Colors.create(srcBlue, srcGreen, srcRed, srcAlpha);
           // TODO: factions? Configurable in INI file? etc
           default:
             return src;

@@ -24,7 +24,7 @@ public class Colors {
      * @return
      */
     public static Color create(int r, int g, int b, int a) {
-        String key = "" + r + "-" + g + "-" + "b" + "-" + a;
+        String key = "" + r + "-" + g + "-" + b + "-" + a;
         if (!colorMap.containsKey(key)) {
             colorMap.put(key, makeColor(r, g, b, a));
         }
