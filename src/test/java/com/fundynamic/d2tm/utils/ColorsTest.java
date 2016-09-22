@@ -51,14 +51,14 @@ public class ColorsTest {
     public void createsNewColorWhenNotCachedOnDifferentGreen() {
         Color color1 = Colors.create(234, 23, 142, 32);
         Color color2 = Colors.create(234, 21, 142, 32); // different green
-        Assert.assertTrue(color1 != color2);
+        Assert.assertNotSame(color1, color2);
     }
 
     @Test
     public void createsNewColorWhenNotCachedOnDifferentBlue() {
         Color color1 = Colors.create(234, 23, 142, 32);
         Color color2 = Colors.create(234, 23, 141, 32); // different blue
-        Assert.assertTrue(color1 != color2);
+        Assert.assertNotSame(color1, color2);
     }
 
 }

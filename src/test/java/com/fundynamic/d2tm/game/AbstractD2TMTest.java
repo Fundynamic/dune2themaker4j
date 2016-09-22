@@ -36,7 +36,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.Game.getResolution;
-import static com.fundynamic.d2tm.game.state.PlayingState.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -128,10 +127,10 @@ public abstract class AbstractD2TMTest {
         guiComposite.addGuiElement(battleField);
 
         sidebar = new Sidebar(
-                screenResolution.getXAsInt() - WIDTH_OF_SIDEBAR,
-                HEIGHT_OF_TOP_BAR,
-                WIDTH_OF_SIDEBAR,
-                screenResolution.getYAsInt() - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
+                screenResolution.getXAsInt() - PlayingState.WIDTH_OF_SIDEBAR,
+                PlayingState.HEIGHT_OF_TOP_BAR,
+                PlayingState.WIDTH_OF_SIDEBAR,
+                screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_BOTTOM_BAR + PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
         );
 
         guiComposite.addGuiElement(sidebar);
