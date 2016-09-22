@@ -35,7 +35,7 @@ public class SidebarTest extends AbstractD2TMTest {
     public static final int STRUCTURE_MAP_COORDINATE_Y = 10;
 
     @Test
-    public void SelectingConstructionYardActivatesSidebar() {
+    public void selectingConstructionYardActivatesSidebar() {
         // Place structure
         MapCoordinate mapCoordinate = MapCoordinate.create(STRUCTURE_MAP_COORDINATE_X, STRUCTURE_MAP_COORDINATE_Y);
         Structure structure = entityRepository.placeStructureOnMap(
@@ -108,8 +108,8 @@ public class SidebarTest extends AbstractD2TMTest {
         MapCoordinate mapCoordinateToTheRight = MapCoordinate.create(mapCoordinate.getXAsInt() + 2, mapCoordinate.getYAsInt());
 
         Coordinate coordinateRightOfConstyard = mapCoordinateToTheRight.toCoordinate().add(new Vector2D(1, 1)); // one pixel
-        int structurePlacementX = mapCoordinateToTheRight.getXAsInt();
-        int structurePlacementY = PlayingState.HEIGHT_OF_TOP_BAR + mapCoordinateToTheRight.getYAsInt();
+        int structurePlacementX = coordinateRightOfConstyard.getXAsInt();
+        int structurePlacementY = PlayingState.HEIGHT_OF_TOP_BAR + coordinateRightOfConstyard.getYAsInt();
 
         // move the mouse to that spot on the battlefield
         mouse.movedTo(Vector2D.create(structurePlacementX, structurePlacementY));
