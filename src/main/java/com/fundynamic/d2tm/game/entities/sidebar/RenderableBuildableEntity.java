@@ -1,12 +1,10 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
-import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
 import com.fundynamic.d2tm.utils.SlickUtils;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 

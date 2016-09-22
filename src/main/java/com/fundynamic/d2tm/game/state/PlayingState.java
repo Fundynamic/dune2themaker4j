@@ -1,7 +1,10 @@
 package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
@@ -17,7 +20,6 @@ import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
-import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;

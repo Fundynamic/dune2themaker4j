@@ -8,7 +8,6 @@ import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;

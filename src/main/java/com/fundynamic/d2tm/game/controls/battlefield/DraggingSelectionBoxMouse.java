@@ -3,7 +3,10 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.EntitiesSet;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Rectangle;

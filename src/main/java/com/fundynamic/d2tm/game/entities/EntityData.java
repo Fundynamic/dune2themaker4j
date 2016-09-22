@@ -10,7 +10,8 @@ import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>Overview</h1>

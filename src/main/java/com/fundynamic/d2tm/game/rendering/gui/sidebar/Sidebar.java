@@ -3,8 +3,6 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
-import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

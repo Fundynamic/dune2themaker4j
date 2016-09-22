@@ -11,8 +11,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * This is a fairly big test:
  * - It assumes a game is set up in 800X600 resolution, with a sidebar and a battlefield (like the 'real game')

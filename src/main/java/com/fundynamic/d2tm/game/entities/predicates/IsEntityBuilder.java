@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
-import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Predicate;
 
