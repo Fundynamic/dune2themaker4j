@@ -1,6 +1,10 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -34,6 +38,7 @@ public class EntitiesData {
     // structures
     public static String CONSTRUCTION_YARD = "CONSTYARD";
     public static String REFINERY = "REFINERY";
+    public static String WINDTRAP = "WINDTRAP";
 
     // projectiles
     public static String BULLET = "RIFLE";
@@ -76,26 +81,36 @@ public class EntitiesData {
     }
 
     /**
-     * Create and add structure to this collection.
+     * Create and add a Structure EntityData to this collection.
      *
-     * @param id
-     * @param pathToImage
-     * @param widthInPixels
-     * @param heightInPixels
-     * @param sight
-     * @param hitPoints
-     * @param explosionId
      * @throws SlickException
      */
-    public void addStructure(String id, String pathToImage, int widthInPixels, int heightInPixels, int sight, int hitPoints, String explosionId) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.STRUCTURE, sight, 0F, hitPoints);
+    public EntityData addStructure(IniDataStructure iniDataStructure) throws SlickException {
+        EntityData entityData = createEntity(
+                iniDataStructure.id,
+                iniDataStructure.image,
+                null,
+                iniDataStructure.width,
+                iniDataStructure.height,
+                EntityType.STRUCTURE,
+                iniDataStructure.sight,
+                0F,
+                iniDataStructure.hitpoints
+        );
 
-        if (!idProvided(explosionId)) {
-            if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
-                throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
+        entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
+        entityData.buildTimeInSeconds = iniDataStructure.buildTimeInSeconds;
+        entityData.buildList = iniDataStructure.buildList;
+
+        if (!idProvided(iniDataStructure.explosion)) {
+            if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
+                throw new IllegalArgumentException("structure " + iniDataStructure.id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
             }
-            entity.explosionId = explosionId;
+            entityData.explosionId = iniDataStructure.explosion;
         }
+        entityData.buildIcon = loadImage(iniDataStructure.buildIcon);
+
+        return entityData;
     }
 
     public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float animationSpeed, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
@@ -148,9 +163,12 @@ public class EntitiesData {
         if (StringUtils.isEmpty(pathToImage)) {
             return null;
         }
-        return new Image(pathToImage);
+        return createSlickImage(pathToImage);
     }
 
+    protected Image createSlickImage(String pathToImage) throws SlickException {
+        return new Image(pathToImage);
+    }
 
     public EntityData getParticle(String id) {
         return getEntityData(EntityType.PARTICLE, id);
@@ -171,7 +189,7 @@ public class EntitiesData {
             getEntityData(entityType, id);
             return true;
         } catch (EntityNotFoundException e) {
-//            System.out.println(e);
+//            System.err.println(e);
             return false;
         }
     }

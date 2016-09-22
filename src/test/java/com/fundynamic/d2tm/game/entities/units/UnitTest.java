@@ -3,7 +3,11 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.EntitiesSet;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
@@ -53,12 +57,12 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
-        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(unit.shouldMove());
+        Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Assert.assertFalse(cpuUnit.shouldMove());
 
-        unit.takeDamage(1, null); // null means unknown entity
+        cpuUnit.takeDamage(1, null); // null means unknown entity
 
-        Assert.assertTrue(unit.shouldMove());
+        Assert.assertTrue(cpuUnit.shouldMove());
     }
 
     @Test

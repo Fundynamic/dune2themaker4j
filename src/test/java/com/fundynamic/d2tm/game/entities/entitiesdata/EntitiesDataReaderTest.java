@@ -1,5 +1,8 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -27,9 +30,10 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsStructureFromIniFile() {
+    public void readsBuildingStructureFromIniFile() {
         readFromTestRulesIni();
-        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, "CONSTYARD");
+
+        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
         assertThat(constyard, is(not(nullValue())));
         assertThat(constyard.hitPoints, is(230));
         assertThat(constyard.image, is(not(nullValue())));
@@ -37,11 +41,31 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.getHeight(), is(64));
         assertThat(constyard.sight, is(4));
         assertThat(constyard.explosionId, is("BOOM"));
+        assertThat(constyard.buildIcon, is(not(nullValue())));
+        assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
+    }
+
+    @Test
+    public void readsSimpleStructureFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
+        assertThat(constyard, is(not(nullValue())));
+        assertThat(constyard.hitPoints, is(283));
+        assertThat(constyard.image, is(not(nullValue())));
+        assertThat(constyard.getWidth(), is(64));
+        assertThat(constyard.getHeight(), is(64));
+        assertThat(constyard.sight, is(4));
+        assertThat(constyard.explosionId, is("BOOM"));
+        assertThat(constyard.buildIcon, is(not(nullValue())));
+        assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(constyard.buildTimeInSeconds, is(5.0f));
     }
 
     @Test
     public void readsUnitFromIniFile() {
         readFromTestRulesIni();
+
         EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
         assertThat(quad, is(not(nullValue())));
         assertThat(quad.image, is(not(nullValue())));
@@ -60,6 +84,7 @@ public class EntitiesDataReaderTest {
     @Test
     public void readsWeaponsFromIniFile() {
         readFromTestRulesIni();
+
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
@@ -73,6 +98,7 @@ public class EntitiesDataReaderTest {
     @Test
     public void readsExplosionFromIniFile() {
         readFromTestRulesIni();
+
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
         assertThat(boom.image, is(not(nullValue())));

@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.utils.Colors;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Color;
@@ -32,7 +34,7 @@ public class RecolorerTest {
 
     @Test
     public void shouldNotModifyColorWhenItIsAnUnknownColorToRecolor() {
-        Color color = new Color(255, 255, 255);
+        Color color = Colors.WHITE;
 
         assertThat(recolorer.isColorToRecolor(color), is(false));
 
@@ -53,7 +55,7 @@ public class RecolorerTest {
         for (Color color : colorsToRecolor) {
             Color newColor = recolorer.recolorToFactionColor(color, Recolorer.FactionColor.BLUE);
             Color expectedColor = new Color(color.getBlue(), color.getGreen(), color.getRed(), color.getAlpha());
-            assertThat(newColor, is(expectedColor));
+            Assert.assertEquals("Expected " + Colors.toString(expectedColor) + " but got " + Colors.toString(newColor), expectedColor, newColor);
         }
     }
 

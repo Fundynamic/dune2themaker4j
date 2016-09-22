@@ -116,8 +116,10 @@ public class MapEditor {
 
         int TILE_SIZE = 32;
         float halfATile = TILE_SIZE / 2;
+
         // convert to absolute pixel coordinates
-        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(centerPosition.getXAsInt(), centerPosition.getYAsInt()).
+        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(
+                centerPosition.getXAsInt(), centerPosition.getYAsInt()).
                 add(Vector2D.create(halfATile, halfATile));
 
         double centerX = asPixelsCentered.getX();

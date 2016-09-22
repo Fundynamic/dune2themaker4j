@@ -10,9 +10,12 @@ import org.newdawn.slick.SlickException;
 
 public class Cell {
 
+    // TODO: decide which TILE_SIZE wins and refer to that one
     public static final int TILE_SIZE = 32;
 
     private final Map map;
+
+    // TODO: Can be removed in favor of MapCoordinate?
     private final int x;
     private final int y;
 
@@ -76,6 +79,11 @@ public class Cell {
         return map.getCell(this.x + 1, this.y);
     }
 
+    /**
+     * Returns the absolute map coordinates in pixels (aka a {@link Coordinate} by converting its internal
+     * {@link MapCoordinate} using {@link MapCoordinate#toCoordinate()}
+     * @return
+     */
     public Coordinate getCoordinates() {
         return getMapCoordinate().toCoordinate();
     }
@@ -85,6 +93,10 @@ public class Cell {
         return this.x == other.getX() && y == other.getY();
     }
 
+    /**
+     * Returns its internal {@link MapCoordinate} position (on the {@link Map}. No conversion is being done.
+     * @return
+     */
     public MapCoordinate getMapCoordinate() {
         return mapCoordinate;
     }

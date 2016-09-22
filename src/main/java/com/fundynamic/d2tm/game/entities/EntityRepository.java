@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
@@ -13,6 +14,8 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -20,6 +23,16 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.Set;
 
+/**
+ * <h1>General purpose</h1>
+ * <p>
+ *     An entity repository holds all {@link EntitiesData} and is able to construct new {@link Entity}'s on the provided
+ *     {@link EntitiesSet}. This set is also used on (for instance) the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
+ * </p>
+ * <p>
+ *     This class is responsible for the <em>creation</em> of entities as well as the removal of entities.
+ * </p>
+ */
 public class EntityRepository {
 
     private final Map map;
@@ -41,12 +54,12 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public Unit placeUnitOnMap(Coordinate coordinate, String id, Player player) {
-        return (Unit) placeOnMap(coordinate, EntityType.UNIT, id, player);
+    public Unit placeUnitOnMap(MapCoordinate coordinate, String id, Player player) {
+        return (Unit) placeOnMap(coordinate.toCoordinate(), EntityType.UNIT, id, player);
     }
 
-    public Structure placeStructureOnMap(Coordinate coordinate, String id, Player player) {
-        return (Structure) placeOnMap(coordinate, EntityType.STRUCTURE, id, player);
+    public Structure placeStructureOnMap(MapCoordinate coordinate, String id, Player player) {
+        return (Structure) placeOnMap(coordinate.toCoordinate(), EntityType.STRUCTURE, id, player);
     }
 
     /**

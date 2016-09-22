@@ -37,6 +37,7 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
         // dependencies from dependencies from battlefield :/
         this.player = mouse.getControllingPlayer();
+        this.mouseCoordinates = Vector2D.zero();
     }
 
     public abstract void leftClicked();
@@ -72,6 +73,10 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
         this.lastSelectedEntity = lastSelectedEntity;
     }
 
+    /**
+     * Returns the cell that the mouse is 'hovering over'. This method may return NULL!
+     * @return
+     */
     public Cell getHoverCell() {
         return hoverCell;
     }
@@ -90,13 +95,15 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
     }
 
     ///BATTLEFIELD HAS MOUSE STATE?
-    ///IT MAKES NO SENSE TO PUT IT IN MOUSE ITSELF BECAUSE THAT IS TO ABSTRACT
+    ///IT MAKES NO SENSE TO PUT IT IN MOUSE ITSELF BECAUSE THAT IS TOO ABSTRACT
     public Entity hoveringOverSelectableEntity() {
         if (hoverCell == null) return NullEntity.INSTANCE;
 
-        EntitiesSet entities = entityRepository.filter(Predicate.builder().
+        EntitiesSet entities = entityRepository.filter(
+                Predicate.builder().
                 vectorWithin(hoverCell.getCoordinates()).
-                isSelectable());
+                isSelectable()
+        );
 
         Entity entity = entities.getFirst();
         if (entity == null) return NullEntity.INSTANCE;

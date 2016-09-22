@@ -1,14 +1,13 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import static com.fundynamic.d2tm.game.entities.EntitiesData.UNKNOWN;
 
 /**
  * Reads the 'rules.ini' file and extracts an EntitiesData data structure.
@@ -58,13 +57,21 @@ public class EntitiesDataReader {
         String[] strings = structures.childrenNames();
         for (String id : strings) {
             Profile.Section struct = structures.getChild(id);
-            entitiesData.addStructure(id,
-                    struct.get("image", String.class),
-                    struct.get("width", Integer.class),
-                    struct.get("height", Integer.class),
-                    struct.get("sight", Integer.class),
-                    struct.get("hitpoints", Integer.class),
-                    struct.get("explosion", String.class, UNKNOWN));
+            entitiesData.addStructure(
+                    new IniDataStructure(
+                        id,
+                        struct.get("image", String.class, null),
+                        struct.get("width", Integer.class),
+                        struct.get("height", Integer.class),
+                        struct.get("sight", Integer.class),
+                        struct.get("hitpoints", Integer.class),
+                        struct.get("explosion", String.class, EntitiesData.UNKNOWN),
+                        struct.get("buildIcon", String.class, null),
+                        struct.get("builds", String.class, ""),
+                        struct.get("buildtime", Float.class, 0F),
+                        struct.get("buildlist", String.class, "")
+                    )
+            );
         }
     }
 
@@ -86,7 +93,7 @@ public class EntitiesDataReader {
                     struct.get("attackrate", Float.class, 0f),
                     struct.get("attackrange", Float.class, 0f),
                     struct.get("hitpoints", Integer.class, 0),
-                    struct.get("weapon", String.class, UNKNOWN),
+                    struct.get("weapon", String.class, EntitiesData.UNKNOWN),
                     struct.get("explosion", String.class));
         }
     }

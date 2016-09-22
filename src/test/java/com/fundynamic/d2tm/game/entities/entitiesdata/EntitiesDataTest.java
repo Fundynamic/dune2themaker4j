@@ -1,8 +1,13 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -78,8 +83,25 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String idOfEntity = "1";
         int sight = 3;
         String explosionId = "UNKNOWN";
-        entitiesData.addStructure(idOfEntity, "constyard.png", widthInPixels, heightInPixels, sight, 1000, explosionId);
 
+        // add
+        entitiesData.addStructure(
+                new IniDataStructure(
+                        idOfEntity,
+                        "constyard.png",
+                        widthInPixels,
+                        heightInPixels,
+                        sight,
+                        1000,
+                        explosionId,
+                        "icon_constyard.bmp",
+                        "",
+                        1.0F,
+                        "WINDTRAP,REFINERY"
+                )
+        );
+
+        // get & assert
         EntityData data = entitiesData.getEntityData(EntityType.STRUCTURE, idOfEntity);
 
         assertEquals(EntityType.STRUCTURE, data.type);
@@ -90,13 +112,16 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(sight, data.sight);
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
+        assertEquals(EntityBuilderType.NONE, data.entityBuilderType);
+        assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
+        assertEquals("WINDTRAP,REFINERY", data.buildList);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1"); // success!
-        entitiesData.addStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1"); // boom!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp", "", 1.0F, "")); // success!
+        entitiesData.addStructure(new IniDataStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp", "", 1.0F, "")); // boom!
     }
 
 

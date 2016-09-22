@@ -1,10 +1,16 @@
 package com.fundynamic.d2tm.game.rendering.gui;
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.PlacingStructureMouse;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
@@ -34,7 +40,7 @@ import java.util.List;
  *     are propagated to {@link #activeGuiElement}.
  * </p>
  */
-public class GuiComposite implements Renderable, Updateable, MouseBehavior {
+public class GuiComposite implements Renderable, Updateable, MouseBehavior, BattleFieldInteractable {
 
     public static final int PIXELS_NEAR_BORDER = 2;
 
@@ -48,6 +54,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
     private GuiElement activeGuiElement = NullGuiElement.getInstance();
 
     private BattleField battleField;
+    private Sidebar sidebar;
 
     @Override
     public void render(Graphics graphics) {
@@ -122,13 +129,62 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior {
     }
 
     public void addGuiElement(GuiElement guiElement) {
+        assignBattlefieldPropertyIfApplicable(guiElement);
+        assignSidebarPropertyIfApplicable(guiElement);
+
+        guiElement.setGuiComposite(this);
+        guiElements.add(guiElement);
+    }
+
+    public void assignSidebarPropertyIfApplicable(GuiElement guiElement) {
+        if (guiElement instanceof Sidebar) {
+            if (sidebar != null) {
+                throw new IllegalArgumentException("There cannot be more than one sidebar gui element");
+            }
+            sidebar = (Sidebar) guiElement;
+        }
+    }
+
+    public void assignBattlefieldPropertyIfApplicable(GuiElement guiElement) {
         if (guiElement instanceof BattleField) {
             if (battleField != null) {
                 throw new IllegalArgumentException("There cannot be more than one battlefield gui element");
             }
             battleField = (BattleField) guiElement;
         }
-        guiElements.add(guiElement);
     }
 
+    /**
+     * Event: An entity builder is selected
+     * @param entityBuilder
+     */
+    public void entityBuilderSelected(Entity entityBuilder) {
+        if (!entityBuilder.isEntityBuilder()) {
+            throw new IllegalArgumentException("Can only select entities which implement entity builder from here on");
+        }
+        if (entityBuilder.isEntityTypeStructure()) {
+            sidebar.showEntityBuilderGuiFor((EntityBuilder) entityBuilder);
+        }
+    }
+
+    /**
+     * Event: a buildable Entity which should be placed is selected.
+     * @param buildableEntity
+     */
+    public void wantsToPlaceBuildableEntityOnBattlefield(BuildableEntity buildableEntity) {
+        battleField.setMouseBehavior(new PlacingStructureMouse(battleField, buildableEntity.getEntityData()));
+    }
+
+    /**
+     * Event: an entity is placed on the map
+     * @param entity
+     */
+    public void entityPlacedOnMap(Entity entity) {
+        sidebar.entityPlacedOnMap(entity);
+        battleField.setMouseBehavior(new NormalMouse(battleField));
+    }
+
+    public void allEntityBuildersDeSelected() {
+        sidebar.hideEntityBuilderGui();
+    }
 }

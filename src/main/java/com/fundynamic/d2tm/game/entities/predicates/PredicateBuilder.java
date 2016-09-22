@@ -1,8 +1,12 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
 
-import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.LinkedList;

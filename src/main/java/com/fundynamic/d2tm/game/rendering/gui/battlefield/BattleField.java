@@ -4,14 +4,13 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.CellBasedMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Rectangle;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -24,7 +23,7 @@ import org.newdawn.slick.SlickException;
  * </p>
  *
  */
-public class BattleField extends GuiElement implements CellBasedMouseBehavior {
+public class BattleField extends GuiElement implements CellBasedMouseBehavior, EntityEventsListener {
 
     // DATA RELATED
     private Map map;
@@ -86,16 +85,19 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
     public void render(Graphics graphics) {
         try {
             // TODO: Merge the culling into this viewport class(?)
+
+            // render terrain
             cellViewportRenderer.render(bufferGraphics, viewingVector, cellTerrainRenderer);
 
-            // 1) Select entities to draw
-            // 2) Decide if there is more to draw (from the entities)
-            // 3) draw!
-            RenderQueue renderQueue = getEntitiesToDraw();
+            RenderQueue renderQueue = getEntitiesToDraw(); // decide which entities to draw
+
+            // draw entities
             renderQueue.render(bufferGraphics);
 
+            // Render shroud
             cellViewportRenderer.render(bufferGraphics, viewingVector, cellShroudRenderer);
 
+            // Draw mouse
             mouseBehavior.render(bufferGraphics);
 
             if (hasFocus) {
@@ -162,14 +164,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
 
-    // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
-    // least not the use them in the non-test code.
-    public Vector2D getViewingVector() {
-        return viewingVector;
-    }
-
-    public Map getMap() {
-        return this.map;
+    public Coordinate translateAbsoluteMapCoordinateToViewportCoordinate(Coordinate absoluteMapCoordinate) {
+        return new Coordinate(absoluteMapCoordinate.min(viewingVector));
     }
 
     public Coordinate translateViewportCoordinateToAbsoluteMapCoordinate(Vector2D positionOnViewport) {
@@ -263,5 +259,43 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior {
 
     public void setViewingVector(Vector2D viewingVector) {
         this.viewingVector = viewingVector;
+    }
+
+    @Override
+    public void entitiesSelected(EntitiesSet entities) {
+        System.out.println("Battlefield gets told that " + entities + " are selected");
+        EntitiesSet entityBuilders = entities.filter(Predicate.isEntityBuilder());
+
+        if (entityBuilders.size() == 1) {
+            Entity first = entities.getFirst();
+            if (first.isEntityBuilder()) {
+                guiComposite.entityBuilderSelected(first);
+            }
+        } else {
+            guiComposite.allEntityBuildersDeSelected();
+        }
+    }
+
+    @Override
+    public void entitiesDeselected(EntitiesSet entities) {
+        System.out.println("Battlefield gets told that " + entities + " are de-selected");
+    }
+
+    // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
+    // least not the use them in the non-test code.
+    public Vector2D getViewingVector() {
+        return viewingVector;
+    }
+
+    public Map getMap() {
+        return this.map;
+    }
+
+    /**
+     * Event: An entity is placed on the map.
+     * @param entity
+     */
+    public void entityPlacedOnMap(Entity entity) {
+        guiComposite.entityPlacedOnMap(entity);
     }
 }

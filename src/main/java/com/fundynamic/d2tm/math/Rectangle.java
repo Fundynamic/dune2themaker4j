@@ -1,6 +1,4 @@
-package com.fundynamic.d2tm.game.entities;
-
-import com.fundynamic.d2tm.math.Vector2D;
+package com.fundynamic.d2tm.math;
 
 public class Rectangle {
 
@@ -43,6 +41,14 @@ public class Rectangle {
         boolean result = vec.getX() >= topLeft.getX() && vec.getX() < bottomRight.getX() && vec.getY() >= topLeft.getY() && vec.getY() < bottomRight.getY();
 //        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
         return result;
+    }
+
+    public int getTopLeftXAsInt() {
+        return topLeft.getXAsInt();
+    }
+
+    public int getTopLeftYAsInt() {
+        return topLeft.getYAsInt();
     }
 
     public Vector2D getTopLeft() {

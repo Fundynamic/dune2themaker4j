@@ -6,8 +6,25 @@ import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+/**
+ * An entities set is an extension of a {@link HashSet} with type {@link Entity}. It provides easy to use methods
+ * and filters.
+ */
 public class EntitiesSet extends HashSet<Entity> {
+
+    public static EntitiesSet fromSet(Set<Entity> entities) {
+        EntitiesSet result = new EntitiesSet();
+        result.addAll(entities);
+        return result;
+    }
+
+    public static EntitiesSet fromSingle(Entity entity) {
+        EntitiesSet result = new EntitiesSet();
+        result.add(entity);
+        return result;
+    }
 
     public EntitiesSet filter(Predicate<Entity> predicate) {
         EntitiesSet result = new EntitiesSet();
@@ -61,4 +78,5 @@ public class EntitiesSet extends HashSet<Entity> {
             entityHandler.handle(entity);
         }
     }
+
 }

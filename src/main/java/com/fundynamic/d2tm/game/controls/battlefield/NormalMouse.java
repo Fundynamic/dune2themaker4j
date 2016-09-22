@@ -2,8 +2,8 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.controls.DraggingSelectionBoxMouse;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
@@ -37,33 +37,38 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
 
     protected void selectEntity(Entity entity) {
         if (!entity.isSelectable()) return;
-        deselectCurrentlySelectedEntity();
+        deselectCurrentlySelectedEntities();
         setLastSelectedEntity(entity);
         ((Selectable) entity).select();
+        battleField.entitiesSelected(EntitiesSet.fromSingle(entity));
     }
 
     @Override
     public void rightClicked() {
-        deselectCurrentlySelectedEntity();
+        deselectCurrentlySelectedEntities();
         setMouseBehavior(new NormalMouse(battleField));
         setLastSelectedEntity(null);
     }
 
-    protected void deselectCurrentlySelectedEntity() {
+    protected void deselectCurrentlySelectedEntities() {
         Set<Entity> entities = entityRepository.filter(
                 Predicate.builder().
                         forPlayer(player).
                         isSelected().
                         build());
-        for (Entity entity : entities) {
-            ((Selectable) entity).deselect();
-        }
 
         // here for old stuff
         Entity lastSelectedEntity = getLastSelectedEntity();
         if (lastSelectedEntity != null && lastSelectedEntity.isSelectable()) {
-            ((Selectable) lastSelectedEntity).deselect();
+            entities.add(lastSelectedEntity);
         }
+
+        for (Entity entity : entities) {
+            ((Selectable) entity).deselect();
+        }
+
+        // Tell battlefield these entities got deselected
+        battleField.entitiesDeselected(EntitiesSet.fromSet(entities));
 
         mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
     }

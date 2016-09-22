@@ -1,7 +1,12 @@
 package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
 import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
@@ -11,10 +16,11 @@ import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
-import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -43,9 +49,12 @@ public class PlayingState extends BasicGameState {
 
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;// pixels
+
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
     public static final int HEIGHT_OF_BOTTOM_BAR = 32;
+    public static final int HEIGHT_OF_MINIMAP = 128;
     public static final int WIDTH_OF_SIDEBAR = 160;
+
     private MapEditor mapEditor;
     private Map map;
 
@@ -86,8 +95,30 @@ public class PlayingState extends BasicGameState {
 
         guiComposite.addGuiElement(battlefield);
 
+        // topbar
         guiComposite.addGuiElement(new DummyGuiElement(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR));
-        guiComposite.addGuiElement(new DummyGuiElement(SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR, WIDTH_OF_SIDEBAR, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR));
+
+        // sidebar
+        guiComposite.addGuiElement(
+                new Sidebar(
+                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
+                        HEIGHT_OF_TOP_BAR,
+                        WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
+                )
+        );
+
+        // minimap
+        guiComposite.addGuiElement(
+                new DummyGuiElement(
+                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
+                        WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR
+                )
+        );
+
+        // bottombar
         guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));
@@ -149,15 +180,17 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
-        //TODO: read from SCENARIO.INI file
+        // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TANK, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(4 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TRIKE, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(5 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.QUAD, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 7), EntitiesData.REFINERY, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 9), EntitiesData.WINDTRAP, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), EntitiesData.TANK, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(4, 3), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(5, 3), EntitiesData.QUAD, human);
 
         // cpu entities
-        entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
     @Override

@@ -45,4 +45,8 @@ public abstract class Predicate<T> {
         }
         return orPredicate;
     }
+
+    public static Predicate<Entity> isEntityBuilder() {
+        return IsEntityBuilder.instance;
+    }
 }

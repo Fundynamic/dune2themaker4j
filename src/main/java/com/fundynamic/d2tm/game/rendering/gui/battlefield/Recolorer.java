@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
+import com.fundynamic.d2tm.utils.Colors;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ImageBuffer;
@@ -13,6 +14,8 @@ public class Recolorer {
 
     public Recolorer() {
         this.colorsToRecolor = new ArrayList<>();
+        // TODO: Make these configurable via INI file? So that you can configure which RGB's are identified as 'team colors'
+        // TODO: and must be redrawn?
         colorsToRecolor.add(new Color(214, 0, 0));
         colorsToRecolor.add(new Color(182, 0, 0));
         colorsToRecolor.add(new Color(153, 0, 0));
@@ -46,15 +49,21 @@ public class Recolorer {
           return src;
         }
 
+        int srcGreen = src.getGreen();
+        int srcRed = src.getRed();
+        int srcBlue = src.getBlue();
+        int srcAlpha = src.getAlpha();
+
         switch (factionColor) {
           case GREEN:
-            return new Color(src.getGreen(), src.getRed(), src.getBlue(), src.getAlpha());
+            return Colors.create(srcGreen, srcRed, srcBlue, srcAlpha);
           case BLUE:
-            return new Color(src.getBlue(), src.getGreen(), src.getRed(), src.getAlpha());
+            return Colors.create(srcBlue, srcGreen, srcRed, srcAlpha);
           // TODO: factions? Configurable in INI file? etc
           default:
             return src;
         }
+
     }
 
     public boolean isColorToRecolor(Color src) {

@@ -2,13 +2,21 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
+import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
-public class Structure extends Entity implements Selectable, Destructible, Focusable {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
+
+    private EntityBuilder entityBuilder;
 
     // Behaviors
     private final FadingSelection fadingSelection;
@@ -31,6 +39,19 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
+
+        switch (entityData.entityBuilderType) {
+            case STRUCTURES:
+                List<EntityData> entityDatas = new ArrayList<>();
+                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                    entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
+                }
+
+                this.entityBuilder = new EntityBuilderImpl(entityDatas);
+                break;
+            default:
+                this.entityBuilder = new NullEntityBuilder();
+        }
     }
 
     public Image getSprite() {
@@ -43,6 +64,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
         float offset = deltaInSeconds * ANIMATION_FRAMES_PER_SECOND;
         animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
@@ -54,6 +76,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
                 entityRepository.explodeAt(centeredPos, entityData, player);
             }
+        }
+
+        if (isBuildingEntity()) {
+            this.entityBuilder.update(deltaInSeconds);
         }
     }
 
@@ -130,5 +156,35 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     public boolean hasFocus() {
         return fadingSelection.hasFocus();
+    }
+
+    @Override
+    public List<BuildableEntity> getBuildList() {
+        return this.entityBuilder.getBuildList();
+    }
+
+    @Override
+    public boolean isBuildingEntity() {
+        return this.entityBuilder.isBuildingEntity();
+    }
+
+    @Override
+    public void buildEntity(BuildableEntity buildableEntity) {
+        this.entityBuilder.buildEntity(buildableEntity);
+    }
+
+    @Override
+    public boolean isAwaitingPlacement() {
+        return this.entityBuilder.isAwaitingPlacement();
+    }
+
+    @Override
+    public void entityIsDelivered(Entity entity) {
+        this.entityBuilder.entityIsDelivered(entity);
+    }
+
+    @Override
+    public boolean isBuildingEntity(BuildableEntity buildableEntity) {
+        return this.entityBuilder.isBuildingEntity(buildableEntity);
     }
 }
