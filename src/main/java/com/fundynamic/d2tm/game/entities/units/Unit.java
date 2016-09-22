@@ -328,7 +328,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
-        map.revealShroudFor(this.coordinate, getSight(), player);
+        map.revealShroudFor(this.coordinate.toMapCoordinate(), getSight(), player);
     }
 
     @Override

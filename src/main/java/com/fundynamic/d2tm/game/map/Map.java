@@ -129,8 +129,8 @@ public class Map {
     }
 
     public Entity revealShroudFor(Entity entity) {
-        List<Coordinate> allCoordinates = entity.getAllCellsAsCoordinates();
-        for (Coordinate coordinate : allCoordinates) {
+        List<MapCoordinate> allCoordinates = entity.getAllCellsAsCoordinates();
+        for (MapCoordinate coordinate : allCoordinates) {
             revealShroudFor(coordinate, entity.getSight(), entity.getPlayer());
         }
         return entity;
@@ -193,7 +193,9 @@ public class Map {
 
         float halfATile = TILE_SIZE / 2;
         // convert to absolute pixel coordinates
-        Vector2D asPixelsCentered = getCellCoordinatesInAbsolutePixels(x, y).
+        Vector2D asPixelsCentered =
+//                getCellCoordinatesInAbsolutePixels(x, y).
+                MapCoordinate.create(x, y).toCoordinate().
                 add(Vector2D.create(halfATile, halfATile));
 
         double centerX = asPixelsCentered.getX();
@@ -209,16 +211,17 @@ public class Map {
                 double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
                 // convert back the pixel coordinates back to a cell
-                Cell cell = getCellByAbsoluteMapCoordinates(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
+                Cell cell = getCellByAbsoluteMapCoordinates(
+                        Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY))
+                );
 
                 player.revealShroudFor(cell.getMapCoordinate());
             }
         }
     }
 
-    public void revealShroudFor(Coordinate coordinate, int range, Player player) {
-        MapCoordinate mapCoordinates = coordinate.toMapCoordinate();
-        revealShroudFor(mapCoordinates.getXAsInt(), mapCoordinates.getYAsInt(), range, player);
+    public void revealShroudFor(MapCoordinate mapCoordinate, int range, Player player) {
+        revealShroudFor(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt(), range, player);
     }
 
     public void revealAllShroudFor(Player player) {

@@ -14,6 +14,7 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
@@ -53,12 +54,12 @@ public class EntityRepository {
         this.entitiesSet = new EntitiesSet();
     }
 
-    public Unit placeUnitOnMap(Coordinate coordinate, String id, Player player) {
-        return (Unit) placeOnMap(coordinate, EntityType.UNIT, id, player);
+    public Unit placeUnitOnMap(MapCoordinate coordinate, String id, Player player) {
+        return (Unit) placeOnMap(coordinate.toCoordinate(), EntityType.UNIT, id, player);
     }
 
-    public Structure placeStructureOnMap(Coordinate coordinate, String id, Player player) {
-        return (Structure) placeOnMap(coordinate, EntityType.STRUCTURE, id, player);
+    public Structure placeStructureOnMap(MapCoordinate coordinate, String id, Player player) {
+        return (Structure) placeOnMap(coordinate.toCoordinate(), EntityType.STRUCTURE, id, player);
     }
 
     /**

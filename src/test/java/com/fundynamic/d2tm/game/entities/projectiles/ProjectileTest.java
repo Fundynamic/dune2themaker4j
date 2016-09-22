@@ -196,7 +196,7 @@ public class ProjectileTest extends AbstractD2TMTest {
         projectile.moveTo(target);
 
         // Place unit on target, so that it will be hit!
-        Unit unit = entityRepository.placeUnitOnMap(target, "QUAD", player);
+        Unit unit = entityRepository.placeUnitOnMap(target.toMapCoordinate(), "QUAD", player);
 
         projectile.update(1);
         assertThat(projectile.isDestroyed(), is(false)); // it is very close, or at target, next update will 'destroy' it

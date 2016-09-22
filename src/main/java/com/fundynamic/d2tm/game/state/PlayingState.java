@@ -18,6 +18,7 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -46,10 +47,12 @@ public class PlayingState extends BasicGameState {
 
     private Predicate updatableEntitiesPredicate;
     private Predicate destroyedEntitiesPredicate;// pixels
+
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
     public static final int HEIGHT_OF_BOTTOM_BAR = 32;
     public static final int HEIGHT_OF_MINIMAP = 128;
     public static final int WIDTH_OF_SIDEBAR = 160;
+
     private MapEditor mapEditor;
     private Map map;
 
@@ -177,15 +180,15 @@ public class PlayingState extends BasicGameState {
 
         // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 5 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, human);
-        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 7 * TILE_SIZE), EntitiesData.REFINERY, human);
-        entityRepository.placeStructureOnMap(Coordinate.create(5 * TILE_SIZE, 9 * TILE_SIZE), EntitiesData.WINDTRAP, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(3 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TANK, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(4 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.TRIKE, human);
-        entityRepository.placeUnitOnMap(Coordinate.create(5 * TILE_SIZE, 3 * TILE_SIZE), EntitiesData.QUAD, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 7), EntitiesData.REFINERY, human);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 9), EntitiesData.WINDTRAP, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), EntitiesData.TANK, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(4, 3), EntitiesData.TRIKE, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(5, 3), EntitiesData.QUAD, human);
 
         // cpu entities
-        entityRepository.placeStructureOnMap(Coordinate.create(57 * TILE_SIZE, 57 * TILE_SIZE), EntitiesData.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
     @Override

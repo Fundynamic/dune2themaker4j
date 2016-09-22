@@ -95,13 +95,15 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
     }
 
     ///BATTLEFIELD HAS MOUSE STATE?
-    ///IT MAKES NO SENSE TO PUT IT IN MOUSE ITSELF BECAUSE THAT IS TO ABSTRACT
+    ///IT MAKES NO SENSE TO PUT IT IN MOUSE ITSELF BECAUSE THAT IS TOO ABSTRACT
     public Entity hoveringOverSelectableEntity() {
         if (hoverCell == null) return NullEntity.INSTANCE;
 
-        EntitiesSet entities = entityRepository.filter(Predicate.builder().
+        EntitiesSet entities = entityRepository.filter(
+                Predicate.builder().
                 vectorWithin(hoverCell.getCoordinates()).
-                isSelectable());
+                isSelectable()
+        );
 
         Entity entity = entities.getFirst();
         if (entity == null) return NullEntity.INSTANCE;

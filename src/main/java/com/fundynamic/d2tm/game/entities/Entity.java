@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
@@ -173,7 +174,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.getHeightInCells();
     }
 
-    public List<Coordinate> getAllCellsAsCoordinates() {
+    public List<MapCoordinate> getAllCellsAsCoordinates() {
         return entityData.getAllCellsAsCoordinates(coordinate);
     }
 

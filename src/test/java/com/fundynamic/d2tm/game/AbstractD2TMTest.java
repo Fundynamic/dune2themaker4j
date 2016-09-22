@@ -20,6 +20,7 @@ import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
+import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -31,8 +32,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
-import static com.fundynamic.d2tm.Game.SCREEN_HEIGHT;
-import static com.fundynamic.d2tm.Game.SCREEN_WIDTH;
+import static com.fundynamic.d2tm.Game.getResolution;
 import static com.fundynamic.d2tm.game.state.PlayingState.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -45,9 +45,10 @@ public abstract class AbstractD2TMTest {
 
     public static Vector2D screenResolution = Game.getResolution();
 
-    public static Vector2D battlefieldSize = Vector2D.create(320, 200);
+    public static Vector2D battlefieldSize; // created later
     public static Vector2D battlefieldViewingVector = Vector2D.create(32, 32);
-    public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, 42);
+    public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, PlayingState.HEIGHT_OF_TOP_BAR);
+
     public static float battleFieldMoveSpeed = 2.0F;
     public static int battleFieldTileSize = Game.TILE_SIZE;
 
@@ -71,11 +72,10 @@ public abstract class AbstractD2TMTest {
 
     protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
     protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
+
     protected Map map;
     protected BattleField battleField;
     protected Sidebar sidebar;
-
-
     protected Mouse mouse;
     protected MouseListener listener;
     protected Shroud shroud;
@@ -105,6 +105,9 @@ public abstract class AbstractD2TMTest {
         Image bufferWithGraphics = mock(Image.class);
         Graphics bufferGraphics = mock(Graphics.class);
         when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
+
+        Vector2D guiAreas = Vector2D.create(PlayingState.WIDTH_OF_SIDEBAR, (PlayingState.HEIGHT_OF_TOP_BAR + PlayingState.HEIGHT_OF_BOTTOM_BAR));
+        battlefieldSize = getResolution().min(guiAreas);
 
         battleField = new BattleField(
                 battlefieldSize,
