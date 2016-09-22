@@ -19,7 +19,16 @@ import static org.junit.Assert.*;
  * - It reads THE REAL RULES.INI FILE!!
  * - It places a structure on the map, within view on the battlefield (map coordinate 10, 10)
  * - It moves the mouse to the structure, this triggers all kinds of 'active gui logic'
- * - It clicks left, so it selects it, this triggers all the 'communicate event through the active gui logic and so forth'
+ * - It clicks left mouse button, so it selects it, this triggers all the 'communicate event through the active gui logic and so forth'
+ * - Since CONSTYARD is now selected, it should now trigger all kinds of rendering logic for the sidebar
+ * - It moves the mouse to the sidebar, triggering sidebar activation logic.
+ * - It moves it into the sidebar upon the FIRST CONSTRUCTABLE ICON. This triggers yet more logic.
+ * - It clicks left mouse button, starting the construction of a REFINERY
+ * - It 'updates' the state for 10 seconds, making the construction complete.
+ * - It clicks left mouse button, again, to 'place the structure on map'
+ * - It moves the mouse BACK on the battlefield, RIGHT to the CONSTYARD
+ * - It clicks left mouse button, to place the structure
+ * - It asserts an entity has been constructed
 
  */
 public class SidebarTest extends AbstractD2TMTest {
