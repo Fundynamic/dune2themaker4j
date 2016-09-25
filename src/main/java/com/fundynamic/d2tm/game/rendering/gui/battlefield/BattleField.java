@@ -292,7 +292,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     /**
-     * Event: An entity is placed on the map.
+     * Event: An entity is placed on the map. The Battlefield propagates that to the guiComposite
      * @param entity
      */
     public void entityPlacedOnMap(Entity entity) {

@@ -2,9 +2,9 @@ package com.fundynamic.d2tm.game.entities.structures;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
-import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
-import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
+import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
@@ -41,25 +41,20 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
 
         List<EntityData> entityDatas = new ArrayList<>();
-        switch (entityData.entityBuilderType) {
-            case STRUCTURES:
-                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
-                    entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
-                }
-
-                this.entityBuilder = new EntityBuilderImpl(entityDatas);
-                break;
-            case UNITS:
-                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
-                    entityDatas.add(entityRepository.getEntityData(EntityType.UNIT, buildableEntity));
-                }
-
-                this.entityBuilder = new EntityBuilderImpl(entityDatas);
-                break;
-
-            default:
-                this.entityBuilder = new NullEntityBuilder();
+        if (entityData.entityBuilderType == EntityBuilderType.STRUCTURES) {
+            for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
+            }
         }
+
+        if (entityData.entityBuilderType == EntityBuilderType.UNITS) {
+            for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                entityDatas.add(entityRepository.getEntityData(EntityType.UNIT, buildableEntity));
+            }
+        }
+
+        this.entityBuilder = new SingleEntityBuilder(entityDatas);
+
     }
 
     public Image getSprite() {
@@ -86,7 +81,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        if (isBuildingEntity()) {
+        if (hasBuildingEntity()) {
             this.entityBuilder.update(deltaInSeconds);
         }
     }
@@ -167,18 +162,18 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public List<BuildableEntity> getBuildList() {
+    public List<AbstractBuildableEntity> getBuildList() {
         return this.entityBuilder.getBuildList();
     }
 
     @Override
-    public boolean isBuildingEntity() {
-        return this.entityBuilder.isBuildingEntity();
+    public boolean hasBuildingEntity() {
+        return this.entityBuilder.hasBuildingEntity();
     }
 
     @Override
-    public void buildEntity(BuildableEntity buildableEntity) {
-        this.entityBuilder.buildEntity(buildableEntity);
+    public void buildEntity(AbstractBuildableEntity placementBuildableEntity) {
+        this.entityBuilder.buildEntity(placementBuildableEntity);
     }
 
     @Override
@@ -187,12 +182,17 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
+    public boolean isAwaitingSpawning() {
+        return this.entityBuilder.isAwaitingSpawning();
+    }
+
+    @Override
     public void entityIsDelivered(Entity entity) {
         this.entityBuilder.entityIsDelivered(entity);
     }
 
     @Override
-    public boolean isBuildingEntity(BuildableEntity buildableEntity) {
-        return this.entityBuilder.isBuildingEntity(buildableEntity);
+    public boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity) {
+        return this.entityBuilder.hasBuildingEntity(placementBuildableEntity);
     }
 }

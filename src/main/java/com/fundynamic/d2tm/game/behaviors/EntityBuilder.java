@@ -1,7 +1,8 @@
 package com.fundynamic.d2tm.game.behaviors;
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
+import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.sidebar.PlacementBuildableEntity;
 
 import java.util.List;
 
@@ -11,26 +12,32 @@ import java.util.List;
  */
 public interface EntityBuilder extends Updateable {
 
-    List<BuildableEntity> getBuildList();
+    List<AbstractBuildableEntity> getBuildList();
 
     /**
      * Returns true if construction of an entity is still busy.
      * Returns true when construction is finished, but requires placement.
      * @return
      */
-    boolean isBuildingEntity();
+    boolean hasBuildingEntity();
 
     /**
      * Start construction of entity.
-     * @param buildableEntity
+     * @param placementBuildableEntity
      */
-    void buildEntity(BuildableEntity buildableEntity);
+    void buildEntity(AbstractBuildableEntity placementBuildableEntity);
 
     /**
-     * Returns true when construction is completed and awaits placements.
+     * Returns true when construction is completed and awaits placements - ie, needs player interaction
      * @return
      */
     boolean isAwaitingPlacement();
+
+    /**
+     * Returns true when construction is completed and awaits being spawned
+     * @return
+     */
+    boolean isAwaitingSpawning();
 
     /**
      * Signals the builder that an entity is delivered (or placed) (if applicable).
@@ -41,8 +48,8 @@ public interface EntityBuilder extends Updateable {
 
     /**
      * Returns true if the buildableEntity is being built
-     * @param buildableEntity
+     * @param placementBuildableEntity
      * @return
      */
-    boolean isBuildingEntity(BuildableEntity buildableEntity);
+    boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity);
 }

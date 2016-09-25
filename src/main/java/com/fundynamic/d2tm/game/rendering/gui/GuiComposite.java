@@ -8,7 +8,8 @@ import com.fundynamic.d2tm.game.controls.MouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
+import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.sidebar.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -169,10 +170,10 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
 
     /**
      * Event: a buildable Entity which should be placed is selected.
-     * @param buildableEntity
+     * @param abstractBuildableEntity
      */
-    public void wantsToPlaceBuildableEntityOnBattlefield(BuildableEntity buildableEntity) {
-        battleField.setMouseBehavior(new PlacingStructureMouse(battleField, buildableEntity.getEntityData()));
+    public void wantsToPlaceBuildableEntityOnBattlefield(AbstractBuildableEntity abstractBuildableEntity) {
+        battleField.setMouseBehavior(new PlacingStructureMouse(battleField, abstractBuildableEntity.getEntityData()));
     }
 
     /**

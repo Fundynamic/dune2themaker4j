@@ -15,11 +15,11 @@ public class RenderableBuildableEntity extends GuiElement {
     public static final int WIDTH = 64;
     public static final int HEIGHT = 48;
 
-    private final BuildableEntity buildableEntity;
+    private final AbstractBuildableEntity abstractBuildableEntity;
 
-    public RenderableBuildableEntity(BuildableEntity buildableEntity, int x, int y) {
+    public RenderableBuildableEntity(AbstractBuildableEntity abstractBuildableEntity, int x, int y) {
         super(x, y, WIDTH, HEIGHT);
-        this.buildableEntity = buildableEntity;
+        this.abstractBuildableEntity = abstractBuildableEntity;
 
         this.fadingSelection = new FadingSelection(getWidthAsInt(), getHeightAsInt(), 3) {
 
@@ -36,13 +36,13 @@ public class RenderableBuildableEntity extends GuiElement {
     public void render(Graphics graphics) {
         int xAsInt = getTopLeftXAsInt();
         int yAsInt = getTopLeftYAsInt();
-        if (buildableEntity.hasBuildIcon()) {
-            graphics.drawImage(buildableEntity.getBuildIcon(), xAsInt, yAsInt);
+        if (abstractBuildableEntity.hasBuildIcon()) {
+            graphics.drawImage(abstractBuildableEntity.getBuildIcon(), xAsInt, yAsInt);
         } else {
             graphics.fillRect(xAsInt, yAsInt, WIDTH, HEIGHT);
         }
 
-        BuildableState buildableState = buildableEntity.getBuildableState();
+        BuildableState buildableState = abstractBuildableEntity.getBuildableState();
         if (buildableState == BuildableState.DISABLED) {
             graphics.setColor(Colors.BLACK_ALPHA_128);
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
@@ -51,13 +51,19 @@ public class RenderableBuildableEntity extends GuiElement {
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            SlickUtils.drawPercentage(graphics, Color.white, buildableEntity.getProgress(), xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawPercentage(graphics, Color.white, abstractBuildableEntity.getProgress(), xAsInt + 2, yAsInt + 16);
         }
 
-        if (buildableState == BuildableState.AWAITSPLACEMENT) {
+        if (buildableState == BuildableState.BUILDING_FINISHED_AWAITS_PLACEMENT) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
             SlickUtils.drawShadowedText(graphics, Color.white, "PLACE", xAsInt + 2, yAsInt + 16);
+        }
+
+        if (buildableState == BuildableState.BUILDING_FINISHED_SPAWNABLE) {
+            graphics.setColor(Colors.RED); // ugly way of letting know we are building this
+            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            SlickUtils.drawShadowedText(graphics, Color.white, "SPAWN", xAsInt + 2, yAsInt + 16);
         }
 
         if (hasFocus) {
@@ -109,7 +115,7 @@ public class RenderableBuildableEntity extends GuiElement {
         return hasFocus;
     }
 
-    public BuildableEntity getBuildableEntity() {
-        return buildableEntity;
+    public AbstractBuildableEntity getAbstractBuildableEntity() {
+        return abstractBuildableEntity;
     }
 }

@@ -61,6 +61,7 @@ public class IniDataUnit {
         this.weaponId = struct.get(INI_KEYWORD_WEAPON, String.class, EntitiesData.UNKNOWN);
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
+        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
     }
 
 }
