@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -39,6 +40,7 @@ public class EntitiesData {
     public static String CONSTRUCTION_YARD = "CONSTYARD";
     public static String REFINERY = "REFINERY";
     public static String WINDTRAP = "WINDTRAP";
+    public static String LIGHT_FACTORY = "LIGHTFACTORY";
 
     // projectiles
     public static String BULLET = "RIFLE";
@@ -113,28 +115,45 @@ public class EntitiesData {
         return entityData;
     }
 
-    public void addUnit(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, int sight, float animationSpeed, float moveSpeed, float turnSpeed, float turnSpeedCannon, float attackRate, float attackRange, int hitPoints, String weaponId, String explosionId) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, pathToBarrelImage, widthInPixels, heightInPixels, EntityType.UNIT, sight, moveSpeed, hitPoints);
+    public EntityData addUnit(String id, IniDataUnit iniDataUnit) throws SlickException {
+        EntityData entityData = createEntity(
+                id,
+                iniDataUnit.pathToImage,
+                iniDataUnit.pathToBarrelImage,
+                iniDataUnit.width,
+                iniDataUnit.height,
+                EntityType.UNIT,
+                iniDataUnit.sight,
+                iniDataUnit.moveSpeed,
+                iniDataUnit.hitpoints
+        );
 
-        entity.attackRate = attackRate;
-        entity.attackRange = attackRange;
-        entity.turnSpeed = turnSpeed;
-        entity.turnSpeedCannon = turnSpeedCannon;
-        entity.animationSpeed = animationSpeed;
+        entityData.attackRate = iniDataUnit.attackRate;
+        entityData.attackRange = iniDataUnit.attackRange;
+        entityData.turnSpeed = iniDataUnit.turnSpeed;
+        entityData.turnSpeedCannon = iniDataUnit.turnSpeedCannon;
+        entityData.animationSpeed = iniDataUnit.animationSpeed;
+        entityData.buildTimeInSeconds = iniDataUnit.buildTimeInSeconds;
+        entityData.buildIcon = loadImage(iniDataUnit.buildIcon);
+
+        String weaponId = iniDataUnit.weaponId;
 
         if (!idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
                 throw new IllegalArgumentException("unit " + id + " [weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
             }
-            entity.weaponId = weaponId;
+            entityData.weaponId = weaponId;
         }
+
+        String explosionId = iniDataUnit.explosionId;
 
         if (!idProvided(explosionId)) {
             if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
                 throw new IllegalArgumentException("unit " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
             }
-            entity.explosionId = explosionId;
+            entityData.explosionId = explosionId;
         }
+        return entityData;
     }
 
     public boolean idProvided(String weaponId) {

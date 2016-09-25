@@ -46,6 +46,14 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
+    public void readsBuildingStructureFromIniFileThatConstructsUnits() {
+        readFromTestRulesIni();
+
+        EntityData lightfctry = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.LIGHT_FACTORY);
+        assertThat(lightfctry.entityBuilderType, is(EntityBuilderType.UNITS));
+    }
+
+    @Test
     public void readsSimpleStructureFromIniFile() {
         readFromTestRulesIni();
 

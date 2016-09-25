@@ -54,7 +54,8 @@ public class UnitTest extends AbstractD2TMTest {
 
         Assert.assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
     }
-
+    
+    // FLAKY TEST: Sometimes fails probably because 'random cell to move to' is the same as it was now...
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
         Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);

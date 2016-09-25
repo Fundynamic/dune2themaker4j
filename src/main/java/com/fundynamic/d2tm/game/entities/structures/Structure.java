@@ -40,15 +40,23 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
 
+        List<EntityData> entityDatas = new ArrayList<>();
         switch (entityData.entityBuilderType) {
             case STRUCTURES:
-                List<EntityData> entityDatas = new ArrayList<>();
                 for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
                     entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
                 }
 
                 this.entityBuilder = new EntityBuilderImpl(entityDatas);
                 break;
+            case UNITS:
+                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                    entityDatas.add(entityRepository.getEntityData(EntityType.UNIT, buildableEntity));
+                }
+
+                this.entityBuilder = new EntityBuilderImpl(entityDatas);
+                break;
+
             default:
                 this.entityBuilder = new NullEntityBuilder();
         }

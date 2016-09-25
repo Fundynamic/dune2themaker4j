@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
@@ -13,6 +14,28 @@ import java.io.InputStream;
  * Reads the 'rules.ini' file and extracts an EntitiesData data structure.
  */
 public class EntitiesDataReader {
+
+    public static final String INI_KEYWORD_IMAGE = "Image";
+    public static final String INI_KEYWORD_WIDTH = "Width";
+    public static final String INI_KEYWORD_HEIGHT = "Height";
+    public static final String INI_KEYWORD_EXPLOSION = "Explosion";
+    public static final String INI_KEYWORD_MOVE_SPEED = "MoveSpeed";
+    public static final String INI_KEYWORD_TURN_SPEED = "TurnSpeed";
+    public static final String INI_KEYWORD_TURN_SPEED_CANNON = "TurnSpeedCannon";
+    public static final String INI_KEYWORD_ATTACK_RATE = "AttackRate";
+    public static final String INI_KEYWORD_ATTACK_RANGE = "AttackRange";
+    public static final String INI_KEYWORD_WEAPON = "Weapon";
+    public static final String INI_KEYWORD_DAMAGE = "Damage";
+    public static final String INI_KEYWORD_FACINGS = "Facings";
+    public static final String INI_KEYWORD_SIGHT = "Sight";
+    public static final String INI_KEYWORD_HIT_POINTS = "HitPoints";
+    public static final String INI_KEYWORD_BUILD_ICON = "BuildIcon";
+    public static final String INI_KEYWORD_BUILDS = "Builds";
+    public static final String INI_KEYWORD_BUILD_TIME = "BuildTime";
+    public static final String INI_KEYWORD_BUILD_LIST = "BuildList";
+    public static final String INI_KEYWORD_FPS = "Fps";
+    public static final String INI_KEYWORD_RECOLOR = "Recolor";
+    public static final String INI_KEYWORD_BARREL = "Barrel";
 
     public EntitiesData fromRulesIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));
@@ -41,13 +64,13 @@ public class EntitiesDataReader {
         for (String id : strings) {
             Profile.Section struct = weapons.getChild(id);
             entitiesData.addProjectile(id,
-                    struct.get("image", String.class),
-                    struct.get("width", Integer.class),
-                    struct.get("height", Integer.class),
-                    struct.get("explosion", String.class),
-                    struct.get("movespeed", Float.class),
-                    struct.get("damage", Integer.class),
-                    struct.get("facings", Integer.class));
+                    struct.get(INI_KEYWORD_IMAGE, String.class),
+                    struct.get(INI_KEYWORD_WIDTH, Integer.class),
+                    struct.get(INI_KEYWORD_HEIGHT, Integer.class),
+                    struct.get(INI_KEYWORD_EXPLOSION, String.class),
+                    struct.get(INI_KEYWORD_MOVE_SPEED, Float.class),
+                    struct.get(INI_KEYWORD_DAMAGE, Integer.class),
+                    struct.get(INI_KEYWORD_FACINGS, Integer.class));
         }
 
     }
@@ -60,16 +83,16 @@ public class EntitiesDataReader {
             entitiesData.addStructure(
                     new IniDataStructure(
                         id,
-                        struct.get("image", String.class, null),
-                        struct.get("width", Integer.class),
-                        struct.get("height", Integer.class),
-                        struct.get("sight", Integer.class),
-                        struct.get("hitpoints", Integer.class),
-                        struct.get("explosion", String.class, EntitiesData.UNKNOWN),
-                        struct.get("buildIcon", String.class, null),
-                        struct.get("builds", String.class, ""),
-                        struct.get("buildtime", Float.class, 0F),
-                        struct.get("buildlist", String.class, "")
+                        struct.get(INI_KEYWORD_IMAGE, String.class, null),
+                        struct.get(INI_KEYWORD_WIDTH, Integer.class),
+                        struct.get(INI_KEYWORD_HEIGHT, Integer.class),
+                        struct.get(INI_KEYWORD_SIGHT, Integer.class),
+                        struct.get(INI_KEYWORD_HIT_POINTS, Integer.class),
+                        struct.get(INI_KEYWORD_EXPLOSION, String.class, EntitiesData.UNKNOWN),
+                        struct.get(INI_KEYWORD_BUILD_ICON, String.class, null),
+                        struct.get(INI_KEYWORD_BUILDS, String.class, ""),
+                        struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F),
+                        struct.get(INI_KEYWORD_BUILD_LIST, String.class, "")
                     )
             );
         }
@@ -80,21 +103,10 @@ public class EntitiesDataReader {
         String[] strings = units.childrenNames();
         for (String id : strings) {
             Profile.Section struct = units.getChild(id);
-            entitiesData.addUnit(id,
-                    struct.get("image", String.class, "no-image-provided"),
-                    struct.get("barrel", String.class, null),
-                    struct.get("width", Integer.class, 1),
-                    struct.get("height", Integer.class, 1),
-                    struct.get("sight", Integer.class, 1),
-                    struct.get("fps", Float.class, 0f),
-                    struct.get("movespeed", Float.class, 0f),
-                    struct.get("turnspeed", Float.class, 0f),
-                    struct.get("turnspeedcannon", Float.class, 0f),
-                    struct.get("attackrate", Float.class, 0f),
-                    struct.get("attackrange", Float.class, 0f),
-                    struct.get("hitpoints", Integer.class, 0),
-                    struct.get("weapon", String.class, EntitiesData.UNKNOWN),
-                    struct.get("explosion", String.class));
+            entitiesData.addUnit(
+                    id,
+                    new IniDataUnit(struct)
+            );
         }
     }
 
@@ -104,11 +116,11 @@ public class EntitiesDataReader {
         for (String id : strings) {
             Profile.Section struct = explosions.getChild(id);
             entitiesData.addParticle(id,
-                    struct.get("image", String.class),
-                    struct.get("width", Integer.class),
-                    struct.get("height", Integer.class),
-                    struct.get("fps", Float.class),
-                    struct.get("recolor", Boolean.class, false));
+                    struct.get(INI_KEYWORD_IMAGE, String.class),
+                    struct.get(INI_KEYWORD_WIDTH, Integer.class),
+                    struct.get(INI_KEYWORD_HEIGHT, Integer.class),
+                    struct.get(INI_KEYWORD_FPS, Float.class),
+                    struct.get(INI_KEYWORD_RECOLOR, Boolean.class, false));
         }
     }
 
