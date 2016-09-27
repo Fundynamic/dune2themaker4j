@@ -11,6 +11,7 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.NullRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -96,6 +97,13 @@ public class EntityRepository {
         EntityData entityData = entitiesData.getEntityData(entityType, id);
         Entity entity = placeOnMap(coordinate, entityData, origin.player);
         return entity.setOrigin(origin);
+    }
+
+    public boolean isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
+        Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
+        EntitiesSet entities = findEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+        Cell cellByMapCoordinates = map.getCellByMapCoordinates(intendedMapCoordinatesToMoveTo);
+        return cellByMapCoordinates.isPassable(entity);
     }
 
     public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {

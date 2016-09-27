@@ -1,7 +1,9 @@
-package com.fundynamic.d2tm.game.entities.sidebar;
+package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 
 /**
  * <h1>General</h1>

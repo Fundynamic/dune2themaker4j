@@ -1,8 +1,7 @@
 package com.fundynamic.d2tm.game.behaviors;
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
-import com.fundynamic.d2tm.game.entities.sidebar.PlacementBuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 
 import java.util.List;
 
@@ -20,6 +19,8 @@ public interface EntityBuilder extends Updateable {
      * @return
      */
     boolean hasBuildingEntity();
+
+    AbstractBuildableEntity getBuildingEntity();
 
     /**
      * Start construction of entity.

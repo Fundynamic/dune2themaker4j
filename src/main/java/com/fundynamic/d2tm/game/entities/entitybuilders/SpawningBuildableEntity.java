@@ -1,9 +1,8 @@
-package com.fundynamic.d2tm.game.entities.sidebar;
+package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
-import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import org.newdawn.slick.Image;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 
 /**
  * <h1>General</h1>

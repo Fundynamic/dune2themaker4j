@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.math.Vector2D;

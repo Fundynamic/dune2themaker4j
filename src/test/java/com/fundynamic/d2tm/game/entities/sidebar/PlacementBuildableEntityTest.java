@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

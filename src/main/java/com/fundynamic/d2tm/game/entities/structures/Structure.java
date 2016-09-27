@@ -1,12 +1,18 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
-import com.fundynamic.d2tm.game.entities.sidebar.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -83,6 +89,26 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         if (hasBuildingEntity()) {
             this.entityBuilder.update(deltaInSeconds);
+        }
+
+        if (isAwaitingSpawning()) {
+            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
+                AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
+                if (this.entityRepository.isPassable(this, potentiallySpawnableCoordinate)) {
+                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+
+                    Entity entity = this.entityRepository.placeOnMap(
+                            absoluteCoordinate,
+                            buildingEntity.getEntityData(),
+                            this.player
+                    );
+
+                    this.entityIsDelivered(entity);
+                    break;
+                }
+            }
+            this.entityIsDelivered(this);
         }
     }
 
@@ -178,6 +204,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public boolean hasBuildingEntity() {
         return this.entityBuilder.hasBuildingEntity();
+    }
+
+    @Override
+    public AbstractBuildableEntity getBuildingEntity() {
+        return this.entityBuilder.getBuildingEntity();
     }
 
     @Override

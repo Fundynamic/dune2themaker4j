@@ -1,8 +1,9 @@
-package com.fundynamic.d2tm.game.entities.sidebar;
+package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 import org.newdawn.slick.Image;
 
 /**
@@ -83,5 +84,6 @@ public abstract class AbstractBuildableEntity implements Updateable {
     public float getProgress() {
         return (entityData.buildTimeInSeconds - secondsToBuildInMs) / entityData.buildTimeInSeconds;
     }
+
 
 }
