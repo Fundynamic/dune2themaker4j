@@ -4,6 +4,9 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
+/**
+ * <h1>Concept of getting destroyed by using hitpoints</h1>
+ */
 public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderable {
 
     private int maxHitpoints;
@@ -73,4 +76,10 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
         return (float)hitPoints / maxHitpoints;
     }
 
+    /**
+     * Zero out hitpoints, effectively killing the entity that is associates with this class.
+     */
+    public void die() {
+        this.hitPoints = 0;
+    }
 }

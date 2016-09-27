@@ -13,6 +13,13 @@ public abstract class Predicate<T> {
     public static Predicate<Entity> isNotDestroyed() {
         return IsNotDestroyed.instance;
     }
+    /**
+     * Alias for {@link #isNotDestroyed()}
+     * @return
+     */
+    public static Predicate<Entity> isAlive() {
+        return isNotDestroyed();
+    }
 
     public static Predicate<Entity> isDestroyer() {
         return IsDestroyer.instance;

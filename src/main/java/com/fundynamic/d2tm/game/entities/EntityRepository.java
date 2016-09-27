@@ -17,7 +17,6 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -99,11 +98,14 @@ public class EntityRepository {
         return entity.setOrigin(origin);
     }
 
-    public boolean isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
+    public PassableResult isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
         Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
-        EntitiesSet entities = findEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+        EntitiesSet entities = findAliveEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
         Cell cellByMapCoordinates = map.getCellByMapCoordinates(intendedMapCoordinatesToMoveTo);
-        return cellByMapCoordinates.isPassable(entity);
+        return new PassableResult(
+                entities.isEmpty() && cellByMapCoordinates.isPassable(entity),
+                entities
+        );
     }
 
     public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {
@@ -224,7 +226,17 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
-    public EntitiesSet findEntitiesOfTypeAtVector(Vector2D absoluteMapCoordinates, EntityType... types) {
+    public EntitiesSet findAliveEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        vectorWithin(absoluteMapCoordinates)
+                        .isAlive()
+
+        );
+    }
+
+    public EntitiesSet findEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
@@ -274,4 +286,21 @@ public class EntityRepository {
         return new RenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
     }
 
+    public class PassableResult {
+        private boolean isPassable;
+        private EntitiesSet entitiesSet;
+
+        public PassableResult(boolean isPassable, EntitiesSet entitiesSet) {
+            this.isPassable = isPassable;
+            this.entitiesSet = entitiesSet;
+        }
+
+        public boolean isPassable() {
+            return isPassable;
+        }
+
+        public EntitiesSet getEntitiesSet() {
+            return entitiesSet;
+        }
+    }
 }

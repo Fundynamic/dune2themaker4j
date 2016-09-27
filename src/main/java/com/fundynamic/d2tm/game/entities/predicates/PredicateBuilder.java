@@ -100,13 +100,22 @@ public class PredicateBuilder {
         return this;
     }
 
+    /**
+     * Alias for {@link #isAlive()}
+     * @return
+     */
     public PredicateBuilder isNotDestroyed() {
         predicates.add(Predicate.isNotDestroyed());
         return this;
     }
 
-    public PredicateBuilder vectorWithin(Vector2D absoluteMapCoordinates) {
-        predicates.add(new Vector2DIsWithinEntity(absoluteMapCoordinates));
+    public PredicateBuilder vectorWithin(Coordinate absoluteMapCoordinates) {
+        predicates.add(new CoordinateIsWithinEntity(absoluteMapCoordinates));
+        return this;
+    }
+
+    public PredicateBuilder isAlive() {
+        predicates.add(Predicate.isAlive());
         return this;
     }
 

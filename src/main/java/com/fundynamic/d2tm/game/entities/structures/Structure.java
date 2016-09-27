@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -93,22 +94,47 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         if (isAwaitingSpawning()) {
             List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+            Unit firstEntityThatBlocksExit = null;
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
                 AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
-                if (this.entityRepository.isPassable(this, potentiallySpawnableCoordinate)) {
+                EntityRepository.PassableResult passableResult = this.entityRepository.isPassable(this, potentiallySpawnableCoordinate);
+                if (passableResult.isPassable()) {
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
 
                     Entity entity = this.entityRepository.placeOnMap(
-                            absoluteCoordinate,
-                            buildingEntity.getEntityData(),
-                            this.player
-                    );
-
+                                absoluteCoordinate,
+                                buildingEntity.getEntityData(),
+                                this.player
+                        );
                     this.entityIsDelivered(entity);
                     break;
+                } else {
+                    if (firstEntityThatBlocksExit == null) {
+                        System.out.println("Found entities set that blocks units:");
+                        System.out.println(passableResult.getEntitiesSet());
+                        System.out.println("END");
+                        firstEntityThatBlocksExit = (Unit) passableResult.getEntitiesSet().getFirst(Predicate.ofType(EntityType.UNIT));
+                    }
                 }
             }
-            this.entityIsDelivered(this);
+
+            // we did not succeed in spawning an entity
+            if (isAwaitingSpawning()) {
+                // TODO: fly it in, nudge other units to move away, etc.
+
+                // THIS IS JUST FOR FUN
+                if (firstEntityThatBlocksExit != null) {
+                    // kill it, so we can try again next frame
+                    System.out.println("------------------" + System.currentTimeMillis());
+                    System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
+                    System.out.println("------------------");
+                    firstEntityThatBlocksExit.explodeAndDie();
+                } else {
+                    // For now, forget it :/
+                    System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
+                    this.entityIsDelivered(this); // lying!!
+                }
+            }
         }
     }
 

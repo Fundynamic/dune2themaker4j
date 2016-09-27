@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
@@ -233,4 +234,12 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     public boolean isEntityBuilder() {
         return this.entityData.entityBuilderType != EntityBuilderType.NONE;
     }
+
+    public boolean isVectorWithin(Coordinate coordinate) {
+        Rectangle entityRectangle = Rectangle.createWithDimensions(getCoordinate(), getDimensions());
+        boolean result = entityRectangle.isVectorWithin(coordinate);
+//        System.out.println("Checking if Coordinate (" + result + ") : " + coordinate + " is within Rectangle of [" + this.getEntityData().key + "] : " + entityRectangle);
+        return result;
+    }
+
 }

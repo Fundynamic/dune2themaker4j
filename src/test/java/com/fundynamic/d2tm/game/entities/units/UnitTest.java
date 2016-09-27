@@ -169,7 +169,7 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PROJECTILE));
         Projectile projectile = (Projectile) lastCreatedEntity;
 
-        EntitiesSet entitiesAtVector = entityRepository.findEntitiesOfTypeAtVector(projectile.getTarget(), EntityType.UNIT);
+        EntitiesSet entitiesAtVector = entityRepository.findAliveEntitiesOfTypeAtVector(projectile.getTarget(), EntityType.UNIT);
         Unit first = (Unit) entitiesAtVector.getFirst();
         assertThat(first, equalTo(cpuQuad));
     }

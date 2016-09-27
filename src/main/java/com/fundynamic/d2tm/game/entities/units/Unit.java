@@ -244,6 +244,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void explodeAndDie() {
+        hitPointBasedDestructibility.die();
         hasSpawnedExplosions = true;
         entityRepository.placeExplosionWithCenterAt(getCenteredCoordinate(), player, entityData.explosionId);
     }
@@ -285,8 +286,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         offset = Vector2D.create(offsetX, offsetY);
     }
 
-    private Vector2D decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
-        Vector2D nextIntendedCoordinatesToMoveTo = getNextIntendedCellToMoveToTarget(target);
+    private Coordinate decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
+        Coordinate nextIntendedCoordinatesToMoveTo = getNextIntendedCellToMoveToTarget(target);
 
         if (canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
             nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
@@ -298,14 +299,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return coordinate;
     }
 
-    private boolean canMoveToCell(Vector2D intendedMapCoordinatesToMoveTo) {
-        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
+    private boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
         Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
 
         return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
     }
 
-    private Vector2D getNextIntendedCellToMoveToTarget(Vector2D target) {
+    private Coordinate getNextIntendedCellToMoveToTarget(Vector2D target) {
         int nextXCoordinate = coordinate.getXAsInt();
         int nextYCoordinate = coordinate.getYAsInt();
         if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
@@ -313,7 +314,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (target.getYAsInt() < coordinate.getYAsInt()) nextYCoordinate -= TILE_SIZE;
         if (target.getYAsInt() > coordinate.getYAsInt()) nextYCoordinate += TILE_SIZE;
 
-        return new Vector2D(nextXCoordinate, nextYCoordinate);
+        return Coordinate.create(nextXCoordinate, nextYCoordinate);
     }
 
     private boolean hasNoNextCellToMoveTo() {
