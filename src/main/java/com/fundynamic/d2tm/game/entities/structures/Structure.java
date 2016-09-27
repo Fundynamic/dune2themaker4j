@@ -95,6 +95,15 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
+        MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
+        if (Game.DEBUG_INFO) {
+            SlickUtils.drawShadowedText(
+                    graphics,
+                    Colors.WHITE,
+                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
+                    x,
+                    y);
+        }
     }
 
     public void select() {
