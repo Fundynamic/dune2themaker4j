@@ -46,6 +46,14 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
+    public void readsBuildingStructureFromIniFileThatConstructsUnits() {
+        readFromTestRulesIni();
+
+        EntityData lightfctry = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.LIGHT_FACTORY);
+        assertThat(lightfctry.entityBuilderType, is(EntityBuilderType.UNITS));
+    }
+
+    @Test
     public void readsSimpleStructureFromIniFile() {
         readFromTestRulesIni();
 
@@ -79,6 +87,7 @@ public class EntitiesDataReaderTest {
         assertThat(quad.sight, is(7));
         assertThat(quad.explosionId, is("BOOM"));
         assertThat(quad.weaponId, is("RIFLE"));
+        assertThat(quad.buildTimeInSeconds, is(7.0f));
     }
 
     @Test

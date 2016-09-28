@@ -1,8 +1,9 @@
-package com.fundynamic.d2tm.game.entities.sidebar;
+package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 import org.newdawn.slick.Image;
 
 /**
@@ -10,7 +11,7 @@ import org.newdawn.slick.Image;
  * An entity that can be built by a {@link com.fundynamic.d2tm.game.behaviors.EntityBuilder}. It contains little
  * state giving hints if it can be built, its progress and so forth.
  */
-public class BuildableEntity implements Updateable {
+public abstract class AbstractBuildableEntity implements Updateable {
 
     /**
      * The thing it is / can be building
@@ -21,7 +22,7 @@ public class BuildableEntity implements Updateable {
 
     public BuildableState buildableState = BuildableState.SELECTABLE;
 
-    public BuildableEntity(EntityData entityData) {
+    public AbstractBuildableEntity(EntityData entityData) {
         this.entityData = entityData;
         secondsToBuildInMs = entityData.buildTimeInSeconds;
     }
@@ -55,16 +56,24 @@ public class BuildableEntity implements Updateable {
         return buildableState;
     }
 
+    public boolean isDoneBuilding() {
+        return secondsToBuildInMs < 0f;
+    }
+
     @Override
     public void update(float deltaInSeconds) {
         secondsToBuildInMs -= deltaInSeconds;
-        if (secondsToBuildInMs < 0) {
-            buildableState = BuildableState.AWAITSPLACEMENT;
+        if (isDoneBuilding()) {
+            buildableState = BuildableState.BUILDING_FINISHED_SPAWNABLE;
         }
     }
 
     public boolean awaitsPlacement() {
-        return buildableState == BuildableState.AWAITSPLACEMENT;
+        return buildableState == BuildableState.BUILDING_FINISHED_AWAITS_PLACEMENT;
+    }
+
+    public boolean awaitsSpawning() {
+        return buildableState == BuildableState.BUILDING_FINISHED_SPAWNABLE;
     }
 
     /**
@@ -75,5 +84,6 @@ public class BuildableEntity implements Updateable {
     public float getProgress() {
         return (entityData.buildTimeInSeconds - secondsToBuildInMs) / entityData.buildTimeInSeconds;
     }
+
 
 }

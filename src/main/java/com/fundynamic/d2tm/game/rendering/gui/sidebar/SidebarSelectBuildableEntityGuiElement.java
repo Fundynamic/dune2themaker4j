@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -13,7 +13,9 @@ import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * A fancy name for a 'build icon'
+ */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
     // the entity that is building other entities
@@ -32,16 +34,16 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         this.entityBuilder = entityBuilder;
         this.guiComposite = guiComposite;
 
-        List<BuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
+        List<AbstractBuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
         this.renderableBuildableEntities = new ArrayList<>(buildList.size());
 
         // make renderable versions for the GUI
         int drawY = getTopLeftYAsInt() + 4; // arbitrary amount down to start
-        for (BuildableEntity buildableEntity : buildList) {
+        for (AbstractBuildableEntity placementBuildableEntity : buildList) {
 
             renderableBuildableEntities.add(
                     new RenderableBuildableEntity(
-                            buildableEntity,
+                            placementBuildableEntity,
                             getTopLeftXAsInt() + 10, // arbitrary amount to the right
                             drawY)
             );
@@ -65,16 +67,15 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
     @Override
     public void leftClicked() {
         if (focussedRenderableBuildableEntity != null) {
-
-            if (!entityBuilder.isBuildingEntity()) {
+            if (!entityBuilder.hasBuildingEntity()) {
                 // construct it:
                 // 1. tell it to construct
-                entityBuilder.buildEntity(focussedRenderableBuildableEntity.getBuildableEntity());
+                entityBuilder.buildEntity(focussedRenderableBuildableEntity.getAbstractBuildableEntity());
             } else {
                 // TODO: Is done constructing.
                 if (entityBuilder.isAwaitingPlacement()) {
                     // TODO move to BattlefieldInteractable interface?!
-                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(focussedRenderableBuildableEntity.getBuildableEntity());
+                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(focussedRenderableBuildableEntity.getAbstractBuildableEntity());
                 }
             }
 
@@ -125,12 +126,15 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void entityPlacedOnMap(Entity entity) {
-        if (!entityBuilder.isBuildingEntity()) {
+        if (!entityBuilder.hasBuildingEntity()) {
             // not building anything, that is weird?
             throw new IllegalStateException("Did not expect this");
         } else {
             if (entityBuilder.isAwaitingPlacement()) {
                 entityBuilder.entityIsDelivered(entity);
+            } else {
+                // for now...
+                throw new IllegalStateException("Would expect to have an entityBuilder selected with the entity that just has been placed.");
             }
         }
     }

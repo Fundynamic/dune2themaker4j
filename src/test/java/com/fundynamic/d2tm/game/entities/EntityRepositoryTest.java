@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -23,21 +22,21 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         Unit unit = makeUnit(player, Coordinate.create(100, 100), EntitiesData.QUAD);
 
         // find at same position
-        EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(100, 100), EntityType.UNIT);
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(100, 100), EntityType.UNIT);
         assertThat(entities.hasAny(), is(true));
         assertThat((Unit) entities.getFirst(), is(unit));
 
         // do not find anything at a bit more upwards
-        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(99, 99), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(99, 99), EntityType.UNIT);
         assertThat(entities, is(empty()));
 
         // find entity at its right-bottom dimension
-        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(131, 131), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(131, 131), EntityType.UNIT);
         assertThat(entities.hasAny(), is(true));
         assertThat((Unit) entities.getFirst(), is(unit));
 
         // do not find anything at a bit more upwards
-        entities = entityRepository.findEntitiesOfTypeAtVector(Vector2D.create(132, 132), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(132, 132), EntityType.UNIT);
         assertThat(entities, is(empty()));
     }
 
@@ -66,7 +65,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
         Entity first = entitiesSet.getFirst();
 
-        assertThat(first.getCoordinate(), is(Vector2D.create(10, 11)));
+        assertThat(first.getCoordinate(), is(Coordinate.create(10, 11)));
     }
 
     @Test
@@ -78,7 +77,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
         Entity first = entitiesSet.getFirst();
 
-        assertThat(first.getCoordinate(), is(Vector2D.create(21, 23)));
+        assertThat(first.getCoordinate(), is(Coordinate.create(21, 23)));
     }
 
     @Test
@@ -90,7 +89,7 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
         Entity first = entitiesSet.getFirst();
 
-        assertThat(first.getCoordinate(), is(Vector2D.create(21, 23)));
+        assertThat(first.getCoordinate(), is(Coordinate.create(21, 23)));
     }
 
     @Test(expected = IllegalArgumentException.class)

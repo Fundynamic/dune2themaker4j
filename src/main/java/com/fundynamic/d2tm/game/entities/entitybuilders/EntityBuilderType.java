@@ -6,7 +6,8 @@ import java.util.List;
 
 public enum EntityBuilderType {
     NONE,            // does not build a thing
-    STRUCTURES;       // builds structures
+    STRUCTURES,      // builds structures
+    UNITS;           // builds units
 
     /**
      * For now like this, TODO: optimize (caching, etc)

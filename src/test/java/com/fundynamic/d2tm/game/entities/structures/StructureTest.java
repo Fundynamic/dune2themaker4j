@@ -4,9 +4,12 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.Assert;
 import org.junit.Test;
 import org.newdawn.slick.Image;
 
@@ -64,5 +67,22 @@ public class StructureTest extends AbstractD2TMTest {
         assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
         assertThat(second.screenX, is(16)); // structureX - viewportVecX
         assertThat(second.screenY, is(16)); // structureY - viewportVecY
+    }
+
+    @Test
+    public void structureSpawnsUnit() {
+        Structure structure = makeStructure(player, 100, MapCoordinate.create(10, 10));
+        List<AbstractBuildableEntity> buildList = structure.getBuildList();
+        Assert.assertFalse(buildList.isEmpty());
+
+        AbstractBuildableEntity abstractBuildableEntity = buildList.get(0);
+        structure.buildEntity(abstractBuildableEntity);
+
+        int size = entityRepository.getEntitiesCount();
+        // wait long enough for construction to be completed & spawned
+        structure.update(abstractBuildableEntity.getEntityData().buildTimeInSeconds + 1);
+
+        // spawned
+        Assert.assertEquals(size + 1, entityRepository.getEntitiesCount());
     }
 }

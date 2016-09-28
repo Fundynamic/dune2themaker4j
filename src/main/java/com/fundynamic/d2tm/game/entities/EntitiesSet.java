@@ -62,6 +62,15 @@ public class EntitiesSet extends HashSet<Entity> {
         return null;
     }
 
+    public Entity getFirst(Predicate<Entity> predicate) {
+        EntitiesSet filter = filter(predicate);
+        if (filter.hasItems()) {
+            return filter.getFirst();
+        }
+        return null;
+    }
+
+
     @Override
     public boolean add(Entity entity) {
         if (entity == null) throw new IllegalArgumentException("Cannot add null to entity set");
@@ -79,4 +88,24 @@ public class EntitiesSet extends HashSet<Entity> {
         }
     }
 
+    /**
+     * Equivalent of doing <code>!isEmpty()</code>
+     * @return
+     */
+    public boolean hasItems() {
+        return !isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        for (Entity entity : this) {
+            result += entity.toString() + "\n";
+        }
+        return result;
+    }
+
+    public static EntitiesSet empty() {
+        return new EntitiesSet();
+    }
 }

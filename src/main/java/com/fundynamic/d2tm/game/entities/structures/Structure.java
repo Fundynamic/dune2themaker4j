@@ -1,12 +1,17 @@
 package com.fundynamic.d2tm.game.entities.structures;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderImpl;
-import com.fundynamic.d2tm.game.entities.entitybuilders.NullEntityBuilder;
-import com.fundynamic.d2tm.game.entities.sidebar.BuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -40,18 +45,21 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.fadingSelection = new FadingSelection(entityData.getWidth(), entityData.getHeight());
         this.hitPointBasedDestructibility = new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth());
 
-        switch (entityData.entityBuilderType) {
-            case STRUCTURES:
-                List<EntityData> entityDatas = new ArrayList<>();
-                for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
-                    entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
-                }
-
-                this.entityBuilder = new EntityBuilderImpl(entityDatas);
-                break;
-            default:
-                this.entityBuilder = new NullEntityBuilder();
+        List<EntityData> entityDatas = new ArrayList<>();
+        if (entityData.entityBuilderType == EntityBuilderType.STRUCTURES) {
+            for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                entityDatas.add(entityRepository.getEntityData(EntityType.STRUCTURE, buildableEntity));
+            }
         }
+
+        if (entityData.entityBuilderType == EntityBuilderType.UNITS) {
+            for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                entityDatas.add(entityRepository.getEntityData(EntityType.UNIT, buildableEntity));
+            }
+        }
+
+        this.entityBuilder = new SingleEntityBuilder(entityDatas);
+
     }
 
     public Image getSprite() {
@@ -78,8 +86,53 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        if (isBuildingEntity()) {
+        if (hasBuildingEntity()) {
             this.entityBuilder.update(deltaInSeconds);
+        }
+
+        if (isAwaitingSpawning()) {
+            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+            Unit firstEntityThatBlocksExit = null;
+            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
+                AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
+                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
+                if (passableResult.isPassable()) {
+                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+
+                    Entity entity = this.entityRepository.placeOnMap(
+                                absoluteCoordinate,
+                                buildingEntity.getEntityData(),
+                                this.player
+                        );
+                    this.entityIsDelivered(entity);
+                    break;
+                } else {
+                    if (firstEntityThatBlocksExit == null) {
+                        System.out.println("Found entities set that blocks units:");
+                        System.out.println(passableResult.getEntitiesSet());
+                        System.out.println("END");
+                        firstEntityThatBlocksExit = (Unit) passableResult.getEntitiesSet().getFirst(Predicate.ofType(EntityType.UNIT));
+                    }
+                }
+            }
+
+            // we did not succeed in spawning an entity
+            if (isAwaitingSpawning()) {
+                // TODO: fly it in, nudge other units to move away, etc.
+
+                // THIS IS JUST FOR FUN
+                if (firstEntityThatBlocksExit != null) {
+                    // kill it, so we can try again next frame
+                    System.out.println("------------------" + System.currentTimeMillis());
+                    System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
+                    System.out.println("------------------");
+                    firstEntityThatBlocksExit.explodeAndDie();
+                } else {
+                    // For now, forget it :/
+                    System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
+                    this.entityIsDelivered(this); // lying!!
+                }
+            }
         }
     }
 
@@ -92,6 +145,15 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
+        MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
+        if (Game.DEBUG_INFO) {
+            SlickUtils.drawShadowedText(
+                    graphics,
+                    Colors.WHITE,
+                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
+                    x,
+                    y);
+        }
     }
 
     public void select() {
@@ -129,7 +191,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
         hitPointBasedDestructibility.takeDamage(hitPoints);
-        System.out.println("I took damage " + hitPointBasedDestructibility);
     }
 
     @Override
@@ -159,18 +220,23 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public List<BuildableEntity> getBuildList() {
+    public List<AbstractBuildableEntity> getBuildList() {
         return this.entityBuilder.getBuildList();
     }
 
     @Override
-    public boolean isBuildingEntity() {
-        return this.entityBuilder.isBuildingEntity();
+    public boolean hasBuildingEntity() {
+        return this.entityBuilder.hasBuildingEntity();
     }
 
     @Override
-    public void buildEntity(BuildableEntity buildableEntity) {
-        this.entityBuilder.buildEntity(buildableEntity);
+    public AbstractBuildableEntity getBuildingEntity() {
+        return this.entityBuilder.getBuildingEntity();
+    }
+
+    @Override
+    public void buildEntity(AbstractBuildableEntity abstractBuildableEntity) {
+        this.entityBuilder.buildEntity(abstractBuildableEntity);
     }
 
     @Override
@@ -179,12 +245,17 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
+    public boolean isAwaitingSpawning() {
+        return this.entityBuilder.isAwaitingSpawning();
+    }
+
+    @Override
     public void entityIsDelivered(Entity entity) {
         this.entityBuilder.entityIsDelivered(entity);
     }
 
     @Override
-    public boolean isBuildingEntity(BuildableEntity buildableEntity) {
-        return this.entityBuilder.isBuildingEntity(buildableEntity);
+    public boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity) {
+        return this.entityBuilder.hasBuildingEntity(placementBuildableEntity);
     }
 }

@@ -10,6 +10,7 @@ import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
@@ -28,6 +29,7 @@ import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -218,8 +220,14 @@ public abstract class AbstractD2TMTest {
         return makeStructure(player, hitPoints, 2, 3, 5, coordinate);
     }
 
+    public Structure makeStructure(Player player, int hitPoints, MapCoordinate coordinate) {
+        return makeStructure(player, hitPoints, 2, 3, 5, coordinate.toCoordinate());
+    }
+
     public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Coordinate coordinate) {
         EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
+        entityData.entityBuilderType = EntityBuilderType.UNITS;
+        entityData.buildList = "QUAD";
         entityData.hitPoints = hitPoints;
         Structure structure = new Structure(coordinate, mock(SpriteSheet.class), player, entityData, entityRepository) {
 

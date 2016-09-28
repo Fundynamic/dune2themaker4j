@@ -7,11 +7,13 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -178,6 +180,44 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.getAllCellsAsCoordinates(coordinate);
     }
 
+    // this basically goes 'around' the entity
+    public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
+        MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
+        ArrayList<MapCoordinate> result = new ArrayList<>();
+
+        int currentX = mapCoordinate.getXAsInt();
+        int currentY = mapCoordinate.getYAsInt();
+
+        // first row
+        int topRowY = currentY - 1;
+        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
+            int calculatedX = (currentX - 1) + x;
+            result.add(MapCoordinate.create(calculatedX, topRowY));
+        }
+
+        // then all 'sides' of the structure (left and right)
+        for (int y = 0; y < entityData.getHeightInCells(); y++) {
+            int calculatedY = currentY + y;
+
+            // left side
+            int leftX = (currentX - 1);
+            result.add(MapCoordinate.create(leftX, calculatedY));
+
+            // right side
+            int rightX = (currentX + entityData.getWidthInCells());
+            result.add(MapCoordinate.create(rightX, calculatedY));
+        }
+
+        // bottom row
+        int bottomRowY = currentY + entityData.getHeightInCells();
+        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
+            int calculatedX = (currentX - 1) + x;
+            result.add(MapCoordinate.create(calculatedX, bottomRowY));
+        }
+
+        return result;
+    }
+
     public boolean isVisibleFor(Player player, Map map) {
         List<Cell> allCellsOccupiedByEntity = map.getAllCellsOccupiedByEntity(this);
         for (Cell cell : allCellsOccupiedByEntity) {
@@ -194,4 +234,12 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     public boolean isEntityBuilder() {
         return this.entityData.entityBuilderType != EntityBuilderType.NONE;
     }
+
+    public boolean isVectorWithin(Coordinate coordinate) {
+        Rectangle entityRectangle = Rectangle.createWithDimensions(getCoordinate(), getDimensions());
+        boolean result = entityRectangle.isVectorWithin(coordinate);
+//        System.out.println("Checking if Coordinate (" + result + ") : " + coordinate + " is within Rectangle of [" + this.getEntityData().key + "] : " + entityRectangle);
+        return result;
+    }
+
 }

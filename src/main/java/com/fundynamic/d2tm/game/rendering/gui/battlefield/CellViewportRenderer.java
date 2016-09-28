@@ -41,6 +41,7 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
                 // TODO: 2 responsibilities happening here, one is culling, one is drawing
                 // it is better to separate the two
                 renderer.draw(graphics, map.getCell(x, y), drawX, drawY);
+//                SlickUtils.drawShadowedText(graphics, Colors.WHITE, "" + x + "," + y, drawX, drawY);
             }
         }
     }

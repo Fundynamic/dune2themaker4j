@@ -11,12 +11,12 @@ import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.NullRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -96,6 +96,16 @@ public class EntityRepository {
         EntityData entityData = entitiesData.getEntityData(entityType, id);
         Entity entity = placeOnMap(coordinate, entityData, origin.player);
         return entity.setOrigin(origin);
+    }
+
+    public PassableResult isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
+        Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
+        EntitiesSet entities = findAliveEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+        Cell cellByMapCoordinates = map.getCellByMapCoordinates(intendedMapCoordinatesToMoveTo);
+        return new PassableResult(
+                entities.isEmpty() && cellByMapCoordinates.isPassable(entity),
+                entities
+        );
     }
 
     public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {
@@ -216,7 +226,17 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
-    public EntitiesSet findEntitiesOfTypeAtVector(Vector2D absoluteMapCoordinates, EntityType... types) {
+    public EntitiesSet findAliveEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        vectorWithin(absoluteMapCoordinates)
+                        .isAlive()
+
+        );
+    }
+
+    public EntitiesSet findEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
@@ -266,4 +286,39 @@ public class EntityRepository {
         return new RenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
     }
 
+    /**
+     * Is same logic as {@link #isPassable(Entity, MapCoordinate)} - but first checks if <code>mapCoordinate</code> is
+     * within the map boundaries.
+     * @param entity
+     * @param mapCoordinate
+     * @return
+     */
+    public PassableResult isPassableWithinMapBoundaries(Entity entity, MapCoordinate mapCoordinate) {
+        if (map.isWithinMapBoundaries(mapCoordinate)) {
+            return isPassable(entity, mapCoordinate);
+        }
+        return new PassableResult(false);
+    }
+
+    public class PassableResult {
+        private boolean isPassable;
+        private EntitiesSet entitiesSet;
+
+        public PassableResult(boolean isPassable, EntitiesSet entitiesSet) {
+            this.isPassable = isPassable;
+            this.entitiesSet = entitiesSet;
+        }
+
+        public PassableResult(boolean isPassable) {
+            this(isPassable, EntitiesSet.empty());
+        }
+
+        public boolean isPassable() {
+            return isPassable;
+        }
+
+        public EntitiesSet getEntitiesSet() {
+            return entitiesSet;
+        }
+    }
 }

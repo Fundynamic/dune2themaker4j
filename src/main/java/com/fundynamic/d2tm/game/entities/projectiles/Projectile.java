@@ -68,7 +68,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
             }
 
             // do damage on cell / range of cells
-            EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
+            EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
             entities.each(new EntityHandler() {
                 @Override
                 public void handle(Entity entity) {

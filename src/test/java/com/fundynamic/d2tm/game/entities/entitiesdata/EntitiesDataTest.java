@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.newdawn.slick.SlickException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class EntitiesDataTest extends AbstractD2TMTest {
@@ -41,7 +43,27 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         float attackRange = 82F;
         String weaponId = "UNKNOWN";
         String explosionId = "UNKNOWN";
-        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", widthInPixels, heightInPixels, sight, animationSpeed, moveSpeed, turnSpeed, turnSpeedCannon, attackRate, attackRange, hitPoints, weaponId, explosionId);
+
+        IniDataUnit iniDataUnit = new IniDataUnit();
+        iniDataUnit.explosionId = explosionId;
+        iniDataUnit.pathToImage = "quad.png";
+        iniDataUnit.pathToBarrelImage = "barrel.png";
+        iniDataUnit.buildIcon = "buildicon.png";
+        iniDataUnit.width = widthInPixels;
+        iniDataUnit.height = heightInPixels;
+        iniDataUnit.sight = sight;
+        iniDataUnit.animationSpeed = animationSpeed;
+        iniDataUnit.moveSpeed = moveSpeed;
+        iniDataUnit.turnSpeed = turnSpeed;
+        iniDataUnit.turnSpeedCannon = turnSpeedCannon;
+        iniDataUnit.attackRange = attackRange;
+        iniDataUnit.attackRate = attackRate;
+        iniDataUnit.weaponId = weaponId;
+        iniDataUnit.explosionId = explosionId;
+        iniDataUnit.hitpoints = hitPoints;
+        iniDataUnit.buildTimeInSeconds = 1.0F;
+
+        entitiesData.addUnit(idOfEntity, iniDataUnit);
 
         EntityData data = entitiesData.getEntityData(EntityType.UNIT, idOfEntity);
 
@@ -59,13 +81,15 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(hitPoints, data.hitPoints);
         assertEquals(explosionId, data.explosionId);
         assertEquals(weaponId, data.weaponId);
+        assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
+        assertNotNull(data.buildIcon);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void createUnitWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addUnit(idOfEntity, "quad.png", "barrel.png", 32, 32, 2, 0.4F, 1.0F, 1.0F, 1.2F, 1.1F, 2.2F, 100, "0", "1"); // success!
-        entitiesData.addUnit(idOfEntity, "this is irrelevant", "barrel.png", 32, 32, 3, 0.4F, 1.0F, 1.0F, 1.2F, 1.1F, 3.2F, 100, "0", "1"); // boom!
+        entitiesData.addUnit(idOfEntity, new IniDataUnit()); // success!
+        entitiesData.addUnit(idOfEntity, new IniDataUnit()); // boom!
     }
 
     @Test (expected = EntityNotFoundException.class)
@@ -115,6 +139,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(EntityBuilderType.NONE, data.entityBuilderType);
         assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
         assertEquals("WINDTRAP,REFINERY", data.buildList);
+        assertNotNull(data.buildIcon);
     }
 
     @Test (expected = IllegalArgumentException.class)

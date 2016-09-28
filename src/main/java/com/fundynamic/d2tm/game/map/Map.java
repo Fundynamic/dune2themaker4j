@@ -80,11 +80,13 @@ public class Map {
 
     public Cell getCellProtected(int x, int y) {
         int correctedX = x;
-        if (correctedX < 0) correctedX = 0;
+        if (correctedX < 0) correctedX = 0; // make sure we never get out of bounds ( < 0)
         if (correctedX >= widthWithInvisibleBorder) correctedX = widthWithInvisibleBorder - 1;
+
         int correctedY = y;
         if (correctedY < 0) correctedY = 0;
         if (correctedY >= heightWithInvisibleBorder) correctedY = heightWithInvisibleBorder - 1;
+
         return getCell(correctedX, correctedY);
     }
 
@@ -122,6 +124,10 @@ public class Map {
 
     public Cell getCellByAbsoluteMapCoordinates(Coordinate coordinates) {
         return getCellProtected((int) (coordinates.getX() / TILE_SIZE), (int) (coordinates.getY() / TILE_SIZE));
+    }
+
+    public Cell getCellByMapCoordinates(MapCoordinate coordinates) {
+        return getCellProtected(coordinates.getXAsInt(), coordinates.getYAsInt());
     }
 
     public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
@@ -232,4 +238,9 @@ public class Map {
         }
     }
 
+    public boolean isWithinMapBoundaries(MapCoordinate intendedMapCoordinatesToMoveTo) {
+        int x = intendedMapCoordinatesToMoveTo.getXAsInt();
+        int y = intendedMapCoordinatesToMoveTo.getYAsInt();
+        return x >= 1 && x <= width && y >= 1 && y <= height;
+    }
 }
