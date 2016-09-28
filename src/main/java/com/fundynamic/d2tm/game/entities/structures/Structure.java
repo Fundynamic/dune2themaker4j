@@ -191,7 +191,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
         hitPointBasedDestructibility.takeDamage(hitPoints);
-        System.out.println("I took damage " + hitPointBasedDestructibility);
     }
 
     @Override
@@ -236,8 +235,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public void buildEntity(AbstractBuildableEntity placementBuildableEntity) {
-        this.entityBuilder.buildEntity(placementBuildableEntity);
+    public void buildEntity(AbstractBuildableEntity abstractBuildableEntity) {
+        this.entityBuilder.buildEntity(abstractBuildableEntity);
     }
 
     @Override
