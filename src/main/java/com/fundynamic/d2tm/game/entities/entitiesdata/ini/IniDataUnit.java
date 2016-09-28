@@ -1,9 +1,6 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
-import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
-import com.fundynamic.d2tm.utils.StringUtils;
 import org.ini4j.Profile;
 
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader.*;

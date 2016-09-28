@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public class EntityTest extends AbstractD2TMTest {
     private EntityData entityData;
 
     @Before
-    public void setup() {
+    public void setUp() throws SlickException {
+        super.setUp();
         topLeftCoordinate = Coordinate.create(Game.TILE_SIZE * 4, Game.TILE_SIZE * 4); // 4X32 = 128
         entityData = new EntityData();
         entityData.setWidth(64);

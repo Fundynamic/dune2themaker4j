@@ -13,7 +13,9 @@ import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * A fancy name for a 'build icon'
+ */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
     // the entity that is building other entities

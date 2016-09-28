@@ -3,8 +3,6 @@ package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
-import com.fundynamic.d2tm.utils.Colors;
-import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 

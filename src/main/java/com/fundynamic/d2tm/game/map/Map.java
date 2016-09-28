@@ -241,10 +241,6 @@ public class Map {
     public boolean isWithinMapBoundaries(MapCoordinate intendedMapCoordinatesToMoveTo) {
         int x = intendedMapCoordinatesToMoveTo.getXAsInt();
         int y = intendedMapCoordinatesToMoveTo.getYAsInt();
-        if (x < 1) return false;
-        if (y < 1) return false;
-        if (x > width) return false;
-        if (y > height) return false;
-        return true;
+        return x >= 1 && x <= width && y >= 1 && y <= height;
     }
 }
