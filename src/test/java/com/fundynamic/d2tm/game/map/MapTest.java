@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
 import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -29,6 +31,32 @@ public class MapTest extends AbstractD2TMTest {
         map.getCell(MAP_WIDTH + 1, MAP_HEIGHT + 1).changeTerrain(new Rock()); // because of the invisible border
 
         entityRepository = makeTestableEntityRepository(map, entitiesData);
+    }
+
+    @Test
+    public void isWithinMapBoundaries() {
+        // smoke test
+        Assert.assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(3,3)));
+
+        // 0,0 is just over the edge (on top, and on the left)
+        Assert.assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(0,0)));
+        // x is within boundaries, but y is still over the top
+        Assert.assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(1,0)));
+
+        // 1,1 is the upmost topleft coordinate
+        Assert.assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(1,1)));
+
+        // going over the edge at the right
+        Assert.assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,1)));
+
+        // going over the edge at the bottom
+        Assert.assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(1,MAP_HEIGHT + 1)));
+
+        // going over the edge at the right and bottom
+        Assert.assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,MAP_HEIGHT + 1)));
+
+        // this is the bottom-right corner
+        Assert.assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH,MAP_HEIGHT)));
     }
 
     @Test

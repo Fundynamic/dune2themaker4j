@@ -104,4 +104,8 @@ public class EntitiesSet extends HashSet<Entity> {
         }
         return result;
     }
+
+    public static EntitiesSet empty() {
+        return new EntitiesSet();
+    }
 }

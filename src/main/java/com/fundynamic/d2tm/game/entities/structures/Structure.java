@@ -97,7 +97,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             Unit firstEntityThatBlocksExit = null;
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
                 AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
-                EntityRepository.PassableResult passableResult = this.entityRepository.isPassable(this, potentiallySpawnableCoordinate);
+                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
                 if (passableResult.isPassable()) {
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
 

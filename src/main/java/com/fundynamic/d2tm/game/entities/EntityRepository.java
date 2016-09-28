@@ -286,6 +286,20 @@ public class EntityRepository {
         return new RenderQueueEnrichableWithFacingLogic(recoloredImage, entityData, turnSpeed);
     }
 
+    /**
+     * Is same logic as {@link #isPassable(Entity, MapCoordinate)} - but first checks if <code>mapCoordinate</code> is
+     * within the map boundaries.
+     * @param entity
+     * @param mapCoordinate
+     * @return
+     */
+    public PassableResult isPassableWithinMapBoundaries(Entity entity, MapCoordinate mapCoordinate) {
+        if (map.isWithinMapBoundaries(mapCoordinate)) {
+            return isPassable(entity, mapCoordinate);
+        }
+        return new PassableResult(false);
+    }
+
     public class PassableResult {
         private boolean isPassable;
         private EntitiesSet entitiesSet;
@@ -293,6 +307,10 @@ public class EntityRepository {
         public PassableResult(boolean isPassable, EntitiesSet entitiesSet) {
             this.isPassable = isPassable;
             this.entitiesSet = entitiesSet;
+        }
+
+        public PassableResult(boolean isPassable) {
+            this(isPassable, EntitiesSet.empty());
         }
 
         public boolean isPassable() {

@@ -3,6 +3,8 @@ package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -41,6 +43,7 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
                 // TODO: 2 responsibilities happening here, one is culling, one is drawing
                 // it is better to separate the two
                 renderer.draw(graphics, map.getCell(x, y), drawX, drawY);
+//                SlickUtils.drawShadowedText(graphics, Colors.WHITE, "" + x + "," + y, drawX, drawY);
             }
         }
     }
