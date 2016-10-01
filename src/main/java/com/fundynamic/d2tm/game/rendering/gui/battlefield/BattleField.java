@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBeh
 import com.fundynamic.d2tm.game.controls.battlefield.CellBasedMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
@@ -264,13 +265,16 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     @Override
     public void entitiesSelected(EntitiesSet entities) {
         System.out.println("Battlefield gets told that " + entities + " are selected");
-        EntitiesSet entityBuilders = entities.filter(Predicate.isEntityBuilder());
 
-        if (entityBuilders.size() == 1) {
+        EntitiesSet entityBuildersForControllingPlayer = entities.filter(
+                Predicate.builder()
+                        .belongsToPlayer(mouse.getControllingPlayer())
+                        .isEntityBuilder()
+        );
+
+        if (entityBuildersForControllingPlayer.hasOne()) {
             Entity first = entities.getFirst();
-            if (first.isEntityBuilder()) {
-                guiComposite.entityBuilderSelected(first);
-            }
+            guiComposite.entityBuilderSelected(first);
         } else {
             guiComposite.allEntityBuildersDeSelected();
         }

@@ -30,7 +30,7 @@ public class BelongsToPlayer extends Predicate<Entity> {
                 '}';
     }
 
-    public static BelongsToPlayer Instance(Player playerItShouldBelongTo) {
+    public static BelongsToPlayer instance(Player playerItShouldBelongTo) {
         if (!instances.containsKey(playerItShouldBelongTo)) {
             instances.put(playerItShouldBelongTo, new BelongsToPlayer(playerItShouldBelongTo));
         }

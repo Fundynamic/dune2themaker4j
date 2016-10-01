@@ -49,6 +49,10 @@ public class EntitiesSet extends HashSet<Entity> {
         return size() > 0;
     }
 
+    public boolean hasOne() {
+        return size() == 1;
+    }
+
     /**
      *
      * Returns first element or null when size is 0

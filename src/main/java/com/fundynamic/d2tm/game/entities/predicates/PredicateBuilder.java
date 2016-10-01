@@ -7,7 +7,6 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import com.fundynamic.d2tm.math.Vector2D;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder forPlayer(Player player) {
-        predicates.add(BelongsToPlayer.Instance((player)));
+        predicates.add(BelongsToPlayer.instance((player)));
         return this;
     }
 
@@ -45,6 +44,16 @@ public class PredicateBuilder {
 
     public Predicate build() {
         return new AndPredicate(predicates);
+    }
+
+    public PredicateBuilder belongsToPlayer(Player playerItShouldBelongTo) {
+        predicates.add(BelongsToPlayer.instance(playerItShouldBelongTo));
+        return this;
+    }
+
+    public PredicateBuilder isEntityBuilder() {
+        predicates.add(IsEntityBuilder.instance);
+        return this;
     }
 
     public PredicateBuilder isSelectable() {
