@@ -27,7 +27,7 @@ public class PredicateBuilder {
     }
 
     public PredicateBuilder forPlayer(Player player) {
-        predicates.add(new BelongsToPlayer(player));
+        predicates.add(BelongsToPlayer.Instance((player)));
         return this;
     }
 

@@ -72,14 +72,14 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     @Test
     public void filtersForPlayer() {
-        Set<Entity> result = entitiesSet.filter(new BelongsToPlayer(player));
+        Set<Entity> result = entitiesSet.filter(BelongsToPlayer.Instance(player));
         assertEquals(playerOneStructureCount + playerOneUnitCount + playerOneBareEntitiesCount, result.size());
     }
 
     @Test
     public void filtersNotForPlayer() {
         // get everything except player one
-        Set<Entity> result = entitiesSet.filter(new NotPredicate(new BelongsToPlayer(player)));
+        Set<Entity> result = entitiesSet.filter(new NotPredicate(BelongsToPlayer.Instance(player)));
         // player 2 has 6 entities
         assertEquals(6, result.size());
     }
