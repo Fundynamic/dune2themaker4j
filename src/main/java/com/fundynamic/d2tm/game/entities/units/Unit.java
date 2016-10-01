@@ -109,7 +109,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 // scan environment within range for enemies
                 EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
 
-                EntitiesSet enemyEntities = entities.filter(new NotPredicate(new BelongsToPlayer(player)));
+                EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
 
                 if (enemyEntities.isEmpty()) {
                     if (this.getPlayer().isCPU()) {
@@ -131,7 +131,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                             attack(enemyToAttack);
                         } else {
                             EntitiesSet allUnits = entityRepository.allUnits();
-                            enemyEntities = allUnits.filter(new NotPredicate(new BelongsToPlayer(player)));
+                            enemyEntities = allUnits.filter(new NotPredicate(BelongsToPlayer.instance((player))));
 
                             distance = 131072; // 64X64X32
                             enemyToAttack = null;
