@@ -165,13 +165,31 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     public Coordinate translateAbsoluteMapCoordinateToViewportCoordinate(Coordinate absoluteMapCoordinate) {
-        return new Coordinate(absoluteMapCoordinate.min(viewingVector));
+        return absoluteMapCoordinate.min(viewingVector);
     }
 
+    /**
+     * <p>
+     *     Given an absolute viewport coordinate (acquire one via {@link #translateScreenToViewportCoordinate(Vector2D)}, returns
+     *     an absolute <em>map</em> {@link Coordinate}.
+     * </p>
+     * @param positionOnViewport
+     * @return
+     */
     public Coordinate translateViewportCoordinateToAbsoluteMapCoordinate(Vector2D positionOnViewport) {
         return new Coordinate(positionOnViewport.add(viewingVector));
     }
 
+    /**
+     * <p>
+     * Given a Vector that represents a screen(/mouse) coordinate. The coordinate will be corrected into the
+     * viewport (of this battlefield class). For instance: assuming the viewport is on 10,20 drawn on the SCREEN. A given
+     * 10,20 coordinate will result in a 0,0 absolute coordinate. A screen coordinate of 20, 30 results in 0,10.
+     *</p>
+     * <b>Can return NULL when coordinate is <em>not</em> within the dimensions of this Gui Element!</b>
+     * @param screenPosition
+     * @return
+     */
     public Coordinate translateScreenToViewportCoordinate(Vector2D screenPosition) {
         if (!isVectorWithin(screenPosition)) return null; // outside our viewport!
         return new Coordinate(screenPosition.min(getTopLeft()));
@@ -218,13 +236,31 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     @Override
     public void movedTo(Vector2D coordinates) {
         this.mouseBehavior.movedTo(coordinates);
+        mouseMovedToCell(getCellByScreenCoordinate(coordinates));
+    }
 
-        Coordinate viewportCoordinate = translateScreenToViewportCoordinate(coordinates);
-        Coordinate absoluteMapCoordinate = translateViewportCoordinateToAbsoluteMapCoordinate(viewportCoordinate);
+    /**
+     * Returns a Cell based on the screen coordinate.
+     *
+     * @param coordinates
+     * @return
+     */
+    public Cell getCellByScreenCoordinate(Vector2D coordinates) {
+        Coordinate absoluteViewportCoordinate = translateScreenToViewportCoordinate(coordinates);
+        return getCellByAbsoluteViewportCoordinate(absoluteViewportCoordinate);
+    }
 
-        Cell cellByAbsoluteMapCoordinates = map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinate);
-
-        mouseMovedToCell(cellByAbsoluteMapCoordinates);
+    /**
+     * <p>
+     * Given an absolute <em>viewport</em> coordinate (you can acquire one by calling {@link #translateScreenToViewportCoordinate(Vector2D)}, this method
+     * figures out which map coordinate is underneath and what cell is associated with it. Returns the found cell.
+     * </p>
+     * @param absoluteViewportCoordinate
+     * @return
+     */
+    public Cell getCellByAbsoluteViewportCoordinate(Coordinate absoluteViewportCoordinate) {
+        Coordinate absoluteMapCoordinate = translateViewportCoordinateToAbsoluteMapCoordinate(absoluteViewportCoordinate);
+        return map.getCellByAbsoluteMapCoordinates(absoluteMapCoordinate);
     }
 
     @Override

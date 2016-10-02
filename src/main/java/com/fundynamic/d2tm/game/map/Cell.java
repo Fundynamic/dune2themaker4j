@@ -85,7 +85,7 @@ public class Cell {
      * @return
      */
     public Coordinate getCoordinates() {
-        return getMapCoordinate().toCoordinate();
+        return mapCoordinate.toCoordinate();
     }
 
     public boolean isAtSameLocationAs(Cell other) {

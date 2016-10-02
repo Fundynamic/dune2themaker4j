@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
@@ -12,8 +13,11 @@ import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
  */
 public class PlacementBuildableEntity extends AbstractBuildableEntity {
 
-    public PlacementBuildableEntity(EntityData entityData) {
+    private Entity entityWhoConstructsThis;
+
+    public PlacementBuildableEntity(EntityData entityData, Entity entityWhoConstructsThis) {
         super(entityData);
+        this.entityWhoConstructsThis = entityWhoConstructsThis;
     }
 
     @Override
@@ -24,4 +28,7 @@ public class PlacementBuildableEntity extends AbstractBuildableEntity {
         }
     }
 
+    public Entity getEntityWhoConstructsThis() {
+        return entityWhoConstructsThis;
+    }
 }

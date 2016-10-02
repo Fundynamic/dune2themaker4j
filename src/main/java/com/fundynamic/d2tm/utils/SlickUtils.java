@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.utils;
 
 
+import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -23,6 +24,10 @@ public class SlickUtils {
     public static void drawShadowedText(Graphics graphics, Color color, String msg, int x, int y) {
         drawText(graphics, Colors.BLACK_ALPHA_128, msg, x + 2, y + 2); // shadow
         drawText(graphics, color, msg, x, y); // text
+    }
+
+    public static void drawLine(Graphics graphics, Coordinate from, Coordinate to) {
+        graphics.drawLine(from.getXAsInt(), from.getYAsInt(), to.getXAsInt(), to.getYAsInt());
     }
 
     /**

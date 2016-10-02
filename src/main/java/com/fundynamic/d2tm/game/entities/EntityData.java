@@ -241,8 +241,8 @@ public class EntityData {
         List<MapCoordinate> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                int vecX = coordinate.getXAsInt() + x * Game.TILE_SIZE;
-                int vecY = coordinate.getYAsInt() + y * Game.TILE_SIZE;
+                int vecX = coordinate.getXAsInt() + (x * Game.TILE_SIZE);
+                int vecY = coordinate.getYAsInt() + (y * Game.TILE_SIZE);
                 result.add(Coordinate.create(vecX, vecY).toMapCoordinate());
             }
         }

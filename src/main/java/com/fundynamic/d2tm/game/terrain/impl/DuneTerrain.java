@@ -58,4 +58,5 @@ public abstract class DuneTerrain implements Terrain {
     public boolean isPassable(Entity entity) {
         return true;
     }
+
 }

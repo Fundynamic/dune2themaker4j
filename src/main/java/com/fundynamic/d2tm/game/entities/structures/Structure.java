@@ -58,7 +58,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        this.entityBuilder = new SingleEntityBuilder(entityDatas);
+        this.entityBuilder = new SingleEntityBuilder(entityDatas, this);
 
     }
 
@@ -144,16 +144,33 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
-        graphics.drawImage(sprite, x, y);
+//        graphics.drawImage(sprite, x, y);
+        graphics.drawRect(x, y, entityData.getWidth(), entityData.getHeight());
+        Coordinate centeredCoordinate = getCenteredCoordinate();
         MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
-        if (Game.DEBUG_INFO) {
-            SlickUtils.drawShadowedText(
-                    graphics,
-                    Colors.WHITE,
-                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
-                    x,
-                    y);
-        }
+        SlickUtils.drawShadowedText(
+                graphics,
+                Colors.WHITE,
+                "" + coordinate.getXAsInt() + "," + coordinate.getYAsInt(),
+                x,
+                y);
+
+        SlickUtils.drawShadowedText(
+                graphics,
+                Colors.WHITE,
+                "" + centeredCoordinate.getXAsInt() + "," + centeredCoordinate.getYAsInt(),
+                x,
+                y + 18);
+
+
+//        if (Game.DEBUG_INFO) {
+//            SlickUtils.drawShadowedText(
+//                    graphics,
+//                    Colors.WHITE,
+//                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
+//                    x,
+//                    y);
+//        }
     }
 
     public void select() {

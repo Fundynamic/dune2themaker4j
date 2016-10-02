@@ -26,4 +26,5 @@ public class Rock extends DuneTerrain implements ConstructionGround {
         return TERRAIN_ROCK;
     }
 
+
 }
