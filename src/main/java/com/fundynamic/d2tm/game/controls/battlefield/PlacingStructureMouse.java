@@ -9,6 +9,7 @@ import com.fundynamic.d2tm.game.terrain.ConstructionGround;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -76,6 +77,10 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         EntityRepository entityRepository = battleField.getEntityRepository();
 
         List<MapCoordinate> allCellsAsCoordinates = this.entityDataToPlace.getAllCellsAsCoordinates(absoluteMapCoordinateOfTopleftOfStructure);
+        MapCoordinate topLeftMapCoordinate = allCellsAsCoordinates.get(0);
+        Coordinate coordinateTopLeft = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(topLeftMapCoordinate.toCoordinate());
+        graphics.drawImage(entityDataToPlace.getFirstImage(), coordinateTopLeft.getXAsInt(), coordinateTopLeft.getYAsInt());
+
         for (MapCoordinate mapCoordinate : allCellsAsCoordinates) {
             Coordinate absoluteMapCoordinate = mapCoordinate.toCoordinate();
             Coordinate coordinate = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(absoluteMapCoordinate);
@@ -92,17 +97,12 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
             }
 
             if (placeable) {
-                graphics.setColor(Color.green);
-                graphics.drawRect(coordinate.getXAsInt(), coordinate.getYAsInt(), 32, 32);
-            }else {
-                graphics.setColor(Color.red);
-                graphics.drawRect(coordinate.getXAsInt(), coordinate.getYAsInt(), 32, 32);
-                graphics.drawLine(coordinate.getXAsInt(), coordinate.getYAsInt(), coordinate.getXAsInt() + 32, coordinate.getYAsInt() + 32);
-                graphics.drawLine(coordinate.getXAsInt(), coordinate.getYAsInt() + 32, coordinate.getXAsInt() + 32, coordinate.getYAsInt());
+                graphics.setColor(Colors.GREEN_ALPHA_128);
+            } else {
+                graphics.setColor(Colors.RED_ALPHA_128);
             }
+            graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), 32, 32);
         }
-
-//        SlickUtils.drawLine(graphics, constructingEntityCoordinate, mouseCoordinates);
 
         graphics.setLineWidth(lineWidth);
     }

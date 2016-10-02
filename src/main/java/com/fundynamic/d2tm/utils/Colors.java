@@ -10,6 +10,8 @@ public class Colors {
 
     public static final Color BLACK = Color.black;
     public static final Color WHITE = Color.white;
+    public static final Color GREEN_ALPHA_128 = new Color(0,255,0,128);
+    public static final Color RED_ALPHA_128 = new Color(255,0,0,128);
     public static final Color BLACK_ALPHA_128 = new Color(0,0,0,128);
     public static final Color WHITE_ALPHA_128 = new Color(255, 255, 255, 128);
     public static final Color RED = new Color(255, 0, 0, 128);
@@ -64,4 +66,5 @@ public class Colors {
     public static String toString(Color c) {
         return "Color(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue() + "," + c.getAlpha() + ")";
     }
+
 }
