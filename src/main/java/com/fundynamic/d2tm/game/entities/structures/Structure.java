@@ -10,11 +10,16 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
 import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.fills.GradientFill;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,6 +152,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         graphics.drawImage(sprite, x, y);
 
         if (Game.DEBUG_INFO) {
+            Vector2D halfSize = getHalfSize();
+            Circle circle = new Circle(x + halfSize.getXAsInt(), y + halfSize.getYAsInt(), entityData.buildRange);
+            graphics.setColor(Colors.YELLOW_ALPHA_32);
+            ShapeRenderer.fill(circle);
+
             MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
             SlickUtils.drawShadowedText(
                     graphics,
