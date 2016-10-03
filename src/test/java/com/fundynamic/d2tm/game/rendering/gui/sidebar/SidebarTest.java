@@ -4,12 +4,17 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.state.PlayingState;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * This is a fairly big test:
@@ -36,6 +41,10 @@ public class SidebarTest extends AbstractD2TMTest {
 
     @Test
     public void selectingConstructionYardActivatesSidebar() {
+        // make a map full of rock to make sure this test passes
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_ROCK);
+
         // Place structure
         MapCoordinate mapCoordinate = MapCoordinate.create(STRUCTURE_MAP_COORDINATE_X, STRUCTURE_MAP_COORDINATE_Y);
         Structure structure = entityRepository.placeStructureOnMap(
