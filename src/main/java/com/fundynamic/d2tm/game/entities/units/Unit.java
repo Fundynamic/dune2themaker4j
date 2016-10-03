@@ -384,10 +384,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void takeDamage(int hitPoints, Entity origin) {
         if (player.isCPU()) {
             if (origin == null) {
-                // we're hit and we don't have an idea where it came from
-                int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-                int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-                Vector2D target = coordinate.add(Vector2D.create(correctX, correctY));
+                Vector2D target = coordinate;
+                // keep thinking of a random position to move to
+                while (target.equals(coordinate)) {
+                    target = getRandomVectorToMoveTo();
+                }
                 moveTo(target);
             } else {
                 if (entityToAttack == null) {
@@ -396,6 +397,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             }
         }
         hitPointBasedDestructibility.takeDamage(hitPoints);
+    }
+
+    public Vector2D getRandomVectorToMoveTo() {
+        // we're hit and we don't have an idea where it came from
+        int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+        int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+        return coordinate.add(Vector2D.create(correctX, correctY));
     }
 
     @Override
