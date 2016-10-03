@@ -10,6 +10,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
@@ -164,8 +165,30 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
 
+    /**
+     * <p>
+     *     This method takes an absoluteMapCoordinate and translates this into a Viewport coordinate. This means
+     *     effectively that any given coordinate is substracted by the camera(viewport) position.
+     * </p>
+     * <h2>Usage</h1>
+     * <p>
+     *     Example: You want to draw anything on screen. Pass in the absolute coordinates here, and use the
+     *     resulting Coordinate as vector to draw within the viewport.
+     * </p>
+     * @param absoluteMapCoordinate
+     * @return
+     */
     public Coordinate translateAbsoluteMapCoordinateToViewportCoordinate(Coordinate absoluteMapCoordinate) {
         return absoluteMapCoordinate.min(viewingVector);
+    }
+
+    /**
+     * <p>A short-hand for {@link #translateAbsoluteMapCoordinateToViewportCoordinate(Coordinate)} but for {@link MapCoordinate}</p>
+     * @param mapCoordinate
+     * @return
+     */
+    public Coordinate translateMapCoordinateToViewportCoordinate(MapCoordinate mapCoordinate) {
+        return translateAbsoluteMapCoordinateToViewportCoordinate(mapCoordinate.toCoordinate());
     }
 
     /**

@@ -12,6 +12,7 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
@@ -39,8 +40,14 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
     public void leftClicked() {
         if (!isAllCoordinatesForEntityToPlacePassableAndWithinReach()) return;
 
-        Entity entity = entityRepository.placeOnMap(getAbsoluteCoordinateTopLeftOfStructureToPlace(), entityDataToPlace, mouse.getControllingPlayer());
-        battleField.entityPlacedOnMap(entity);
+        // tell battlefield of the created entity
+        battleField.entityPlacedOnMap(
+                entityRepository.placeOnMap( // place entity on map
+                        getAbsoluteCoordinateTopLeftOfStructureToPlace(),
+                        entityDataToPlace,
+                        mouse.getControllingPlayer()
+                )
+        );
     }
 
     @Override
@@ -61,8 +68,8 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
         MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
 
-        Coordinate coordinateTopLeft = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(topLeftMapCoordinate.toCoordinate());
-        graphics.drawImage(entityDataToPlace.getFirstImage(), coordinateTopLeft.getXAsInt(), coordinateTopLeft.getYAsInt());
+        Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);
+        SlickUtils.drawImage(graphics, entityDataToPlace.getFirstImage(), coordinateTopLeft);
 
         // Now, do checks if the structure may be placed
         for (PlaceableMapCoordinateCandidate placeableMapCoordinateCandidate : mapCoordinatesForEntityToPlace) {
@@ -86,12 +93,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
             placeableMapCoordinateCandidate.distance = constructingEntityCoordinate.distance(coordinate);
 
             graphics.setColor(Colors.WHITE);
-            graphics.drawLine(
-                    coordinate.getXAsInt(),
-                    coordinate.getYAsInt(),
-                    constructingEntityCoordinate.getXAsInt(),
-                    constructingEntityCoordinate.getYAsInt()
-            );
+            SlickUtils.drawLine(graphics, coordinate, constructingEntityCoordinate);
 
             // still placeable? good. Final (expensive) check -> any other units that may block this?
             if (isPlaceable) {
@@ -178,11 +180,20 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         return this.mapCoordinatesForEntityToPlace.stream().allMatch(c -> c.isPassable && c.isWithinReach);
     }
 
+    /**
+     * This method finds a closest player Structure to the given coordinate.
+     * @param coordinate
+     * @return
+     */
     private Entity findClosestStructureOfPlayer(Coordinate coordinate) {
+        // TODO: Optimize
+        // Perhaps have a 'satisfying distance' ? ie, whenever it finds one within this distance, stop searching?
+        // Do not loop over everything?
+        // Move to EntityRepository?
         PredicateBuilder predicateBuilder = Predicate.builder().forPlayer(player).ofType(EntityType.STRUCTURE);
         EntitiesSet allStructuresForPlayer = entityRepository.filter(predicateBuilder.build());
 
-        float closestDistanceFoundSoFar = 320000;
+        float closestDistanceFoundSoFar = 320000; // Get from Map!? (width * height) -> get rid of magic number
         Entity closestEntityFoundSoFar = null;
 
         for (Entity entity : allStructuresForPlayer) {

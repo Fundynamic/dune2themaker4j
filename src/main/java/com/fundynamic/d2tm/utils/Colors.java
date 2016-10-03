@@ -6,6 +6,18 @@ import org.newdawn.slick.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <h1>General purpose</h1>
+ * <p>
+ *     Easy color management & caching of colors that are being created - to prevent recreation of Color classes all the time.
+ * </p>
+ * <h2>Usage</h2>
+ * <p>
+ *     Get a color by one of the static final fields.
+ *
+ *     Or use the {@link #create(int, int, int, int)} to create a new color.
+ * </p>
+ */
 public class Colors {
 
     public static final Color BLACK = Color.black;
@@ -22,7 +34,7 @@ public class Colors {
     public static Map<String,Color> colorMap = new HashMap<>();
 
     /**
-     * Creates a color and cashes it.
+     * Creates a color and caches it. Cache-key is determined by rgba.
      * @param r
      * @param g
      * @param b
@@ -56,7 +68,7 @@ public class Colors {
     }
 
     /**
-     * Shorthand for {@link #create(float, float, float, -1)}
+     * Shorthand for {@link #create(int, int, int, -1)}
      * @param r
      * @param g
      * @param b
