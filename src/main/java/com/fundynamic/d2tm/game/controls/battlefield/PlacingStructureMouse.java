@@ -75,7 +75,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
             boolean isPlaceable = cell.isVisibleFor(player);
 
             // visible? then check if it may be constructed (is it construction ground?)
-            if (isPlaceable && (cell.getTerrain() instanceof ConstructionGround) == false) {
+            if (isPlaceable && !(cell.getTerrain() instanceof ConstructionGround)) {
                 isPlaceable = false;
             }
 

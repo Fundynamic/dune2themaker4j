@@ -13,13 +13,11 @@ import java.util.List;
  */
 public class SingleEntityBuilder implements EntityBuilder {
 
-    private Entity constructingForEntity;
     private AbstractBuildableEntity buildingEntity = null;
 
     private List<AbstractBuildableEntity> buildableEntities = new ArrayList<>();
 
     public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity) {
-        this.constructingForEntity = constructingForEntity;
         for (EntityData entityDataToBuild : entityDatasToBuild) {
             // TODO: make more flexible!!
             if (entityDataToBuild.isTypeStructure()) {
