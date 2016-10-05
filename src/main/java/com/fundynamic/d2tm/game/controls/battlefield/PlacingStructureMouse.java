@@ -38,7 +38,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void leftClicked() {
-        if (!isAllCoordinatesForEntityToPlacePassableAndWithinReach()) return;
+        if (!canPlaceEntity()) return;
 
         // tell battlefield of the created entity
         battleField.entityPlacedOnMap(
@@ -92,43 +92,55 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
             placeableMapCoordinateCandidate.distance = constructingEntityCoordinate.distance(coordinate);
 
-            graphics.setColor(Colors.WHITE);
-            SlickUtils.drawLine(graphics, coordinate, constructingEntityCoordinate);
+            // render the lines when debug info is true
+            if (Game.DEBUG_INFO) {
+                graphics.setColor(Colors.WHITE);
+                SlickUtils.drawLine(graphics, coordinate, constructingEntityCoordinate);
+            }
 
             // still placeable? good. Final (expensive) check -> any other units that may block this?
             if (isPlaceable) {
                 EntitiesSet entitiesAtMapCoordinate = entityRepository.findAliveEntitiesOfTypeAtVector(absoluteMapCoordinate, EntityType.STRUCTURE, EntityType.UNIT);
                 isPlaceable = entitiesAtMapCoordinate.isEmpty();
             }
-            placeableMapCoordinateCandidate.isPassable = isPlaceable;
+
+            if (!isPlaceable) {
+                placeableMapCoordinateCandidate.placeableState = PlaceableState.BLOCKED;
+            }
         }
 
         float maxDistance = entityWhoConstructsIt.getEntityData().buildRange; // from center of the structure that built this entity (to place)
 
         for (PlaceableMapCoordinateCandidate pmcc : mapCoordinatesForEntityToPlace) {
-            if (!pmcc.isPassable) continue; // not worth evaluating distance
-            pmcc.isWithinReach = pmcc.distance < maxDistance;
+            if (pmcc.placeableState != PlaceableState.PLACEABLE) continue;
+            if (pmcc.distance > maxDistance) {
+                pmcc.placeableState = PlaceableState.OUT_OF_REACH;
+            }
         }
 
+        boolean canPlaceEntity = canPlaceEntity();
 
         // Render stuff!
         for (PlaceableMapCoordinateCandidate placeableMapCoordinateCandidate : mapCoordinatesForEntityToPlace) {
             Coordinate absoluteMapCoordinate = placeableMapCoordinateCandidate.mapCoordinate.toCoordinate();
             Coordinate coordinate = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(absoluteMapCoordinate);
 
-            if (placeableMapCoordinateCandidate.isPassable) {
-                if (placeableMapCoordinateCandidate.isWithinReach) {
-                    graphics.setColor(Colors.GREEN_ALPHA_128);
-                } else {
-                    graphics.setColor(Colors.YELLOW_ALPHA_128);
-                }
+            if (canPlaceEntity) {
+                graphics.setColor(Colors.GREEN_ALPHA_128);
             } else {
-                if (placeableMapCoordinateCandidate.isWithinReach) {
-                    graphics.setColor(Colors.RED_ALPHA_128);
-                } else {
-                    graphics.setColor(Colors.DARK_RED_ALPHA_128);
+                switch (placeableMapCoordinateCandidate.placeableState) {
+                    case PLACEABLE:
+                        graphics.setColor(Colors.GREEN_ALPHA_128);
+                        break;
+                    case BLOCKED:
+                        graphics.setColor(Colors.RED_ALPHA_128);
+                        break;
+                    case OUT_OF_REACH:
+                        graphics.setColor(Colors.YELLOW_ALPHA_128);
+                        break;
                 }
             }
+
 
             graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), Game.TILE_SIZE, Game.TILE_SIZE);
         }
@@ -152,7 +164,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         mapCoordinatesForEntityToPlace =
                 allMapCoordinates
                         .stream()
-                        .map(mapCoordinate -> new PlaceableMapCoordinateCandidate(mapCoordinate, false))
+                        .map(mapCoordinate -> new PlaceableMapCoordinateCandidate(mapCoordinate, PlaceableState.PLACEABLE))
                         .collect(toList());
 
     }
@@ -176,8 +188,14 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
                 '}';
     }
 
-    public boolean isAllCoordinatesForEntityToPlacePassableAndWithinReach() {
-        return this.mapCoordinatesForEntityToPlace.stream().allMatch(c -> c.isPassable && c.isWithinReach);
+    public boolean canPlaceEntity() {
+        // blocked == not good
+        // passable == good
+        // out of reach, but one passable == good
+        boolean blocked = this.mapCoordinatesForEntityToPlace.stream().anyMatch(c -> c.placeableState == PlaceableState.BLOCKED);
+        if (blocked) return false;
+
+        return this.mapCoordinatesForEntityToPlace.stream().anyMatch(c -> c.placeableState == PlaceableState.PLACEABLE);
     }
 
     /**
@@ -212,13 +230,18 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
     private class PlaceableMapCoordinateCandidate  {
 
         public MapCoordinate mapCoordinate;
-        public boolean isPassable = false;
-        public boolean isWithinReach = true;
+        public PlaceableState placeableState;
         public float distance = 99999;
 
-        public PlaceableMapCoordinateCandidate(MapCoordinate mapCoordinate, boolean passable) {
+        public PlaceableMapCoordinateCandidate(MapCoordinate mapCoordinate, PlaceableState state) {
             this.mapCoordinate = mapCoordinate;
-            this.isPassable = passable;
+            this.placeableState = state;
         }
+    }
+
+    enum PlaceableState {
+        PLACEABLE,
+        BLOCKED,
+        OUT_OF_REACH
     }
 }

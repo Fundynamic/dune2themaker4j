@@ -150,18 +150,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         graphics.drawImage(sprite, x, y);
 
         if (Game.DEBUG_INFO) {
+            // render build-range
             Vector2D halfSize = getHalfSize();
             Circle circle = new Circle(x + halfSize.getXAsInt(), y + halfSize.getYAsInt(), entityData.buildRange);
             graphics.setColor(Colors.YELLOW_ALPHA_32);
             ShapeRenderer.fill(circle);
-
-            MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
-            SlickUtils.drawShadowedText(
-                    graphics,
-                    Colors.WHITE,
-                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
-                    x,
-                    y);
         }
     }
 
