@@ -1,15 +1,17 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.utils.StringUtils;
+import org.ini4j.Profile;
+
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader.*;
 
 /**
  * Object representation of a STRUCTURE entry in the INI file.
  */
 public class IniDataStructure {
 
-
-    public String id;
     public String image;
     public int width;
     public int height;
@@ -21,18 +23,20 @@ public class IniDataStructure {
     public float buildTimeInSeconds;
     public String buildList;
 
-    public IniDataStructure(String id, String image, int width, int height, int sight, int hitpoints, String explosion, String buildIcon, String entityBuilderType, float buildTimeInSeconds, String buildList) {
-        this.id = id;
-        this.image = image;
-        this.width = width;
-        this.height = height;
-        this.sight = sight;
-        this.hitpoints = hitpoints;
-        this.explosion = explosion;
-        this.buildIcon = buildIcon;
-        this.entityBuilderType = entityBuilderType;
-        this.buildTimeInSeconds = buildTimeInSeconds;
-        this.buildList = buildList;
+    public IniDataStructure() {
+    }
+
+    public IniDataStructure(Profile.Section struct) {
+        this.image = struct.get(INI_KEYWORD_IMAGE, String.class, null);
+        this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class);
+        this.height = struct.get(INI_KEYWORD_HEIGHT, Integer.class);
+        this.sight = struct.get(INI_KEYWORD_SIGHT, Integer.class);
+        this.hitpoints = struct.get(INI_KEYWORD_HIT_POINTS, Integer.class);
+        this.explosion = struct.get(INI_KEYWORD_EXPLOSION, String.class, EntitiesData.UNKNOWN);
+        this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
+        this.entityBuilderType = struct.get(INI_KEYWORD_BUILDS, String.class, "");
+        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        this.buildList = struct.get(INI_KEYWORD_BUILD_LIST, String.class, "");
     }
 
     public EntityBuilderType getEntityBuilderType() {

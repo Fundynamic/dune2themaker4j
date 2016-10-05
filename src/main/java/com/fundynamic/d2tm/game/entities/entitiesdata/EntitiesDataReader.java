@@ -81,19 +81,8 @@ public class EntitiesDataReader {
         for (String id : strings) {
             Profile.Section struct = structures.getChild(id);
             entitiesData.addStructure(
-                    new IniDataStructure(
-                        id,
-                        struct.get(INI_KEYWORD_IMAGE, String.class, null),
-                        struct.get(INI_KEYWORD_WIDTH, Integer.class),
-                        struct.get(INI_KEYWORD_HEIGHT, Integer.class),
-                        struct.get(INI_KEYWORD_SIGHT, Integer.class),
-                        struct.get(INI_KEYWORD_HIT_POINTS, Integer.class),
-                        struct.get(INI_KEYWORD_EXPLOSION, String.class, EntitiesData.UNKNOWN),
-                        struct.get(INI_KEYWORD_BUILD_ICON, String.class, null),
-                        struct.get(INI_KEYWORD_BUILDS, String.class, ""),
-                        struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F),
-                        struct.get(INI_KEYWORD_BUILD_LIST, String.class, "")
-                    )
+                    id,
+                    new IniDataStructure(struct)
             );
         }
     }

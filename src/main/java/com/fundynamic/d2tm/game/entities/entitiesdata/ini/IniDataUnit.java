@@ -39,7 +39,6 @@ public class IniDataUnit {
     public float buildTimeInSeconds;
 
     public IniDataUnit() {
-
     }
 
     public IniDataUnit(Profile.Section struct) {

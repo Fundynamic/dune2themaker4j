@@ -87,9 +87,9 @@ public class EntitiesData {
      *
      * @throws SlickException
      */
-    public EntityData addStructure(IniDataStructure iniDataStructure) throws SlickException {
+    public EntityData addStructure(String id, IniDataStructure iniDataStructure) throws SlickException {
         EntityData entityData = createEntity(
-                iniDataStructure.id,
+                id,
                 iniDataStructure.image,
                 null,
                 iniDataStructure.width,
@@ -106,7 +106,7 @@ public class EntitiesData {
 
         if (!idProvided(iniDataStructure.explosion)) {
             if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
-                throw new IllegalArgumentException("structure " + iniDataStructure.id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
+                throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
             }
             entityData.explosionId = iniDataStructure.explosion;
         }

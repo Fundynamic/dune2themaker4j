@@ -104,25 +104,30 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         int widthInCells = widthInPixels / Game.TILE_SIZE;
         int heightInCells = heightInPixels / Game.TILE_SIZE;
         int hitPoints = 1000;
+        String entityBuilderType = "";
         String idOfEntity = "1";
         int sight = 3;
         String explosionId = "UNKNOWN";
 
+
+
+        IniDataStructure iniDataStructure = new IniDataStructure();
+
+        iniDataStructure.image = "constyard.png";
+        iniDataStructure.width = widthInPixels;
+        iniDataStructure.height = heightInPixels;
+        iniDataStructure.sight = sight;
+        iniDataStructure.hitpoints = 1000;
+        iniDataStructure.explosion = explosionId;
+        iniDataStructure.buildIcon = "icon_constyard.bmp";
+        iniDataStructure.entityBuilderType = entityBuilderType;
+        iniDataStructure.buildTimeInSeconds = 1.0F;
+        iniDataStructure.buildList = "WINDTRAP,REFINERY";
+
         // add
         entitiesData.addStructure(
-                new IniDataStructure(
-                        idOfEntity,
-                        "constyard.png",
-                        widthInPixels,
-                        heightInPixels,
-                        sight,
-                        1000,
-                        explosionId,
-                        "icon_constyard.bmp",
-                        "",
-                        1.0F,
-                        "WINDTRAP,REFINERY"
-                )
+                idOfEntity,
+                iniDataStructure
         );
 
         // get & assert
@@ -145,8 +150,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     @Test (expected = IllegalArgumentException.class)
     public void createStructureWithDuplicateIdThrowsIllegalArgumentException() throws SlickException {
         String idOfEntity = "1";
-        entitiesData.addStructure(new IniDataStructure(idOfEntity, "constyard.png", 32, 32, 2, 1000, "1", "icon_constyard.bmp", "", 1.0F, "")); // success!
-        entitiesData.addStructure(new IniDataStructure(idOfEntity, "this is irrelevant", 32, 32, 3, 1000, "1", "icon_constyard.bmp", "", 1.0F, "")); // boom!
+        entitiesData.addStructure(idOfEntity, new IniDataStructure()); // success!
+        entitiesData.addStructure(idOfEntity, new IniDataStructure()); // boom!
     }
 
 
