@@ -17,10 +17,12 @@ public class IniDataStructure {
     public int height;
     public int sight;
     public int hitpoints;
+    public int buildRangeInTiles;
     public String explosion;
     public String buildIcon;
     public String entityBuilderType;
     public float buildTimeInSeconds;
+
     public String buildList;
 
     public IniDataStructure() {
@@ -37,6 +39,7 @@ public class IniDataStructure {
         this.entityBuilderType = struct.get(INI_KEYWORD_BUILDS, String.class, "");
         this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         this.buildList = struct.get(INI_KEYWORD_BUILD_LIST, String.class, "");
+        this.buildRangeInTiles = struct.get(INI_KEYWORD_BUILD_RANGE, Integer.class, 0);
     }
 
     public EntityBuilderType getEntityBuilderType() {

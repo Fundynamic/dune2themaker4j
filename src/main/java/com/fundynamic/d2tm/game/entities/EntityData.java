@@ -41,7 +41,7 @@ public class EntityData {
     private float chop = -1f;
     private float halfChop = -1f;
     public float buildTimeInSeconds = 5.0F;
-    public float buildRange = Game.HALF_TILE + (3 * Game.TILE_SIZE);
+    public float buildRange = 0F;
 
     public EntityType type;
 

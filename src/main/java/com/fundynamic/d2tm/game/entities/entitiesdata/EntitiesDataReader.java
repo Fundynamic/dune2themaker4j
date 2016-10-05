@@ -32,6 +32,7 @@ public class EntitiesDataReader {
     public static final String INI_KEYWORD_BUILD_ICON = "BuildIcon";
     public static final String INI_KEYWORD_BUILDS = "Builds";
     public static final String INI_KEYWORD_BUILD_TIME = "BuildTime";
+    public static final String INI_KEYWORD_BUILD_RANGE = "BuildRange";
     public static final String INI_KEYWORD_BUILD_LIST = "BuildList";
     public static final String INI_KEYWORD_FPS = "Fps";
     public static final String INI_KEYWORD_RECOLOR = "Recolor";
