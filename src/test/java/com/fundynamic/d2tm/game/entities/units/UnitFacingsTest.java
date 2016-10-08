@@ -19,7 +19,7 @@ public class UnitFacingsTest {
 
     @Test
     public void returnsRightWhenUnableToFigureOutWhereToFaceTo() {
-        assertEquals(UnitFacings.RIGHT, determine(unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates));
+        assertEquals(RIGHT, determine(unitAbsoluteMapCoordinates, unitAbsoluteMapCoordinates));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class UnitFacingsTest {
     @Test
     public void determinesFacingLeftDown() {
         Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(create(-1, 1));
-        assertEquals(UnitFacings.LEFT_DOWN, determine(unitAbsoluteMapCoordinates, coordinatesToFaceTo));
+        assertEquals(LEFT_DOWN, determine(unitAbsoluteMapCoordinates, coordinatesToFaceTo));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class UnitFacingsTest {
     @Test
     public void determinesFacingDown() {
         Vector2D coordinatesToFaceTo = unitAbsoluteMapCoordinates.add(create(0, 1));
-        assertEquals(UnitFacings.DOWN, determine(unitAbsoluteMapCoordinates, coordinatesToFaceTo));
+        assertEquals(DOWN, determine(unitAbsoluteMapCoordinates, coordinatesToFaceTo));
     }
 
     @Test

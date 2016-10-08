@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
@@ -87,9 +88,9 @@ public class EntitiesData {
      *
      * @throws SlickException
      */
-    public EntityData addStructure(IniDataStructure iniDataStructure) throws SlickException {
+    public EntityData addStructure(String id, IniDataStructure iniDataStructure) throws SlickException {
         EntityData entityData = createEntity(
-                iniDataStructure.id,
+                id,
                 iniDataStructure.image,
                 null,
                 iniDataStructure.width,
@@ -100,13 +101,42 @@ public class EntitiesData {
                 iniDataStructure.hitpoints
         );
 
+        // The buildRange is (for now) determined by the size of the structure.
+        // Because the range is calculated from the center of the structure.
+        // In order to make it 'fair' for larger structures (if any would appear),
+        // we add 'half' of the structure to the range.
+        //
+        // For a constyard it is a square, so 64x64 pixels = 1 'half', meaning:
+        //
+        // (64/64)/2 = 0,5 * 32 (tile width) = 16 pixels
+        //
+        // A larger structure would be (width/height), ie a heavy factory thing would be:
+        // (96/64)/2 = ,75 * 32 = 24 pixels.
+        //
+        // Although on every squared structure this would even out fine, but then the
+        // 'buildRange' should have one tile extra because (again) it is calculated
+        // from the center
+        //
+        // this is all weird , then again, fixing this would require to check for every cell
+        // on the structure which basically makes calculating the 'can I place it in this distance' logic
+        // Width*height times more consuming.
+        //
+        // Unless....
+        //
+        // We do the 'computed map' thing (where we have all entity data on a map attached), so we don't
+        // need to do an expensive lookup in the EntityRepository
+        //TODO: Do something about the above, for now accept its quirks
+        float someRatio = (float)entityData.getWidth() / (float)entityData.getHeight();
+        int extraFromCenter = (int)((someRatio / 2) * Game.TILE_SIZE); // this is seriously flawed :/ (too tired to fix now)
+        // add additional '1' to get 'past the center and occupy one cell'.
+        entityData.buildRange = extraFromCenter + ((1 + iniDataStructure.buildRangeInTiles) * Game.TILE_SIZE);
         entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
         entityData.buildTimeInSeconds = iniDataStructure.buildTimeInSeconds;
         entityData.buildList = iniDataStructure.buildList;
 
         if (!idProvided(iniDataStructure.explosion)) {
             if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
-                throw new IllegalArgumentException("structure " + iniDataStructure.id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
+                throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
             }
             entityData.explosionId = iniDataStructure.explosion;
         }

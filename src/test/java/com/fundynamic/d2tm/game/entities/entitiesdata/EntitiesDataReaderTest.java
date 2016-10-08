@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
@@ -43,6 +44,11 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.explosionId, is("BOOM"));
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
+
+        // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
+        // therefor we do times 3!
+        float value = ((Game.TILE_SIZE) * 3) + Game.HALF_TILE; // we can do half-tile because it is a 64x64 structure
+        assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
     }
 
     @Test

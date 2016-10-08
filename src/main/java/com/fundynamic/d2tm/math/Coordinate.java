@@ -34,4 +34,12 @@ public class Coordinate extends Vector2D {
     public Coordinate min(Vector2D otherVector) {
         return new Coordinate(super.min(otherVector));
     }
+
+    public Coordinate addHalfTile() {
+        return new Coordinate(getX() + Game.HALF_TILE, getYAsInt() + Game.HALF_TILE);
+    }
+
+    public static Coordinate create(Vector2D vector2D) {
+        return new Coordinate(vector2D.getX(), vector2D.getY());
+    }
 }

@@ -17,11 +17,11 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     private List<AbstractBuildableEntity> buildableEntities = new ArrayList<>();
 
-    public SingleEntityBuilder(List<EntityData> entityDatasToBuild) {
-        for (EntityData entityDataToBuild : entityDatasToBuild ) {
+    public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity) {
+        for (EntityData entityDataToBuild : entityDatasToBuild) {
             // TODO: make more flexible!!
             if (entityDataToBuild.isTypeStructure()) {
-                buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild));
+                buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild, constructingForEntity));
             } else {
                 buildableEntities.add(new SpawningBuildableEntity(entityDataToBuild));
             }

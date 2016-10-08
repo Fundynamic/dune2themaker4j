@@ -1,8 +1,11 @@
 package com.fundynamic.d2tm.utils;
 
 
+import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 public class SlickUtils {
 
@@ -25,12 +28,27 @@ public class SlickUtils {
         drawText(graphics, color, msg, x, y); // text
     }
 
+    public static void drawLine(Graphics graphics, Coordinate from, Coordinate to) {
+        graphics.drawLine(from.getXAsInt(), from.getYAsInt(), to.getXAsInt(), to.getYAsInt());
+    }
+
     /**
      * Draws a text
      */
     public static void drawText(Graphics graphics, Color color, String msg, int x, int y) {
         graphics.setColor(color);
         graphics.drawString(msg, x, y);
+    }
+
+
+    /**
+     * Draws image on given vector.
+     * @param graphics
+     * @param image
+     * @param vec
+     */
+    public static void drawImage(Graphics graphics, Image image, Vector2D vec) {
+        graphics.drawImage(image, vec.getXAsInt(), vec.getYAsInt());
     }
 
 }

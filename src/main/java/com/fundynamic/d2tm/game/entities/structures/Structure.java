@@ -10,11 +10,14 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
 import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +61,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        this.entityBuilder = new SingleEntityBuilder(entityDatas);
+        this.entityBuilder = new SingleEntityBuilder(entityDatas, this);
 
     }
 
@@ -145,14 +148,13 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getSprite();
         graphics.drawImage(sprite, x, y);
-        MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
+
         if (Game.DEBUG_INFO) {
-            SlickUtils.drawShadowedText(
-                    graphics,
-                    Colors.WHITE,
-                    "" + mapCoordinate.getXAsInt() + "," + mapCoordinate.getYAsInt(),
-                    x,
-                    y);
+            // render build-range
+            Vector2D halfSize = getHalfSize();
+            Circle circle = new Circle(x + halfSize.getXAsInt(), y + halfSize.getYAsInt(), entityData.buildRange);
+            graphics.setColor(Colors.YELLOW_ALPHA_32);
+            ShapeRenderer.fill(circle);
         }
     }
 

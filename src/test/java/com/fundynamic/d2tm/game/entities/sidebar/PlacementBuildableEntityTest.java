@@ -19,7 +19,7 @@ public class PlacementBuildableEntityTest {
 
     @Test
     public void buildStates() {
-        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData);
+        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, null);
         Assert.assertEquals(BuildableState.SELECTABLE, placementBuildableEntity.getBuildableState());
 
         // start building
@@ -38,7 +38,7 @@ public class PlacementBuildableEntityTest {
 
     @Test
     public void progress() {
-        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData);
+        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, null);
         placementBuildableEntity.startBuilding();
         Assert.assertEquals(0.0F, placementBuildableEntity.getProgress(), 000.1f);
 

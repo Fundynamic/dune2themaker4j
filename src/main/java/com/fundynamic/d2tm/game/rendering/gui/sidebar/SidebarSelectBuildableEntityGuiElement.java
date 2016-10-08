@@ -75,7 +75,8 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
                 // TODO: Is done constructing.
                 if (entityBuilder.isAwaitingPlacement()) {
                     // TODO move to BattlefieldInteractable interface?!
-                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(focussedRenderableBuildableEntity.getAbstractBuildableEntity());
+                    AbstractBuildableEntity abstractBuildableEntity = focussedRenderableBuildableEntity.getAbstractBuildableEntity();
+                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(abstractBuildableEntity);
                 }
             }
 
