@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fundynamic</groupId>
 	<artifactId>d2tm</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3-alpha</version>
 	<packaging>jar</packaging>
 
 	<name>Dune 2 - The Maker</name>
