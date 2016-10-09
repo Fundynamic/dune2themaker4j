@@ -78,7 +78,7 @@ public class PlayingState extends BasicGameState {
         Player human = new Player("Human", Recolorer.FactionColor.RED);
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
-        human.setCredits(100);
+        human.setCredits(3000);
         cpu.setCredits(2000);
 
         mapEditor = new MapEditor(terrainFactory);

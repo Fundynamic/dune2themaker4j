@@ -18,7 +18,7 @@ public interface EntityBuilder extends Updateable {
      * Returns true when construction is finished, but requires placement.
      * @return
      */
-    boolean hasBuildingEntity();
+    boolean isBuildingAnEntity();
 
     AbstractBuildableEntity getBuildingEntity();
 
@@ -52,5 +52,5 @@ public interface EntityBuilder extends Updateable {
      * @param placementBuildableEntity
      * @return
      */
-    boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity);
+    boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity);
 }

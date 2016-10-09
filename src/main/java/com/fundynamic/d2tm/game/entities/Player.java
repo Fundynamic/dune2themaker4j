@@ -19,11 +19,15 @@ public class Player {
     private int credits;
 
     public Player(String name, Recolorer.FactionColor factionColor) {
+        this(name, factionColor, 2000);
+    }
+
+    public Player(String name, Recolorer.FactionColor factionColor, int startingCredits) {
         this.name = name;
         this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
-        this.credits = 0;
+        this.credits = startingCredits;
     }
 
     public Recolorer.FactionColor getFactionColor() {

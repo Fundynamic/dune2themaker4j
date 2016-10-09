@@ -47,6 +47,29 @@ public class AbstractBuildableEntityTest {
     }
 
     @Test
+    public void startBuildingBuildsEvenWhenPlayerHasNotEnoughCredits() {
+        player.setCredits(0);
+        entityData.buildCost = 100;
+
+        buildableEntity.startBuilding();
+
+        Assert.assertTrue(buildableEntity.isBuilding());
+
+        // this is intentional, the check / prevention is done in the SingleEntityBuilder#buildEntity method
+    }
+
+    @Test
+    public void substractsCreditsFromPlayerWhenStartingToBuildSomething() {
+        player.setCredits(9999);
+        entityData.buildCost = 500;
+
+        buildableEntity.startBuilding();
+
+        int expectedCredits = 9999 - entityData.buildCost;
+        Assert.assertEquals(expectedCredits, player.getCredits());
+    }
+
+    @Test
     public void givenAwaitsPlacementWhenEnoughMoneyAndEnablingItShouldBeSelectable() {
         player.setCredits(BUILD_COST);
         entityData.buildCost = BUILD_COST / 5;

@@ -35,7 +35,7 @@ public class SingleEntityBuilder implements EntityBuilder {
     }
 
     @Override
-    public boolean hasBuildingEntity() {
+    public boolean isBuildingAnEntity() {
         return buildingEntity != null;
     }
 
@@ -46,23 +46,30 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     @Override
     public void buildEntity(AbstractBuildableEntity abstractBuildableEntity) {
+        if (!abstractBuildableEntity.canBuildEntity()) {
+            // Unable to comply: this is not an entity that can be built now!
+            return;
+        }
+
         this.buildingEntity = abstractBuildableEntity;
+
         // disable all buildable entities
         for (AbstractBuildableEntity be : buildableEntities) {
             be.disable();
         }
-        // except this one, build it!
+
+        // start building this one
         this.buildingEntity.startBuilding();
     }
 
     @Override
     public boolean isAwaitingPlacement() {
-        return hasBuildingEntity() && buildingEntity.awaitsPlacement();
+        return isBuildingAnEntity() && buildingEntity.awaitsPlacement();
     }
 
     @Override
     public boolean isAwaitingSpawning() {
-        return hasBuildingEntity() && buildingEntity.awaitsSpawning();
+        return isBuildingAnEntity() && buildingEntity.awaitsSpawning();
     }
 
     @Override
@@ -76,7 +83,7 @@ public class SingleEntityBuilder implements EntityBuilder {
     }
 
     @Override
-    public boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity) {
+    public boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity) {
         return buildingEntity.equals(placementBuildableEntity);
     }
 

@@ -12,7 +12,6 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
-import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -224,8 +223,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public boolean hasBuildingEntity() {
-        return this.entityBuilder.hasBuildingEntity();
+    public boolean isBuildingAnEntity() {
+        return this.entityBuilder.isBuildingAnEntity();
     }
 
     @Override
@@ -254,7 +253,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity) {
-        return this.entityBuilder.hasBuildingEntity(placementBuildableEntity);
+    public boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity) {
+        return this.entityBuilder.isBuildingAnEntity(placementBuildableEntity);
     }
 }

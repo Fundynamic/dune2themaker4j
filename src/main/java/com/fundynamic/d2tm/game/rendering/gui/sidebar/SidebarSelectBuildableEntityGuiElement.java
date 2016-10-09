@@ -68,7 +68,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
     @Override
     public void leftClicked() {
         if (focussedRenderableBuildableEntity != null) {
-            if (!entityBuilder.hasBuildingEntity()) {
+            if (!entityBuilder.isBuildingAnEntity()) {
                 // construct it:
                 // 1. tell it to construct
                 entityBuilder.buildEntity(focussedRenderableBuildableEntity.getAbstractBuildableEntity());
@@ -128,7 +128,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void entityPlacedOnMap(Entity entity) {
-        if (!entityBuilder.hasBuildingEntity()) {
+        if (!entityBuilder.isBuildingAnEntity()) {
             // not building anything, that is weird?
             throw new IllegalStateException("Did not expect this");
         } else {

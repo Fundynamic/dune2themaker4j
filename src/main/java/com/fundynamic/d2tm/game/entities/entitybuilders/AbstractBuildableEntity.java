@@ -43,7 +43,12 @@ public abstract class AbstractBuildableEntity implements Updateable {
         return entityData.buildIcon;
     }
 
+    public boolean canBuildEntity() {
+        return this.buildableState == BuildableState.SELECTABLE;
+    }
+
     public void startBuilding() {
+        player.spend(entityData.buildCost);
         resetBuildTime();
         buildableState = BuildableState.BUILDING;
     }
