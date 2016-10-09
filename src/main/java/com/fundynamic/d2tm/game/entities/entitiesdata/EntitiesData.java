@@ -167,6 +167,7 @@ public class EntitiesData {
         entityData.buildTimeInSeconds = iniDataUnit.buildTimeInSeconds;
         entityData.buildIcon = loadImage(iniDataUnit.buildIcon);
         entityData.buildCost = iniDataUnit.buildCost;
+        entityData.name = id;
 
         String weaponId = iniDataUnit.weaponId;
 
@@ -206,6 +207,7 @@ public class EntitiesData {
         entityData.moveSpeed = moveSpeed;
         entityData.hitPoints = hitPoints;
         entityData.key = EntityData.constructKey(entityType, id);
+        entityData.name = id;
         entitiesData.put(entityData.key, entityData);
         return entityData;
     }

@@ -40,6 +40,8 @@ public class EntityData {
 
     public static final String UNKNOWN = "UNKNOWN";
 
+    public String name;             // the name used in the INI file (ie [QUAD] without [])
+
     // Kind of entity it reflects
     public EntityType type;
 

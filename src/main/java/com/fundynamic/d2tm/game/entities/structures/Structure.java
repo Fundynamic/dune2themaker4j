@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
@@ -68,10 +69,21 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         return spritesheet.getSprite(0, animationFrame);
     }
 
+    private float thinkTimer = 0.0f;
+
     public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
+        }
+
+        // Hack something in so we earn money (for now) - remove this once we have harvesters in place.
+        if (entityData.isTypeStructure() && EntitiesData.REFINERY.equalsIgnoreCase(entityData.name)) {
+            thinkTimer += deltaInSeconds;
+            while (thinkTimer > 0.5F) {
+                thinkTimer -= 0.5F;
+                player.addCredits(5);
+            }
         }
 
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
