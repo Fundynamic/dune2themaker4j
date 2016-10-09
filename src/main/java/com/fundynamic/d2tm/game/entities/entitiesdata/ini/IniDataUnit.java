@@ -36,6 +36,7 @@ public class IniDataUnit {
 
     // related to building this unit
     public String buildIcon;
+    public int buildCost;
     public float buildTimeInSeconds;
 
     public IniDataUnit() {
@@ -58,6 +59,7 @@ public class IniDataUnit {
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
     }
 
 }

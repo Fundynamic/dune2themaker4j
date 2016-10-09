@@ -48,7 +48,7 @@ public class EntityData {
 
     public float buildTimeInSeconds = 5.0F;
     public float buildRange = 0F;
-    public int buildCost = Random.getRandomBetween(25, 150);     // cost to build this
+    public int buildCost = -1;      // cost to build this
     public Image buildIcon;         // build icon
     public String buildList = "";
 

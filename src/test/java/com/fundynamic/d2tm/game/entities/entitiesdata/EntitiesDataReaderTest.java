@@ -44,6 +44,7 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.explosionId, is("BOOM"));
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
+        assertThat(constyard.buildCost, is(1000));
 
         // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
         // therefor we do times 3!
@@ -74,6 +75,7 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
         assertThat(constyard.buildTimeInSeconds, is(5.0f));
+        assertThat(constyard.buildCost, is(250));
     }
 
     @Test
@@ -94,6 +96,7 @@ public class EntitiesDataReaderTest {
         assertThat(quad.explosionId, is("BOOM"));
         assertThat(quad.weaponId, is("RIFLE"));
         assertThat(quad.buildTimeInSeconds, is(7.0f));
+        assertThat(quad.buildCost, is(200));
     }
 
     @Test
