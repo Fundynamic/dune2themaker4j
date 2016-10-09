@@ -30,6 +30,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     private final FadingSelection fadingSelection;
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
 
+    // Temporarily timer for refinery 'credits giving' logic
+    private float thinkTimer = 0.0f;
+
     // Implementation
     private float animationTimer;
     private static final int ANIMATION_FRAME_COUNT = 2;
@@ -68,8 +71,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         int animationFrame = (int)animationTimer;
         return spritesheet.getSprite(0, animationFrame);
     }
-
-    private float thinkTimer = 0.0f;
 
     public void update(float deltaInSeconds) {
         if (this.isDestroyed()) {

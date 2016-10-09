@@ -6,7 +6,6 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
-import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
