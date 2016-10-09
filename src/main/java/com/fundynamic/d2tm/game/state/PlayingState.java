@@ -218,6 +218,9 @@ public class PlayingState extends BasicGameState {
             entity.update(deltaInSeconds);
         }
 
+        human.update(deltaInSeconds);
+        cpu.update(deltaInSeconds);
+
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 
         guiComposite.update(deltaInSeconds);

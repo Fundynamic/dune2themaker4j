@@ -32,7 +32,7 @@ public class Topbar extends GuiElement {
 
         SlickUtils.drawText(graphics, Color.white, "Moneybar", topLeft.getXAsInt(), topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
 
-        String creditsString = String.format("$ %d", player.getCredits());
+        String creditsString = String.format("$ %d", player.getAnimatedCredits());
         SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidthAsInt()) - 100, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
     }
 

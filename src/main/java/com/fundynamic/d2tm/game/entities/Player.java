@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -8,7 +9,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Player {
+public class Player implements Updateable {
 
     private final String name;
     private final Recolorer.FactionColor factionColor;
@@ -17,6 +18,9 @@ public class Player {
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
     private int credits;
+    private int animatedCredits;
+
+    private float creditsTimer = 0F;
 
     public Player(String name, Recolorer.FactionColor factionColor) {
         this(name, factionColor, 2000);
@@ -28,6 +32,7 @@ public class Player {
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
         this.credits = startingCredits;
+        this.animatedCredits = startingCredits;
     }
 
     public Recolorer.FactionColor getFactionColor() {
@@ -87,6 +92,7 @@ public class Player {
 
     public void setCredits(int credits) {
         this.credits = credits;
+        this.animatedCredits = credits;
     }
 
     public boolean canBuy(int cost) {
@@ -103,5 +109,24 @@ public class Player {
 
     public int getCredits() {
         return credits;
+    }
+
+    public int getAnimatedCredits() {
+        return animatedCredits;
+    }
+
+    @Override
+    public void update(float deltaInSeconds) {
+        if (animatedCredits != credits) {
+            creditsTimer += deltaInSeconds;
+            while (creditsTimer > 0.0F && animatedCredits != credits) {
+                creditsTimer -= 0.010;
+                if (animatedCredits < credits) {
+                    animatedCredits += 1;
+                } else {
+                    animatedCredits -= 1;
+                }
+            }
+        }
     }
 }
