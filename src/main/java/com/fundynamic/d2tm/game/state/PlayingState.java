@@ -183,11 +183,6 @@ public class PlayingState extends BasicGameState {
         // TODO: read from SCENARIO.INI file
         // human entities
         entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 7), EntitiesData.REFINERY, human);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 9), EntitiesData.WINDTRAP, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), EntitiesData.TANK, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(4, 3), EntitiesData.TRIKE, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(5, 3), EntitiesData.QUAD, human);
 
         // cpu entities
         entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
