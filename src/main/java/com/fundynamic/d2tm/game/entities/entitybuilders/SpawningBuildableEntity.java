@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.Player;
 
 /**
  * <h1>General</h1>
@@ -14,8 +14,8 @@ import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
  */
 public class SpawningBuildableEntity extends AbstractBuildableEntity {
 
-    public SpawningBuildableEntity(EntityData entityData) {
-        super(entityData);
+    public SpawningBuildableEntity(EntityData entityData, Player player) {
+        super(entityData, player);
     }
 
 }

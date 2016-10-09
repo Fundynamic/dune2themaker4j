@@ -38,46 +38,55 @@ import java.util.List;
 public class EntityData {
 
     public static final String UNKNOWN = "UNKNOWN";
-    private float chop = -1f;
-    private float halfChop = -1f;
-    public float buildTimeInSeconds = 5.0F;
-    public float buildRange = 0F;
 
+    public String name;             // the name used in the INI file (ie [QUAD] without [])
+
+    // Kind of entity it reflects
     public EntityType type;
 
-    public Image image; // base image
-    public Image barrelImage; // barrelImage (top image)
-    public Image buildIcon; // build icon
+    // Build related
+    public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
 
-    private int width;   // in pixels
-    private int height;  // in pixels
-    private int widthInCells; // in cells, derived from pixels
-    private int heightInCells; // in cells, derived from pixels
+    public float buildTimeInSeconds = 1.0F;
+    public float buildRange = 0F;
+    public int buildCost = -1;      // cost to build this
+    public Image buildIcon;         // build icon
+    public String buildList = "";
+
+    public Image image;             // base image
+    public Image barrelImage;       // barrelImage (top image)
+    private int facings;
+
+    private int width;              // in pixels
+    private int height;             // in pixels
+    private int widthInCells;       // in cells, derived from pixels
+    private int heightInCells;      // in cells, derived from pixels
 
     public int sight;
 
-    public float moveSpeed;   // the speed a unit moves: value is pixels in seconds.
-    public float turnSpeed;   // the speed a unit turns: value is facing angles in seconds. < 1 means the value is times per second
-    public float turnSpeedCannon; // the speed a unit's barrel turns: value is facing angles in seconds. < 1 means the value is times per second
-    public float attackRate;  // the speed a unit attacks: < 1 means the value is times per second
+    public float moveSpeed;         // the speed a unit moves: value is pixels in seconds.
+    public float turnSpeed;         // the speed a unit turns: value is facing angles in seconds. < 1 means the value is times per second
+    public float turnSpeedCannon;   // the speed a unit's barrel turns: value is facing angles in seconds. < 1 means the value is times per second
 
-    public float attackRange; // the range for a unit to attack in pixels
+    public float attackRate;        // the speed a unit attacks: < 1 means the value is times per second
+    public float attackRange;       // the range for a unit to attack in pixels
 
-    public int hitPoints;
-
-    private int facings;
-
+    public String weaponId = UNKNOWN;
     public int damage;
 
-    public String explosionId = "UNKNOWN";
-    public String weaponId = "UNKNOWN";
+    public int hitPoints;           // initial hitPoints when spawned
 
-    public float animationSpeed; // in frames per second
-    public String key; // key used in HashMap
+    public String explosionId = UNKNOWN;
 
-    public boolean recolor; // if 'true' then the particle will be recolored (into team color) before spawned
-    public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
-    public String buildList = "";
+    public float animationSpeed;    // in frames per second, for animating
+
+    public String key;              // key used in HashMap
+
+    public boolean recolor;         // if 'true' then the particle will be recolored (into team color) before spawned
+
+    // for turning
+    private float chop = -1f;
+    private float halfChop = -1f;
 
     public EntityData() {
     }

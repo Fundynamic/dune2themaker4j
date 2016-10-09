@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.utils.StringUtils;
@@ -17,12 +18,13 @@ public class IniDataStructure {
     public int height;
     public int sight;
     public int hitpoints;
-    public int buildRangeInTiles;
     public String explosion;
     public String buildIcon;
     public String entityBuilderType;
-    public float buildTimeInSeconds;
 
+    public float buildTimeInSeconds;
+    public int buildRangeInTiles;
+    public int buildCost;
     public String buildList;
 
     public IniDataStructure() {
@@ -37,9 +39,14 @@ public class IniDataStructure {
         this.explosion = struct.get(INI_KEYWORD_EXPLOSION, String.class, EntitiesData.UNKNOWN);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         this.entityBuilderType = struct.get(INI_KEYWORD_BUILDS, String.class, "");
-        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        if (Game.RECORDING_VIDEO) {
+            this.buildTimeInSeconds = 1;
+        } else {
+            this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        }
         this.buildList = struct.get(INI_KEYWORD_BUILD_LIST, String.class, "");
         this.buildRangeInTiles = struct.get(INI_KEYWORD_BUILD_RANGE, Integer.class, 0);
+        this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
     }
 
     public EntityBuilderType getEntityBuilderType() {

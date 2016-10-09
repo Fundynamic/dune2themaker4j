@@ -17,6 +17,7 @@ import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
+import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -77,6 +78,9 @@ public class PlayingState extends BasicGameState {
         Player human = new Player("Human", Recolorer.FactionColor.RED);
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
+        human.setCredits(3000);
+        cpu.setCredits(2000);
+
         mapEditor = new MapEditor(terrainFactory);
         map = new Map(shroud, 64, 64);
 
@@ -96,7 +100,7 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(battlefield);
 
         // topbar
-        guiComposite.addGuiElement(new DummyGuiElement(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR));
+        guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human));
 
         // sidebar
         guiComposite.addGuiElement(
@@ -213,6 +217,9 @@ public class PlayingState extends BasicGameState {
         for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
+
+        human.update(deltaInSeconds);
+        cpu.update(deltaInSeconds);
 
         entityRepository.removeEntities(destroyedEntitiesPredicate());
 

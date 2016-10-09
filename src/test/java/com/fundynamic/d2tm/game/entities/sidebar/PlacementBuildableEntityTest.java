@@ -1,7 +1,9 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,16 +12,18 @@ import org.junit.Test;
 public class PlacementBuildableEntityTest {
 
     private EntityData entityData;
+    private Player player;
 
     @Before
     public void setUp() {
+        player = new Player("Human player", Recolorer.FactionColor.BLUE);
         entityData = new EntityData();
         entityData.buildTimeInSeconds = 4.0f;
     }
 
     @Test
     public void buildStates() {
-        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, null);
+        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, player, null);
         Assert.assertEquals(BuildableState.SELECTABLE, placementBuildableEntity.getBuildableState());
 
         // start building
@@ -38,7 +42,7 @@ public class PlacementBuildableEntityTest {
 
     @Test
     public void progress() {
-        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, null);
+        PlacementBuildableEntity placementBuildableEntity = new PlacementBuildableEntity(entityData, player, null);
         placementBuildableEntity.startBuilding();
         Assert.assertEquals(0.0F, placementBuildableEntity.getProgress(), 000.1f);
 

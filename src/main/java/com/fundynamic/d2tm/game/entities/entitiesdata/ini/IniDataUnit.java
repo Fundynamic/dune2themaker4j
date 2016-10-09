@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import org.ini4j.Profile;
 
@@ -36,6 +37,7 @@ public class IniDataUnit {
 
     // related to building this unit
     public String buildIcon;
+    public int buildCost;
     public float buildTimeInSeconds;
 
     public IniDataUnit() {
@@ -57,7 +59,12 @@ public class IniDataUnit {
         this.weaponId = struct.get(INI_KEYWORD_WEAPON, String.class, EntitiesData.UNKNOWN);
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
-        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        if (Game.RECORDING_VIDEO) {
+            this.buildTimeInSeconds = 1;
+        } else {
+            this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        }
+        this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
     }
 
 }

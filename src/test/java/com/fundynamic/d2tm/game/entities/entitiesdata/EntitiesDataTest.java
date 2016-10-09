@@ -43,6 +43,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         float attackRange = 82F;
         String weaponId = "UNKNOWN";
         String explosionId = "UNKNOWN";
+        int buildCost = 287;
 
         IniDataUnit iniDataUnit = new IniDataUnit();
         iniDataUnit.explosionId = explosionId;
@@ -62,6 +63,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         iniDataUnit.explosionId = explosionId;
         iniDataUnit.hitpoints = hitPoints;
         iniDataUnit.buildTimeInSeconds = 1.0F;
+        iniDataUnit.buildCost = buildCost;
 
         entitiesData.addUnit(idOfEntity, iniDataUnit);
 
@@ -82,6 +84,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(explosionId, data.explosionId);
         assertEquals(weaponId, data.weaponId);
         assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
+        assertEquals(buildCost, data.buildCost);
         assertNotNull(data.buildIcon);
     }
 
@@ -108,6 +111,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         String idOfEntity = "1";
         int sight = 3;
         String explosionId = "UNKNOWN";
+        int buildCost = 329;
 
 
 
@@ -123,6 +127,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         iniDataStructure.entityBuilderType = entityBuilderType;
         iniDataStructure.buildTimeInSeconds = 1.0F;
         iniDataStructure.buildList = "WINDTRAP,REFINERY";
+        iniDataStructure.buildCost = buildCost;
 
         // add
         entitiesData.addStructure(
@@ -144,6 +149,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         assertEquals(EntityBuilderType.NONE, data.entityBuilderType);
         assertEquals(1.0F, data.buildTimeInSeconds, 0.1F);
         assertEquals("WINDTRAP,REFINERY", data.buildList);
+        assertEquals(buildCost, data.buildCost);
         assertNotNull(data.buildIcon);
     }
 

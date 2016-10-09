@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 import org.newdawn.slick.Image;
 
@@ -16,15 +17,18 @@ public abstract class AbstractBuildableEntity implements Updateable {
     /**
      * The thing it is / can be building
      */
-    private EntityData entityData;
+    private final EntityData entityData;
 
-    private float secondsToBuildInMs;
+    private final Player player;
+
+    private float secondsToBuild;
 
     public BuildableState buildableState = BuildableState.SELECTABLE;
 
-    public AbstractBuildableEntity(EntityData entityData) {
+    public AbstractBuildableEntity(EntityData entityData, Player player) {
         this.entityData = entityData;
-        secondsToBuildInMs = entityData.buildTimeInSeconds;
+        this.player = player;
+        resetBuildTime();
     }
 
     public EntityData getEntityData() {
@@ -39,8 +43,13 @@ public abstract class AbstractBuildableEntity implements Updateable {
         return entityData.buildIcon;
     }
 
+    public boolean canBuildEntity() {
+        return this.buildableState == BuildableState.SELECTABLE;
+    }
+
     public void startBuilding() {
-        secondsToBuildInMs = entityData.buildTimeInSeconds;
+        player.spend(entityData.buildCost);
+        resetBuildTime();
         buildableState = BuildableState.BUILDING;
     }
 
@@ -49,7 +58,12 @@ public abstract class AbstractBuildableEntity implements Updateable {
     }
 
     public void enable() {
-        buildableState = BuildableState.SELECTABLE;
+        resetBuildTime();
+        buildableState = getSelectableStateBasedOnPrice();
+    }
+
+    public void resetBuildTime() {
+        secondsToBuild = entityData.buildTimeInSeconds;
     }
 
     public BuildableState getBuildableState() {
@@ -57,14 +71,37 @@ public abstract class AbstractBuildableEntity implements Updateable {
     }
 
     public boolean isDoneBuilding() {
-        return secondsToBuildInMs < 0f;
+        return secondsToBuild < 0f;
+    }
+
+    public boolean isBuilding() {
+        return buildableState == BuildableState.BUILDING;
     }
 
     @Override
     public void update(float deltaInSeconds) {
-        secondsToBuildInMs -= deltaInSeconds;
-        if (isDoneBuilding()) {
-            buildableState = BuildableState.BUILDING_FINISHED_SPAWNABLE;
+        if (isSelectable()) {
+            // keep evaluating price
+            buildableState = getSelectableStateBasedOnPrice();
+        }
+
+        if (isBuilding()) {
+            secondsToBuild -= deltaInSeconds;
+            if (isDoneBuilding()) {
+                buildableState = BuildableState.BUILDING_FINISHED_SPAWNABLE;
+            }
+        }
+    }
+
+    public boolean isSelectable() {
+        return buildableState == BuildableState.SELECTABLE || buildableState == BuildableState.SELECTABLE_TOO_EXPENSIVE;
+    }
+
+    private BuildableState getSelectableStateBasedOnPrice() {
+        if (player.canBuy(entityData.buildCost)) {
+            return BuildableState.SELECTABLE;
+        } else {
+            return BuildableState.SELECTABLE_TOO_EXPENSIVE;
         }
     }
 
@@ -82,8 +119,11 @@ public abstract class AbstractBuildableEntity implements Updateable {
      * @return
      */
     public float getProgress() {
-        return (entityData.buildTimeInSeconds - secondsToBuildInMs) / entityData.buildTimeInSeconds;
+        return (entityData.buildTimeInSeconds - secondsToBuild) / entityData.buildTimeInSeconds;
     }
 
 
+    public int getBuildCost() {
+        return entityData.buildCost;
+    }
 }

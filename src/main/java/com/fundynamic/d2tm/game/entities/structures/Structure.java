@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
@@ -12,7 +13,6 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.Colors;
-import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -29,6 +29,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     // Behaviors
     private final FadingSelection fadingSelection;
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
+
+    // Temporarily timer for refinery 'credits giving' logic
+    private float thinkTimer = 0.0f;
 
     // Implementation
     private float animationTimer;
@@ -61,8 +64,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        this.entityBuilder = new SingleEntityBuilder(entityDatas, this);
-
+        this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
     }
 
     public Image getSprite() {
@@ -74,6 +76,15 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         if (this.isDestroyed()) {
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
+        }
+
+        // Hack something in so we earn money (for now) - remove this once we have harvesters in place.
+        if (entityData.isTypeStructure() && EntitiesData.REFINERY.equalsIgnoreCase(entityData.name)) {
+            thinkTimer += deltaInSeconds;
+            while (thinkTimer > 0.5F) {
+                thinkTimer -= 0.5F;
+                player.addCredits(5);
+            }
         }
 
         // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
@@ -89,9 +100,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        if (hasBuildingEntity()) {
-            this.entityBuilder.update(deltaInSeconds);
-        }
+        this.entityBuilder.update(deltaInSeconds);
 
         if (isAwaitingSpawning()) {
             List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
@@ -133,7 +142,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                 } else {
                     // For now, forget it :/
                     System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
-                    this.entityIsDelivered(this); // lying!!
+                    this.entityIsDelivered(this);
                 }
             }
         }
@@ -227,8 +236,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public boolean hasBuildingEntity() {
-        return this.entityBuilder.hasBuildingEntity();
+    public boolean isBuildingAnEntity() {
+        return this.entityBuilder.isBuildingAnEntity();
     }
 
     @Override
@@ -257,7 +266,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public boolean hasBuildingEntity(AbstractBuildableEntity placementBuildableEntity) {
-        return this.entityBuilder.hasBuildingEntity(placementBuildableEntity);
+    public boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity) {
+        return this.entityBuilder.isBuildingAnEntity(placementBuildableEntity);
     }
 }
