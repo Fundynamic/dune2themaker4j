@@ -49,6 +49,20 @@ public class RenderableBuildableEntity extends GuiElement {
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
         }
 
+        if (buildableState == BuildableState.SELECTABLE) {
+            if (hasFocus()) {
+                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+            } else {
+                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+            }
+        }
+
+        if (buildableState == BuildableState.SELECTABLE_TOO_EXPENSIVE) {
+            SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+            graphics.setColor(Colors.RED_ALPHA_128); // ugly way of letting know it is too expensive
+            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+        }
+
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());

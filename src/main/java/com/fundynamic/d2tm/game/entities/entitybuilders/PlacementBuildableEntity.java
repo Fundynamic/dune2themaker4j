@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
-import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 
 /**
@@ -15,8 +15,8 @@ public class PlacementBuildableEntity extends AbstractBuildableEntity {
 
     private Entity entityWhoConstructsThis;
 
-    public PlacementBuildableEntity(EntityData entityData, Entity entityWhoConstructsThis) {
-        super(entityData);
+    public PlacementBuildableEntity(EntityData entityData, Player player, Entity entityWhoConstructsThis) {
+        super(entityData, player);
         this.entityWhoConstructsThis = entityWhoConstructsThis;
     }
 

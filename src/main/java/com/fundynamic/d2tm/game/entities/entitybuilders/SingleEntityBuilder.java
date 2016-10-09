@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.entities.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,13 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     private List<AbstractBuildableEntity> buildableEntities = new ArrayList<>();
 
-    public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity) {
+    public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity, Player player) {
         for (EntityData entityDataToBuild : entityDatasToBuild) {
             // TODO: make more flexible!!
             if (entityDataToBuild.isTypeStructure()) {
-                buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild, constructingForEntity));
+                buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild, player, constructingForEntity));
             } else {
-                buildableEntities.add(new SpawningBuildableEntity(entityDataToBuild));
+                buildableEntities.add(new SpawningBuildableEntity(entityDataToBuild, player));
             }
         }
     }
@@ -66,6 +67,7 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     @Override
     public void entityIsDelivered(Entity entity) {
+        buildingEntity.enable();
         buildingEntity = null;
         // enable all buildable entities again
         for (AbstractBuildableEntity be : buildableEntities) {
@@ -80,6 +82,8 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     @Override
     public void update(float deltaInSeconds) {
-        buildingEntity.update(deltaInSeconds);
+        for (AbstractBuildableEntity be : buildableEntities) {
+            be.update(deltaInSeconds);
+        }
     }
 }

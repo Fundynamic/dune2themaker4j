@@ -59,6 +59,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         graphics.setColor(Color.gray);
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
         graphics.setColor(Color.white);
+
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.render(graphics);
         }

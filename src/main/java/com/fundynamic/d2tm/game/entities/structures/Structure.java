@@ -61,8 +61,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        this.entityBuilder = new SingleEntityBuilder(entityDatas, this);
-
+        this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
     }
 
     public Image getSprite() {
@@ -89,9 +88,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             }
         }
 
-        if (hasBuildingEntity()) {
-            this.entityBuilder.update(deltaInSeconds);
-        }
+        this.entityBuilder.update(deltaInSeconds);
 
         if (isAwaitingSpawning()) {
             List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
@@ -133,7 +130,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                 } else {
                     // For now, forget it :/
                     System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
-                    this.entityIsDelivered(this); // lying!!
+                    this.entityIsDelivered(this);
                 }
             }
         }
