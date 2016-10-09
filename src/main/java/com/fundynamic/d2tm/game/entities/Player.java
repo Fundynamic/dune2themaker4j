@@ -16,11 +16,14 @@ public class Player {
     private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
+    private int credits;
+
     public Player(String name, Recolorer.FactionColor factionColor) {
         this.name = name;
         this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
+        this.credits = 0;
     }
 
     public Recolorer.FactionColor getFactionColor() {
@@ -72,5 +75,29 @@ public class Player {
      */
     public void shroud(MapCoordinate mapCoordinate) {
         shrouded.put(mapCoordinate, true);
+    }
+
+    public void addCredits(int credits) {
+        this.credits += credits;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
+    public boolean canBuy(int cost) {
+        return cost <= credits;
+    }
+
+    public boolean spend(int amount) {
+        if (canBuy(amount)) {
+            credits -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    public int getCredits() {
+        return credits;
     }
 }

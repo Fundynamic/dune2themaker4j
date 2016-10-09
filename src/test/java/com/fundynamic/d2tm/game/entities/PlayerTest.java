@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class PlayerTest extends AbstractD2TMTest {
@@ -54,6 +56,61 @@ public class PlayerTest extends AbstractD2TMTest {
         player.removeEntity(entity);
 
         assertEquals(0, player.aliveEntities());
+    }
+
+    @Test
+    public void cannotBuyThingsThatCostMoreThanCreditsOwned() {
+        player.setCredits(100);
+        assertFalse(player.canBuy(101));
+        assertEquals(100, player.getCredits());
+    }
+
+    @Test
+    public void canBuyThingsThatCostEqualThanCreditsOwned() {
+        player.setCredits(100);
+        assertTrue(player.canBuy(100));
+        assertEquals(100, player.getCredits());
+    }
+
+    @Test
+    public void canBuyThingsThatCostLessThanCreditsOwned() {
+        player.setCredits(100);
+        assertTrue(player.canBuy(99));
+        assertEquals(100, player.getCredits());
+    }
+
+    @Test
+    public void cannotSpendThingsThatCostMoreThanCreditsOwned() {
+        player.setCredits(100);
+        assertFalse(player.spend(101));
+        assertEquals(100, player.getCredits());
+    }
+
+    @Test
+    public void canSpendThingsThatCostEqualThanCreditsOwned() {
+        player.setCredits(100);
+        assertTrue(player.spend(100));
+        assertEquals(0, player.getCredits());
+    }
+
+    @Test
+    public void canSpendThingsThatCostLessThanCreditsOwned() {
+        player.setCredits(100);
+        assertTrue(player.spend(99));
+        assertEquals(1, player.getCredits());
+    }
+
+    @Test
+    public void spendingScenario() {
+        player.setCredits(0);
+
+        assertFalse(player.spend(50));
+        assertEquals(0, player.getCredits());
+
+        player.addCredits(100);
+
+        assertTrue(player.spend(50));
+        assertEquals(50, player.getCredits());
     }
 
 }
