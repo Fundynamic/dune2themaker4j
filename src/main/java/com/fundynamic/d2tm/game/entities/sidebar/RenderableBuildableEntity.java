@@ -43,7 +43,7 @@ public class RenderableBuildableEntity extends GuiElement {
             graphics.fillRect(xAsInt, yAsInt, WIDTH, HEIGHT);
         }
 
-        if (!abstractBuildableEntity.isBuilding()) {
+        if (!abstractBuildableEntity.isBuilding() && !abstractBuildableEntity.awaitsPlacement()) {
             if (hasFocus()) {
                 SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
             } else {
