@@ -34,6 +34,7 @@ For every feature or improvement a small tech demo is created and posted at yout
 - [Alpha 1 (v0.0.1) Demos @ YouTube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW2_Ue06RVQewDQBF8nkW_dE)
 - [Alpha 2 (v0.0.2) Demos @ Youtube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW0rdEfpvgFH2sHiB3JIR-BN)
 - [Alpha 3 (v0.0.3) Demos @ Youtube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW3gzw8Op11WWOeftgjHGZJv)
+- [Alpha 4 (v0.0.4) Demos @ Youtube](https://www.youtube.com/playlist?list=PLGJc4IZyoBW3AJTOohs34NWrcKsT2nw9Y)
 
 ## Development
 Import the project using your favorite IDE.
