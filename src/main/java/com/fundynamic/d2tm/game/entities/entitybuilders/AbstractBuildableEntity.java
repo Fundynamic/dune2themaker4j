@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -21,14 +22,14 @@ public abstract class AbstractBuildableEntity implements Updateable {
 
     private final Player player;
 
-    private float secondsToBuildInMs;
+    private float secondsToBuild;
 
     public BuildableState buildableState = BuildableState.SELECTABLE;
 
     public AbstractBuildableEntity(EntityData entityData, Player player) {
         this.entityData = entityData;
         this.player = player;
-        secondsToBuildInMs = entityData.buildTimeInSeconds;
+        resetBuildTime();
     }
 
     public EntityData getEntityData() {
@@ -63,7 +64,7 @@ public abstract class AbstractBuildableEntity implements Updateable {
     }
 
     public void resetBuildTime() {
-        secondsToBuildInMs = entityData.buildTimeInSeconds;
+        secondsToBuild = entityData.buildTimeInSeconds;
     }
 
     public BuildableState getBuildableState() {
@@ -71,7 +72,7 @@ public abstract class AbstractBuildableEntity implements Updateable {
     }
 
     public boolean isDoneBuilding() {
-        return secondsToBuildInMs < 0f;
+        return secondsToBuild < 0f;
     }
 
     public boolean isBuilding() {
@@ -86,7 +87,7 @@ public abstract class AbstractBuildableEntity implements Updateable {
         }
 
         if (isBuilding()) {
-            secondsToBuildInMs -= deltaInSeconds;
+            secondsToBuild -= deltaInSeconds;
             if (isDoneBuilding()) {
                 buildableState = BuildableState.BUILDING_FINISHED_SPAWNABLE;
             }
@@ -119,7 +120,7 @@ public abstract class AbstractBuildableEntity implements Updateable {
      * @return
      */
     public float getProgress() {
-        return (entityData.buildTimeInSeconds - secondsToBuildInMs) / entityData.buildTimeInSeconds;
+        return (entityData.buildTimeInSeconds - secondsToBuild) / entityData.buildTimeInSeconds;
     }
 
 

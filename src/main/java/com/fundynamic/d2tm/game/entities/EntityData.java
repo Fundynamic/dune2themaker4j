@@ -48,7 +48,7 @@ public class EntityData {
     // Build related
     public EntityBuilderType entityBuilderType = EntityBuilderType.NONE;
 
-    public float buildTimeInSeconds = 5.0F;
+    public float buildTimeInSeconds = 1.0F;
     public float buildRange = 0F;
     public int buildCost = -1;      // cost to build this
     public Image buildIcon;         // build icon
