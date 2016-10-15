@@ -220,6 +220,7 @@ public class EntitiesData {
     }
 
     protected Image createSlickImage(String pathToImage) throws SlickException {
+        System.err.println("Reading " + pathToImage);
         return new Image(pathToImage);
     }
 
