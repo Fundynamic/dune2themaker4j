@@ -15,8 +15,6 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -29,7 +27,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(MockitoJUnitRunner.class)
 public class PlayingStateTest extends AbstractD2TMTest {
 
     private PlayingState playingState;

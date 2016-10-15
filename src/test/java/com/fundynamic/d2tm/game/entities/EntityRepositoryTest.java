@@ -14,7 +14,6 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
 public class EntityRepositoryTest extends AbstractD2TMTest {
 
     @Test

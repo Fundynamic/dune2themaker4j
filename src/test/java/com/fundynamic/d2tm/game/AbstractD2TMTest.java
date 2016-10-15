@@ -42,7 +42,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+/**
+ * Use MockitoJUnitRunner.Silent because we stub out a lot of things here, the down side is that some tests do not hit
+ * the stubs/mocks and these tests will throw a UnnecessaryStubbingException. However, I prefer that over having to turn on/off
+ * each mocking action for each test that might use it or not.
+ */
+@RunWith(MockitoJUnitRunner.Silent.class)
 public abstract class AbstractD2TMTest {
 
     public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
