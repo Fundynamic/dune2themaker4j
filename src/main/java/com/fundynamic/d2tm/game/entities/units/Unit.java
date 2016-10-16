@@ -403,8 +403,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Vector2D getRandomVectorToMoveTo() {
         // we're hit and we don't have an idea where it came from
-        int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-        int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+        int correctX = Random.getRandomBetween(-1, 2) * TILE_SIZE;
+        int correctY = Random.getRandomBetween(-1, 2) * TILE_SIZE;
         return coordinate.add(Vector2D.create(correctX, correctY));
     }
 
@@ -490,6 +490,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public Vector2D getDimensions() {
-        return Vector2D.create(Game.TILE_SIZE, Game.TILE_SIZE);
+        return Vector2D.create(TILE_SIZE, TILE_SIZE);
     }
 }
