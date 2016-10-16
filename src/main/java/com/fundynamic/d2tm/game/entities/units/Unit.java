@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
