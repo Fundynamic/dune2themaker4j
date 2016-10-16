@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -111,5 +112,15 @@ public class EntitiesSet extends HashSet<Entity> {
 
     public static EntitiesSet empty() {
         return new EntitiesSet();
+    }
+
+    public EntitiesSet exclude(Entity entityToExclude) {
+        EntitiesSet entitiesSet = new EntitiesSet();
+        for (Entity entity : this) {
+            if (entity != entityToExclude) {
+                entitiesSet.add(entity);
+            }
+        }
+        return entitiesSet;
     }
 }

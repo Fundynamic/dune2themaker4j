@@ -75,6 +75,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // perhaps be optimized? (without any offsets?)
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
+
         bodyFacing.render(graphics, drawX, drawY);
         cannonFacing.render(graphics, drawX, drawY);
     }
@@ -300,7 +301,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
+//        entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
 
         return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
