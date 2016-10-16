@@ -1,10 +1,12 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.EnrichableAbsoluteRenderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -30,10 +32,18 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
 
     private float frame;
 
+    // used when image to draw is bigger or smaller than the TILE_SIZE, so the image always is drawn centered.
+    private Vector2D drawCorrectionVec;
+
     public RenderQueueEnrichableWithFacingLogic(Image image, EntityData entityData, float turnSpeed) {
         super(image, entityData.getWidth(), entityData.getHeight());
         this.turnSpeed = turnSpeed;
         this.animationSpeed = entityData.animationSpeed;
+
+        this.drawCorrectionVec = Vector2D.create(
+                (Game.TILE_SIZE - entityData.getWidth()) / 2,
+                (Game.TILE_SIZE - entityData.getHeight()) / 2
+        );
 
         int possibleFacings = getHorizontalCount();
         this.maxFrames = getVerticalCount();
@@ -47,7 +57,7 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     @Override
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getBodyFacing(facing);
-        graphics.drawImage(sprite, x, y);
+        graphics.drawImage(sprite, x + drawCorrectionVec.getXAsInt(), y + drawCorrectionVec.getYAsInt());
     }
 
     @Override

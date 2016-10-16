@@ -26,6 +26,7 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
         this.width = width;
         this.height = height;
         this.lineWidth = lineWidth;
+
         resetFading();
     }
 
