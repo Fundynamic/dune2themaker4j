@@ -28,6 +28,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
     private int playerOneBareEntitiesCount;
     private int destroyers;
     private int moveableUnitsOfPlayerOne;
+    private Coordinate topLeftFirstQuad;
 
     @Before
     public void setUp() throws SlickException {
@@ -37,13 +38,14 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         entitiesSet = new EntitiesSet();
 
         player = new Player("Player one", Recolorer.FactionColor.GREEN);
-        Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player one has 4 units and 2 structures
-        entitiesSet.add(makeUnit(player, Coordinate.create(320, 320), "QUAD"));
-        entitiesSet.add(makeUnit(player, Coordinate.create(384, 320), "QUAD"));
-        entitiesSet.add(makeUnit(player, Coordinate.create(320, 384), "QUAD"));
-        entitiesSet.add(makeUnit(player, Coordinate.create(960, 960), "QUAD"));
+        topLeftFirstQuad = Coordinate.create(320, 320);
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad, "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(64, 0)), "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(0, 64)), "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(640, 640)), "QUAD"));
+
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
         destroyers = 4;
@@ -51,6 +53,8 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         entitiesSet.add(makeStructure(player, 200));
         entitiesSet.add(makeStructure(player, 200));
         playerOneStructureCount = 2;
+
+        Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
 
         // player two has 3 units and 3 structures
         entitiesSet.add(makeUnit(playerTwo));
@@ -117,11 +121,13 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         Set<Entity> result = entitiesSet.filter(
                 Predicate.builder().withinArea(
                         Rectangle.create(
-                                Vector2D.create(319, 319),
-                                Vector2D.create(385, 385)
+                                topLeftFirstQuad.min(Coordinate.create(1,1)),
+                                topLeftFirstQuad
+                                        .add(Coordinate.create(64, 64)) // topleft of quads area
+                                        .addHalfTile() // make sure we are at least over the center of the unit
+                                        .add(Coordinate.create(1,1))) // and over it
                         )
-                )
-        );
+                );
         assertEquals(3, result.size());
     }
 

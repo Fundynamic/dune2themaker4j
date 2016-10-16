@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities.predicates;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 
 /**
@@ -20,7 +21,10 @@ public class EntityIsWithinAreaOfAbsoluteCoordinates extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return rectangle.isVectorWithin(entity.getCenteredCoordinate());
+        Coordinate centered = entity.getCenteredCoordinate();
+        boolean result = rectangle.isVectorWithin(centered);
+//        System.out.println("Checking if entity @ [" + centered.getXAsInt() + "," + centered.getYAsInt() + "] is within " + rectangle + " -> " + result);
+        return result;
     }
 
     @Override
