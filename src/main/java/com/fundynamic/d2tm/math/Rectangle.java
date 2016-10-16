@@ -39,7 +39,7 @@ public class Rectangle {
 
     public boolean isVectorWithin(Vector2D vec) {
         boolean result = vec.getX() >= topLeft.getX() && vec.getX() < bottomRight.getX() && vec.getY() >= topLeft.getY() && vec.getY() < bottomRight.getY();
-//        System.out.println("Testing if " + vec + " is within " + this + " --> " + result);
+//        System.out.println("Testing if " + vec.getXAsInt() + "," + vec.getYAsInt() + " is within " + this + " --> " + result);
         return result;
     }
 
@@ -61,11 +61,6 @@ public class Rectangle {
 
     @Override
     public String toString() {
-        return "Rectangle{" +
-                "width=" + width +
-                ", height=" + height +
-                ", topLeft=" + topLeft +
-                ", bottomRight=" + bottomRight +
-                '}';
+        return "Rectangle [@ " + topLeft.getXAsInt() + ", " + topLeft.getYAsInt() + " -> WXH " + (topLeft.getXAsInt() + width) + " X " + (topLeft.getYAsInt() + height) + "]";
     }
 }

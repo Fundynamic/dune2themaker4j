@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
@@ -75,6 +74,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // perhaps be optimized? (without any offsets?)
         int drawY = y + offset.getYAsInt();
         int drawX = x + offset.getXAsInt();
+
         bodyFacing.render(graphics, drawX, drawY);
         cannonFacing.render(graphics, drawX, drawY);
     }
@@ -300,7 +300,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     private boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo, EntityType.UNIT, EntityType.STRUCTURE);
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
+//        entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
 
         return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
@@ -401,8 +402,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Vector2D getRandomVectorToMoveTo() {
         // we're hit and we don't have an idea where it came from
-        int correctX = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
-        int correctY = Random.getRandomBetween(-1, 2) * Game.TILE_SIZE;
+        int correctX = Random.getRandomBetween(-1, 2) * TILE_SIZE;
+        int correctY = Random.getRandomBetween(-1, 2) * TILE_SIZE;
         return coordinate.add(Vector2D.create(correctX, correctY));
     }
 
@@ -484,5 +485,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Entity getEntityToAttack() {
         return entityToAttack;
+    }
+
+    @Override
+    public Vector2D getDimensions() {
+        return Vector2D.create(TILE_SIZE, TILE_SIZE);
     }
 }

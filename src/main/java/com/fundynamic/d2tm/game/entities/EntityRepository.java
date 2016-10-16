@@ -2,7 +2,9 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.behaviors.FadingSelectionCentered;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
+import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibilityCentered;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
@@ -129,8 +131,8 @@ public class EntityRepository {
                     coordinate,
                     makeRenderableWithFacingLogic(entityData, recoloredImage, entityData.turnSpeed),
                     makeRenderableWithFacingLogic(entityData, entityData.barrelImage, entityData.turnSpeedCannon),
-                    new FadingSelection(entityData.getWidth(), entityData.getHeight()),
-                    new HitPointBasedDestructibility(entityData.hitPoints, entityData.getWidth()),
+                    new FadingSelectionCentered(entityData.getWidth(), entityData.getHeight()),
+                    new HitPointBasedDestructibilityCentered(entityData.hitPoints, entityData.getWidth(), entityData.getHeight()),
                     player,
                     entityData,
                     this

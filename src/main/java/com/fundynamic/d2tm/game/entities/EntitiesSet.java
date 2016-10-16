@@ -112,4 +112,14 @@ public class EntitiesSet extends HashSet<Entity> {
     public static EntitiesSet empty() {
         return new EntitiesSet();
     }
+
+    public EntitiesSet exclude(Entity entityToExclude) {
+        EntitiesSet entitiesSet = new EntitiesSet();
+        for (Entity entity : this) {
+            if (!entity.equals(entityToExclude)) {
+                entitiesSet.add(entity);
+            }
+        }
+        return entitiesSet;
+    }
 }
