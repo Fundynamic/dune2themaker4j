@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
-import com.fundynamic.d2tm.game.entities.units.Unit;
 
 import java.util.ArrayList;
 import java.util.HashSet;
