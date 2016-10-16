@@ -20,7 +20,7 @@ public class EntityIsWithinAreaOfAbsoluteCoordinates extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return rectangle.isVectorWithin(entity.getCoordinate());
+        return rectangle.isVectorWithin(entity.getCenteredCoordinate());
     }
 
     @Override
