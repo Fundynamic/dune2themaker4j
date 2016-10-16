@@ -485,4 +485,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Entity getEntityToAttack() {
         return entityToAttack;
     }
+
+    @Override
+    public Vector2D getDimensions() {
+        return Vector2D.create(Game.TILE_SIZE, Game.TILE_SIZE);
+    }
 }
