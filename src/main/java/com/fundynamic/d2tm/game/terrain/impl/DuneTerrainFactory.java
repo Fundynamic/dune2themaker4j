@@ -22,11 +22,11 @@ public class DuneTerrainFactory implements TerrainFactory {
             case DuneTerrain.TERRAIN_SAND_HILL:
                 return new SandHill(theme);
             case DuneTerrain.TERRAIN_SPICE:
-                return new Spice(theme, cell, 100);
+                return new Spice(theme, cell, 1000);
             case DuneTerrain.TERRAIN_MOUNTAIN:
                 return new Mountain(theme);
             case DuneTerrain.TERRAIN_SPICE_HILL:
-                return new SpiceHill(theme, cell, 100);
+                return new SpiceHill(theme, cell, 1000);
             case DuneTerrain.CONCRETE:
                 return new ConcreteSlab(theme);
             default:

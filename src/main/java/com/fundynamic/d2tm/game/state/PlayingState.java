@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.*;
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -78,7 +80,11 @@ public class PlayingState extends BasicGameState {
         Player human = new Player("Human", Recolorer.FactionColor.RED);
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
-        human.setCredits(3000);
+        if (Game.RECORDING_VIDEO) {
+            human.setCredits(9999);
+        } else {
+            human.setCredits(3000);
+        }
         cpu.setCredits(2000);
 
         mapEditor = new MapEditor(terrainFactory);

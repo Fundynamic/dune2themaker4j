@@ -34,7 +34,19 @@ public class EntitiesData {
      */
     public static String TANK = "TANK";
 
+    /**
+     * ID of HARVESTER
+     */
+    public static final String HARVESTER = "HARVESTER";
+
+    /**
+     * ID of SOLDIER
+     */
     public static String SOLDIER = "SOLDIER";
+
+    /**
+     * ID of INFANTRY
+     */
     public static String INFANTRY = "INFANTRY";
 
     // structures

@@ -8,6 +8,10 @@ import com.fundynamic.d2tm.math.MapCoordinate;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
 public class Cell {
 
     // TODO: decide which TILE_SIZE wins and refer to that one
@@ -107,5 +111,37 @@ public class Cell {
 
     public boolean isPassable(Entity entity) {
         return terrain.isPassable(entity);
+    }
+
+    public void smooth() {
+        MapEditor.TerrainFacing facing = MapEditor.getFacing(
+                terrain.isSame(getCellAbove().getTerrain()),
+                terrain.isSame(getCellRight().getTerrain()),
+                terrain.isSame(getCellBeneath().getTerrain()),
+                terrain.isSame(getCellLeft().getTerrain()));
+
+        terrain.setFacing(facing);
+    }
+
+    public void smoothSurroundingCells() {
+        List<Cell> cells = getSurroundingCells();
+        for (Cell cell : cells) {
+            cell.smooth();
+        }
+    }
+
+    public List<Cell> getSurroundingCells() {
+        Cell cellAbove = getCellAbove();
+        Cell cellBeneath = getCellBeneath();
+        return Arrays.asList(
+                cellAbove,
+                cellAbove.getCellLeft(),
+                cellAbove.getCellRight(),
+                getCellLeft(),
+                getCellRight(),
+                cellBeneath,
+                cellBeneath.getCellLeft(),
+                cellBeneath.getCellRight()
+        );
     }
 }

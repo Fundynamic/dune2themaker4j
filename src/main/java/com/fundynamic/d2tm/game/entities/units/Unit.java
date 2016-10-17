@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
 import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
@@ -9,6 +10,8 @@ import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.terrain.Harvestable;
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -101,6 +104,23 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             cannonFacing.update(deltaInSeconds);
         }
 
+        if (this.entityData.name.equals(EntitiesData.HARVESTER)) {
+            Cell cellByMapCoordinates = this.map.getCellByMapCoordinates(getCoordinate().toMapCoordinate());
+            Terrain terrain = cellByMapCoordinates.getTerrain();
+            if (terrain instanceof Harvestable) {
+                ((Harvestable) terrain).harvest(10);
+                if (!bodyFacing.isAnimating()) {
+                    bodyFacing.startAnimating();
+                }
+            } else {
+                if (bodyFacing.isAnimating()) {
+                    bodyFacing.stopAndResetAnimating();
+                }
+            }
+        }
+
+        bodyFacing.update(deltaInSeconds);
+
         if (!shouldMove() && !shouldAttack()) {
             guardTimer += deltaInSeconds;
             if (guardTimer > GUARD_TIMER_INTERVAL) {
@@ -180,8 +200,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         } else {
             if (bodyFacing.isFacingDesiredFacing()) {
                 moveToNextCellPixelByPixel(deltaInSeconds);
-            } else {
-                bodyFacing.update(deltaInSeconds);
             }
         }
     }
@@ -280,8 +298,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (!vecToAdd.equals(Vector2D.zero())) {
             moveToCell(coordinate.add(vecToAdd));
         }
-
-        bodyFacing.updateAnimation(deltaInSeconds);
 
         offset = Vector2D.create(offsetX, offsetY);
     }
