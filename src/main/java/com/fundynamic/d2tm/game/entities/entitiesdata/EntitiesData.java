@@ -181,6 +181,10 @@ public class EntitiesData {
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
 
+        if (id.equals(EntitiesData.HARVESTER)) {
+            entityData.isHarvester = true;
+        }
+
         String weaponId = iniDataUnit.weaponId;
 
         if (!idProvided(weaponId)) {

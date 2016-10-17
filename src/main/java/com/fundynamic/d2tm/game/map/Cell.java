@@ -3,6 +3,8 @@ package com.fundynamic.d2tm.game.map;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.impl.Spice;
+import com.fundynamic.d2tm.game.terrain.impl.SpiceHill;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import org.newdawn.slick.Image;
@@ -143,5 +145,9 @@ public class Cell {
                 cellBeneath.getCellLeft(),
                 cellBeneath.getCellRight()
         );
+    }
+
+    public boolean isHarvestable() {
+        return (terrain instanceof Spice || terrain instanceof SpiceHill);
     }
 }

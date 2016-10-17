@@ -122,4 +122,8 @@ public class EntitiesSet extends HashSet<Entity> {
         }
         return entitiesSet;
     }
+
+    public boolean sameSizeAs(EntitiesSet other) {
+        return this.size() == other.size();
+    }
 }

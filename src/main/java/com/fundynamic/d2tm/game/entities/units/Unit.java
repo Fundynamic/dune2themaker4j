@@ -507,4 +507,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public Vector2D getDimensions() {
         return Vector2D.create(TILE_SIZE, TILE_SIZE);
     }
+
+    public void harvest(Coordinate target) {
+        moveTo(target);
+    }
+
 }
