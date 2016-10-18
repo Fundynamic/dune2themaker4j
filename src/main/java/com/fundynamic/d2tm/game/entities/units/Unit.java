@@ -100,9 +100,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             explodeAndDie();
         }
 
-        if (!cannonFacing.isFacingDesiredFacing()) {
-            cannonFacing.update(deltaInSeconds);
-        }
+        cannonFacing.update(deltaInSeconds);
+        bodyFacing.update(deltaInSeconds);
 
         if (this.entityData.name.equals(EntitiesData.HARVESTER)) {
             Cell cellByMapCoordinates = this.map.getCellByMapCoordinates(getCoordinate().toMapCoordinate());
@@ -118,8 +117,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         }
-
-        bodyFacing.update(deltaInSeconds);
 
         if (!shouldMove() && !shouldAttack()) {
             guardTimer += deltaInSeconds;
