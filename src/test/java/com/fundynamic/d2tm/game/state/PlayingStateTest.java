@@ -102,7 +102,8 @@ public class PlayingStateTest extends AbstractD2TMTest {
         assertThat(entityRepository.getEntitiesCount(), is(originalCount));
 
         unit.takeDamage(unit.getHitPoints(), null); // takes damage, so it gets destroyed
-        unit.update(1);       // required to update internal state
+        unit.update(1);       // to dying
+        unit.update(1);       // now dead (is Destroyed == true)
         assertThat(unit.isDestroyed(), is(true));
 
         playingState.update(gameContainer, game, 10);

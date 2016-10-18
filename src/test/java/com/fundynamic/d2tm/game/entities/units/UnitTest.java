@@ -114,8 +114,8 @@ public class UnitTest extends AbstractD2TMTest {
         Unit unit = makeUnit(player);
         unit.takeDamage(unit.getHitPoints(), null);
 
-        unit.update(1);
-
+        unit.update(1); // dying
+        unit.update(1); // dead
 
         Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
         assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PARTICLE));

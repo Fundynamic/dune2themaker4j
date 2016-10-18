@@ -7,6 +7,10 @@ import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
 import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.entities.units.states.DeadState;
+import com.fundynamic.d2tm.game.entities.units.states.DyingState;
+import com.fundynamic.d2tm.game.entities.units.states.IdleState;
+import com.fundynamic.d2tm.game.entities.units.states.UnitState;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
@@ -25,6 +29,9 @@ import static com.fundynamic.d2tm.Game.TILE_SIZE;
 public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable {
 
     public static final int GUARD_TIMER_INTERVAL = 5;
+
+    // state
+    private UnitState state;
 
     // Behaviors
     private FadingSelection fadingSelection;
@@ -47,8 +54,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private Entity entityToAttack;
     private float attackTimer; // needed for attackRate
 
-    private boolean hasSpawnedExplosions;
-
     // give units a bit more intelligence
     private float guardTimer = 0;
 
@@ -64,6 +69,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.nextTargetToMoveTo = coordinate;
         this.offset = Vector2D.zero();
         this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
+        this.state = new IdleState(this, entityRepository, map);
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
@@ -84,6 +90,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
+        state.update(deltaInSeconds);
+
         if (this.isDestroyed()) {
             return;
         }
@@ -96,8 +104,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             moveCloserToTarget(deltaInSeconds);
         }
 
-        if (shouldExplode()) {
-            explodeAndDie();
+        if (hitPointBasedDestructibility.hasDied()) {
+            setState(new DyingState(this, entityRepository, map));
         }
 
         cannonFacing.update(deltaInSeconds);
@@ -107,7 +115,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             Cell cellByMapCoordinates = this.map.getCellByMapCoordinates(getCoordinate().toMapCoordinate());
             Terrain terrain = cellByMapCoordinates.getTerrain();
             if (terrain instanceof Harvestable) {
-                ((Harvestable) terrain).harvest(10);
+                ((Harvestable) terrain).harvest(5);
                 if (!bodyFacing.isAnimating()) {
                     bodyFacing.startAnimating();
                 }
@@ -248,20 +256,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
             }
         }
-    }
-
-    private boolean shouldExplode() {
-        return hitPointBasedDestructibility.hasDied() && !hasExploded();
-    }
-
-    public boolean hasExploded() {
-        return hasSpawnedExplosions;
-    }
-
-    public void explodeAndDie() {
-        hitPointBasedDestructibility.die();
-        hasSpawnedExplosions = true;
-        entityRepository.placeExplosionWithCenterAt(getCenteredCoordinate(), player, entityData.explosionId);
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {
@@ -410,6 +404,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         }
+        // TODO: set state to dying when applicable!?
         hitPointBasedDestructibility.takeDamage(hitPoints);
     }
 
@@ -422,7 +417,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public boolean isDestroyed() {
-        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
+//        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
+        return state instanceof DeadState;
     }
 
     @Override
@@ -509,4 +505,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         moveTo(target);
     }
 
+    public void setState(UnitState state) {
+        this.state = state;
+    }
+
+    public void die() {
+        setState(new DyingState(this, entityRepository, map));
+    }
 }
