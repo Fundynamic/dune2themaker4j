@@ -34,9 +34,6 @@ public class Spice extends DuneTerrain implements Harvestable {
         if (this.spice <= 0) {
             cell.changeTerrain(new Sand(theme)); // <-- this is odd!?
             cell.smoothSurroundingCells();
-//			Spice terrain = (Spice)terrains.getType(Spice.class, this.facing);
-//			terrain.setAmount
-//			cell.changeTerrain(terrain);
         }
         return spice;
     }
