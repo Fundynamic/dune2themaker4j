@@ -14,4 +14,10 @@ public class MoveState extends UnitState {
     public void update(float deltaInSeconds) {
 
     }
+
+    @Override
+    public String toString() {
+        return "MoveState";
+    }
+
 }

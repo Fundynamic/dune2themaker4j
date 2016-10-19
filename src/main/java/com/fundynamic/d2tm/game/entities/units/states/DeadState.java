@@ -16,4 +16,8 @@ public class DeadState extends UnitState {
         // dead
     }
 
+    @Override
+    public String toString() {
+        return "DeadState";
+    }
 }

@@ -20,7 +20,12 @@ public class DyingState extends UnitState {
                 unit.getEntityData().explosionId
         );
 
-        unit.setState(new DeadState(unit, entityRepository, map));
+        unit.dead();
+    }
+
+    @Override
+    public String toString() {
+        return "DyingState";
     }
 
 }

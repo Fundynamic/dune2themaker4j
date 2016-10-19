@@ -130,6 +130,10 @@ public class Map {
         return getCellProtected(coordinates.getXAsInt(), coordinates.getYAsInt());
     }
 
+    public Cell getCellFor(Entity entity) {
+        return getCellByMapCoordinates(entity.getCoordinate().toMapCoordinate());
+    }
+
     public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
         return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
     }

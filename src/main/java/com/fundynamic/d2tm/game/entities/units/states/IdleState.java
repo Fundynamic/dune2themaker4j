@@ -16,8 +16,13 @@ public class IdleState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (unit.isHarvester()) {
-            unit.setState(new SeekSpiceState(unit, entityRepository, map));
+            unit.seekSpice();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "IdleState";
     }
 
 }

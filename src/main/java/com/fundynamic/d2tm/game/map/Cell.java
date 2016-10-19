@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.impl.Spice;
 import com.fundynamic.d2tm.game.terrain.impl.SpiceHill;
@@ -135,6 +136,7 @@ public class Cell {
     public List<Cell> getSurroundingCells() {
         Cell cellAbove = getCellAbove();
         Cell cellBeneath = getCellBeneath();
+
         return Arrays.asList(
                 cellAbove,
                 cellAbove.getCellLeft(),
@@ -148,6 +150,13 @@ public class Cell {
     }
 
     public boolean isHarvestable() {
-        return (terrain instanceof Spice || terrain instanceof SpiceHill);
+        return terrain instanceof Harvestable;
+    }
+
+    public int harvest(int amount) {
+        if (isHarvestable()) {
+            return ((Harvestable) terrain).harvest(amount);
+        }
+        return 0;
     }
 }

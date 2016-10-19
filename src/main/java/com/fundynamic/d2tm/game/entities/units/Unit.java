@@ -2,20 +2,14 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
 import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.entities.units.states.DeadState;
-import com.fundynamic.d2tm.game.entities.units.states.DyingState;
-import com.fundynamic.d2tm.game.entities.units.states.IdleState;
-import com.fundynamic.d2tm.game.entities.units.states.UnitState;
+import com.fundynamic.d2tm.game.entities.units.states.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
-import com.fundynamic.d2tm.game.terrain.Harvestable;
-import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -90,6 +84,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
+        if (hitPointBasedDestructibility.hasDied()) {
+            die();
+        }
+
+        Cell unitCell = map.getCellFor(this);
+
+        // we can harvest
+        if (unitCell.isHarvestable()) {
+            harvesting();
+        }
+
         state.update(deltaInSeconds);
 
         if (this.isDestroyed()) {
@@ -102,29 +107,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (shouldMove()) {
             moveCloserToTarget(deltaInSeconds);
-        }
-
-        if (hitPointBasedDestructibility.hasDied()) {
-            setState(new DyingState(this, entityRepository, map));
+        } else {
+//            setState(new IdleState(this, entityRepository, map));
         }
 
         cannonFacing.update(deltaInSeconds);
         bodyFacing.update(deltaInSeconds);
-
-        if (this.entityData.name.equals(EntitiesData.HARVESTER)) {
-            Cell cellByMapCoordinates = this.map.getCellByMapCoordinates(getCoordinate().toMapCoordinate());
-            Terrain terrain = cellByMapCoordinates.getTerrain();
-            if (terrain instanceof Harvestable) {
-                ((Harvestable) terrain).harvest(5);
-                if (!bodyFacing.isAnimating()) {
-                    bodyFacing.startAnimating();
-                }
-            } else {
-                if (bodyFacing.isAnimating()) {
-                    bodyFacing.stopAndResetAnimating();
-                }
-            }
-        }
 
         if (!shouldMove() && !shouldAttack()) {
             guardTimer += deltaInSeconds;
@@ -386,6 +374,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
         this.entityToAttack = null; // forget about attacking
         this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+        this.setState(new MoveState(this, entityRepository, map));
     }
 
     @Override
@@ -417,7 +406,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public boolean isDestroyed() {
-//        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
         return state instanceof DeadState;
     }
 
@@ -505,11 +493,44 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         moveTo(target);
     }
 
-    public void setState(UnitState state) {
-        this.state = state;
+    private void setState(UnitState state) {
+        if (this.state.getClass().equals(state.getClass())) {
+            // do not set, same type
+        } else {
+            System.out.println("Unit [" + entityData.name + "] sets state from [" + this.state + "] to [" + state + "]");
+            this.state = state;
+        }
     }
 
     public void die() {
         setState(new DyingState(this, entityRepository, map));
     }
+
+    public void dead() {
+        setState(new DeadState(this, entityRepository, map));
+    }
+
+    public void seekSpice() {
+        if (isAnimating()) {
+            stopAndResetAnimating();
+        }
+        setState(new SeekSpiceState(this, entityRepository, map));
+    }
+
+    public void harvesting() {
+        setState(new HarvestingState(this, entityRepository, map));
+    }
+
+    public boolean isAnimating() {
+        return bodyFacing.isAnimating();
+    }
+
+    public void startAnimating() {
+        bodyFacing.startAnimating();
+    }
+
+    public void stopAndResetAnimating() {
+        bodyFacing.stopAndResetAnimating();
+    }
+
 }
