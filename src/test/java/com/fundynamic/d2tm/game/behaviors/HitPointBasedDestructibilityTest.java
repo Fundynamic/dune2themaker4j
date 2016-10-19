@@ -31,9 +31,15 @@ public class HitPointBasedDestructibilityTest {
     }
 
     @Test
-    public void deductsDamageFromHitPoints() {
+    public void whenDamageIsGreaterThanHitPointsThanHitpointsRemainZero() {
         hitPointBasedDestructibility.takeDamage(40);
         Assert.assertEquals((MAX_HIT_POINTS - 40), hitPointBasedDestructibility.getHitPoints());
+    }
+
+    @Test
+    public void deductsDamageFromHitPoints() {
+        hitPointBasedDestructibility.takeDamage((MAX_HIT_POINTS + 10));
+        Assert.assertEquals(0, hitPointBasedDestructibility.getHitPoints());
     }
 
     @Test
