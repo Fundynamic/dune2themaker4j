@@ -55,6 +55,12 @@ public class HitPointBasedDestructibilityTest {
     }
 
     @Test
+    public void isDestroyedWithZeroHitPoints() {
+        hitPointBasedDestructibility.takeDamage(MAX_HIT_POINTS);
+        Assert.assertTrue(hitPointBasedDestructibility.hasDied());
+    }
+
+    @Test
     public void isNotDestroyedMoreThanOneHitPoint() {
         Assert.assertFalse(hitPointBasedDestructibility.hasDied());
     }
