@@ -105,12 +105,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             chaseOrAttack(deltaInSeconds);
         }
 
-        if (shouldMove()) {
-            moveCloserToTarget(deltaInSeconds);
-        } else {
-//            setState(new IdleState(this, entityRepository, map));
-        }
-
         cannonFacing.update(deltaInSeconds);
         bodyFacing.update(deltaInSeconds);
 
@@ -187,15 +181,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return entityToAttack != null;
     }
 
-    public void moveCloserToTarget(float deltaInSeconds) {
-        if (hasNoNextCellToMoveTo()) {
-            decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(target);
-        } else {
-            if (bodyFacing.isFacingDesiredFacing()) {
-                moveToNextCellPixelByPixel(deltaInSeconds);
-            }
-        }
-    }
 
     public void chaseOrAttack(float deltaInSeconds) {
         float attackRange = entityData.attackRange;
@@ -241,60 +226,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 entityToAttack = null;
             } else {
-                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
+//                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
+                moveTo(entityToAttack.getCoordinate());
             }
         }
     }
 
-    private void moveToNextCellPixelByPixel(float deltaInSeconds) {
-        float offsetX = offset.getX();
-        float offsetY = offset.getY();
-
-        if (nextTargetToMoveTo.getXAsInt() < coordinate.getXAsInt()) offsetX -= entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getXAsInt() > coordinate.getXAsInt()) offsetX += entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getYAsInt() < coordinate.getYAsInt()) offsetY -= entityData.getRelativeMoveSpeed(deltaInSeconds);
-        if (nextTargetToMoveTo.getYAsInt() > coordinate.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
-
-        Vector2D vecToAdd = Vector2D.zero();
-        if (offsetX > 31) {
-            offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(32, 0));
-        }
-        if (offsetX < -31) {
-            offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(-32, 0));
-        }
-        if (offsetY > 31) {
-            offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, 32));
-        }
-        if (offsetY < -31) {
-            offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, -32));
-        }
-
-        // Arrived at intended next target cell
-        if (!vecToAdd.equals(Vector2D.zero())) {
-            moveToCell(coordinate.add(vecToAdd));
-        }
-
-        offset = Vector2D.create(offsetX, offsetY);
-    }
-
-    private Coordinate decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(Vector2D target) {
-        Coordinate nextIntendedCoordinatesToMoveTo = getNextIntendedCellToMoveToTarget(target);
-
-        if (canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
-            nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
-            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
-            UnitMoveIntents.addIntent(nextTargetToMoveTo);
-            return nextIntendedCoordinatesToMoveTo;
-        }
-
-        return coordinate;
-    }
-
-    private boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
+    public boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
         EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
 //        entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
@@ -302,7 +240,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
     }
 
-    private Coordinate getNextIntendedCellToMoveToTarget(Vector2D target) {
+    public Coordinate getNextIntendedCellToMoveToTarget(Vector2D target) {
         int nextXCoordinate = coordinate.getXAsInt();
         int nextYCoordinate = coordinate.getYAsInt();
         if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
@@ -313,19 +251,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return Coordinate.create(nextXCoordinate, nextYCoordinate);
     }
 
-    private boolean hasNoNextCellToMoveTo() {
+    public boolean hasNoNextCellToMoveTo() {
         return nextTargetToMoveTo == coordinate;
-    }
-
-    private void moveToCell(Coordinate coordinateToMoveTo) {
-        this.coordinate = coordinateToMoveTo;
-        this.nextTargetToMoveTo = coordinateToMoveTo;
-
-        UnitMoveIntents.removeIntent(coordinateToMoveTo);
-
-        // TODO: replace with some event "unit moved to coordinate" which is picked up
-        // elsewhere (Listener?)
-        map.revealShroudFor(this.coordinate.toMapCoordinate(), getSight(), player);
     }
 
     @Override
@@ -372,9 +299,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
-        this.entityToAttack = null; // forget about attacking
+//        this.entityToAttack = null; // forget about attacking
         this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
-        this.setState(new MoveState(this, entityRepository, map));
+        this.setState(new GoalResolverState(this, entityRepository, map));
     }
 
     @Override
@@ -533,4 +460,33 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.stopAndResetAnimating();
     }
 
+    public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
+        nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
+        bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
+
+        UnitMoveIntents.addIntent(nextTargetToMoveTo);
+
+        setState(new MoveToCellState(this, entityRepository, map));
+    }
+
+    public Vector2D getTarget() {
+        return target;
+    }
+
+    public void arrivedAtCell(Coordinate coordinateToMoveTo) {
+        this.coordinate = coordinateToMoveTo;
+        this.nextTargetToMoveTo = coordinateToMoveTo;
+
+        UnitMoveIntents.removeIntent(coordinateToMoveTo);
+
+        // TODO: replace with some event "unit moved to coordinate" which is picked up
+        // elsewhere (Listener?)
+        map.revealShroudFor(this.coordinate.toMapCoordinate(), getSight(), player);
+
+        setState(new GoalResolverState(this, entityRepository, map));
+    }
+
+    public RenderQueueEnrichableWithFacingLogic getBodyFacing() {
+        return bodyFacing;
+    }
 }
