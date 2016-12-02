@@ -32,8 +32,11 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
@@ -47,8 +50,11 @@ import static org.mockito.Mockito.when;
  * the stubs/mocks and these tests will throw a UnnecessaryStubbingException. However, I prefer that over having to turn on/off
  * each mocking action for each test that might use it or not.
  */
-@RunWith(MockitoJUnitRunner.Silent.class)
 public abstract class AbstractD2TMTest {
+
+    // don't warn user about misusage, old behaviour
+    @Rule
+    public MockitoRule mrule = MockitoJUnit.rule().silent();
 
     public static final float ONE_FRAME_PER_SECOND_DELTA = 1f;
 
