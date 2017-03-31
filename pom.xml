@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.2.9</version>
+			<version>2.7.19</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -72,7 +72,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-                                <version>0.7.7.201606060606</version>
+                                <version>0.7.9</version>
 				<executions>
 					<execution>
 						<id>jacoco-initialize</id>
@@ -92,7 +92,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.6.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -130,7 +130,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>bundle-release</id>
@@ -154,7 +154,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.7.201606060606</version>
+				<version>0.7.9</version>
 			</plugin>
 		</plugins>
 	</reporting>
