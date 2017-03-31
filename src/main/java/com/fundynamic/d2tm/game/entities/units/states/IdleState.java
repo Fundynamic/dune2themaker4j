@@ -10,7 +10,6 @@ public class IdleState extends UnitState {
         super(unit, entityRepository, map);
     }
 
-
     // TODO boredom (after x time turn around randomly)
 
     @Override

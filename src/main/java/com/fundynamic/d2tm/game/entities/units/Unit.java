@@ -234,10 +234,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
         EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
-//        entities = entities.exclude(this); // do not count ourselves as blocking
+        entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
 
-        return entities.isEmpty() && cell.isPassable(this) && !UnitMoveIntents.hasIntentFor(intendedMapCoordinatesToMoveTo);
+        return entities.isEmpty() &&
+                cell.isPassable(this) &&
+                UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this);
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget(Vector2D target) {
@@ -294,6 +296,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void lostFocus() {
         fadingSelection.lostFocus();
+    }
+
+    /**
+     * Go to idle state
+     */
+    public void idle() {
+        this.setState(new IdleState(this, entityRepository, map));
     }
 
     @Override
@@ -464,7 +473,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
         bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
 
-        UnitMoveIntents.addIntent(nextTargetToMoveTo);
+        UnitMoveIntents.instance.addIntent(nextTargetToMoveTo, this);
 
         setState(new MoveToCellState(this, entityRepository, map));
     }
@@ -477,7 +486,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.coordinate = coordinateToMoveTo;
         this.nextTargetToMoveTo = coordinateToMoveTo;
 
-        UnitMoveIntents.removeIntent(coordinateToMoveTo);
+        UnitMoveIntents.instance.removeIntent(coordinateToMoveTo);
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)

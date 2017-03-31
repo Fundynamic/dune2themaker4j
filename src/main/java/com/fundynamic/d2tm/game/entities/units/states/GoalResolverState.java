@@ -15,13 +15,27 @@ public class GoalResolverState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (unit.hasNoNextCellToMoveTo()) {
+            System.out.println("Unit has no next cell to move to");
             Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget(unit.getTarget());
 
+            System.out.println("Unit has decided that the next cell to move to is " + nextIntendedCoordinatesToMoveTo);
             if (unit.canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
+                System.out.println("Unit can move to next cell");
                 unit.moveToCell(nextIntendedCoordinatesToMoveTo);
+            } else {
+                System.out.println("Unit cannot move to next cell, will retry next cycle");
             }
         } else {
-            System.out.println("Has cell to move to, what am I doing here!?");
+            System.out.println("Unit next cell to move to");
+            Coordinate nextIntendedCoordinatesToMoveTo = new Coordinate(unit.getNextTargetToMoveTo());
+            System.out.println("Unit has cell to move to that is: " + nextIntendedCoordinatesToMoveTo);
+            if (unit.canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
+                System.out.println("Unit can move to next cell");
+                unit.moveToCell(nextIntendedCoordinatesToMoveTo);
+            } else {
+                System.out.println("Unit cannot move to cell, will idle... !?");
+                unit.stopAndResetAnimating();
+            }
         }
     }
 
