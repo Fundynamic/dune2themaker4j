@@ -36,8 +36,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private RenderQueueEnrichableWithFacingLogic bodyFacing;
     private RenderQueueEnrichableWithFacingLogic cannonFacing;
 
-    private Vector2D target;
-    private Vector2D nextTargetToMoveTo;
+    private Vector2D target;                // the (end) goal to attack/move
+    private Vector2D nextTargetToMoveTo;    // the next step/target to move to (ie, this is a step towards the 'real' target)
 
     // Dependencies
     private final Map map;
@@ -181,7 +181,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return entityToAttack != null;
     }
 
-
     public void chaseOrAttack(float deltaInSeconds) {
         float attackRange = entityData.attackRange;
         // ok, we don't need to move, so lets see if we are in range
@@ -242,7 +241,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this);
     }
 
-    public Coordinate getNextIntendedCellToMoveToTarget(Vector2D target) {
+    public Coordinate getNextIntendedCellToMoveToTarget() {
         int nextXCoordinate = coordinate.getXAsInt();
         int nextYCoordinate = coordinate.getYAsInt();
         if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
@@ -298,9 +297,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         fadingSelection.lostFocus();
     }
 
-    /**
-     * Go to idle state
-     */
     public void idle() {
         this.setState(new IdleState(this, entityRepository, map));
     }
@@ -308,6 +304,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void moveTo(Vector2D absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
+        // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
         this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
         this.setState(new GoalResolverState(this, entityRepository, map));

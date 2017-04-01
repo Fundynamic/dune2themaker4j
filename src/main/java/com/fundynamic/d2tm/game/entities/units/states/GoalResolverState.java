@@ -14,28 +14,21 @@ public class GoalResolverState extends UnitState {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (unit.hasNoNextCellToMoveTo()) {
-            System.out.println("Unit has no next cell to move to");
-            Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget(unit.getTarget());
+        if (!unit.shouldMove()) {
+            unit.idle();
+            return;
+        }
 
-            System.out.println("Unit has decided that the next cell to move to is " + nextIntendedCoordinatesToMoveTo);
+        if (unit.hasNoNextCellToMoveTo()) {
+            Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
             if (unit.canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
-                System.out.println("Unit can move to next cell");
                 unit.moveToCell(nextIntendedCoordinatesToMoveTo);
-            } else {
-                System.out.println("Unit cannot move to next cell, will retry next cycle");
             }
         } else {
-            System.out.println("Unit next cell to move to");
-            Coordinate nextIntendedCoordinatesToMoveTo = new Coordinate(unit.getNextTargetToMoveTo());
-            System.out.println("Unit has cell to move to that is: " + nextIntendedCoordinatesToMoveTo);
-            if (unit.canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
-                System.out.println("Unit can move to next cell");
-                unit.moveToCell(nextIntendedCoordinatesToMoveTo);
-            } else {
-                System.out.println("Unit cannot move to cell, will idle... !?");
-                unit.stopAndResetAnimating();
-            }
+            // still have a target, keep moving
+            // we can get here when a unit is mid-way moving and is ordered to move somewhere else,
+            // which will set the unit state to the GoalResolverState again.
+            unit.moveToCell(Coordinate.create(unit.getNextTargetToMoveTo()));
         }
     }
 
