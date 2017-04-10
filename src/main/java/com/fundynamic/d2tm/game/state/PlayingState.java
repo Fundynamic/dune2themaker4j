@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.state;
 
-import com.fundynamic.d2tm.*;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
@@ -30,6 +29,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
 
 public class PlayingState extends BasicGameState {
 
@@ -192,10 +192,12 @@ public class PlayingState extends BasicGameState {
 
         // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), "HARVESTER", human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 2), "QUAD", human);
         entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
 
         // cpu entities
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), "QUAD", cpu);
         entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
