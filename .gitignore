@@ -14,7 +14,7 @@ engine/target
 game/target
 d2tm/target
 target
-graphics/
+./graphics
 
 # Eclipse files
 engine/.classpath
