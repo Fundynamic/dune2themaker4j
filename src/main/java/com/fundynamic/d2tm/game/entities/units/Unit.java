@@ -91,7 +91,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         Cell unitCell = map.getCellFor(this);
 
         // we can harvest
-        if (unitCell.isHarvestable()) {
+        if (isHarvester() && unitCell.isHarvestable()) {
             harvesting();
         }
 
