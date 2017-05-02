@@ -1,5 +1,10 @@
 package com.fundynamic.d2tm.math;
 
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.terrain.Terrain;
+
+import java.util.List;
+
 public class Random {
 
     /**
@@ -20,4 +25,14 @@ public class Random {
         return (int) (Math.random() * max);
     }
 
+    /**
+     * Given a list of T, returns a random item from the list.
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T getRandomItem(List<T> list) {
+        if (list.isEmpty()) return null;
+        return list.get(getInt(list.size()));
+    }
 }

@@ -21,11 +21,11 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
     }
 
     public void takeDamage(int hitPoints) {
-        this.hitPoints -= hitPoints;
+        this.hitPoints = Math.max(this.hitPoints - hitPoints, 0);
     }
 
     public boolean hasDied() {
-        return hitPoints < 1;
+        return hitPoints <= 0;
     }
 
     @Override
@@ -76,10 +76,4 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
         return (float)hitPoints / maxHitpoints;
     }
 
-    /**
-     * Zero out hitpoints, effectively killing the entity that is associates with this class.
-     */
-    public void die() {
-        this.hitPoints = 0;
-    }
 }

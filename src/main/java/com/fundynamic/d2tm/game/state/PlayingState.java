@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.state;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
@@ -28,6 +29,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
 
 public class PlayingState extends BasicGameState {
 
@@ -78,7 +80,11 @@ public class PlayingState extends BasicGameState {
         Player human = new Player("Human", Recolorer.FactionColor.RED);
         Player cpu = new Player("CPU", Recolorer.FactionColor.GREEN);
 
-        human.setCredits(3000);
+        if (Game.RECORDING_VIDEO) {
+            human.setCredits(9999);
+        } else {
+            human.setCredits(3000);
+        }
         cpu.setCredits(2000);
 
         mapEditor = new MapEditor(terrainFactory);
@@ -186,10 +192,12 @@ public class PlayingState extends BasicGameState {
 
         // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), "HARVESTER", human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 2), "QUAD", human);
         entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
 
         // cpu entities
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), "QUAD", cpu);
         entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 

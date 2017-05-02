@@ -5,14 +5,15 @@ import com.fundynamic.d2tm.game.behaviors.Destroyer;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.Mouse;
+import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.NullEntity;
 import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.math.Coordinate;
-
-import java.util.Set;
 
 /**
  *
@@ -34,9 +35,18 @@ import java.util.Set;
  */
 public class MovableSelectedMouse extends NormalMouse {
 
+    private EntitiesSet entitiesSetOfAllMovable;
+
     public MovableSelectedMouse(BattleField battleField) {
         super(battleField);
         mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+    }
+
+    public EntitiesSet getAllSelectedMovableEntitiesForPlayer() {
+        return entityRepository.filter(
+                Predicate.builder().
+                        selectedMovableForPlayer(player)
+        );
     }
 
     @Override
@@ -44,7 +54,9 @@ public class MovableSelectedMouse extends NormalMouse {
         Entity hoveringOverEntity = hoveringOverSelectableEntity();
 
         // hovering over an entity and visible for player
-        if (!NullEntity.is(hoveringOverEntity) && getHoverCell().isVisibleFor(player)) {
+        Cell cell = getHoverCell();
+
+        if (!NullEntity.is(hoveringOverEntity) && cell.isVisibleFor(player)) {
             // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
                 selectEntity(hoveringOverEntity);
@@ -53,14 +65,23 @@ public class MovableSelectedMouse extends NormalMouse {
 
             }
         } else {
-            Set<Entity> selectedMovableEntities = entityRepository.filter(
-                    Predicate.builder().
-                            selectedMovableForPlayer(player)
-            );
+            Coordinate target = cell.getMapCoordinate().toCoordinate();
 
-            Coordinate target = getHoverCell().getMapCoordinate().toCoordinate();
-            for (Entity entity : selectedMovableEntities) {
-                ((Moveable) entity).moveTo(target);
+            EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
+            if (harvestersSelected.hasAny() && entitiesSetOfAllMovable.sameSizeAs(harvestersSelected)) {
+                if (cell.isHarvestable()) {
+                    for (Entity entity : entitiesSetOfAllMovable) {
+                        ((Unit) entity).harvest(target);
+                    }
+                } else {
+                    for (Entity entity : entitiesSetOfAllMovable) {
+                        ((Moveable) entity).moveTo(target);
+                    }
+                }
+            } else {
+                for (Entity entity : entitiesSetOfAllMovable) {
+                    ((Moveable) entity).moveTo(target);
+                }
             }
         }
     }
@@ -68,20 +89,20 @@ public class MovableSelectedMouse extends NormalMouse {
     public void attackDestructibleIfApplicable(Entity hoveringOverEntity) {
         // does not belong to player; that can only mean 'attack'!
         if (hoveringOverEntity.isDestructible()) {
-            Set<Entity> selectedDestroyersEntities = entityRepository.filter(
+
+            EntitiesSet entitiesCapableOfDestroyingThings = entitiesSetOfAllMovable.filter(
                     Predicate.builder().
                             selectedDestroyersForPlayer(player)
             );
 
-            for (Entity entity : selectedDestroyersEntities) {
-                ((Destroyer) entity).attack(hoveringOverEntity);
-            }
+            entitiesCapableOfDestroyingThings.each(entity -> ((Destroyer) entity).attack(hoveringOverEntity));
         }
     }
 
     @Override
     public void mouseMovedToCell(Cell cell) {
         if (cell == null) throw new IllegalArgumentException("argument cell may not be null");
+        entitiesSetOfAllMovable = getAllSelectedMovableEntitiesForPlayer();
 
         // get the hovering entity without updated cell
         Entity previousHoveringEntity = hoveringOverSelectableEntity();
@@ -106,6 +127,12 @@ public class MovableSelectedMouse extends NormalMouse {
         // no entity on the cell we're hovering over, so we can move
         if (NullEntity.is(entity)) {
             mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+            EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
+            if (harvestersSelected.hasAny() && harvestersSelected.sameSizeAs(entitiesSetOfAllMovable)) {
+                if (cell.isHarvestable()) {
+                    mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+                }
+            }
             return;
         }
 
@@ -122,6 +149,7 @@ public class MovableSelectedMouse extends NormalMouse {
             // or show an attack icon
             mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
         }
+
     }
 
     @Override

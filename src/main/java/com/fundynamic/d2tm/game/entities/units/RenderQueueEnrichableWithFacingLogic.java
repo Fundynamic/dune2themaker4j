@@ -23,6 +23,7 @@ import org.newdawn.slick.SpriteSheet;
 public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements EnrichableAbsoluteRenderable, Updateable {
 
     private int maxFrames = 0;
+    private int maxFramesWithoutFirst = 0;
 
     private float facing;
     private int desiredFacing;
@@ -31,6 +32,8 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     private float animationSpeed;
 
     private float frame;
+
+    private boolean animating;
 
     // used when image to draw is bigger or smaller than the TILE_SIZE, so the image always is drawn centered.
     private Vector2D drawCorrectionVec;
@@ -47,8 +50,10 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
 
         int possibleFacings = getHorizontalCount();
         this.maxFrames = getVerticalCount();
+        this.maxFramesWithoutFirst = maxFrames - 1;
+        this.animating = false;
 
-        this.frame = Random.getRandomBetween(0, maxFrames);
+        this.frame = 0; // Random.getRandomBetween(0, maxFrames)
         this.facing = Random.getRandomBetween(0, possibleFacings);
 
         this.desiredFacing = (int) facing;
@@ -58,6 +63,19 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     public void render(Graphics graphics, int x, int y) {
         Image sprite = getBodyFacing(facing);
         graphics.drawImage(sprite, x + drawCorrectionVec.getXAsInt(), y + drawCorrectionVec.getYAsInt());
+    }
+
+    boolean isAnimating() {
+        return animating;
+    }
+
+    void startAnimating() {
+        animating = true;
+    }
+
+    void stopAndResetAnimating() {
+        animating = false;
+        frame = 0;
     }
 
     @Override
@@ -78,6 +96,9 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         if (!isFacingDesiredFacing()) {
             facing = UnitFacings.turnTo(facing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
         }
+        if (animating) {
+            updateAnimation(deltaInSeconds);
+        }
     }
 
     // set the desire where to face to (which requires turning to happen, in the update() method)
@@ -96,10 +117,10 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         return true;
     }
 
-    public void updateAnimation(float deltaInSeconds) {
+    private void updateAnimation(float deltaInSeconds) {
         frame += EntityData.getRelativeSpeed(animationSpeed, deltaInSeconds);
         if (frame >= maxFrames) {
-            frame -= maxFrames;
+            frame -= maxFramesWithoutFirst;
         }
     }
 }

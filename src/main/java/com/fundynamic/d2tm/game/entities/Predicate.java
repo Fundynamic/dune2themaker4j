@@ -56,4 +56,8 @@ public abstract class Predicate<T> {
     public static Predicate<Entity> isEntityBuilder() {
         return IsEntityBuilder.instance;
     }
+
+    public static Predicate<Entity> isHarvester() {
+        return IsHarvester.instance;
+    }
 }

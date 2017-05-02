@@ -88,6 +88,8 @@ public class EntityData {
     private float chop = -1f;
     private float halfChop = -1f;
 
+    public boolean isHarvester;
+
     public EntityData() {
     }
 

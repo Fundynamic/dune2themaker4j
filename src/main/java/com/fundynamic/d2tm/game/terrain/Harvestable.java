@@ -2,6 +2,11 @@ package com.fundynamic.d2tm.game.terrain;
 
 public interface Harvestable {
 
-    void harvest(int amount);
+    /**
+     * Reduces the amount of 'resource (spice)' on a tile. Returns the actual withdrawn amount.
+     * @param amount
+     * @return
+     */
+    int harvest(int amount);
 
 }

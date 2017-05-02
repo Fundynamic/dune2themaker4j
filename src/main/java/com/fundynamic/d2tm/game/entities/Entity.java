@@ -130,6 +130,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return this instanceof Focusable;
     }
 
+    /**
+     * Capable of harvesting stuff
+     * @return
+     */
+    public boolean isHarvester() {
+        return entityData.isHarvester;
+    }
+
     public abstract EntityType getEntityType();
 
     public boolean isEntityTypeStructure() {
@@ -241,5 +249,4 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 //        System.out.println("Checking if Coordinate (" + result + ") : " + coordinate + " is within Rectangle of [" + this.getEntityData().key + "] : " + entityRectangle);
         return result;
     }
-
 }

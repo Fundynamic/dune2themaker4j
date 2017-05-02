@@ -34,7 +34,19 @@ public class EntitiesData {
      */
     public static String TANK = "TANK";
 
+    /**
+     * ID of HARVESTER
+     */
+    public static final String HARVESTER = "HARVESTER";
+
+    /**
+     * ID of SOLDIER
+     */
     public static String SOLDIER = "SOLDIER";
+
+    /**
+     * ID of INFANTRY
+     */
     public static String INFANTRY = "INFANTRY";
 
     // structures
@@ -168,6 +180,10 @@ public class EntitiesData {
         entityData.buildIcon = loadImage(iniDataUnit.buildIcon);
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
+
+        if (id.equals(EntitiesData.HARVESTER)) {
+            entityData.isHarvester = true;
+        }
 
         String weaponId = iniDataUnit.weaponId;
 

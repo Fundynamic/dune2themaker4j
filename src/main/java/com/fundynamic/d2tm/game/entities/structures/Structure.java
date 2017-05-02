@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.entities.units.states.DyingState;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -138,7 +139,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                     System.out.println("------------------" + System.currentTimeMillis());
                     System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
                     System.out.println("------------------");
-                    firstEntityThatBlocksExit.explodeAndDie();
+                    firstEntityThatBlocksExit.die();
                 } else {
                     // For now, forget it :/
                     System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");

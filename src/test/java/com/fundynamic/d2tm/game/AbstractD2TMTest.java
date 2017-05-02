@@ -20,24 +20,28 @@ import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.Terrain;
+import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
+import com.fundynamic.d2tm.game.terrain.impl.HarvestableTerrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.runner.RunWith;
+import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.Game.getResolution;
@@ -51,6 +55,11 @@ import static org.mockito.Mockito.when;
  * each mocking action for each test that might use it or not.
  */
 public abstract class AbstractD2TMTest {
+
+    @Test
+    public void CheckDebugFlagIsNotTrue() {
+        Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
+    }
 
     // don't warn user about misusage, old behaviour
     @Rule
@@ -105,6 +114,7 @@ public abstract class AbstractD2TMTest {
         };
 
         map = makeMap(MAP_WIDTH, MAP_HEIGHT); // create a default map
+
         imageRepository = makeImageRepository();
         entitiesDataReader = makeEntitiesDataReader();
         entitiesData = entitiesDataReader.fromRulesIni();
@@ -209,7 +219,7 @@ public abstract class AbstractD2TMTest {
             @Override
             public Cell getCell(int x, int y) {
                 Cell cell = super.getCell(x, y);
-                // TODO: get rid of SUPER UGLY WAY TO HIJACK INTO RENDERING STUFF
+                // Some deep stubbing done here, ideally we run within a graphics context, but Travis is unable to
                 cell.setTileImage(mockedImage);
                 return cell;
             }
@@ -217,7 +227,12 @@ public abstract class AbstractD2TMTest {
     }
 
     public Cell makeCell(int x, int y) {
-        Terrain terrain = mock(Terrain.class);
+        Terrain terrain = new EmptyTerrain(mock(Image.class));
+        return new Cell(map, terrain, x, y);
+    }
+
+    public Cell makeHarvestableCell(int x, int y, int amount) {
+        Terrain terrain = new HarvestableTerrain(mock(Image.class), amount);
         return new Cell(map, terrain, x, y);
     }
 

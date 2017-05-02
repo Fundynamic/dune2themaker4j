@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -24,6 +25,9 @@ public class EntitiesDataReaderTest {
     @Before
     public void setUp() throws SlickException {
         entitiesDataReader = makeEntitiesDataReader();
+        if (Game.RECORDING_VIDEO) {
+            Assert.fail("You cannot run this test with RECORDING_VIDEO to true, because it messes up with build times.");
+        }
     }
 
     public void readFromTestRulesIni() {

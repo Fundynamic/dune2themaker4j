@@ -164,15 +164,7 @@ public class MapEditor {
         for (int x = 1; x <= map.getWidth(); x++) {
             for (int y = 1; y <= map.getHeight(); y++) {
                 Cell cell = map.getCell(x, y);
-                final Terrain terrain = cell.getTerrain();
-
-                TerrainFacing facing = getFacing(
-                        terrain.isSame(cell.getCellAbove().getTerrain()),
-                        terrain.isSame(cell.getCellRight().getTerrain()),
-                        terrain.isSame(cell.getCellBeneath().getTerrain()),
-                        terrain.isSame(cell.getCellLeft().getTerrain()));
-
-                terrain.setFacing(facing);
+                cell.smooth();
             }
         }
     }

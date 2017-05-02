@@ -1,6 +1,6 @@
-package com.fundynamic.d2tm.game.terrain;
+package com.fundynamic.d2tm.game.terrain.impl;
 
-import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
+import com.fundynamic.d2tm.game.terrain.Terrain;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
