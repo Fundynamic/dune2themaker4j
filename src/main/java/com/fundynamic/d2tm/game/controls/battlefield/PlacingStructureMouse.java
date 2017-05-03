@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
@@ -66,11 +67,21 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         if (hoverCell == null) return;
         if (mapCoordinatesForEntityToPlace.isEmpty()) return;
 
-        MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
+        if (entityDataToPlace.isTypeStructure()) {
+            doLogic(graphics);
+        } else if (entityDataToPlace.isTypeSuperPower()) {
+            mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+        } else {
+            MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
+            Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);
+            SlickUtils.drawImage(graphics, entityDataToPlace.getFirstImage(), coordinateTopLeft);
+        }
+    }
 
+    public void doLogic(Graphics graphics) {
+        MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
         Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);
         SlickUtils.drawImage(graphics, entityDataToPlace.getFirstImage(), coordinateTopLeft);
-
         // Now, do checks if the structure may be placed
         for (PlaceableMapCoordinateCandidate placeableMapCoordinateCandidate : mapCoordinatesForEntityToPlace) {
             Coordinate absoluteMapCoordinate = placeableMapCoordinateCandidate.mapCoordinate.toCoordinate().addHalfTile();

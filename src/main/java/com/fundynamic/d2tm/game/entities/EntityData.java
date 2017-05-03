@@ -239,6 +239,10 @@ public class EntityData {
         return EntityType.PARTICLE.equals(this.type);
     }
 
+    public boolean isTypeSuperPower() {
+        return EntityType.SUPERPOWER.equals(this.type);
+    }
+
     public boolean isTypeProjectile() {
         return EntityType.PROJECTILE.equals(this.type);
     }

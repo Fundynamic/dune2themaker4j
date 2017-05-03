@@ -5,5 +5,5 @@ public enum EntityType {
     PROJECTILE,         // like a rocket, bullet, etc.
     UNIT,
     PARTICLE,           // like an explosion, not to be confused with Particles emitted from a ParticleSystem from Slick.
-    NONE
+    SUPERPOWER, NONE
 }

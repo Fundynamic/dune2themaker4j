@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 public class EntitiesData {
 
     public static final String UNKNOWN = "UNKNOWN";
+    public static final String DEATHHAND = "DEATHHAND";
 
     // units
 
@@ -78,6 +80,25 @@ public class EntitiesData {
         entity.explosionId = explosionId;
         entity.setFacingsAndCalculateChops(facings);
     }
+
+    public void addSuperPower(String id, IniDataSuperPower iniDataSuperPower) {
+        if (tryGetEntityData(EntityType.SUPERPOWER, id)) {
+            throw new IllegalArgumentException("Entity of type " + EntityType.SUPERPOWER + " already exists with id " + id + ". Known entities are:\n" + entitiesData);
+        }
+        try {
+            EntityData entityData = new EntityData();
+            entityData.key = EntityData.constructKey(EntityType.SUPERPOWER, id);
+            entityData.name = id;
+            entityData.type = EntityType.SUPERPOWER;
+            entityData.buildIcon = loadImage(iniDataSuperPower.buildIcon);
+            entityData.buildCost = iniDataSuperPower.buildCost;
+            entityData.buildTimeInSeconds = iniDataSuperPower.buildTimeInSeconds;
+            entitiesData.put(entityData.key, entityData);
+        } catch (SlickException e) {
+            throw new IllegalArgumentException("Unable to load image: ", e);
+        }
+    }
+
 
     /**
      * Create and add particle to this collection.
@@ -283,4 +304,5 @@ public class EntitiesData {
         stringBuffer.append("--- EntitiesData ---\n");
         return stringBuffer.toString();
     }
+
 }

@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
@@ -49,6 +50,7 @@ public class EntitiesDataReader {
             EntitiesData entitiesData = createNewEntitiesData();
 
             Ini ini = new Ini(inputStream);
+            readSuperPowers(entitiesData, ini);
             readWeapons(entitiesData, ini);
             readExplosions(entitiesData, ini);
             readStructures(entitiesData, ini);
@@ -75,6 +77,16 @@ public class EntitiesDataReader {
                     struct.get(INI_KEYWORD_FACINGS, Integer.class));
         }
 
+    }
+
+    private void readSuperPowers(EntitiesData entitiesData, Ini ini) throws SlickException {
+        Profile.Section superpowers = ini.get("SUPERPOWERS");
+        if (superpowers == null) return;
+        String[] strings = superpowers.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = superpowers.getChild(id);
+            entitiesData.addSuperPower(id, new IniDataSuperPower(struct));
+        }
     }
 
     public void readStructures(EntitiesData entitiesData, Ini ini) throws SlickException {

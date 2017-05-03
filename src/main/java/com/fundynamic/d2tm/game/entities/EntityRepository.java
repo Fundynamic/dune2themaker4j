@@ -142,7 +142,7 @@ public class EntityRepository {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
             createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
             return placeOnMap(createdEntity);
-        }  else if (entityData.isTypeParticle()) {
+        } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
             if (entityData.recolor) {
                 recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
@@ -150,6 +150,12 @@ public class EntityRepository {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
             createdEntity = new Particle(coordinate, spriteSheet, entityData, this);
             return placeOnMap(createdEntity);
+        } else if (entityData.isTypeSuperPower()) {
+            // Super powers are special..
+            throw new IllegalArgumentException("Super power not implemented! " + entityData.type);
+//            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
+//            createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
+//            return placeOnMap(createdEntity);
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }

@@ -68,27 +68,42 @@ public class EntitiesDataReaderTest {
     public void readsSimpleStructureFromIniFile() {
         readFromTestRulesIni();
 
-        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
-        assertThat(constyard, is(not(nullValue())));
-        assertThat(constyard.hitPoints, is(283));
-        assertThat(constyard.image, is(not(nullValue())));
-        assertThat(constyard.getWidth(), is(64));
-        assertThat(constyard.getHeight(), is(64));
-        assertThat(constyard.sight, is(4));
-        assertThat(constyard.explosionId, is("BOOM"));
-        assertThat(constyard.buildIcon, is(not(nullValue())));
-        assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
-        assertThat(constyard.buildTimeInSeconds, is(5.0f));
-        assertThat(constyard.buildCost, is(250));
+        EntityData windtrap = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
+        assertThat(windtrap, is(not(nullValue())));
+        assertThat(windtrap.hitPoints, is(283));
+        assertThat(windtrap.image, is(not(nullValue())));
+        assertThat(windtrap.type, is(EntityType.STRUCTURE));
+        assertThat(windtrap.getWidth(), is(64));
+        assertThat(windtrap.getHeight(), is(64));
+        assertThat(windtrap.sight, is(4));
+        assertThat(windtrap.explosionId, is("BOOM"));
+        assertThat(windtrap.buildIcon, is(not(nullValue())));
+        assertThat(windtrap.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(windtrap.buildTimeInSeconds, is(5.0f));
+        assertThat(windtrap.buildCost, is(250));
+    }
+
+    @Test
+    public void readsSuperPowerFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData deathhand = entitiesData.getEntityData(EntityType.SUPERPOWER, EntitiesData.DEATHHAND);
+        assertThat(deathhand, is(not(nullValue())));
+        assertThat(deathhand.type, is(EntityType.SUPERPOWER));
+        assertThat(deathhand.buildIcon, is(not(nullValue())));
+        assertThat(deathhand.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(deathhand.buildTimeInSeconds, is(5.0f));
+        assertThat(deathhand.buildCost, is(0));
     }
 
     @Test
     public void readsUnitFromIniFile() {
         readFromTestRulesIni();
 
-        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
+        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, EntitiesData.QUAD);
         assertThat(quad, is(not(nullValue())));
         assertThat(quad.image, is(not(nullValue())));
+        assertThat(quad.type, is(EntityType.UNIT));
         assertThat(quad.hitPoints, is(434));
         assertThat(quad.moveSpeed, is(1.5F));
         assertThat(quad.turnSpeed, is(0.75F));
@@ -110,6 +125,7 @@ public class EntitiesDataReaderTest {
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
+        assertThat(rifle.type, is(EntityType.PROJECTILE));
         assertThat(rifle.getWidth(), is(6));
         assertThat(rifle.getHeight(), is(6));
         assertThat(rifle.explosionId, is("BOOM"));
@@ -123,6 +139,7 @@ public class EntitiesDataReaderTest {
 
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
+        assertThat(boom.type, is(EntityType.PARTICLE));
         assertThat(boom.image, is(not(nullValue())));
         assertThat(boom.getWidth(), is(48));
         assertThat(boom.getHeight(), is(48));

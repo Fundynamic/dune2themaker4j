@@ -21,7 +21,7 @@ public class SingleEntityBuilder implements EntityBuilder {
     public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity, Player player) {
         for (EntityData entityDataToBuild : entityDatasToBuild) {
             // TODO: make more flexible!!
-            if (entityDataToBuild.isTypeStructure()) {
+            if (entityDataToBuild.isTypeStructure() || entityDataToBuild.isTypeSuperPower()) {
                 buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild, player, constructingForEntity));
             } else {
                 buildableEntities.add(new SpawningBuildableEntity(entityDataToBuild, player));
