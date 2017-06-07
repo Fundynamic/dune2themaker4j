@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 
+import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
@@ -25,7 +26,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
         super(battleField);
         this.entityRepository = battleField.getEntityRepository();
 
-        this.entityDataToPlace = entityRepository.getEntityData(EntityType.PROJECTILE, EntitiesData.LARGE_ROCKET);
+        this.entityDataToPlace = placementBuildableEntity.getEntityData();
         this.entityWhoConstructsIt = placementBuildableEntity.getEntityWhoConstructsThis();
 
         mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
@@ -35,14 +36,19 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
     public void leftClicked() {
         if (!canPlaceEntity()) return;
 
-        Coordinate coordinate = getAbsoluteCoordinateTopLeftOfStructureToPlace();
+        Coordinate coordinate = getAbsoluteCoordinateTopLeftOfTarget();
 
-        Projectile projectile = entityRepository.placeProjectile(Coordinate.create(0,0), EntitiesData.LARGE_ROCKET, player);
-        projectile.moveTo(coordinate);
+        Coordinate startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
+        startCoordinate = startCoordinate.min(entityDataToPlace.getHalfSize());
+
+        Entity entity = entityRepository.placeOnMap(startCoordinate, entityDataToPlace, player);
+        if (entity.isMovable()) {
+            ((Moveable) entity).moveTo(coordinate);
+        }
 
     }
 
-    public Coordinate getAbsoluteCoordinateTopLeftOfStructureToPlace() {
+    public Coordinate getAbsoluteCoordinateTopLeftOfTarget() {
         // first get absolute viewport coordinates, we can calculate on the battlefield with that
         Coordinate viewportCoordinate = battleField.translateScreenToViewportCoordinate(mouseCoordinates);
 

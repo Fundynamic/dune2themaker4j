@@ -10,6 +10,7 @@ import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.entities.units.NullRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -151,11 +152,9 @@ public class EntityRepository {
             createdEntity = new Particle(coordinate, spriteSheet, entityData, this);
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeSuperPower()) {
-            // Super powers are special..
-            throw new IllegalArgumentException("Super power not implemented! " + entityData.type);
-//            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-//            createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
-//            return placeOnMap(createdEntity);
+            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
+            createdEntity = new SuperPower(coordinate, spriteSheet, player, entityData, this);
+            return placeOnMap(createdEntity);
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
@@ -278,6 +277,10 @@ public class EntityRepository {
 
     public Projectile placeProjectile(Coordinate coordinate, String id, Player player) {
         return (Projectile) placeOnMap(coordinate, EntityType.PROJECTILE, id, player);
+    }
+
+    public Projectile placeSuperPower(Coordinate coordinate, String id, Player player) {
+        return (Projectile) placeOnMap(coordinate, EntityType.SUPERPOWER, id, player);
     }
 
     public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {

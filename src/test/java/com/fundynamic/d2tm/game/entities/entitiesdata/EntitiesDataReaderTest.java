@@ -88,12 +88,16 @@ public class EntitiesDataReaderTest {
         readFromTestRulesIni();
 
         EntityData deathhand = entitiesData.getEntityData(EntityType.SUPERPOWER, EntitiesData.DEATHHAND);
+
         assertThat(deathhand, is(not(nullValue())));
         assertThat(deathhand.type, is(EntityType.SUPERPOWER));
         assertThat(deathhand.buildIcon, is(not(nullValue())));
         assertThat(deathhand.entityBuilderType, is(EntityBuilderType.NONE));
         assertThat(deathhand.buildTimeInSeconds, is(5.0f));
         assertThat(deathhand.buildCost, is(0));
+        assertThat(deathhand.getWidth(), is(80));
+        assertThat(deathhand.getHeight(), is(100));
+        assertThat(deathhand.image, is(not(nullValue())));
     }
 
     @Test

@@ -88,6 +88,9 @@ public class EntitiesData {
         try {
             EntityData entityData = new EntityData();
             entityData.key = EntityData.constructKey(EntityType.SUPERPOWER, id);
+            entityData.setWidth(iniDataSuperPower.width);
+            entityData.setHeight(iniDataSuperPower.height);
+            entityData.image = loadImage(iniDataSuperPower.image);
             entityData.name = id;
             entityData.type = EntityType.SUPERPOWER;
             entityData.buildIcon = loadImage(iniDataSuperPower.buildIcon);
