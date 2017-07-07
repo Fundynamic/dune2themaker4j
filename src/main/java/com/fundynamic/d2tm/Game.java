@@ -22,7 +22,7 @@ public class Game extends StateBasedGame {
 
     public static final boolean DEBUG_INFO = false;
     // if true, it speeds up some things so we can demo it faster
-    public static final boolean RECORDING_VIDEO = true;
+    public static final boolean RECORDING_VIDEO = false;
 
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
