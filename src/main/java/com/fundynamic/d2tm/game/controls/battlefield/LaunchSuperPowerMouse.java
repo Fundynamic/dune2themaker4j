@@ -1,15 +1,11 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 
-import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
-import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -36,16 +32,12 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
     public void leftClicked() {
         if (!canPlaceEntity()) return;
 
-        Coordinate coordinate = getAbsoluteCoordinateTopLeftOfTarget();
+        Coordinate target = getAbsoluteCoordinateTopLeftOfTarget();
 
         Coordinate startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
         startCoordinate = startCoordinate.min(entityDataToPlace.getHalfSize());
 
-        Entity entity = entityRepository.placeOnMap(startCoordinate, entityDataToPlace, player);
-        if (entity.isMovable()) {
-            ((Moveable) entity).moveTo(coordinate);
-        }
-
+        entityRepository.spawnSuperPower(startCoordinate, entityDataToPlace, player, target);
     }
 
     public Coordinate getAbsoluteCoordinateTopLeftOfTarget() {

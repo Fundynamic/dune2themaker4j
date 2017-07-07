@@ -95,9 +95,7 @@ public class EntitiesDataReaderTest {
         assertThat(deathhand.entityBuilderType, is(EntityBuilderType.NONE));
         assertThat(deathhand.buildTimeInSeconds, is(5.0f));
         assertThat(deathhand.buildCost, is(0));
-        assertThat(deathhand.getWidth(), is(80));
-        assertThat(deathhand.getHeight(), is(100));
-        assertThat(deathhand.image, is(not(nullValue())));
+        assertThat(deathhand.weaponId, is("RIFLE"));
     }
 
     @Test
@@ -155,7 +153,7 @@ public class EntitiesDataReaderTest {
             entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-wrong-weaponid-unit.ini"));
             fail("Expected to have thrown an illegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("unit QUAD [weapon] refers to non-existing [WEAPONS/THIS_ID_DOES_NOT_EXIST]"));
+            assertThat(e.getMessage(), is("entity QUAD property [Weapon] refers to non-existing [WEAPONS/THIS_ID_DOES_NOT_EXIST]"));
         }
     }
 

@@ -88,15 +88,12 @@ public class EntitiesData {
         try {
             EntityData entityData = new EntityData();
             entityData.key = EntityData.constructKey(EntityType.SUPERPOWER, id);
-            entityData.setWidth(iniDataSuperPower.width);
-            entityData.setHeight(iniDataSuperPower.height);
-            entityData.image = loadImage(iniDataSuperPower.image);
             entityData.name = id;
             entityData.type = EntityType.SUPERPOWER;
             entityData.buildIcon = loadImage(iniDataSuperPower.buildIcon);
             entityData.buildCost = iniDataSuperPower.buildCost;
             entityData.buildTimeInSeconds = iniDataSuperPower.buildTimeInSeconds;
-            entityData.setFacingsAndCalculateChops(iniDataSuperPower.facings);
+            entityData.weaponId = getAndEnsureWeaponId(iniDataSuperPower.weaponId, id);
             entitiesData.put(entityData.key, entityData);
         } catch (SlickException e) {
             throw new IllegalArgumentException("Unable to load image: ", e);
@@ -206,18 +203,12 @@ public class EntitiesData {
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
 
+        // NOOOOOO
         if (id.equals(EntitiesData.HARVESTER)) {
             entityData.isHarvester = true;
         }
 
-        String weaponId = iniDataUnit.weaponId;
-
-        if (!idProvided(weaponId)) {
-            if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
-                throw new IllegalArgumentException("unit " + id + " [weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
-            }
-            entityData.weaponId = weaponId;
-        }
+        entityData.weaponId = getAndEnsureWeaponId(iniDataUnit.weaponId, id);
 
         String explosionId = iniDataUnit.explosionId;
 
@@ -228,6 +219,15 @@ public class EntitiesData {
             entityData.explosionId = explosionId;
         }
         return entityData;
+    }
+
+    public String getAndEnsureWeaponId(String weaponId, String id) {
+        if (!idProvided(weaponId)) {
+            if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
+                throw new IllegalArgumentException("entity " + id + " property [Weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
+            }
+        }
+        return weaponId;
     }
 
     public boolean idProvided(String weaponId) {

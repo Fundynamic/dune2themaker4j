@@ -111,14 +111,14 @@ public class EntityRepository {
         );
     }
 
-    public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {
+    public Entity placeOnMap(Coordinate startCoordinate, EntityData entityData, Player player) {
         Entity createdEntity;
         Image originalImage = entityData.image;
 
         if (entityData.isTypeStructure()) {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Structure(
-                    coordinate,
+                    startCoordinate,
                     makeSpriteSheet(entityData, recoloredImage),
                     player,
                     entityData,
@@ -129,7 +129,7 @@ public class EntityRepository {
             Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Unit(
                     map,
-                    coordinate,
+                    startCoordinate,
                     makeRenderableWithFacingLogic(entityData, recoloredImage, entityData.turnSpeed),
                     makeRenderableWithFacingLogic(entityData, entityData.barrelImage, entityData.turnSpeedCannon),
                     new FadingSelectionCentered(entityData.getWidth(), entityData.getHeight()),
@@ -141,7 +141,7 @@ public class EntityRepository {
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
+            createdEntity = new Projectile(startCoordinate, spriteSheet, player, entityData, this);
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
@@ -149,19 +149,17 @@ public class EntityRepository {
                 recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
             }
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
-            createdEntity = new Particle(coordinate, spriteSheet, entityData, this);
+            createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeSuperPower()) {
-            SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new SuperPower(coordinate, spriteSheet, entityData, player, this);
-            return placeOnMap(createdEntity);
+            throw new IllegalArgumentException("Use spawnSuperPower method instead.");
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
     }
 
-    public Entity placeOnMap(Entity createdEntity) {
-        return addEntityToList(map.revealShroudFor(createdEntity));
+    public <T extends Entity> T placeOnMap(T createdEntity) {
+        return (T) addEntityToList(map.revealShroudFor(createdEntity));
     }
 
     public Entity addEntityToList(Entity entity) {
@@ -309,6 +307,13 @@ public class EntityRepository {
             return isPassable(entity, mapCoordinate);
         }
         return new PassableResult(false);
+    }
+
+    public SuperPower spawnSuperPower(Coordinate fireStarterCoordinate, EntityData superPowerEntityData, Player player, Coordinate target) {
+        SuperPower superPower = new SuperPower(Coordinate.create(0,0), superPowerEntityData, player, this);
+        superPower.setFireStarterCoordinate(fireStarterCoordinate);
+        superPower.setTarget(target);
+        return placeOnMap(superPower);
     }
 
     public class PassableResult {

@@ -50,8 +50,8 @@ public class EntitiesDataReader {
             EntitiesData entitiesData = createNewEntitiesData();
 
             Ini ini = new Ini(inputStream);
-            readSuperPowers(entitiesData, ini);
             readWeapons(entitiesData, ini);
+            readSuperPowers(entitiesData, ini);
             readExplosions(entitiesData, ini);
             readStructures(entitiesData, ini);
             readUnits(entitiesData, ini);
