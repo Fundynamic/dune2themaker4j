@@ -30,8 +30,6 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void leftClicked() {
-        if (!canPlaceEntity()) return;
-
         Coordinate target = getAbsoluteCoordinateTopLeftOfTarget();
 
         Coordinate startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
@@ -82,7 +80,4 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
                 '}';
     }
 
-    public boolean canPlaceEntity() {
-        return true;
-    }
 }
