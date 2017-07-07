@@ -11,6 +11,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Bootstrap;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Game extends StateBasedGame {
 
@@ -20,9 +23,9 @@ public class Game extends StateBasedGame {
     public static final int TILE_SIZE = 32;
     public static final int HALF_TILE = TILE_SIZE / 2;
 
-    public static final boolean DEBUG_INFO = false;
+    public static boolean DEBUG_INFO = false;
     // if true, it speeds up some things so we can demo it faster
-    public static final boolean RECORDING_VIDEO = false;
+    public static boolean RECORDING_VIDEO = false;
 
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -60,6 +63,10 @@ public class Game extends StateBasedGame {
     }
 
     public static void main(String[] args) {
+        List<String> argsList = Arrays.asList(args);
+        RECORDING_VIDEO = argsList.contains("recording");
+        DEBUG_INFO = argsList.contains("debug");
+
         Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, false);
     }
 
