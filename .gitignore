@@ -14,9 +14,8 @@ engine/target
 game/target
 d2tm/target
 target
-./graphics
 
-# Eclipse files
+# D2TM specific / eclipse
 engine/.classpath
 engine/.project
 engine/.settings*
@@ -26,3 +25,5 @@ game/.settings*
 d2tm/.classpath
 d2tm/.project
 d2tm/.settings*
+
+/graphics/
