@@ -14,6 +14,7 @@ public class IniDataSuperPower {
     public String buildIcon;
     public float buildTimeInSeconds;
     public int buildCost;
+    public int facings;
 
     public IniDataSuperPower(Profile.Section struct) {
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
@@ -21,6 +22,8 @@ public class IniDataSuperPower {
         this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class);
         this.height = struct.get(INI_KEYWORD_HEIGHT, Integer.class);
         this.image = struct.get(INI_KEYWORD_IMAGE, String.class, null);
+        this.facings = struct.get(INI_KEYWORD_FACINGS, Integer.class, 0);
+
         if (Game.RECORDING_VIDEO) {
             this.buildTimeInSeconds = 1;
         } else {

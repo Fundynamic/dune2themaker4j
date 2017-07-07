@@ -153,7 +153,7 @@ public class EntityRepository {
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeSuperPower()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new SuperPower(coordinate, spriteSheet, player, entityData, this);
+            createdEntity = new SuperPower(coordinate, spriteSheet, entityData, player, this);
             return placeOnMap(createdEntity);
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);

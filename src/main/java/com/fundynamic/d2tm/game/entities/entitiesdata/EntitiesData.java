@@ -75,10 +75,10 @@ public class EntitiesData {
     }
 
     public void addProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
-        entity.damage = damage;
-        entity.explosionId = explosionId;
-        entity.setFacingsAndCalculateChops(facings);
+        EntityData entityData = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
+        entityData.damage = damage;
+        entityData.explosionId = explosionId;
+        entityData.setFacingsAndCalculateChops(facings);
     }
 
     public void addSuperPower(String id, IniDataSuperPower iniDataSuperPower) {
@@ -96,6 +96,7 @@ public class EntitiesData {
             entityData.buildIcon = loadImage(iniDataSuperPower.buildIcon);
             entityData.buildCost = iniDataSuperPower.buildCost;
             entityData.buildTimeInSeconds = iniDataSuperPower.buildTimeInSeconds;
+            entityData.setFacingsAndCalculateChops(iniDataSuperPower.facings);
             entitiesData.put(entityData.key, entityData);
         } catch (SlickException e) {
             throw new IllegalArgumentException("Unable to load image: ", e);
