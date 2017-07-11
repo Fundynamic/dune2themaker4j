@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SpriteSheet;
 
 
 public class SuperPower extends Entity implements Destructible {
@@ -13,6 +12,7 @@ public class SuperPower extends Entity implements Destructible {
     private Coordinate target;
     private boolean destroyed;
     private Coordinate fireStarterCoordinate;
+    private boolean spawnedProjectile;
 
     public SuperPower(Coordinate mapCoordinates, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(mapCoordinates, null, entityData, player, entityRepository);
@@ -21,8 +21,20 @@ public class SuperPower extends Entity implements Destructible {
 
     @Override
     public void update(float deltaInSeconds) {
+        if (spawnedProjectile) return;
         Projectile projectile = entityRepository.placeProjectile(fireStarterCoordinate, entityData.weaponId, player);
+        projectile.onEvent(EventType.ENTITY_DESTROYED, this::onProjectileDestroyed);
         projectile.moveTo(target);
+        spawnedProjectile = true;
+    }
+
+    public void onProjectileDestroyed(Entity entity) {
+        if (entityRepository.allUnits().hasItems()) {
+            for (Entity target : entityRepository.allUnits()) {
+                Projectile projectile = entityRepository.placeProjectile(entity.getCenteredCoordinate(), entityData.weaponId, player);
+                projectile.moveTo(target.getCoordinate());
+            }
+        }
         destroyed = true;
     }
 
@@ -74,4 +86,5 @@ public class SuperPower extends Entity implements Destructible {
     public Coordinate getTarget() {
         return target;
     }
+
 }

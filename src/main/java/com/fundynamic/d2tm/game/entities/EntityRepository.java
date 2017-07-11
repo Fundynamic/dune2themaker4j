@@ -180,6 +180,7 @@ public class EntityRepository {
 
     public void removeEntity(Entity entity) {
         entity.removeFromPlayerSet(entity);
+        entity.destroy();
         entitiesSet.remove(entity);
     }
 

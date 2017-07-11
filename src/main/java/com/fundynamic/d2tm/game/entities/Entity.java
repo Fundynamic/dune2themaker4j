@@ -14,7 +14,11 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+
 
 /**
  * <p>
@@ -248,5 +252,26 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         boolean result = entityRectangle.isVectorWithin(coordinate);
 //        System.out.println("Checking if Coordinate (" + result + ") : " + coordinate + " is within Rectangle of [" + this.getEntityData().key + "] : " + entityRectangle);
         return result;
+    }
+
+    private java.util.Map<EventType, List<Consumer<Entity>>> eventTypeListMap = new HashMap();
+
+    public void onEvent(EventType eventType, Consumer<Entity> eventHandler) {
+        if (!eventTypeListMap.containsKey(eventType)) {
+            eventTypeListMap.put(eventType, new LinkedList<Consumer<Entity>>());
+        }
+        eventTypeListMap.get(eventType).add(eventHandler);
+    }
+
+    public void destroy() {
+        emitEvent(EventType.ENTITY_DESTROYED);
+    }
+
+    public void emitEvent(EventType eventType) {
+        if (eventTypeListMap.containsKey(eventType)) {
+            for (Consumer<Entity> eventHandler : eventTypeListMap.get(eventType)){
+                eventHandler.accept(this);
+            }
+        }
     }
 }
