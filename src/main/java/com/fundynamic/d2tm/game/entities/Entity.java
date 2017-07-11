@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 /**
@@ -254,13 +255,28 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return result;
     }
 
-    private java.util.Map<EventType, List<Consumer<Entity>>> eventTypeListMap = new HashMap();
+    private java.util.Map<EventType, List<EventSubscription<? extends Entity>>> eventTypeListMap = new HashMap();
 
-    public void onEvent(EventType eventType, Consumer<Entity> eventHandler) {
+    public <T extends Entity> void onEvent(EventType eventType, T subscriber, Function<T, Void> eventHandler) {
+        this.onEvent(eventType, subscriber, eventHandler, true);
+    }
+
+    protected <T extends Entity> void onEvent(EventType eventType, T subscriber, Function<T, Void> eventHandler, boolean registerDestroyEventHandler) {
         if (!eventTypeListMap.containsKey(eventType)) {
-            eventTypeListMap.put(eventType, new LinkedList<Consumer<Entity>>());
+            eventTypeListMap.put(eventType, new LinkedList<>());
         }
-        eventTypeListMap.get(eventType).add(eventHandler);
+        EventSubscription eventSubscription = new EventSubscription(subscriber, eventHandler);
+        eventTypeListMap.get(eventType).add(eventSubscription);
+
+        if (registerDestroyEventHandler) {
+            subscriber.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.removeEventSubscription(eventType, eventSubscription), false);
+        }
+    }
+
+    private <T extends Entity> Void removeEventSubscription(EventType eventType, EventSubscription<T> subscriber) {
+        List<EventSubscription<? extends Entity>> subscriptions = eventTypeListMap.get(eventType);
+        subscriptions.remove(subscriber);
+        return null;
     }
 
     public void destroy() {
@@ -269,9 +285,23 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     public void emitEvent(EventType eventType) {
         if (eventTypeListMap.containsKey(eventType)) {
-            for (Consumer<Entity> eventHandler : eventTypeListMap.get(eventType)){
-                eventHandler.accept(this);
+            for (EventSubscription eventSubscription : eventTypeListMap.get(eventType)){
+                eventSubscription.invoke();
             }
+        }
+    }
+
+    class EventSubscription<T extends Entity> {
+        private T subscriber;
+        private Function<T, Void> eventHandler;
+
+        public EventSubscription(T subscriber, Function<T, Void> eventHandler) {
+            this.subscriber = subscriber;
+            this.eventHandler = eventHandler;
+        }
+
+        public void invoke() {
+            eventHandler.apply(subscriber);
         }
     }
 }

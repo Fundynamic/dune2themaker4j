@@ -12,30 +12,33 @@ public class SuperPower extends Entity implements Destructible {
     private Coordinate target;
     private boolean destroyed;
     private Coordinate fireStarterCoordinate;
-    private boolean spawnedProjectile;
+    private boolean updateCalled;
 
     public SuperPower(Coordinate mapCoordinates, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(mapCoordinates, null, entityData, player, entityRepository);
         target = mapCoordinates;
     }
 
+    // TODO: onCreate!?
+
     @Override
     public void update(float deltaInSeconds) {
-        if (spawnedProjectile) return;
+        if (updateCalled) return;
         Projectile projectile = entityRepository.placeProjectile(fireStarterCoordinate, entityData.weaponId, player);
-        projectile.onEvent(EventType.ENTITY_DESTROYED, this::onProjectileDestroyed);
+        projectile.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.onProjectileDestroyed(projectile));
         projectile.moveTo(target);
-        spawnedProjectile = true;
+        updateCalled = true;
     }
 
-    public void onProjectileDestroyed(Entity entity) {
+    public Void onProjectileDestroyed(Projectile projectile) {
         if (entityRepository.allUnits().hasItems()) {
             for (Entity target : entityRepository.allUnits()) {
-                Projectile projectile = entityRepository.placeProjectile(entity.getCenteredCoordinate(), entityData.weaponId, player);
-                projectile.moveTo(target.getCoordinate());
+                Projectile retaliationProjectile = entityRepository.placeProjectile(projectile.getCenteredCoordinate(), entityData.weaponId, player);
+                retaliationProjectile.moveTo(target.getCoordinate());
             }
         }
         destroyed = true;
+        return null;
     }
 
     @Override
