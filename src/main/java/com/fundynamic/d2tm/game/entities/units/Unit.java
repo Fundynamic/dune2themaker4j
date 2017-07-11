@@ -120,6 +120,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
                 if (enemyEntities.isEmpty()) {
                     if (this.getPlayer().isCPU()) {
+                        //TODO: all enemy units seem to attack always!?
                         float distance = 131072; // 64X64X32
                         Entity enemyToAttack = null;
                         for (Entity entity : entities) {
