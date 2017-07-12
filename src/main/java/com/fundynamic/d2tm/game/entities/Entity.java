@@ -255,7 +255,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return result;
     }
 
-    private java.util.Map<EventType, List<EventSubscription<? extends Entity>>> eventTypeListMap = new HashMap();
+    protected final java.util.Map<EventType, List<EventSubscription<? extends Entity>>> eventTypeListMap = new HashMap();
 
     public <T extends Entity> void onEvent(EventType eventType, T subscriber, Function<T, Void> eventHandler) {
         this.onEvent(eventType, subscriber, eventHandler, true);
@@ -274,6 +274,9 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     }
 
     private <T extends Entity> Void removeEventSubscription(EventType eventType, EventSubscription<T> subscriber) {
+        System.out.println("Removed");
+        // is this enough? What if there are more of this 'type' and for this 'subscriber' (not the eventSubscription,
+        // but the 'subscriber' of the eventubscription?
         List<EventSubscription<? extends Entity>> subscriptions = eventTypeListMap.get(eventType);
         subscriptions.remove(subscriber);
         return null;
@@ -281,6 +284,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     public void destroy() {
         emitEvent(EventType.ENTITY_DESTROYED);
+        eventTypeListMap.clear();
     }
 
     public void emitEvent(EventType eventType) {
@@ -302,6 +306,25 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
         public void invoke() {
             eventHandler.apply(subscriber);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            EventSubscription<?> that = (EventSubscription<?>) o;
+
+            return subscriber != null ? subscriber.equals(that.subscriber) : that.subscriber == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return subscriber != null ? subscriber.hashCode() : 0;
+        }
+
+        public T getSubscriber() {
+            return subscriber;
         }
     }
 }
