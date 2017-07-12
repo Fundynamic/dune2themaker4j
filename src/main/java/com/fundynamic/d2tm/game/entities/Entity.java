@@ -291,7 +291,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
             // find all event subscriptions that have this subscriber
             List<EventSubscription<? extends Entity>> toBeDeleted = new ArrayList<>();
             for (EventSubscription subscription : subscriptions) {
-                if (subscription.getSubscriber() == subscriber) {
+                if (subscription.getSubscriber() == subscriber) { // check by reference!
                     toBeDeleted.add(subscription);
                 }
             }
