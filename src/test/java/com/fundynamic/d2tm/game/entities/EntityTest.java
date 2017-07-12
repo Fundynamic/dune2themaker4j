@@ -116,10 +116,9 @@ public class EntityTest extends AbstractD2TMTest {
 
     @Test
     public void givenEntityDestroyedWillRemoveSubscriberFromDestroyedEntity() {
-        // when event1 gets destroyed, call 'eventMethod' on event2
         entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
 
-        // For entity1: expect the subscription of entity2 upon ENTITY_DESTROYED
+        // For entity1: expect the subscription of entity2 upon DUMMY
         Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.DUMMY).size()); // 1 subscription
         Entity.EventSubscription<? extends Entity> eventSubscription = entity1.eventSubscriptionsFor(EventType.DUMMY).get(0);
         Assert.assertSame(eventSubscription.getSubscriber(), entity2); // and its subscriber is entity2
@@ -178,6 +177,35 @@ public class EntityTest extends AbstractD2TMTest {
 
         // expected to be raised to 4
         Assert.assertEquals(4, entity2.getAmountEventMethodCalled());
+    }
+
+    @Test
+    public void givenEntity2DestroyedWillRemoveSubscriptionFromEntity1() {
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+
+        // Emit event once, will increase counter to 1
+        entity1.emitEvent(EventType.DUMMY);
+
+        // ACT: Entity2 gets destroyed!
+        entity2.destroy();
+
+        // expect no subscriptions for Entity2, because they should be cleared
+        Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
+
+        // Entity1 should no longer notify entity2 upon DUMMY event
+        Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.DUMMY).size());
+
+        // Emitting event on event1 will yield no results on entity2
+        entity1.emitEvent(EventType.DUMMY);
+
+        // this would be impossible normally, since its reference would be cleared, but here we
+        // make it tripple sure it is not called (result should still be 1)
+        Assert.assertEquals(1, entity2.getAmountEventMethodCalled());
+    }
+
+    @Test
+    public void canEmitEventThatHasNoSubscribers() {
+        entity1.emitEvent(EventType.DUMMY);
     }
 
     // destroy without any events set, check NPE , etc
