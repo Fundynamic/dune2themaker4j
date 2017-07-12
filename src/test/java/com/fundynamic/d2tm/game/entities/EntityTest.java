@@ -79,16 +79,18 @@ public class EntityTest extends AbstractD2TMTest {
     // Event handling, subscribers, etc
     /////////////////////////////////////////////////
     // This is how it is set up:
-    // Event2, subscribes to an ENTITY_DESTROYED event for entity1. So when Entity1 gets destroyed, Entity2 will
+    // Event2, subscribes to a DUMMY event for entity1. So when Entity1 emits a DUMMY event, Entity2 will
     // be notified.
     //
-    // By Event2's subscription on Event1, when Event2 gets destroyed, Event1 will know to stop holding the reference
-    // to Event2 (allowing GC to clear it up).
+    // By Event2's subscription on Event1, when Event2 gets destroyed (ENTITY_DESTROYED),
+    // Event1 will know to stop holding the reference to Event2 (allowing GC to clear it up).
     //
     // Thus both Entities are tied by an OnEvent: Entity2 -> Entity1, and Entity1 -> Entity2
     //
     // When Entity1 gets destroyed first, it will no longer notify other Entities, thus all subscriptions should
     // be cleared.
+    //
+    // When Entity2 gets destroyed first, Entity1 should no longer notify Entity2
 
     @Test
     public void onEventOnOwnEntityWillHaveOnlyOneDestroySubscription() {
