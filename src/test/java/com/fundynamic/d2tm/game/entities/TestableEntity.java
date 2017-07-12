@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.math.Coordinate;
+import org.junit.Test;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 
@@ -12,6 +13,17 @@ public class TestableEntity extends Entity {
 
     public TestableEntity(Coordinate coordinate, SpriteSheet spritesheet, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(coordinate, spritesheet, entityData, player, entityRepository);
+    }
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public TestableEntity setName(String name) {
+        this.name = name;
+        return this;
     }
 
     private int v;
@@ -51,5 +63,13 @@ public class TestableEntity extends Entity {
 
     public int getAmountEventMethodCalled() {
         return v;
+    }
+
+    @Override
+    public String toString() {
+        return "TestableEntity{" +
+                "name='" + name + '\'' +
+                ", v=" + v +
+                '}';
     }
 }

@@ -2,7 +2,8 @@ package com.fundynamic.d2tm.game.entities;
 
 
 public enum EventType {
-    ENTITY_DESTROYED(1);
+    ENTITY_DESTROYED(1),
+    DUMMY(9999);
 
 
     EventType(int id) {

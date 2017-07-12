@@ -34,8 +34,10 @@ public class EntityTest extends AbstractD2TMTest {
         entityData.setWidth(64);
         entityData.setHeight(64);
 
-        entity1 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository);
-        entity2 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository);
+        entity1 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("Entity1");
+        entity2 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("Entity2");
     }
 
     @Test
@@ -88,39 +90,38 @@ public class EntityTest extends AbstractD2TMTest {
     // When Entity1 gets destroyed first, it will no longer notify other Entities, thus all subscriptions should
     // be cleared.
 
-
     @Test
-    public void onEvent() {
-        entity1.onEvent(EventType.ENTITY_DESTROYED, entity1, s -> s.eventMethod());
-        Assert.assertEquals(0, entity1.getAmountEventMethodCalled()); // because not destroyed yet
-        Assert.assertTrue(entity1.containsSubscriberFor(EventType.ENTITY_DESTROYED));
-        Assert.assertEquals(2, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
+    public void onEventOnOwnEntityWillHaveOnlyOneDestroySubscription() {
+        entity1.onEvent(EventType.DUMMY, entity1, s -> s.eventMethod());
+
+        Assert.assertEquals(0, entity1.getAmountEventMethodCalled()); // nothing triggered the DUMMY event yet
+
+        // expect one subscription (because event triggers on own object)
+        Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
     }
 
     @Test
-    public void onEventEntityDestroyedCallsMethodOnSubscriber() {
-        // when event1 gets destroyed, call 'eventMethod' on event2
-        entity1.onEvent(EventType.ENTITY_DESTROYED, entity2, s -> s.eventMethod());
+    public void Entity1EmitsDummyEventCallsExpectedMethodAndRaisesValue() {
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
 
         // at first we expect no methods have been called yet (no events happened)
         Assert.assertEquals(0, entity1.getAmountEventMethodCalled());
         Assert.assertEquals(0, entity2.getAmountEventMethodCalled());
 
-        // Entity1 gets destroyed!
-        entity1.destroy();
+        entity1.emitEvent(EventType.DUMMY); // some dummy event happened!
 
-        Assert.assertEquals(0, entity1.getAmountEventMethodCalled());
-        Assert.assertEquals(1, entity2.getAmountEventMethodCalled()); // this entity1 gets notified
+        Assert.assertEquals(0, entity1.getAmountEventMethodCalled()); // entity1 was not interested
+        Assert.assertEquals(1, entity2.getAmountEventMethodCalled()); // entity2 was interested and should have raised value
     }
 
     @Test
     public void givenEntityDestroyedWillRemoveSubscriberFromDestroyedEntity() {
         // when event1 gets destroyed, call 'eventMethod' on event2
-        entity1.onEvent(EventType.ENTITY_DESTROYED, entity2, s -> s.eventMethod());
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
 
         // For entity1: expect the subscription of entity2 upon ENTITY_DESTROYED
-        Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size()); // 1 subscription
-        Entity.EventSubscription<? extends Entity> eventSubscription = entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).get(0);
+        Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.DUMMY).size()); // 1 subscription
+        Entity.EventSubscription<? extends Entity> eventSubscription = entity1.eventSubscriptionsFor(EventType.DUMMY).get(0);
         Assert.assertSame(eventSubscription.getSubscriber(), entity2); // and its subscriber is entity2
 
         // For entity2: expect the subscription of entity1 upon ENTITY_DESTROYED, so that it knows no longer
@@ -136,7 +137,44 @@ public class EntityTest extends AbstractD2TMTest {
         Assert.assertEquals(0, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
 
         // Entity2 should no longer notify entity1 upon its destroy, because entity1 is no longer among us...
-         Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
+        Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
+
+        // should be able to destroy entity2 without problems now
+        entity2.destroy();
+    }
+
+    @Test
+    public void Entity1EmitsDummyEventCallsExpectedMethodAndRaisesValueAtMultipleSubscribers() {
+        TestableEntity entity3 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("Entity3");
+
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+        entity1.onEvent(EventType.DUMMY, entity3, s -> s.eventMethod());
+
+        // at first we expect no methods have been called yet (no events happened)
+        Assert.assertEquals(0, entity1.getAmountEventMethodCalled());
+        Assert.assertEquals(0, entity2.getAmountEventMethodCalled());
+        Assert.assertEquals(0, entity3.getAmountEventMethodCalled());
+
+        entity1.emitEvent(EventType.DUMMY); // some dummy event happened!
+
+        Assert.assertEquals(0, entity1.getAmountEventMethodCalled()); // entity1 was not interested
+        Assert.assertEquals(1, entity2.getAmountEventMethodCalled()); // entity2 was interested and should have raised value
+        Assert.assertEquals(1, entity3.getAmountEventMethodCalled()); // entity2 was interested and should have raised value
+    }
+
+    @Test
+    public void SubscribingMoreThanOnceOnSameEntityWilCallMethodMultipleTimes() {
+        // woops subscribing too much
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+        entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
+
+        entity1.emitEvent(EventType.DUMMY); // some dummy event happened!
+
+        // expected to be raised to 4
+        Assert.assertEquals(4, entity2.getAmountEventMethodCalled());
     }
 
     // destroy without any events set, check NPE , etc

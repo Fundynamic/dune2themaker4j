@@ -13,10 +13,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -265,31 +262,57 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         if (!eventTypeListMap.containsKey(eventType)) {
             eventTypeListMap.put(eventType, new LinkedList<>());
         }
-        EventSubscription eventSubscription = new EventSubscription(subscriber, eventHandler);
-        eventTypeListMap.get(eventType).add(eventSubscription);
+        addEventSubscription(eventType, subscriber, eventHandler);
 
         if (registerDestroyEventHandler) {
-            subscriber.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.removeEventSubscription(eventType, eventSubscription), false);
+            // when the subscriber gets destroyed, let this entity know it happened.
+            subscriber.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.removeEventSubscription(subscriber), false);
+
+            if (subscriber != this) {
+                // when this gets destroyed, tell the *other* subscriber that it happened.
+                this.onEvent(EventType.ENTITY_DESTROYED, subscriber, s -> s.removeEventSubscription(this), false);
+            }
         }
     }
 
-    private <T extends Entity> Void removeEventSubscription(EventType eventType, EventSubscription<T> subscriber) {
-        System.out.println("Removed");
-        // is this enough? What if there are more of this 'type' and for this 'subscriber' (not the eventSubscription,
-        // but the 'subscriber' of the eventubscription?
-        List<EventSubscription<? extends Entity>> subscriptions = eventTypeListMap.get(eventType);
-        subscriptions.remove(subscriber);
+    private <T extends Entity> EventSubscription addEventSubscription(EventType eventType, T subscriber, Function<T, Void> eventHandler) {
+        EventSubscription eventSubscription = new EventSubscription(subscriber, eventHandler);
+        if (!eventTypeListMap.get(eventType).contains(eventSubscription)) {
+            eventTypeListMap.get(eventType).add(eventSubscription);
+        }
+        return eventSubscription;
+    }
+
+    protected <T extends Entity> Void removeEventSubscription(T subscriber) {
+        System.out.println(this + " received removeEventSubscription, Entity destroyed is " + subscriber);
+
+        for (List<EventSubscription<? extends Entity>> subscriptions : eventTypeListMap.values()) {
+
+            // find all event subscriptions that have this subscriber
+            List<EventSubscription<? extends Entity>> toBeDeleted = new ArrayList<>();
+            for (EventSubscription subscription : subscriptions) {
+                if (subscription.getSubscriber() == subscriber) {
+                    toBeDeleted.add(subscription);
+                }
+            }
+
+            // delete those
+            for (EventSubscription subscription : toBeDeleted) {
+                subscriptions.remove(subscription);
+            }
+        }
         return null;
     }
 
     public void destroy() {
-        emitEvent(EventType.ENTITY_DESTROYED);
-        eventTypeListMap.clear();
+        emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
+        eventTypeListMap.clear(); // now clear all our subscriptions explicitly
     }
 
     public void emitEvent(EventType eventType) {
         if (eventTypeListMap.containsKey(eventType)) {
             for (EventSubscription eventSubscription : eventTypeListMap.get(eventType)){
+                System.out.println(this.toString() + " emits event " + eventType);
                 eventSubscription.invoke();
             }
         }
@@ -306,21 +329,6 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
         public void invoke() {
             eventHandler.apply(subscriber);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            EventSubscription<?> that = (EventSubscription<?>) o;
-
-            return subscriber != null ? subscriber.equals(that.subscriber) : that.subscriber == null;
-        }
-
-        @Override
-        public int hashCode() {
-            return subscriber != null ? subscriber.hashCode() : 0;
         }
 
         public T getSubscriber() {
