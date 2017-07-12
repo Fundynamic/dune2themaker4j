@@ -136,6 +136,7 @@ public class EntityTest extends AbstractD2TMTest {
         Assert.assertEquals(0, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
 
         // Entity2 should no longer notify entity1 upon its destroy, because entity1 is no longer among us...
+         Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
     }
 
     // destroy without any events set, check NPE , etc
