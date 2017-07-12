@@ -139,6 +139,9 @@ public class EntityTest extends AbstractD2TMTest {
         // Entity2 should no longer notify entity1 upon its destroy, because entity1 is no longer among us...
         Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
 
+        entity1 = null;
+        System.gc(); // clear out all references to entity1, and clear memory.
+
         // should be able to destroy entity2 without problems now
         entity2.destroy();
     }
