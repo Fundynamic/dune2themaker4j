@@ -80,21 +80,35 @@ public class MapEditor {
 
         createCircularField(map, Vector2D.create(0, 0), DuneTerrain.TERRAIN_ROCK, 20);
         createCircularField(map, Vector2D.create(map.getWidth(), map.getHeight()), DuneTerrain.TERRAIN_ROCK, 20);
+        int minX = 5;
+        int maxX = map.getWidth() - 5;
+        int minY = 5;
+        int maxY = map.getHeight() - 5;
 
-        for (int f = 0; f < 5; f++) {
-            Vector2D randomVec = Vector2D.random(15, 45, 15, 45);
-            createCircularField(map, randomVec, DuneTerrain.TERRAIN_SPICE, 6);
-            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE, 200);
-            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE_HILL, 50);
+        int amountOfStuff = 1 + (map.getWidth() + map.getHeight()) / 32; // 32 = arbitrary number (not tile size ;-))
+
+        int surface = map.getSurfaceAreaInTiles();
+        int spiceFieldSize = (int)(surface * 0.05);
+        int spiceCircularSize = 6;
+        int spiceHillSize = (int)(spiceFieldSize * 0.05); // part of spiceFieldSize
+
+        for (int f = 0; f < amountOfStuff; f++) {
+            Vector2D randomVec = Vector2D.random(minX, maxX, minY, maxY);
+            createCircularField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceCircularSize);
+            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceFieldSize);
+            createField(map, randomVec, DuneTerrain.TERRAIN_SPICE_HILL, spiceHillSize);
         }
 
-        for (int f = 0; f < 5; f++) {
-            Vector2D randomVec = Vector2D.random(15, 45, 15, 45);
-            createCircularField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 6);
-            createField(map, randomVec, DuneTerrain.TERRAIN_ROCK, 100);
-//            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, 25);
-        }
+        int rockCircularSize = 6;
+        int rockSize = (int)(surface * 0.07);
+        int mountainSize = (int)(rockSize * 0.02);
 
+        for (int f = 0; f < amountOfStuff; f++) {
+            Vector2D randomVec = Vector2D.random(minX, maxX, minY, maxY);
+            createCircularField(map, randomVec, DuneTerrain.TERRAIN_ROCK, rockCircularSize);
+            createField(map, randomVec, DuneTerrain.TERRAIN_ROCK, rockSize);
+//            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, mountainSize);
+        }
     }
 
     public void fillMapWithTerrain(Map map, int terrainType) {

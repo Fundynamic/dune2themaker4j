@@ -57,7 +57,6 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                        Map map,
                        Mouse mouse,
                        float moveSpeed,
-                       int tileSize,
                        Player player,
                        Image buffer,
                        EntityRepository entityRepository) throws SlickException {
@@ -69,13 +68,13 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         this.mouseBehavior = new NormalMouse(this);
 
-        this.viewingVectorPerimeter = map.createViewablePerimeter(size, tileSize);
+        this.viewingVectorPerimeter = map.createViewablePerimeter(size);
         this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
 
         this.viewingVector = viewingVector;
-        this.cellViewportRenderer = new CellViewportRenderer(map, tileSize, size);
+        this.cellViewportRenderer = new CellViewportRenderer(map, size);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(player, map.getShroud());
 

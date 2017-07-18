@@ -20,7 +20,6 @@ import com.fundynamic.d2tm.game.entities.units.UnitFacings;
 import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
@@ -39,12 +38,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.Game.getResolution;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,9 +73,6 @@ public abstract class AbstractD2TMTest {
     public static Vector2D battleFieldDrawingPosition = Vector2D.create(0, PlayingState.HEIGHT_OF_TOP_BAR);
 
     public static float battleFieldMoveSpeed = 2.0F;
-    public static int battleFieldTileSize = Game.TILE_SIZE;
-
-    public static int TILE_SIZE = 32;
 
     public static int MAP_WIDTH = 64;
     public static int MAP_HEIGHT = 64;
@@ -106,7 +102,7 @@ public abstract class AbstractD2TMTest {
 
     @Before
     public void setUp() throws SlickException {
-        shroud = new Shroud(null, Game.TILE_SIZE) {
+        shroud = new Shroud(null, TILE_SIZE) {
             @Override
             public SpriteSheet createSpriteSheetFromImage() {
                 return mock(SpriteSheet.class);
@@ -141,7 +137,6 @@ public abstract class AbstractD2TMTest {
                 map,
                 mouse,
                 battleFieldMoveSpeed,
-                battleFieldTileSize,
                 player,
                 bufferWithGraphics,
                 entityRepository

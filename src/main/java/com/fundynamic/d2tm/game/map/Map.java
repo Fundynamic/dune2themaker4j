@@ -39,7 +39,7 @@ public class Map {
         this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                Cell cell = new Cell(this, new EmptyTerrain(TILE_SIZE), x, y);
+                Cell cell = new Cell(this, EmptyTerrain.instance(), x, y);
                 // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
                 cells[x][y] = cell;
             }
@@ -78,6 +78,13 @@ public class Map {
         return getCell(x, y).getTerrain().getTerrainFacing();
     }
 
+    /**
+     * Possibly corrects given coordinates and returns always a cell.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Cell getCellProtected(int x, int y) {
         int correctedX = x;
         if (correctedX < 0) correctedX = 0; // make sure we never get out of bounds ( < 0)
@@ -90,6 +97,16 @@ public class Map {
         return getCell(correctedX, correctedY);
     }
 
+    public Cell getCellWithinBoundariesOrNullObject(int x, int y) {
+        if (x < 0) return null; // make sure we never get out of bounds ( < 0)
+        if (x >= widthWithInvisibleBorder) return null;
+
+        if (y < 0) return null;
+        if (y >= heightWithInvisibleBorder) return null;
+
+        return getCell(x, y);
+    }
+
     public int getWidthInPixels(int tileWidth) {
         return this.width * tileWidth;
     }
@@ -98,12 +115,12 @@ public class Map {
         return this.height * tileHeight;
     }
 
-    public Perimeter createViewablePerimeter(Vector2D screenResolution, int tileSize) {
+    public Perimeter createViewablePerimeter(Vector2D screenResolution) {
         return new Perimeter(
-                tileSize,
-                (getWidthInPixels(tileSize) - tileSize) - screenResolution.getX(),
-                tileSize,
-                (getHeightInPixels(tileSize) - tileSize) - screenResolution.getY()
+                TILE_SIZE,
+                (getWidthInPixels(TILE_SIZE) - TILE_SIZE) - screenResolution.getX(),
+                TILE_SIZE,
+                (getHeightInPixels(TILE_SIZE) - TILE_SIZE) - screenResolution.getY()
         );
     }
 
@@ -246,5 +263,9 @@ public class Map {
         int x = intendedMapCoordinatesToMoveTo.getXAsInt();
         int y = intendedMapCoordinatesToMoveTo.getYAsInt();
         return x >= 1 && x <= width && y >= 1 && y <= height;
+    }
+
+    public int getSurfaceAreaInTiles() {
+        return width * height;
     }
 }

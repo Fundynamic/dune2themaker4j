@@ -21,6 +21,8 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
     private EntityData entityDataToPlace;
@@ -153,7 +155,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
             }
 
 
-            graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), Game.TILE_SIZE, Game.TILE_SIZE);
+            graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), TILE_SIZE, TILE_SIZE);
         }
     }
 

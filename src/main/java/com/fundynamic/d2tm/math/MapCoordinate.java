@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.math;
 
 
-import com.fundynamic.d2tm.Game;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  *
@@ -23,7 +23,7 @@ public class MapCoordinate extends Vector2D {
     }
 
     public Coordinate toCoordinate() {
-        return Coordinate.create(getX() * Game.TILE_SIZE, getY() * Game.TILE_SIZE);
+        return Coordinate.create(getX() * TILE_SIZE, getY() * TILE_SIZE);
     }
 
     public MapCoordinate add(Vector2D other) {

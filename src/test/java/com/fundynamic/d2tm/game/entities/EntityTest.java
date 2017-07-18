@@ -13,6 +13,7 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -29,7 +30,7 @@ public class EntityTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        topLeftCoordinate = Coordinate.create(Game.TILE_SIZE * 4, Game.TILE_SIZE * 4); // 4X32 = 128
+        topLeftCoordinate = Coordinate.create(TILE_SIZE * 4, TILE_SIZE * 4); // 4X32 = 128
         entityData = new EntityData();
         entityData.setWidth(64);
         entityData.setHeight(64);
@@ -99,7 +100,7 @@ public class EntityTest extends AbstractD2TMTest {
         Assert.assertEquals(0, entity1.getAmountEventMethodCalled()); // nothing triggered the DUMMY event yet
 
         // expect one subscription (because event triggers on own object)
-        Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
+        Assert.assertEquals(1, entity1.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size()); //?
     }
 
     @Test
@@ -139,9 +140,6 @@ public class EntityTest extends AbstractD2TMTest {
 
         // Entity2 should no longer notify entity1 upon its destroy, because entity1 is no longer among us...
         Assert.assertEquals(0, entity2.eventSubscriptionsFor(EventType.ENTITY_DESTROYED).size());
-
-        entity1 = null;
-        System.gc(); // clear out all references to entity1, and clear memory.
 
         // should be able to destroy entity2 without problems now
         entity2.destroy();
@@ -201,7 +199,7 @@ public class EntityTest extends AbstractD2TMTest {
         entity1.emitEvent(EventType.DUMMY);
 
         // this would be impossible normally, since its reference would be cleared, but here we
-        // make it tripple sure it is not called (result should still be 1)
+        // make it triple sure it is not called (result should still be 1)
         Assert.assertEquals(1, entity2.getAmountEventMethodCalled());
     }
 

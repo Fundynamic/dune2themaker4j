@@ -3,6 +3,9 @@ package com.fundynamic.d2tm.math;
 
 import com.fundynamic.d2tm.Game;
 
+import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 /**
  *
  * This represents an absolute coordinate (Vector2D). To transform coordinates into Map coordinates (cell based) use the
@@ -24,7 +27,7 @@ public class Coordinate extends Vector2D {
     }
 
     public MapCoordinate toMapCoordinate() {
-        return MapCoordinate.create(getX() / Game.TILE_SIZE, getY() / Game.TILE_SIZE);
+        return MapCoordinate.create(getX() / TILE_SIZE, getY() / TILE_SIZE);
     }
 
     public Coordinate add(Vector2D vec) {
@@ -36,7 +39,7 @@ public class Coordinate extends Vector2D {
     }
 
     public Coordinate addHalfTile() {
-        return new Coordinate(getX() + Game.HALF_TILE, getYAsInt() + Game.HALF_TILE);
+        return new Coordinate(getX() + HALF_TILE, getYAsInt() + HALF_TILE);
     }
 
     public static Coordinate create(Vector2D vector2D) {

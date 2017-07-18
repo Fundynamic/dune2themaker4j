@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
@@ -12,6 +11,8 @@ import org.newdawn.slick.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * <h1>Overview</h1>
@@ -105,12 +106,12 @@ public class EntityData {
 
     public void setWidth(int width) {
         this.width = width;
-        widthInCells = (int) Math.ceil((float) width / Game.TILE_SIZE);
+        widthInCells = (int) Math.ceil((float) width / TILE_SIZE);
     }
 
     public void setHeight(int height) {
         this.height = height;
-        heightInCells = (int) Math.ceil((float) height / Game.TILE_SIZE);
+        heightInCells = (int) Math.ceil((float) height / TILE_SIZE);
     }
 
     public int getWidth() {
@@ -257,8 +258,8 @@ public class EntityData {
         List<MapCoordinate> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                int vecX = coordinate.getXAsInt() + (x * Game.TILE_SIZE);
-                int vecY = coordinate.getYAsInt() + (y * Game.TILE_SIZE);
+                int vecX = coordinate.getXAsInt() + (x * TILE_SIZE);
+                int vecY = coordinate.getYAsInt() + (y * TILE_SIZE);
                 result.add(Coordinate.create(vecX, vecY).toMapCoordinate());
             }
         }
@@ -277,7 +278,7 @@ public class EntityData {
         List<MapCoordinate> result = getAllCellsAsCoordinates(coordinate);
 
         List<Coordinate> centered = new ArrayList<>(result.size());
-        Vector2D halfCell = Vector2D.create(Game.TILE_SIZE / 2, Game.TILE_SIZE / 2);
+        Vector2D halfCell = Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2);
         for (MapCoordinate resultCoordinate : result) {
             centered.add(resultCoordinate.toCoordinate().add(halfCell));
         }

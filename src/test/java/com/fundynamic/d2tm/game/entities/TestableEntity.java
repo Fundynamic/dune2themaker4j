@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.math.Coordinate;
-import org.junit.Test;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SpriteSheet;
 

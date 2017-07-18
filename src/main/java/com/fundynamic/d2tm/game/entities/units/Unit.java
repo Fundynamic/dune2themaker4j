@@ -15,7 +15,7 @@ import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
-import static com.fundynamic.d2tm.Game.TILE_SIZE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * Should become observable with RxJava!

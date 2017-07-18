@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.AssertHelper.assertFloatEquals;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 
 public class BattleFieldTest extends AbstractD2TMTest {

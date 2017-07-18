@@ -61,6 +61,7 @@ public class IniDataUnit {
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         if (Game.RECORDING_VIDEO) {
             this.buildTimeInSeconds = 1;
+            this.moveSpeed *= 3;
         } else {
             this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         }

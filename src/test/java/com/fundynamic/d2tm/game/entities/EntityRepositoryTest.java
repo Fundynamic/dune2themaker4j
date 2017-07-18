@@ -6,8 +6,6 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.newdawn.slick.SlickException;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;

@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
 import static com.fundynamic.d2tm.game.AbstractD2TMTest.makeEntitiesDataReader;
+import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -52,7 +54,7 @@ public class EntitiesDataReaderTest {
 
         // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
         // therefor we do times 3!
-        float value = ((Game.TILE_SIZE) * 3) + Game.HALF_TILE; // we can do half-tile because it is a 64x64 structure
+        float value = ((TILE_SIZE) * 3) + HALF_TILE; // we can do half-tile because it is a 64x64 structure
         assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
     }
 

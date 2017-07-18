@@ -4,21 +4,20 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.game.terrain.Terrain;
-import com.fundynamic.d2tm.game.terrain.impl.Spice;
-import com.fundynamic.d2tm.game.terrain.impl.SpiceHill;
+import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cell {
 
-    // TODO: decide which TILE_SIZE wins and refer to that one
     public static final int TILE_SIZE = 32;
+    public static final int HALF_TILE = TILE_SIZE / 2;
 
     private final Map map;
 
@@ -70,20 +69,24 @@ public class Cell {
         return y;
     }
 
+    public Cell getNeighbouringCell(int relativeX, int relativeY) {
+        return map.getCellWithinBoundariesOrNullObject(this.x + relativeX, this.y + relativeY);
+    }
+
     public Cell getCellAbove() {
-        return map.getCell(this.x, this.y - 1);
+        return getNeighbouringCell(0, -1);
     }
 
     public Cell getCellLeft() {
-        return map.getCell(this.x - 1, this.y);
+        return getNeighbouringCell(-1, 0);
     }
 
     public Cell getCellBeneath() {
-        return map.getCell(this.x, this.y + 1);
+        return getNeighbouringCell(0, 1);
     }
 
     public Cell getCellRight() {
-        return map.getCell(this.x + 1, this.y);
+        return getNeighbouringCell(1, 0);
     }
 
     /**
@@ -118,12 +121,17 @@ public class Cell {
 
     public void smooth() {
         MapEditor.TerrainFacing facing = MapEditor.getFacing(
-                terrain.isSame(getCellAbove().getTerrain()),
-                terrain.isSame(getCellRight().getTerrain()),
-                terrain.isSame(getCellBeneath().getTerrain()),
-                terrain.isSame(getCellLeft().getTerrain()));
+                terrain.isSame(getCellTerrain(getCellAbove())),
+                terrain.isSame(getCellTerrain(getCellRight())),
+                terrain.isSame(getCellTerrain(getCellBeneath())),
+                terrain.isSame(getCellTerrain(getCellLeft())));
 
         terrain.setFacing(facing);
+    }
+
+    private Terrain getCellTerrain(Cell cell) {
+        if (cell == null) return EmptyTerrain.instance();
+        return cell.getTerrain();
     }
 
     public void smoothSurroundingCells() {
@@ -134,19 +142,19 @@ public class Cell {
     }
 
     public List<Cell> getSurroundingCells() {
-        Cell cellAbove = getCellAbove();
-        Cell cellBeneath = getCellBeneath();
-
         return Arrays.asList(
-                cellAbove,
-                cellAbove.getCellLeft(),
-                cellAbove.getCellRight(),
-                getCellLeft(),
-                getCellRight(),
-                cellBeneath,
-                cellBeneath.getCellLeft(),
-                cellBeneath.getCellRight()
-        );
+                getNeighbouringCell(-1, -1),
+                getNeighbouringCell(0, -1),
+                getNeighbouringCell(1, -1),
+                getNeighbouringCell(1, 0),
+                getNeighbouringCell(1, 1),
+                getNeighbouringCell(0, 1),
+                getNeighbouringCell(-1, 1),
+                getNeighbouringCell(-1, 0)
+            )
+            .stream()
+            .filter(el -> el != null)
+            .collect(Collectors.toList());
     }
 
     public boolean isHarvestable() {

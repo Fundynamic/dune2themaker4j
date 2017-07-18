@@ -14,18 +14,19 @@ import org.newdawn.slick.util.Bootstrap;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 
 public class Game extends StateBasedGame {
 
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 600;
-
-    public static final int TILE_SIZE = 32;
-    public static final int HALF_TILE = TILE_SIZE / 2;
+    public static final int SCREEN_WIDTH = 1024;
+    public static final int SCREEN_HEIGHT = 768;
 
     public static boolean DEBUG_INFO = false;
-    // if true, it speeds up some things so we can demo it faster
+    // if 'recording' is passed as argument then the game will use 'demo settings' to make it run faster
     public static boolean RECORDING_VIDEO = false;
+    // if 'fullscreen' is passed as argument then the game will be rendered in fullscreen
+    public static boolean FULLSCREEN = false;
 
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -55,8 +56,7 @@ public class Game extends StateBasedGame {
                 new Shroud(
                     imageRepository.loadAndCache("shroud_edges.png"),
                         TILE_SIZE
-                ),
-                TILE_SIZE
+                )
         );
 
         addState(playingState);
@@ -66,8 +66,9 @@ public class Game extends StateBasedGame {
         List<String> argsList = Arrays.asList(args);
         RECORDING_VIDEO = argsList.contains("recording");
         DEBUG_INFO = argsList.contains("debug");
+        FULLSCREEN = argsList.contains("fullscreen");
 
-        Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, false);
+        Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN);
     }
 
 }

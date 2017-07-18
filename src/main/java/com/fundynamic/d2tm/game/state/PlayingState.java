@@ -30,6 +30,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class PlayingState extends BasicGameState {
 
@@ -39,8 +40,6 @@ public class PlayingState extends BasicGameState {
     private final Shroud shroud;
     private final Input input;
     private final Vector2D screenResolution;
-
-    private final int tileSize;
 
     private Player human;
     private Player cpu;
@@ -61,10 +60,9 @@ public class PlayingState extends BasicGameState {
     private MapEditor mapEditor;
     private Map map;
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileSize) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
-        this.tileSize = tileSize;
         this.input = gameContainer.getInput();
         this.screenResolution = getResolution();
         this.imageRepository = imageRepository;
@@ -88,7 +86,7 @@ public class PlayingState extends BasicGameState {
         cpu.setCredits(2000);
 
         mapEditor = new MapEditor(terrainFactory);
-        map = new Map(shroud, 64, 64);
+        map = new Map(shroud, 128, 128);
 
         entityRepository = createEntityRepository();
 
@@ -105,7 +103,7 @@ public class PlayingState extends BasicGameState {
 
         guiComposite.addGuiElement(battlefield);
 
-        // topbar
+        // topbar / moneybar
         guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human));
 
         // sidebar
@@ -143,7 +141,7 @@ public class PlayingState extends BasicGameState {
         BattleField battlefield;
 
         try {
-            float moveSpeed = 30 * tileSize;
+            float moveSpeed = 30 * TILE_SIZE;
             Vector2D viewingVector = Vector2D.create(32, 32);
 
             Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, (HEIGHT_OF_TOP_BAR + HEIGHT_OF_BOTTOM_BAR));
@@ -161,7 +159,6 @@ public class PlayingState extends BasicGameState {
                     getMap(),
                     mouse,
                     moveSpeed,
-                    tileSize,
                     human,
                     image,
                     entityRepository);

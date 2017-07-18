@@ -14,6 +14,8 @@ import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 public class EntitiesData {
 
     public static final String UNKNOWN = "UNKNOWN";
@@ -161,9 +163,9 @@ public class EntitiesData {
         // need to do an expensive lookup in the EntityRepository
         //TODO: Do something about the above, for now accept its quirks
         float someRatio = (float)entityData.getWidth() / (float)entityData.getHeight();
-        int extraFromCenter = (int)((someRatio / 2) * Game.TILE_SIZE); // this is seriously flawed :/ (too tired to fix now)
+        int extraFromCenter = (int)((someRatio / 2) * TILE_SIZE); // this is seriously flawed :/ (too tired to fix now)
         // add additional '1' to get 'past the center and occupy one cell'.
-        entityData.buildRange = extraFromCenter + ((1 + iniDataStructure.buildRangeInTiles) * Game.TILE_SIZE);
+        entityData.buildRange = extraFromCenter + ((1 + iniDataStructure.buildRangeInTiles) * TILE_SIZE);
         entityData.entityBuilderType = iniDataStructure.getEntityBuilderType();
         entityData.buildTimeInSeconds = iniDataStructure.buildTimeInSeconds;
         entityData.buildList = iniDataStructure.buildList;
