@@ -3,41 +3,86 @@ package com.fundynamic.d2tm.game.entities.superpowers;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.map.Trigonometry;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
+
+import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.DONE;
+import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.EXPLODING;
+import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.LAUNCHED;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 
 public class SuperPower extends Entity implements Destructible {
 
+    private Coordinate detonatedAt;
+
+    enum SuperPowerState {
+        INITIAL, LAUNCHED, EXPLODING, DONE
+    }
+
     private Coordinate target;
     private boolean destroyed;
     private Coordinate fireStarterCoordinate;
-    private boolean updateCalled;
+    private SuperPowerState state;
+    private float timePassed;
+    private float timePassedSinceLastDetonation;
 
     public SuperPower(Coordinate mapCoordinates, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(mapCoordinates, null, entityData, player, entityRepository);
         target = mapCoordinates;
+        state = SuperPowerState.INITIAL;
     }
 
     // TODO: onCreate!?
+    private static float RingOfFireDuration = 1;
 
     @Override
     public void update(float deltaInSeconds) {
-        if (updateCalled) return;
-        Projectile projectile = entityRepository.placeProjectile(fireStarterCoordinate, entityData.weaponId, player);
-        projectile.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.onProjectileDestroyed(projectile));
-        projectile.moveTo(target);
-        updateCalled = true;
+        switch (state) {
+            case INITIAL:
+                Projectile projectile = entityRepository.placeProjectile(fireStarterCoordinate, entityData.weaponId, player);
+                projectile.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.onProjectileDestroyed(projectile));
+                projectile.moveTo(target);
+                state = LAUNCHED;
+                break;
+            case EXPLODING:
+                timePassed += deltaInSeconds;
+                timePassedSinceLastDetonation += deltaInSeconds;
+
+                if (timePassed > RingOfFireDuration) {
+                    state = DONE;
+                } else if (timePassedSinceLastDetonation > 0.1) {
+                    float distance = (float)((Math.log(timePassed + 1) / Math.log(1.25f)));
+
+                    double centerX = detonatedAt.getX();
+                    double centerY = detonatedAt.getY();
+                    float rangeInPixels = (distance * TILE_SIZE);
+
+                    createRingOfFire(centerX, centerY, rangeInPixels);
+                    timePassedSinceLastDetonation = 0;
+                }
+
+                break;
+            case DONE:
+                destroyed = true;
+                break;
+        }
+    }
+
+    public void createRingOfFire(double centerX, double centerY, float rangeInPixels) {
+        for (int degrees=0; degrees < 360 / 6; degrees++) {
+            // calculate as if we would draw a circle and remember the coordinates
+            double circleX = (centerX + (Trigonometry.cos[degrees * 6] * rangeInPixels));
+            double circleY = (centerY + (Trigonometry.sin[degrees * 6] * rangeInPixels));
+
+            entityRepository.placeExplosionWithCenterAt(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)), player, "BOOM");
+        }
     }
 
     public Void onProjectileDestroyed(Projectile projectile) {
-        if (entityRepository.allUnits().hasItems()) {
-            for (Entity target : entityRepository.allUnits()) {
-                Projectile retaliationProjectile = entityRepository.placeProjectile(projectile.getCenteredCoordinate(), entityData.weaponId, player);
-                retaliationProjectile.moveTo(target.getCoordinate());
-            }
-        }
-        destroyed = true;
+        detonatedAt = projectile.getCenteredCoordinate();
+        state = EXPLODING;
         return null;
     }
 
