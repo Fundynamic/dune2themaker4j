@@ -29,7 +29,16 @@ public class Recolorer {
         RED, GREEN, BLUE
     }
 
-    public Image recolorToFactionColor(Image image, FactionColor factionColor) {
+    /**
+     * Given a base image, it will copy its buffer and recolor it. Returning a new Image as result.
+     *
+     * TODO: Use caching here? (or in its callee)
+     *
+     * @param image
+     * @param factionColor
+     * @return
+     */
+    public Image createCopyRecoloredToFactionColor(Image image, FactionColor factionColor) {
         final int width = image.getWidth();
         final int height = image.getHeight();
 
@@ -37,14 +46,14 @@ public class Recolorer {
         for (int x = 0; x < buffer.getWidth(); x++) {
             for (int y = 0; y < buffer.getHeight(); y++) {
                 final Color pixel = image.getColor(x, y);
-                final Color newColor = recolorToFactionColor(pixel, factionColor);
+                final Color newColor = createCopyRecoloredToFactionColor(pixel, factionColor);
                 buffer.setRGBA(x, y, newColor.getRed(), newColor.getGreen(), newColor.getBlue(), pixel.getAlpha());
             }
         }
         return buffer.getImage();
     }
 
-    public Color recolorToFactionColor(Color src, FactionColor factionColor) {
+    public Color createCopyRecoloredToFactionColor(Color src, FactionColor factionColor) {
         if (!isColorToRecolor(src)) {
           return src;
         }

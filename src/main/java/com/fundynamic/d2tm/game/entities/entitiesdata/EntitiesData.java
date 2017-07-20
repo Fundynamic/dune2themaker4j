@@ -16,6 +16,10 @@ import java.util.HashMap;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
+/**
+ * A collection of all the blue-prints of all the entities within the game. Usually read from a resource
+ * like rules.ini by the {@link EntitiesDataReader}
+ */
 public class EntitiesData {
 
     public static final String UNKNOWN = "UNKNOWN";
@@ -255,6 +259,12 @@ public class EntitiesData {
         return entityData;
     }
 
+    /**
+     * Loads image from path and returns a Slick image object. Returns null when path to image is null or empty string.
+     * @param pathToImage
+     * @return
+     * @throws SlickException
+     */
     protected Image loadImage(String pathToImage) throws SlickException {
         if (StringUtils.isEmpty(pathToImage)) {
             return null;
@@ -262,6 +272,16 @@ public class EntitiesData {
         return createSlickImage(pathToImage);
     }
 
+    /**
+     * Creates a Slick Image.
+     *
+     * TODO: Use imageRepository, as we can use this for all base images. When an entity is created by the
+     * entity repository then there a copy should be made and recolored, there we can also cache those things
+     * based on image-name + color.
+     * @param pathToImage
+     * @return
+     * @throws SlickException
+     */
     protected Image createSlickImage(String pathToImage) throws SlickException {
         System.err.println("Reading " + pathToImage);
         return new Image(pathToImage);

@@ -1,9 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.FadingSelectionCentered;
-import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibilityCentered;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
@@ -29,11 +27,15 @@ import java.util.Set;
 /**
  * <h1>General purpose</h1>
  * <p>
- *     An entity repository holds all {@link EntitiesData} and is able to construct new {@link Entity}'s on the provided
- *     {@link EntitiesSet}. This set is also used on (for instance) the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
+ *     This class is responsible for the <em>creation</em> of entities as well as the <em>removal</em> of entities and
+ *     can be considered as the <em><b>global game state of the battlefield</b></em>.
  * </p>
  * <p>
- *     This class is responsible for the <em>creation</em> of entities as well as the removal of entities.
+ *     An entity repository contains all {@link EntitiesData} (blue-prints/types of all entities) and is able to construct
+ *     new {@link Entity}'s on the provided within its internal {@link EntitiesSet}.
+ * </p>
+ * <p>
+ *     This set is used by (for instance) the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
  * </p>
  */
 public class EntityRepository {
@@ -43,6 +45,7 @@ public class EntityRepository {
     private final Recolorer recolorer;
 
     private EntitiesData entitiesData;
+
     private Entity lastCreatedEntity;
 
     private EntitiesSet entitiesSet;
@@ -116,7 +119,7 @@ public class EntityRepository {
         Image originalImage = entityData.image;
 
         if (entityData.isTypeStructure()) {
-            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Structure(
                     startCoordinate,
                     makeSpriteSheet(entityData, recoloredImage),
@@ -126,7 +129,7 @@ public class EntityRepository {
             );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
-            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Unit(
                     map,
                     startCoordinate,
@@ -146,7 +149,7 @@ public class EntityRepository {
         } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
             if (entityData.recolor) {
-                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+                recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             }
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
             createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);

@@ -178,7 +178,11 @@ public class PlayingState extends BasicGameState {
     }
 
     public EntityRepository createEntityRepository() throws SlickException {
-        return new EntityRepository(getMap(), new Recolorer(), new EntitiesDataReader().fromRulesIni());
+        return new EntityRepository(
+                getMap(),
+                new Recolorer(),
+                new EntitiesDataReader().fromRulesIni()
+        );
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
@@ -208,8 +212,8 @@ public class PlayingState extends BasicGameState {
 
         Font font = graphics.getFont();
 
+        // TODO: Proper end-game conditions and dealing with them
         if (cpu.aliveEntities() < 1) {
-            // why like this!?
             font.drawString(10, 220, "Enemy player has been destroyed. You have won the game.", Color.green);
         }
 

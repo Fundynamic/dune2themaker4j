@@ -355,7 +355,7 @@ public abstract class AbstractD2TMTest {
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
         Image image = mock(Image.class);
         Recolorer recolorer = mock(Recolorer.class);
-        when(recolorer.recolorToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        when(recolorer.createCopyRecoloredToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
         return new EntityRepository(map, recolorer, entitiesData) {
             // used by Projectile and Particle
             @Override

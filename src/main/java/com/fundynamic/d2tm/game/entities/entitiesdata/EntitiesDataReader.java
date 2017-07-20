@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Reads the 'rules.ini' file and extracts an EntitiesData data structure.
+ * Reads the 'rules.ini' file and creates a EntitiesData data structure out of it. Used by the
+ * {@link com.fundynamic.d2tm.game.entities.EntityRepository} for bringing the entities into life.
  */
-public class EntitiesDataReader {
+public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (allow other formats?)
 
     public static final String INI_KEYWORD_IMAGE = "Image";
     public static final String INI_KEYWORD_WIDTH = "Width";
