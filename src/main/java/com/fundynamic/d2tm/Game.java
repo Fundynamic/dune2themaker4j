@@ -21,6 +21,8 @@ public class Game extends StateBasedGame {
 
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
+    public static final boolean SHOW_FPS = false;
+    public static final boolean VSYNC = true;
 
     public static boolean DEBUG_INFO = false;
     // if 'recording' is passed as argument then the game will use 'demo settings' to make it run faster
@@ -46,8 +48,8 @@ public class Game extends StateBasedGame {
                 )
         );
 
-        container.setShowFPS(false);
-        container.setVSync(true);
+        container.setShowFPS(SHOW_FPS);
+        container.setVSync(VSYNC);
 
         PlayingState playingState = new PlayingState(
                 container,
