@@ -151,8 +151,7 @@ public class EntitiesDataReaderTest {
         assertThat(rifle.hasExplosionId(), is(true));
         assertThat(rifle.moveSpeed, is(160f));
         assertThat(rifle.damage, is(28));
-        assertThat(rifle.soundId, is("SOUND1"));
-        assertThat(rifle.hasSoundId(), is(true));
+        assertThat(rifle.hasSound(), is(true));
     }
 
     @Test
@@ -165,8 +164,7 @@ public class EntitiesDataReaderTest {
         assertThat(boom.image, is(not(nullValue())));
         assertThat(boom.getWidth(), is(48));
         assertThat(boom.getHeight(), is(48));
-        assertThat(boom.soundId, is("SOUND1"));
-        assertThat(boom.hasSoundId(), is(true));
+        assertThat(boom.hasSound(), is(true));
     }
 
     @Test

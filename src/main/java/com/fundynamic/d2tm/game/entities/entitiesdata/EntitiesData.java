@@ -12,6 +12,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,17 +77,17 @@ public class EntitiesData {
     public static String EXPLOSION_SMALL_UNIT = "WHEELED";
 
     private HashMap<String, EntityData> entitiesData;
-    private ArrayList<SoundData> sounds;
+    private HashMap<String, SoundData> soundsData;
 
     public EntitiesData() {
         entitiesData = new HashMap<>();
-        sounds = new ArrayList<>();
+        soundsData = new HashMap<>();
     }
 
-    public void addSound(String path) throws SlickException {
+    public void addSound(String id, String path) throws SlickException {
         SoundData soundData = new SoundData();
         soundData.sound = loadSound(path);
-        sounds.add(soundData);
+        soundsData.put(id, soundData);
     }
 
     public void addProjectile(String id, IniDataWeapon iniDataWeapon) throws SlickException {
@@ -104,7 +105,7 @@ public class EntitiesData {
 
         entityData.damage = iniDataWeapon.damage;
         entityData.explosionId = iniDataWeapon.explosionId;
-        entityData.soundId = iniDataWeapon.soundId; // for launching projectile?
+        entityData.soundData = getAndEnsureSoundId(iniDataWeapon.soundId, id); // for launching projectile?
 
         entityData.setFacingsAndCalculateChops(iniDataWeapon.facings);
     }
@@ -149,9 +150,20 @@ public class EntitiesData {
                 -1
         );
 
-        entityData.soundId = iniDataExplosion.soundId;
+        entityData.soundData = getAndEnsureSoundId(iniDataExplosion.soundId, id);
         entityData.animationSpeed = iniDataExplosion.framesPerSecond;
         entityData.recolor = iniDataExplosion.recolor;
+    }
+
+    private SoundData getAndEnsureSoundId(String soundId, String id) {
+        if (!idProvided(soundId)) {
+            return null;
+        }
+
+        if (!soundsData.containsKey(soundId)) {
+            throw new IllegalArgumentException("entity " + id + " property [Sound] refers to non-existing [SOUNDS/" + soundId + "]");
+        }
+        return soundsData.get(soundId);
     }
 
     /**
@@ -206,7 +218,7 @@ public class EntitiesData {
         entityData.buildList = iniDataStructure.buildList;
         entityData.buildCost = iniDataStructure.buildCost;
 
-        if (!idProvided(iniDataStructure.explosion)) {
+        if (idProvided(iniDataStructure.explosion)) {
             if (!tryGetEntityData(EntityType.PARTICLE, iniDataStructure.explosion)) {
                 throw new IllegalArgumentException("structure " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataStructure.explosion + "]");
             }
@@ -241,6 +253,7 @@ public class EntitiesData {
         entityData.name = id;
 
         // NOOOOOO
+        // TODO: Add 'harvester' property to unit in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
         if (id.equals(EntitiesData.HARVESTER)) {
             entityData.isHarvester = true;
         }
@@ -249,7 +262,7 @@ public class EntitiesData {
 
         String explosionId = iniDataUnit.explosionId;
 
-        if (!idProvided(explosionId)) {
+        if (idProvided(explosionId)) {
             if (!tryGetEntityData(EntityType.PARTICLE, explosionId)) {
                 throw new IllegalArgumentException("unit " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + explosionId + "]");
             }
@@ -259,7 +272,7 @@ public class EntitiesData {
     }
 
     public String getAndEnsureWeaponId(String weaponId, String id) {
-        if (!idProvided(weaponId)) {
+        if (idProvided(weaponId)) {
             if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
                 throw new IllegalArgumentException("entity " + id + " property [Weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
             }
@@ -268,7 +281,7 @@ public class EntitiesData {
     }
 
     public boolean idProvided(String weaponId) {
-        return UNKNOWN.equals(weaponId);
+        return !UNKNOWN.equals(weaponId);
     }
 
     private EntityData createEntity(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {
@@ -357,10 +370,6 @@ public class EntitiesData {
         return this.entitiesData.isEmpty();
     }
 
-    public List<SoundData> getSounds() {
-        return sounds;
-    }
-
     @Override
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
@@ -373,4 +382,8 @@ public class EntitiesData {
         return stringBuffer.toString();
     }
 
+    public List<SoundData> getSounds() {
+        Collection<SoundData> values = soundsData.values();
+        return new ArrayList<>(values);
+    }
 }

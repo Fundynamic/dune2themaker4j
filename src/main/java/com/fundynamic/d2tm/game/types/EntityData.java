@@ -92,7 +92,7 @@ public class EntityData {
 
     public boolean isHarvester;
 
-    public String soundId = UNKNOWN;          // for playing sound if required
+    public SoundData soundData = null;          // for playing sound if required
 
     public EntityData() {
     }
@@ -192,8 +192,8 @@ public class EntityData {
         return !UNKNOWN.equals(weaponId);
     }
 
-    public boolean hasSoundId() {
-        return !UNKNOWN.equals(soundId);
+    public boolean hasSound() {
+        return soundData != null;
     }
 
     public String getWeaponIdKey() {

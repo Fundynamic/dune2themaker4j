@@ -70,7 +70,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
         String[] strings = sounds.childrenNames();
         for (String id : strings) {
             Profile.Section struct = sounds.getChild(id);
-            entitiesData.addSound(struct.get(INI_KEYWORD_FILE, String.class));
+            entitiesData.addSound(id, struct.get(INI_KEYWORD_FILE, String.class));
         }
     }
 

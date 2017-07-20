@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata.ini;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import org.ini4j.Profile;
 
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader.*;
@@ -23,7 +24,7 @@ public class IniDataWeapon {
 
     public IniDataWeapon(Profile.Section struct) {
         this.image = struct.get(INI_KEYWORD_IMAGE, String.class);
-        this.soundId = struct.get(INI_KEYWORD_SOUND, String.class);
+        this.soundId = struct.get(INI_KEYWORD_SOUND, String.class, EntitiesData.UNKNOWN);
         this.widthInPixels = struct.get(INI_KEYWORD_WIDTH, Integer.class);
         this.heightInPixels = struct.get(INI_KEYWORD_HEIGHT, Integer.class);
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
