@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities.entitiesdata;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataWeapon;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
@@ -41,6 +42,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
     public static final String INI_KEYWORD_RECOLOR = "Recolor";
     public static final String INI_KEYWORD_BARREL = "Barrel";
     public static final String INI_KEYWORD_FILE = "File";
+    public static final String INI_KEYWORD_SOUND = "Sound";
 
     public EntitiesData fromRulesIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));
@@ -67,6 +69,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
 
     private void readSounds(EntitiesData entitiesData, Ini ini) throws SlickException {
         Profile.Section sounds = ini.get("SOUNDS");
+        if (sounds == null) return;
         String[] strings = sounds.childrenNames();
         for (String id : strings) {
             Profile.Section struct = sounds.getChild(id);
@@ -79,14 +82,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
         String[] strings = weapons.childrenNames();
         for (String id : strings) {
             Profile.Section struct = weapons.getChild(id);
-            entitiesData.addProjectile(id,
-                    struct.get(INI_KEYWORD_IMAGE, String.class),
-                    struct.get(INI_KEYWORD_WIDTH, Integer.class),
-                    struct.get(INI_KEYWORD_HEIGHT, Integer.class),
-                    struct.get(INI_KEYWORD_EXPLOSION, String.class),
-                    struct.get(INI_KEYWORD_MOVE_SPEED, Float.class),
-                    struct.get(INI_KEYWORD_DAMAGE, Integer.class),
-                    struct.get(INI_KEYWORD_FACINGS, Integer.class));
+            entitiesData.addProjectile(id, new IniDataWeapon(struct));
         }
     }
 

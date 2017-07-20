@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataWeapon;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
@@ -91,11 +92,24 @@ public class EntitiesData {
         sounds.add(soundData);
     }
 
-    public void addProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
-        EntityData entityData = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PROJECTILE, -1, moveSpeed, -1);
-        entityData.damage = damage;
-        entityData.explosionId = explosionId;
-        entityData.setFacingsAndCalculateChops(facings);
+    public void addProjectile(String id, IniDataWeapon iniDataWeapon) throws SlickException {
+        EntityData entityData = createEntity(
+                id,
+                iniDataWeapon.image,
+                null,
+                iniDataWeapon.widthInPixels,
+                iniDataWeapon.heightInPixels,
+                EntityType.PROJECTILE,
+                -1,
+                iniDataWeapon.moveSpeed,
+                -1
+        );
+
+        entityData.damage = iniDataWeapon.damage;
+        entityData.explosionId = iniDataWeapon.explosionId;
+        entityData.soundId = iniDataWeapon.soundId; // for launching projectile?
+
+        entityData.setFacingsAndCalculateChops(iniDataWeapon.facings);
     }
 
     public void addSuperPower(String id, IniDataSuperPower iniDataSuperPower) {
