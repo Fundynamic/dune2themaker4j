@@ -1,5 +1,6 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.types;
 
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
@@ -16,7 +17,7 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * <h1>Overview</h1>
- * This is an object representation of an Entity within a `rules.ini` file. The {@link EntitiesData} class contains
+ * This is an object representation of an Entity. The {@link EntitiesData} class contains
  * all objects after reading the rules.ini file. The interpretation of the file and the construction of an {@link EntityData} class
  * is done by the {@link EntitiesDataReader}.
  *

@@ -1,13 +1,16 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.types.SoundData;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
+
+import java.util.List;
 
 import static com.fundynamic.d2tm.game.AbstractD2TMTest.makeEntitiesDataReader;
 import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
@@ -34,6 +37,18 @@ public class EntitiesDataReaderTest {
 
     public void readFromTestRulesIni() {
         entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
+    }
+
+    @Test
+    public void readsSoundsFromIniFile() {
+        readFromTestRulesIni();
+
+        List<SoundData> sounds = entitiesData.getSounds();
+
+        Assert.assertEquals(sounds.size(), 1);
+
+        SoundData soundData = sounds.get(0);
+        Assert.assertNotNull(soundData.sound);
     }
 
     @Test

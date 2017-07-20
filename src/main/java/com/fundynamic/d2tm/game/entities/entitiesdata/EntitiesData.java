@@ -1,18 +1,21 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
-import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
+import com.fundynamic.d2tm.game.types.SoundData;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -75,9 +78,17 @@ public class EntitiesData {
     public static String EXPLOSION_SMALL_UNIT = "WHEELED";
 
     private HashMap<String, EntityData> entitiesData;
+    private ArrayList<SoundData> sounds;
 
     public EntitiesData() {
         entitiesData = new HashMap<>();
+        sounds = new ArrayList<>();
+    }
+
+    public void addSound(String path) throws SlickException {
+        SoundData soundData = new SoundData();
+        soundData.sound = loadSound(path);
+        sounds.add(soundData);
     }
 
     public void addProjectile(String id, String pathToImage, int widthInPixels, int heightInPixels, String explosionId, float moveSpeed, int damage, int facings) throws SlickException {
@@ -272,6 +283,13 @@ public class EntitiesData {
         return createSlickImage(pathToImage);
     }
 
+    protected Sound loadSound(String path) throws SlickException {
+        if (StringUtils.isEmpty(path)) {
+            return null;
+        }
+        return new Sound(path);
+    }
+
     /**
      * Creates a Slick Image.
      *
@@ -317,6 +335,10 @@ public class EntitiesData {
 
     public boolean isEmpty() {
         return this.entitiesData.isEmpty();
+    }
+
+    public List<SoundData> getSounds() {
+        return sounds;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Assert;
 import org.junit.Test;

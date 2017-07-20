@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities.units;
 
 
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;

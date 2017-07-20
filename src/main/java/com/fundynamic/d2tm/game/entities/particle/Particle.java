@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.entities.particle;
 
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.math.Coordinate;

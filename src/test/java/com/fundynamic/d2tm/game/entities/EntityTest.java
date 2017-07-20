@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;

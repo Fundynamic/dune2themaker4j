@@ -40,6 +40,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
     public static final String INI_KEYWORD_FPS = "Fps";
     public static final String INI_KEYWORD_RECOLOR = "Recolor";
     public static final String INI_KEYWORD_BARREL = "Barrel";
+    public static final String INI_KEYWORD_FILE = "File";
 
     public EntitiesData fromRulesIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));
@@ -51,6 +52,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
             EntitiesData entitiesData = createNewEntitiesData();
 
             Ini ini = new Ini(inputStream);
+            readSounds(entitiesData, ini);
             readWeapons(entitiesData, ini);
             readSuperPowers(entitiesData, ini);
             readExplosions(entitiesData, ini);
@@ -60,6 +62,15 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
             return entitiesData;
         } catch (IOException | SlickException e) {
             throw new IllegalStateException("Unable to read rules.ini", e);
+        }
+    }
+
+    private void readSounds(EntitiesData entitiesData, Ini ini) throws SlickException {
+        Profile.Section sounds = ini.get("SOUNDS");
+        String[] strings = sounds.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = sounds.getChild(id);
+            entitiesData.addSound(struct.get(INI_KEYWORD_FILE, String.class));
         }
     }
 
@@ -77,7 +88,6 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
                     struct.get(INI_KEYWORD_DAMAGE, Integer.class),
                     struct.get(INI_KEYWORD_FACINGS, Integer.class));
         }
-
     }
 
     private void readSuperPowers(EntitiesData entitiesData, Ini ini) throws SlickException {

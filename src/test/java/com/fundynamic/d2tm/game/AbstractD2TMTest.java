@@ -4,7 +4,7 @@ package com.fundynamic.d2tm.game;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -166,6 +166,11 @@ public abstract class AbstractD2TMTest {
                     @Override
                     protected Image loadImage(String pathToImage) throws SlickException {
                         return mock(Image.class);
+                    }
+
+                    @Override
+                    protected Sound loadSound(String path) throws SlickException {
+                        return mock(Sound.class);
                     }
 
                 };
