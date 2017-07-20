@@ -1,10 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataWeapon;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.*;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 import org.newdawn.slick.SlickException;
@@ -101,9 +98,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
         String[] strings = structures.childrenNames();
         for (String id : strings) {
             Profile.Section struct = structures.getChild(id);
-            entitiesData.addStructure(
-                    id,
-                    new IniDataStructure(struct)
+            entitiesData.addStructure(id, new IniDataStructure(struct)
             );
         }
     }
@@ -113,9 +108,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
         String[] strings = units.childrenNames();
         for (String id : strings) {
             Profile.Section struct = units.getChild(id);
-            entitiesData.addUnit(
-                    id,
-                    new IniDataUnit(struct)
+            entitiesData.addUnit(id, new IniDataUnit(struct)
             );
         }
     }
@@ -125,12 +118,7 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
         String[] strings = explosions.childrenNames();
         for (String id : strings) {
             Profile.Section struct = explosions.getChild(id);
-            entitiesData.addParticle(id,
-                    struct.get(INI_KEYWORD_IMAGE, String.class),
-                    struct.get(INI_KEYWORD_WIDTH, Integer.class),
-                    struct.get(INI_KEYWORD_HEIGHT, Integer.class),
-                    struct.get(INI_KEYWORD_FPS, Float.class),
-                    struct.get(INI_KEYWORD_RECOLOR, Boolean.class, false));
+            entitiesData.addParticle(id, new IniDataExplosion(struct));
         }
     }
 

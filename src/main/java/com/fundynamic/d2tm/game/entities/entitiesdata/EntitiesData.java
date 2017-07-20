@@ -1,13 +1,10 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataWeapon;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.*;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataSuperPower;
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import com.fundynamic.d2tm.game.types.SoundData;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
@@ -136,16 +133,25 @@ public class EntitiesData {
      * Create and add particle to this collection.
      *
      * @param id
-     * @param pathToImage
-     * @param widthInPixels
-     * @param heightInPixels
-     * @param framesPerSecond
+     * @param iniDataExplosion
      * @throws SlickException
      */
-    public void addParticle(String id, String pathToImage, int widthInPixels, int heightInPixels, float framesPerSecond, boolean recolor) throws SlickException {
-        EntityData entity = createEntity(id, pathToImage, null, widthInPixels, heightInPixels, EntityType.PARTICLE, -1, -1, -1);
-        entity.animationSpeed = framesPerSecond;
-        entity.recolor = recolor;
+    public void addParticle(String id, IniDataExplosion iniDataExplosion) throws SlickException {
+        EntityData entityData = createEntity(
+                id,
+                iniDataExplosion.image,
+                null,
+                iniDataExplosion.widthInPixels,
+                iniDataExplosion.heightInPixels,
+                EntityType.PARTICLE,
+                -1,
+                -1,
+                -1
+        );
+
+        entityData.soundId = iniDataExplosion.soundId;
+        entityData.animationSpeed = iniDataExplosion.framesPerSecond;
+        entityData.recolor = iniDataExplosion.recolor;
     }
 
     /**

@@ -165,8 +165,8 @@ public class EntitiesDataReaderTest {
         assertThat(boom.image, is(not(nullValue())));
         assertThat(boom.getWidth(), is(48));
         assertThat(boom.getHeight(), is(48));
-//        assertThat(boom.soundId, is("SOUND1"));
-//        assertThat(boom.hasSoundId(), is(true));
+        assertThat(boom.soundId, is("SOUND1"));
+        assertThat(boom.hasSoundId(), is(true));
     }
 
     @Test
