@@ -3,11 +3,17 @@ package com.fundynamic.d2tm.game.entities.superpowers;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.map.Cell;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Trigonometry;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.DONE;
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.EXPLODING;
@@ -37,7 +43,7 @@ public class SuperPower extends Entity implements Destructible {
     }
 
     // TODO: onCreate!?
-    private static float RingOfFireDuration = 1;
+    private static float RingOfFireTotalTimeDuration = 1;
 
     @Override
     public void update(float deltaInSeconds) {
@@ -52,23 +58,76 @@ public class SuperPower extends Entity implements Destructible {
                 timePassed += deltaInSeconds;
                 timePassedSinceLastDetonation += deltaInSeconds;
 
-                if (timePassed > RingOfFireDuration) {
+                if (timePassed > RingOfFireTotalTimeDuration) {
                     state = DONE;
-                } else if (timePassedSinceLastDetonation > 0.1) {
-                    float distance = (float)((Math.log(timePassed + 1) / Math.log(1.25f)));
+                } else {
+                    double timeToCreateNewRingOfFireThreshold = 0.1;
+                    // time to create a new ring
+                    if (timePassedSinceLastDetonation > timeToCreateNewRingOfFireThreshold) {
+                        float distance = (float)((Math.log(timePassed + 1) / Math.log(1.25f)));
 
-                    double centerX = detonatedAt.getX();
-                    double centerY = detonatedAt.getY();
-                    float rangeInPixels = (distance * TILE_SIZE);
+                        double centerX = detonatedAt.getX();
+                        double centerY = detonatedAt.getY();
+                        float rangeInPixels = (distance * TILE_SIZE);
 
-                    createRingOfFire(centerX, centerY, rangeInPixels);
-                    timePassedSinceLastDetonation = 0;
+                        createRingOfFire(centerX, centerY, rangeInPixels);
+                        damageInCircularField(centerX, centerY, 25);
+                        timePassedSinceLastDetonation = 0;
+                    }
                 }
 
                 break;
             case DONE:
                 destroyed = true;
                 break;
+        }
+    }
+
+    public void damageInCircularField(double centerX, double centerY, int damageRadiusInTiles) {
+        if (damageRadiusInTiles < 1) return;
+        Set<Coordinate> coordinatesToDamage = new HashSet<>();
+
+        float damageAtCenter = 40; // the closer to the center the more damage is dealt, the further away, the less damage is received
+        float maxDistance = damageRadiusInTiles * TILE_SIZE;
+
+        Coordinate centerCoordinate = Coordinate.create((float) centerX, (float) centerY);
+
+        for (int rangeStep=0; rangeStep < damageRadiusInTiles; rangeStep++) {
+            for (int degrees=0; degrees < 360; degrees += 4) { // rough circle is enough
+
+                // calculate as if we would draw a circle and remember the coordinates
+                float rangeInPixels = (rangeStep * TILE_SIZE);
+                double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+                double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
+
+                // convert back the pixel coordinates back to a cell
+                Coordinate coordinate = Coordinate.create(
+                        (int) Math.ceil(circleX), (int) Math.ceil(circleY)
+                ).toMapCoordinate().toCoordinate(); // snap it, so we can filter out a lot of duplicates
+
+                coordinatesToDamage.add(coordinate);
+            }
+        }
+
+        for (Coordinate coordinate : coordinatesToDamage) {
+            // do damage
+            EntitiesSet entities = entityRepository.filter(Predicate.builder().vectorWithin(coordinate));
+
+            // ie, given max distance of 500
+            // when distance between center and this is 100 px, we're thus very close (from center). So
+            // we expect to be at 80% (ie 500-100 = 400, 400/500 = 0,8). So we use 80% of the power, as opposed we would
+            // have used on the center itself (100%).
+            // distance of 300 from center, would yield:
+            // 500-300 = 200, thus 200 /500 = ,4, thus 40%
+            float distanceNormalised = Math.max((maxDistance - centerCoordinate.distance(coordinate))/maxDistance, 0F);
+
+            int damageHitpoints = (int)(damageAtCenter * distanceNormalised);
+
+            entities.forEach(entity -> {
+                if (entity.isDestructible()) {
+                    ((Destructible) entity).takeDamage(damageHitpoints, null);
+                }
+            });
         }
     }
 

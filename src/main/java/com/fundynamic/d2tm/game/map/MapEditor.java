@@ -154,7 +154,6 @@ public class MapEditor {
                 putTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
             }
         }
-
     }
 
     public void createField(Map map, Vector2D startVector, int terrainType, int size) {

@@ -30,6 +30,15 @@ public class Vector2DTest {
     }
 
     @Test
+    public void areEqual() {
+        Vector2D vec1 = new Vector2D(10F, 10F);
+        Vector2D vec2 = new Vector2D(10F, 10F);
+        Vector2D vec3 = new Vector2D(11F, 10F);
+        Assert.assertEquals(vec1, vec2);
+        Assert.assertNotEquals(vec1, vec3);
+    }
+
+    @Test
     public void dividesVector() {
         Vector2D vec = new Vector2D(64F, 128F);
         Vector2D divved = vec.div(32F);
