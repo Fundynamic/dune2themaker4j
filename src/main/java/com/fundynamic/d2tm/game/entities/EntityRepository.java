@@ -156,7 +156,7 @@ public class EntityRepository {
             createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeSuperPower()) {
-            throw new IllegalArgumentException("Use spawnSuperPower method instead.");
+            throw new IllegalArgumentException("Don't use placeOnMap, but use method spawnSuperPower method instead.");
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
@@ -314,11 +314,24 @@ public class EntityRepository {
         return new PassableResult(false);
     }
 
+    /**
+     * Super powers are special, they need to be created using this method.
+     *
+     * @param fireStarterCoordinate
+     * @param superPowerEntityData
+     * @param player
+     * @param target
+     * @return
+     */
     public SuperPower spawnSuperPower(Coordinate fireStarterCoordinate, EntityData superPowerEntityData, Player player, Coordinate target) {
         SuperPower superPower = new SuperPower(Coordinate.create(0,0), superPowerEntityData, player, this);
         superPower.setFireStarterCoordinate(fireStarterCoordinate);
         superPower.setTarget(target);
         return placeOnMap(superPower);
+    }
+
+    public void playSound() {
+        this.entitiesData.getSounds().get(0).sound.play();
     }
 
     public class PassableResult {

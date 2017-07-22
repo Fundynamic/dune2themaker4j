@@ -13,14 +13,17 @@ public class IniDataSuperPower {
     public float buildTimeInSeconds;
     public int buildCost;
     public String weaponId;
+    // Explosion to render when dead
+    public String explosionId;
 
     public IniDataSuperPower(Profile.Section struct) {
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
         this.weaponId = struct.get(INI_KEYWORD_WEAPON, String.class, EntitiesData.UNKNOWN);
+        this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
 
         if (Game.RECORDING_VIDEO) {
-            this.buildTimeInSeconds = 1;
+            this.buildTimeInSeconds *= 0.1f;
         } else {
             this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         }

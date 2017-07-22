@@ -113,6 +113,9 @@ public class EntitiesDataReaderTest {
         assertThat(deathhand.buildTimeInSeconds, is(5.0f));
         assertThat(deathhand.buildCost, is(0));
         assertThat(deathhand.weaponId, is("RIFLE"));
+        assertThat(deathhand.hasSound(), is(false));
+        assertThat(deathhand.hasExplosionId(), is(true));
+        assertThat(deathhand.explosionId, is("BOOM"));
     }
 
     @Test
@@ -147,8 +150,8 @@ public class EntitiesDataReaderTest {
         assertThat(rifle.type, is(EntityType.PROJECTILE));
         assertThat(rifle.getWidth(), is(6));
         assertThat(rifle.getHeight(), is(6));
-        assertThat(rifle.explosionId, is("BOOM"));
         assertThat(rifle.hasExplosionId(), is(true));
+        assertThat(rifle.explosionId, is("BOOM"));
         assertThat(rifle.moveSpeed, is(160f));
         assertThat(rifle.damage, is(28));
         assertThat(rifle.hasSound(), is(true));

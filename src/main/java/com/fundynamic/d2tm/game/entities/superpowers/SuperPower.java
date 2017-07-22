@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.map.Trigonometry;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Random;
 import org.newdawn.slick.Graphics;
 
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.DONE;
@@ -77,7 +78,22 @@ public class SuperPower extends Entity implements Destructible {
             double circleX = (centerX + (Trigonometry.cos[degrees * 6] * rangeInPixels));
             double circleY = (centerY + (Trigonometry.sin[degrees * 6] * rangeInPixels));
 
-            entityRepository.placeExplosionWithCenterAt(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)), player, "BOOM");
+            // TODO: Use some sound manager that makes the sounds, as opposed to the camera and also right volume, etc.
+            // GH: https://github.com/Fundynamic/dune2themaker4j/issues/157
+            // TODO: Select random sound from 'sound group'
+            // GH: https://github.com/Fundynamic/dune2themaker4j/issues/158
+
+            // play sound if it has one in a random manner so it won't blow up your speakers by creating a gazilion
+            // explosion particles and thus sounds
+            if (entityData.hasExplosionId()) {
+                if (Random.getRandomBetween(0, 100) < 4) {
+                    EntityData explosion = entityRepository.getEntityData(EntityType.PARTICLE, entityData.explosionId);
+                    if (explosion.hasSound()) {
+                        explosion.soundData.sound.play();
+                    }
+                }
+                entityRepository.placeExplosionWithCenterAt(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)), player, entityData.explosionId);
+            }
         }
     }
 

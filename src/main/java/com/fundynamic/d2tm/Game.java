@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Bootstrap;
 
@@ -18,6 +19,8 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 
 public class Game extends StateBasedGame {
+
+    public static final String GAME_TITLE = "Dune II - The Maker";
 
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
@@ -61,16 +64,28 @@ public class Game extends StateBasedGame {
                 )
         );
 
+        SoundStore.get().setSoundVolume(0.5f);
+        SoundStore.get().setMusicVolume(0.5f);
+
         addState(playingState);
     }
 
+    /**
+     * Main entry point
+     * @param args
+     */
     public static void main(String[] args) {
         List<String> argsList = Arrays.asList(args);
         RECORDING_VIDEO = argsList.contains("recording");
         DEBUG_INFO = argsList.contains("debug");
         FULLSCREEN = argsList.contains("fullscreen");
 
-        Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN);
+        Bootstrap.runAsApplication(
+                new Game(GAME_TITLE),
+                SCREEN_WIDTH,
+                SCREEN_HEIGHT,
+                FULLSCREEN
+            );
     }
 
 }

@@ -60,8 +60,10 @@ public class IniDataUnit {
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         if (Game.RECORDING_VIDEO) {
-            this.buildTimeInSeconds = 1;
-            this.moveSpeed *= 3;
+            this.buildTimeInSeconds *= 0.1f;
+            this.moveSpeed *= 2;
+            this.turnSpeed *= 2;
+            this.turnSpeedCannon *= 2;
         } else {
             this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         }

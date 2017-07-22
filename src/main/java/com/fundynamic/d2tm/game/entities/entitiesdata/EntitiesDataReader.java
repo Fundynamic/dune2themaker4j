@@ -53,8 +53,8 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
             Ini ini = new Ini(inputStream);
             readSounds(entitiesData, ini);
             readWeapons(entitiesData, ini);
-            readSuperPowers(entitiesData, ini);
             readExplosions(entitiesData, ini);
+            readSuperPowers(entitiesData, ini);
             readStructures(entitiesData, ini);
             readUnits(entitiesData, ini);
 

@@ -123,6 +123,16 @@ public class EntitiesData {
             entityData.buildCost = iniDataSuperPower.buildCost;
             entityData.buildTimeInSeconds = iniDataSuperPower.buildTimeInSeconds;
             entityData.weaponId = getAndEnsureWeaponId(iniDataSuperPower.weaponId, id);
+            // TODO: Do a two step building of entityData
+            // 1) first read
+            // 2) then link (and check), because we get into circular references, ie Explosions vs Super powers and such
+            if (idProvided(iniDataSuperPower.explosionId)) {
+                if (!tryGetEntityData(EntityType.PARTICLE, iniDataSuperPower.explosionId)) {
+                    throw new IllegalArgumentException("super power " + id + " [explosion] refers to non-existing [EXPLOSIONS/" + iniDataSuperPower.explosionId + "]");
+                }
+                entityData.explosionId = iniDataSuperPower.explosionId;
+            }
+
             entitiesData.put(entityData.key, entityData);
         } catch (SlickException e) {
             throw new IllegalArgumentException("Unable to load image: ", e);
@@ -280,8 +290,8 @@ public class EntitiesData {
         return weaponId;
     }
 
-    public boolean idProvided(String weaponId) {
-        return !UNKNOWN.equals(weaponId);
+    public boolean idProvided(String id) {
+        return !UNKNOWN.equals(id);
     }
 
     private EntityData createEntity(String id, String pathToImage, String pathToBarrelImage, int widthInPixels, int heightInPixels, EntityType entityType, int sight, float moveSpeed, int hitPoints) throws SlickException {

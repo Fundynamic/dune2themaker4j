@@ -1,6 +1,9 @@
 package com.fundynamic.d2tm.game.event;
 
+import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
@@ -15,11 +18,12 @@ import org.newdawn.slick.SlickException;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DebugKeysListenerTest {
+public class DebugKeysListenerTest extends AbstractD2TMTest {
 
     public static final char ANY_CHAR = '#';
     public static final int ANY_KEY = Input.KEY_COLON;
 
+    // masks the real battlefield in the AbstractD2TM test.
     @Mock private BattleField battleField;
 
     private final Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
@@ -27,7 +31,7 @@ public class DebugKeysListenerTest {
 
     @Before
     public void setUp() {
-        debugKeysListener = new DebugKeysListener(battleField, player);
+        debugKeysListener = new DebugKeysListener(battleField, player, entityRepository);
     }
 
     @Test

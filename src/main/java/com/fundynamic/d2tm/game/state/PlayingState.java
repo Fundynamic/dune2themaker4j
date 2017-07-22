@@ -130,7 +130,7 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));
-        input.addKeyListener(new DebugKeysListener(battlefield, human));
+        input.addKeyListener(new DebugKeysListener(battlefield, human, entityRepository));
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         initializeMap(entityRepository, human, cpu);
