@@ -7,7 +7,6 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
@@ -33,8 +32,9 @@ public class Particle extends Entity implements Destructible {
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
-        graphics.drawImage(sprite, x, y, new Color(1f, 1f, 1f, alpha));
-//        graphics.setColor(new Color(1f,1f,1f,1.0f));
+        sprite.setImageColor(1, 1, 1, alpha);
+        graphics.drawImage(sprite, x, y);
+        sprite.setImageColor(1, 1, 1, 1);
     }
 
     public Image getSprite() {
