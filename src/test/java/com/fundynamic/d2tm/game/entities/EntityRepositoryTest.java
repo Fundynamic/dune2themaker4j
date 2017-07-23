@@ -7,7 +7,10 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Test;
+import org.mockito.internal.util.collections.Sets;
 import org.newdawn.slick.SlickException;
+
+import java.util.Arrays;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -37,6 +40,43 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(132, 132), EntityType.UNIT);
         assertThat(entities, is(empty()));
     }
+
+    @Test
+    public void findAliveEntitiesAtMultipleCoordinates() throws SlickException {
+        Unit unit1 = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
+        Unit unit2 = makeUnit(player, Coordinate.create(64, 32), EntitiesData.QUAD);
+
+
+        // Single coordinate passed, expected unit1
+        EntitiesSet destructibleEntities = entityRepository.findDestructibleEntities(Coordinate.create(32, 32));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Single coordinate passed, as Set
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Two coordinate passed, as Set, only one coordinate would yield result
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32), Coordinate.create(320, 320)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Two coordinate passed, as Set, two entities should be found
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32), Coordinate.create(64, 32)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(2));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+        assertThat(destructibleEntities.contains(unit2), is(true));
+    }
+
 
     @Test (expected = IllegalArgumentException.class)
     public void throwsExceptionWhenTryingToCreateExplosionOutOfNonParticle() {

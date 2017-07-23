@@ -41,6 +41,10 @@ public abstract class Predicate<T> {
         return IsSelectable.instance;
     }
 
+    public static Predicate<Entity> isDestructible() {
+        return IsSelectable.instance;
+    }
+
     public static Predicate<Entity> ofType(EntityType entityType) {
         return OfType.instance(entityType);
     }

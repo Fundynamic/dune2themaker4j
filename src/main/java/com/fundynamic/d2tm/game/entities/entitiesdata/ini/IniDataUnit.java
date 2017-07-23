@@ -28,9 +28,9 @@ public class IniDataUnit {
     public float attackRate;
     public float attackRange;
 
-    // sight and hitpoints
+    // sight and hitPoints
     public int sight;
-    public int hitpoints;
+    public int hitPoints;
 
     // Explosion to render when dead
     public String explosionId;
@@ -55,19 +55,19 @@ public class IniDataUnit {
         this.turnSpeedCannon = struct.get(INI_KEYWORD_TURN_SPEED_CANNON, Float.class, 0f);
         this.attackRate = struct.get(INI_KEYWORD_ATTACK_RATE, Float.class, 0f);
         this.attackRange = struct.get(INI_KEYWORD_ATTACK_RANGE, Float.class, 0f);
-        this.hitpoints = struct.get(INI_KEYWORD_HIT_POINTS, Integer.class, 0);
+        this.hitPoints = struct.get(INI_KEYWORD_HIT_POINTS, Integer.class, 0);
         this.weaponId = struct.get(INI_KEYWORD_WEAPON, String.class, EntitiesData.UNKNOWN);
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
+        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
+        this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
+
         if (Game.RECORDING_VIDEO) {
             this.buildTimeInSeconds *= 0.1f;
             this.moveSpeed *= 2;
             this.turnSpeed *= 2;
             this.turnSpeedCannon *= 2;
-        } else {
-            this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         }
-        this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
     }
 
 }

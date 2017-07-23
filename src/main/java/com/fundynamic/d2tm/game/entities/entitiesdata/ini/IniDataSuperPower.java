@@ -21,11 +21,10 @@ public class IniDataSuperPower {
         this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
         this.weaponId = struct.get(INI_KEYWORD_WEAPON, String.class, EntitiesData.UNKNOWN);
         this.explosionId = struct.get(INI_KEYWORD_EXPLOSION, String.class);
+        this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
 
         if (Game.RECORDING_VIDEO) {
             this.buildTimeInSeconds *= 0.1f;
-        } else {
-            this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         }
     }
 

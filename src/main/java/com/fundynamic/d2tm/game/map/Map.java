@@ -156,7 +156,7 @@ public class Map {
     }
 
     public Entity revealShroudFor(Entity entity) {
-        List<MapCoordinate> allCoordinates = entity.getAllCellsAsCoordinates();
+        List<MapCoordinate> allCoordinates = entity.getAllCellsAsMapCoordinates();
         for (MapCoordinate coordinate : allCoordinates) {
             revealShroudFor(coordinate, entity.getSight(), entity.getPlayer());
         }

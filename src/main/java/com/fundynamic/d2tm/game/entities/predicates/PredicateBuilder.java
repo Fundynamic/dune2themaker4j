@@ -8,8 +8,10 @@ import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Builder to construct queries by using predicates.
@@ -123,8 +125,31 @@ public class PredicateBuilder {
         return this;
     }
 
+    public PredicateBuilder vectorWithin(Coordinate ...absoluteMapCoordinates) {
+        // Use or condition (either of the coordinates can be true)
+        AnyPredicate coordinatesPredicate = new AnyPredicate();
+        for (Coordinate coordinate: absoluteMapCoordinates) {
+            coordinatesPredicate.addPredicate((new CoordinateIsWithinEntity(coordinate)));
+        }
+        predicates.add(coordinatesPredicate);
+        return this;
+    }
+
+    public PredicateBuilder vectorWithin(List<Coordinate> absoluteMapCoordinates) {
+        return vectorWithin(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
+    }
+
+    public PredicateBuilder vectorWithin(Set<Coordinate> absoluteMapCoordinates) {
+        return vectorWithin(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
+    }
+
     public PredicateBuilder isAlive() {
         predicates.add(Predicate.isAlive());
+        return this;
+    }
+
+    public PredicateBuilder isDestructible() {
+        predicates.add(Predicate.isDestructible());
         return this;
     }
 

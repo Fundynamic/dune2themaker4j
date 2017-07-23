@@ -23,6 +23,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -236,12 +238,24 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
+    public EntitiesSet findDestructibleEntities(Coordinate... absoluteMapCoordinates) {
+        return filter(
+                Predicate.builder().
+                    isDestructible().
+                    vectorWithin(absoluteMapCoordinates)
+        );
+    }
+
+    public EntitiesSet findDestructibleEntities(Set<Coordinate> absoluteMapCoordinates) {
+        return findDestructibleEntities(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
+    }
+
     public EntitiesSet findAliveEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
+                        isAlive().
                         vectorWithin(absoluteMapCoordinates)
-                        .isAlive()
 
         );
     }

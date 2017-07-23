@@ -59,7 +59,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         iniDataUnit.attackRate = attackRate;
         iniDataUnit.weaponId = weaponId;
         iniDataUnit.explosionId = explosionId;
-        iniDataUnit.hitpoints = hitPoints;
+        iniDataUnit.hitPoints = hitPoints;
         iniDataUnit.buildTimeInSeconds = 1.0F;
         iniDataUnit.buildCost = buildCost;
 

@@ -6,7 +6,7 @@ import org.newdawn.slick.Graphics;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
- * <h1>Concept of getting destroyed by using hitpoints</h1>
+ * <h1>Concept of getting destroyed by using hitPoints</h1>
  */
 public class HitPointBasedDestructibilityCentered extends HitPointBasedDestructibility {
 

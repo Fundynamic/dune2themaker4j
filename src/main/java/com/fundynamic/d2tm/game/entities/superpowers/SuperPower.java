@@ -3,13 +3,10 @@ package com.fundynamic.d2tm.game.entities.superpowers;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
-import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Trigonometry;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
 import java.util.HashSet;
@@ -18,12 +15,15 @@ import java.util.Set;
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.DONE;
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.EXPLODING;
 import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.LAUNCHED;
+import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 
 public class SuperPower extends Entity implements Destructible {
 
     private Coordinate detonatedAt;
+    private Set<Coordinate> coordinatesToDamage;
+    private Graphics graphics;
 
     enum SuperPowerState {
         INITIAL, LAUNCHED, EXPLODING, DONE
@@ -65,13 +65,17 @@ public class SuperPower extends Entity implements Destructible {
                     // time to create a new ring
                     if (timePassedSinceLastDetonation > timeToCreateNewRingOfFireThreshold) {
                         float distance = (float)((Math.log(timePassed + 1) / Math.log(1.25f)));
+                        float maxDistance = (float)((Math.log(RingOfFireTotalTimeDuration + 1) / Math.log(1.25f)));
 
                         double centerX = detonatedAt.getX();
                         double centerY = detonatedAt.getY();
                         float rangeInPixels = (distance * TILE_SIZE);
+                        float rangeOfSmokeInPixels = rangeInPixels * 2.5f;
+                        float maxDistanceInPixels = maxDistance * 2.5f * TILE_SIZE;
 
                         createRingOfFire(centerX, centerY, rangeInPixels);
-                        damageInCircularField(centerX, centerY, 25);
+                        createRingOfSmoke(centerX, centerY, rangeOfSmokeInPixels);
+                        damageInCircularField(centerX, centerY, maxDistanceInPixels);
                         timePassedSinceLastDetonation = 0;
                     }
                 }
@@ -83,17 +87,39 @@ public class SuperPower extends Entity implements Destructible {
         }
     }
 
-    public void damageInCircularField(double centerX, double centerY, int damageRadiusInTiles) {
-        if (damageRadiusInTiles < 1) return;
-        Set<Coordinate> coordinatesToDamage = new HashSet<>();
+    public void damageInCircularField(double centerX, double centerY, float maxDistance) {
+        if (coordinatesToDamage == null) {
+            this.coordinatesToDamage = determineCoordinatesToDamage(centerX, centerY, maxDistance);
+        }
 
-        float damageAtCenter = 40; // the closer to the center the more damage is dealt, the further away, the less damage is received
-        float maxDistance = damageRadiusInTiles * TILE_SIZE;
+        float damageAtCenter = 65; // the closer to the center the more damage is dealt, the further away, the less damage is received
 
         Coordinate centerCoordinate = Coordinate.create((float) centerX, (float) centerY);
 
-        for (int rangeStep=0; rangeStep < damageRadiusInTiles; rangeStep++) {
-            for (int degrees=0; degrees < 360; degrees += 4) { // rough circle is enough
+        EntitiesSet entities = entityRepository.findDestructibleEntities(coordinatesToDamage);
+
+        entities.forEach(entity -> {
+            if (!entity.isDestructible()) return;
+            for (Coordinate entityCoordinate : entity.getAllCellsAsCoordinates()) {
+                float actualDistance = centerCoordinate.distance(entityCoordinate);
+                int damageHitpoints = getDamageHitpoints(damageAtCenter, maxDistance, actualDistance);
+                ((Destructible) entity).takeDamage(damageHitpoints, null);
+            }
+        });
+    }
+
+    public int getDamageHitpoints(float damageAtCenter, float maxDistance, float actualDistance) {
+        float distanceNormalised = Math.max((maxDistance - actualDistance)/maxDistance, 0F);
+        return (int)(damageAtCenter * distanceNormalised);
+    }
+
+    public Set<Coordinate> determineCoordinatesToDamage(double centerX, double centerY, float maxDistanceInPixels) {
+        Set<Coordinate> coordinatesToDamage = new HashSet<>();
+
+        int steps = Math.round(maxDistanceInPixels / HALF_TILE);
+
+        for (int rangeStep = 0; rangeStep < steps; rangeStep++) {
+            for (int degrees=0; degrees < 360; degrees += 3) {
 
                 // calculate as if we would draw a circle and remember the coordinates
                 float rangeInPixels = (rangeStep * TILE_SIZE);
@@ -109,40 +135,22 @@ public class SuperPower extends Entity implements Destructible {
             }
         }
 
-        for (Coordinate coordinate : coordinatesToDamage) {
-            // do damage
-            EntitiesSet entities = entityRepository.filter(Predicate.builder().vectorWithin(coordinate));
-
-            // ie, given max distance of 500
-            // when distance between center and this is 100 px, we're thus very close (from center). So
-            // we expect to be at 80% (ie 500-100 = 400, 400/500 = 0,8). So we use 80% of the power, as opposed we would
-            // have used on the center itself (100%).
-            // distance of 300 from center, would yield:
-            // 500-300 = 200, thus 200 /500 = ,4, thus 40%
-            float distanceNormalised = Math.max((maxDistance - centerCoordinate.distance(coordinate))/maxDistance, 0F);
-
-            int damageHitpoints = (int)(damageAtCenter * distanceNormalised);
-
-            entities.forEach(entity -> {
-                if (entity.isDestructible()) {
-                    ((Destructible) entity).takeDamage(damageHitpoints, null);
-                }
-            });
-        }
+        return coordinatesToDamage;
     }
 
     public void createRingOfFire(double centerX, double centerY, float rangeInPixels) {
-        for (int degrees=0; degrees < 360 / 6; degrees++) {
+
+        for (int degrees=0; degrees < 360; degrees += 6) {
             // calculate as if we would draw a circle and remember the coordinates
-            double circleX = (centerX + (Trigonometry.cos[degrees * 6] * rangeInPixels));
-            double circleY = (centerY + (Trigonometry.sin[degrees * 6] * rangeInPixels));
+            double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+            double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
 
             // TODO: Use some sound manager that makes the sounds, as opposed to the camera and also right volume, etc.
             // GH: https://github.com/Fundynamic/dune2themaker4j/issues/157
             // TODO: Select random sound from 'sound group'
             // GH: https://github.com/Fundynamic/dune2themaker4j/issues/158
 
-            // play sound if it has one in a random manner so it won't blow up your speakers by creating a gazilion
+            // play sound if it has one in a random manner so it won't blow up your speakers by creating a gazillion
             // explosion particles and thus sounds
             if (entityData.hasExplosionId()) {
                 if (Random.getRandomBetween(0, 100) < 4) {
@@ -156,6 +164,17 @@ public class SuperPower extends Entity implements Destructible {
         }
     }
 
+    public void createRingOfSmoke(double centerX, double centerY, float rangeInPixels) {
+        for (int degrees=0; degrees < 360; degrees += 6) {
+            // calculate as if we would draw a circle and remember the coordinates
+            double circleX = (centerX + (Trigonometry.cos[degrees] * rangeInPixels));
+            double circleY = (centerY + (Trigonometry.sin[degrees] * rangeInPixels));
+            if (Random.getRandomBetween(0, 100) < 25) {
+                entityRepository.placeExplosionWithCenterAt(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)), player, "SMOKE");
+            }
+        }
+    }
+
     public Void onProjectileDestroyed(Projectile projectile) {
         detonatedAt = projectile.getCenteredCoordinate();
         state = EXPLODING;
@@ -165,6 +184,7 @@ public class SuperPower extends Entity implements Destructible {
     @Override
     public void render(Graphics graphics, int x, int y) {
         // NA
+        this.graphics = graphics;
     }
 
     @Override

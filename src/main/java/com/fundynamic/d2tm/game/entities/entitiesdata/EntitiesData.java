@@ -249,7 +249,7 @@ public class EntitiesData {
                 EntityType.UNIT,
                 iniDataUnit.sight,
                 iniDataUnit.moveSpeed,
-                iniDataUnit.hitpoints
+                iniDataUnit.hitPoints
         );
 
         entityData.attackRate = iniDataUnit.attackRate;

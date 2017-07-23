@@ -28,7 +28,7 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
  *
  *      [STRUCTURES/CONSTYARD]
  *      image=structures/2x2_constyard.png
- *      hitpoints=2000
+ *      hitPoints=2000
  *      width=64
  *      height=64
  *      sight=5
@@ -41,7 +41,10 @@ public class EntityData {
 
     public static final String UNKNOWN = "UNKNOWN";
 
-    public String name;             // the name used in the INI file (ie [QUAD] without [])
+    /**
+     * the name used in the INI file (ie [QUAD] without [])
+     */
+    public String name;
 
     // Kind of entity it reflects
     public EntityType type;

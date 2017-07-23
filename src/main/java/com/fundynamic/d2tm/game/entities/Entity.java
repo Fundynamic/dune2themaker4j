@@ -16,6 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -186,8 +187,13 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.getHeightInCells();
     }
 
-    public List<MapCoordinate> getAllCellsAsCoordinates() {
+    public List<MapCoordinate> getAllCellsAsMapCoordinates() {
         return entityData.getAllCellsAsCoordinates(coordinate);
+    }
+
+    public List<Coordinate> getAllCellsAsCoordinates() {
+        List<MapCoordinate> allCellsAsCoordinates = entityData.getAllCellsAsCoordinates(coordinate);
+        return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate()).collect(Collectors.toList());
     }
 
     // this basically goes 'around' the entity

@@ -64,7 +64,7 @@ public class Game extends StateBasedGame {
                 )
         );
 
-        SoundStore.get().setSoundVolume(0.5f);
+        SoundStore.get().setSoundVolume(0.2f);
         SoundStore.get().setMusicVolume(0.5f);
 
         addState(playingState);
