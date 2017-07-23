@@ -40,6 +40,9 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
     public static final String INI_KEYWORD_BARREL = "Barrel";
     public static final String INI_KEYWORD_FILE = "File";
     public static final String INI_KEYWORD_SOUND = "Sound";
+    public static final String INI_KEYWORD_ASCEND_TO = "AscendTo";
+    public static final String INI_KEYWORD_ASCEND_AT = "AscendAt";
+    public static final String INI_KEYWORD_DESCEND_AT = "DescendAt";
 
     public EntitiesData fromRulesIni() {
         return fromResource(getClass().getResourceAsStream("/rules.ini"));

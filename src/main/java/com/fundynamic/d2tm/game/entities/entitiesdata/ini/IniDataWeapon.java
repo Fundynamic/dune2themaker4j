@@ -18,6 +18,9 @@ public class IniDataWeapon {
     public int facings;
     public String image;
     public String soundId;
+    public int ascendTo;
+    public float ascendAt;
+    public float descendAt;
 
     public IniDataWeapon() {
     }
@@ -31,5 +34,8 @@ public class IniDataWeapon {
         this.moveSpeed = struct.get(INI_KEYWORD_MOVE_SPEED, Float.class);
         this.damage = struct.get(INI_KEYWORD_DAMAGE, Integer.class);
         this.facings = struct.get(INI_KEYWORD_FACINGS, Integer.class);
+        this.ascendTo = struct.get(INI_KEYWORD_ASCEND_TO, Integer.class, 0);
+        this.ascendAt = struct.get(INI_KEYWORD_ASCEND_AT, Float.class, 0F);
+        this.descendAt = struct.get(INI_KEYWORD_DESCEND_AT, Float.class, 0F);
     }
 }

@@ -155,6 +155,9 @@ public class EntitiesDataReaderTest {
         assertThat(rifle.moveSpeed, is(160f));
         assertThat(rifle.damage, is(28));
         assertThat(rifle.hasSound(), is(true));
+        assertThat(rifle.maxAscensionHeight, is(83));
+        assertThat(rifle.maxAscensionAtFlightPercentage, is(0.23F));
+        assertThat(rifle.startToDescendPercentage, is(0.87F));
     }
 
     @Test

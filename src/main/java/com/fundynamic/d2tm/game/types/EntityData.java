@@ -67,6 +67,10 @@ public class EntityData {
     private int widthInCells;       // in cells, derived from pixels
     private int heightInCells;      // in cells, derived from pixels
 
+    public int maxAscensionHeight; // in pixels, how high a projectile can ascend when 'launched'
+    public float startToDescendPercentage; // normalised value (between 0 and 1.0), when should descend be initiated?
+    public float maxAscensionAtFlightPercentage; // normalised value (between 0 and 1.0), when should the projectile be at maxAscensionHeight during flight?
+
     public int sight;
 
     public float moveSpeed;         // the speed a unit moves: value is pixels in seconds.

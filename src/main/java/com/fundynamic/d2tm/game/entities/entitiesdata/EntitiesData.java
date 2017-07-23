@@ -107,6 +107,10 @@ public class EntitiesData {
         entityData.explosionId = iniDataWeapon.explosionId;
         entityData.soundData = getAndEnsureSoundId(iniDataWeapon.soundId, id); // for launching projectile?
 
+        entityData.maxAscensionHeight = iniDataWeapon.ascendTo;
+        entityData.maxAscensionAtFlightPercentage = iniDataWeapon.ascendAt;
+        entityData.startToDescendPercentage = iniDataWeapon.descendAt;
+
         entityData.setFacingsAndCalculateChops(iniDataWeapon.facings);
     }
 

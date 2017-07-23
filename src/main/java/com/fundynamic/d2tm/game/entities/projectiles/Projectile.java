@@ -17,6 +17,8 @@ public class Projectile extends Entity implements Moveable, Destructible {
     // state
     private Coordinate target;
     private boolean destroyed;
+    private float height = 0F; // supposed 'height' of projectile
+    private float distanceCalculatedALaunch;
 
     public Projectile(Coordinate mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
@@ -33,7 +35,12 @@ public class Projectile extends Entity implements Moveable, Destructible {
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
-        graphics.drawImage(sprite, x, y);
+        sprite.setImageColor(0, 0, 0, 0.5f);
+        int shadowX = x + Math.round(height / 8);
+        graphics.drawImage(sprite, shadowX, y);
+
+        sprite.setImageColor(1, 1, 1, 1);
+        graphics.drawImage(sprite, x, (y - height));
     }
 
     public Image getSprite() {
@@ -61,9 +68,30 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
             Vector2D delta = normalised.scale(timeCorrectedSpeed);
             coordinate = coordinate.add(delta);
+
+            if (entityData.maxAscensionHeight > 0) {
+                if (getFlightProgress() < entityData.maxAscensionAtFlightPercentage) {
+                    if (height < entityData.maxAscensionHeight) {
+                        height = (getFlightProgress() * entityData.maxAscensionHeight) * (1 / entityData.maxAscensionAtFlightPercentage);
+                        if (height >= entityData.maxAscensionHeight) height = entityData.maxAscensionHeight;
+                    }
+                } else {
+                    if (getFlightProgress() > entityData.startToDescendPercentage) {
+                        if (height > 0) {
+                            float maxDescensionAtFlightPercentage = 1f - entityData.startToDescendPercentage;
+
+                            float descendProgress = 1.0f - getFlightProgress();
+                            float progress = descendProgress * (1 / maxDescensionAtFlightPercentage);
+
+                            height = Math.min(entityData.maxAscensionHeight, progress * entityData.maxAscensionHeight);
+                            if (height < 0) height = 0;
+                        }
+                    }
+                }
+            }
         }
 
-        if (target.distance(coordinate) < 0.1F) {
+        if (getCurrentDistanceToTarget() < 0.1F) {
             if (entityData.hasExplosionId()) {
                 entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
             }
@@ -83,9 +111,19 @@ public class Projectile extends Entity implements Moveable, Destructible {
         }
     }
 
+    public float getFlightProgress() {
+        return 1.0f - (getCurrentDistanceToTarget() / distanceCalculatedALaunch);
+    }
+
+    public float getCurrentDistanceToTarget() {
+        return target.distance(coordinate);
+    }
+
     @Override
-    public void moveTo(Vector2D target) {
-        this.target = new Coordinate(target);
+    public void moveTo(Vector2D moveToTarget) {
+        Coordinate newTarget = new Coordinate(moveToTarget);
+        distanceCalculatedALaunch = target.distance(newTarget);
+        this.target = newTarget;
     }
 
     @Override
