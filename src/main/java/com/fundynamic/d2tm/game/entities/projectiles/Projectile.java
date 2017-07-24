@@ -35,12 +35,19 @@ public class Projectile extends Entity implements Moveable, Destructible {
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
-        sprite.setImageColor(0, 0, 0, 0.5f);
+
+        if (height > 0) {
+            drawShadowImage(graphics, x, y, sprite);
+        }
+
+        graphics.drawImage(sprite, x, (y - height));
+    }
+
+    public void drawShadowImage(Graphics graphics, int x, int y, Image sprite) {
+        sprite.setImageColor(0, 0, 0, 0.5f); // set color of image to black, transparent
         int shadowX = x + Math.round(height / 8);
         graphics.drawImage(sprite, shadowX, y);
-
-        sprite.setImageColor(1, 1, 1, 1);
-        graphics.drawImage(sprite, x, (y - height));
+        sprite.setImageColor(1, 1, 1, 1); // restore drawing to opaque
     }
 
     public Image getSprite() {
