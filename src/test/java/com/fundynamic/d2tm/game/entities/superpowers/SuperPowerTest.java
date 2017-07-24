@@ -53,12 +53,12 @@ public class SuperPowerTest extends AbstractD2TMTest {
         Assert.assertEquals(SuperPower.SuperPowerState.EXPLODING, superPower.getState());
 
         // creates ring of fire and smoke
-        superPower.update(0.5f);
+        superPower.update(SuperPower.RingOfFireTotalTimeDuration / 2);
 
         // still exploding
         Assert.assertEquals(SuperPower.SuperPowerState.EXPLODING, superPower.getState());
 
-        superPower.update(0.5f);
+        superPower.update(SuperPower.RingOfFireTotalTimeDuration / 2);
 
         Assert.assertEquals(SuperPower.SuperPowerState.EXPLODING, superPower.getState());
 
