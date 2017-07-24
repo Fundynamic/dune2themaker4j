@@ -76,24 +76,11 @@ public class Projectile extends Entity implements Moveable, Destructible {
             Vector2D delta = normalised.scale(timeCorrectedSpeed);
             coordinate = coordinate.add(delta);
 
-            if (entityData.maxAscensionHeight > 0) {
-                if (getFlightProgress() < entityData.maxAscensionAtFlightPercentage) {
-                    if (height < entityData.maxAscensionHeight) {
-                        height = (getFlightProgress() * entityData.maxAscensionHeight) * (1 / entityData.maxAscensionAtFlightPercentage);
-                        if (height >= entityData.maxAscensionHeight) height = entityData.maxAscensionHeight;
-                    }
-                } else {
-                    if (getFlightProgress() > entityData.startToDescendPercentage) {
-                        if (height > 0) {
-                            float maxDescensionAtFlightPercentage = 1f - entityData.startToDescendPercentage;
-
-                            float descendProgress = 1.0f - getFlightProgress();
-                            float progress = descendProgress * (1 / maxDescensionAtFlightPercentage);
-
-                            height = Math.min(entityData.maxAscensionHeight, progress * entityData.maxAscensionHeight);
-                            if (height < 0) height = 0;
-                        }
-                    }
+            if (canAscendAndDescend()) {
+                if (shouldAscend()) {
+                    ascend();
+                } else if (shouldDescend()) {
+                    descend();
                 }
             }
         }
@@ -116,6 +103,37 @@ public class Projectile extends Entity implements Moveable, Destructible {
             });
             destroyed = true;
         }
+    }
+
+    public void descend() {
+        if (height > 0) {
+            float maxDescensionAtFlightPercentage = 1f - entityData.startToDescendPercentage;
+
+            float descendProgress = 1.0f - getFlightProgress();
+            float progress = descendProgress * (1 / maxDescensionAtFlightPercentage);
+
+            height = Math.min(entityData.maxAscensionHeight, progress * entityData.maxAscensionHeight);
+            if (height < 0) height = 0;
+        }
+    }
+
+    public boolean shouldDescend() {
+        return getFlightProgress() > entityData.startToDescendPercentage;
+    }
+
+    public void ascend() {
+        if (height < entityData.maxAscensionHeight) {
+            height = (getFlightProgress() * entityData.maxAscensionHeight) * (1 / entityData.maxAscensionAtFlightPercentage);
+            if (height >= entityData.maxAscensionHeight) height = entityData.maxAscensionHeight;
+        }
+    }
+
+    public boolean shouldAscend() {
+        return getFlightProgress() < entityData.maxAscensionAtFlightPercentage;
+    }
+
+    public boolean canAscendAndDescend() {
+        return entityData.maxAscensionHeight > 0;
     }
 
     public float getFlightProgress() {
