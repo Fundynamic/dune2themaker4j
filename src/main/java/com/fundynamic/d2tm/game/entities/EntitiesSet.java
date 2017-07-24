@@ -49,14 +49,6 @@ public class EntitiesSet extends HashSet<Entity> {
         return new ArrayList<>(this);
     }
 
-    public boolean hasAny() {
-        return size() > 0;
-    }
-
-    public boolean hasOne() {
-        return size() == 1;
-    }
-
     /**
      *
      * Returns first element or null when size is 0.
@@ -106,6 +98,18 @@ public class EntitiesSet extends HashSet<Entity> {
         return !isEmpty();
     }
 
+    /**
+     * Synonym for hasItems()
+     * @return
+     */
+    public boolean hasAny() {
+        return hasItems();
+    }
+
+    public boolean hasOne() {
+        return size() == 1;
+    }
+
     @Override
     public String toString() {
         String result = "";
@@ -120,12 +124,8 @@ public class EntitiesSet extends HashSet<Entity> {
     }
 
     public EntitiesSet exclude(Entity entityToExclude) {
-        EntitiesSet entitiesSet = new EntitiesSet();
-        for (Entity entity : this) {
-            if (!entity.equals(entityToExclude)) {
-                entitiesSet.add(entity);
-            }
-        }
+        EntitiesSet entitiesSet = EntitiesSet.fromSet(this);
+        entitiesSet.remove(entityToExclude);
         return entitiesSet;
     }
 

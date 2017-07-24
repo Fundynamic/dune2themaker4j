@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -11,6 +12,27 @@ import static org.junit.Assert.assertTrue;
 
 
 public class PlayerTest extends AbstractD2TMTest {
+
+    @Test
+    public void update() {
+        int startingCredits = player.getCredits();
+
+        // update state should do nothing, since no changes in credit
+        player.update(1F);
+
+        Assert.assertEquals(startingCredits, player.getCredits());
+        Assert.assertEquals(startingCredits, player.getAnimatedCredits());
+
+        // Change credit amount
+        player.addCredits(50);
+
+        // update one hundreth of a second, should increase one credit
+        player.update(0.01f);
+
+        Assert.assertEquals(startingCredits + 50, player.getCredits());
+        Assert.assertEquals(startingCredits + 1, player.getAnimatedCredits());
+    }
+
 
     @Test
     public void hasNoAliveEntitiesAtDefault() {

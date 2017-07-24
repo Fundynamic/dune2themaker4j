@@ -27,9 +27,6 @@ public class DebugKeysListener extends AbstractKeyListener {
             Map map = battleField.getMap();
             map.revealAllShroudFor(player);
         }
-        if (key == Input.KEY_S) {
-            entityRepository.playSound();
-        }
     }
 
     @Override

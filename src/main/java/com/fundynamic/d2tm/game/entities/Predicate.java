@@ -2,7 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.entities.predicates.*;
 
-public abstract class Predicate<T> {
+public abstract class Predicate<T extends Entity> {
 
     public abstract boolean test(T t);
 

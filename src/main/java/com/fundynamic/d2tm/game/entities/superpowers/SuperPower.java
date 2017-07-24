@@ -37,9 +37,6 @@ public class SuperPower extends Entity implements Destructible {
     private float timePassed;
     private float timePassedSinceLastDetonation;
 
-    // in memory coordinates to damage
-    private Set<Coordinate> coordinatesToDamage;
-
     public SuperPower(Coordinate coordinate, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(coordinate, null, entityData, player, entityRepository);
         state = SuperPowerState.INITIAL;
@@ -91,15 +88,9 @@ public class SuperPower extends Entity implements Destructible {
     }
 
     public void damageInCircularField(double centerX, double centerY, float maxDistance) {
-        if (coordinatesToDamage == null) {
-            this.coordinatesToDamage = determineCoordinatesToDamage(centerX, centerY, maxDistance);
-        }
-
         float damageAtCenter = 65; // the closer to the center the more damage is dealt, the further away, the less damage is received
-
         Coordinate centerCoordinate = Coordinate.create((float) centerX, (float) centerY);
-
-        EntitiesSet entities = entityRepository.findDestructibleEntities(coordinatesToDamage);
+        EntitiesSet entities = entityRepository.findDestructibleEntitiesWithinDistance(centerCoordinate, maxDistance);
 
         entities.forEach(entity -> {
             if (!entity.isDestructible()) return;
@@ -212,8 +203,13 @@ public class SuperPower extends Entity implements Destructible {
     @Override
     public String toString() {
         return "SuperPower{" +
-                "target=" + target +
-                ", destroyed=" + destroyed +
+                "destroyed=" + destroyed +
+                ", fireStarterCoordinate=" + fireStarterCoordinate +
+                ", target=" + target +
+                ", detonatedAt=" + detonatedAt +
+                ", state=" + state +
+                ", timePassed=" + timePassed +
+                ", timePassedSinceLastDetonation=" + timePassedSinceLastDetonation +
                 '}';
     }
 

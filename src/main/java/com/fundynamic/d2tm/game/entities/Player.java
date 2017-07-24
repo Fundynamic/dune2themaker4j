@@ -120,7 +120,7 @@ public class Player implements Updateable {
         if (animatedCredits != credits) {
             creditsTimer += deltaInSeconds;
             while (creditsTimer > 0.0F && animatedCredits != credits) {
-                creditsTimer -= 0.010;
+                creditsTimer -= 0.01;
                 if (animatedCredits < credits) {
                     animatedCredits += 1;
                 } else {

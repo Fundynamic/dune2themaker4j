@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 
+import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelectionCentered;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibilityCentered;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
@@ -260,18 +261,18 @@ public class EntityRepository {
         );
     }
 
-    public EntitiesSet findEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
-        return filter(
-                Predicate.builder().
-                        ofTypes(types).
-                        vectorWithin(absoluteMapCoordinates)
-        );
-    }
-
     public EntitiesSet findEntitiesOfTypeAtVectorWithinDistance(Coordinate coordinate, float range, EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
+                        withinRange(coordinate, range)
+        );
+    }
+
+    public EntitiesSet findDestructibleEntitiesWithinDistance(Coordinate coordinate, float range) {
+        return filter(
+                Predicate.builder().
+                        isDestructible().
                         withinRange(coordinate, range)
         );
     }
@@ -294,10 +295,6 @@ public class EntityRepository {
 
     public Projectile placeProjectile(Coordinate coordinate, String id, Player player) {
         return (Projectile) placeOnMap(coordinate, EntityType.PROJECTILE, id, player);
-    }
-
-    public Projectile placeSuperPower(Coordinate coordinate, String id, Player player) {
-        return (Projectile) placeOnMap(coordinate, EntityType.SUPERPOWER, id, player);
     }
 
     public SpriteSheet makeSpriteSheet(EntityData entityData, Image recoloredImage) {
@@ -342,10 +339,6 @@ public class EntityRepository {
         superPower.setFireStarterCoordinate(fireStarterCoordinate);
         superPower.setTarget(target);
         return placeOnMap(superPower);
-    }
-
-    public void playSound() {
-        this.entitiesData.getSounds().get(0).sound.play();
     }
 
     public class PassableResult {

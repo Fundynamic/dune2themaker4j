@@ -2,19 +2,20 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.newdawn.slick.SlickException;
 
-import java.util.Arrays;
-
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class EntityRepositoryTest extends AbstractD2TMTest {
 
@@ -135,4 +136,23 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         new EntityRepository(map, new Recolorer(), new EntitiesData());
     }
 
+    @Test
+    public void spawnSuperPower() {
+        EntityData deathhand = entityRepository.getEntityData(EntityType.SUPERPOWER, "DEATHHAND");
+        SuperPower superPower = entityRepository.spawnSuperPower(Coordinate.create(322, 123), deathhand, player, Coordinate.zero());
+
+        // expect location of super power to be 0,0, since it won't matter anyway.
+        // the super power is a script
+        assertThat(superPower.getCoordinate(), is(Coordinate.zero()));
+    }
+
+    @Test
+    public void createSuperWeaponUsingPlaceOnMapThrowsException() {
+        try {
+            entityRepository.placeOnMap(Coordinate.zero(), EntityType.SUPERPOWER, "DEATHHAND", player);
+            fail("Expected exception to be thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Don't use placeOnMap, but use method spawnSuperPower method instead.", e.getMessage());
+        }
+    }
 }
