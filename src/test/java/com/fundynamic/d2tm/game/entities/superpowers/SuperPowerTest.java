@@ -21,6 +21,7 @@ public class SuperPowerTest extends AbstractD2TMTest {
         EntityData weaponEntityData = entityRepository.getEntityData(EntityType.SUPERPOWER, "DEATHHAND");
         superPower = new SuperPower(new Coordinate(0, 0), weaponEntityData, player, entityRepository);
         superPower.setFireStarterCoordinate(Coordinate.create(100, 100));
+        superPower.setTarget(Coordinate.create(50,50));
     }
 
     @Test
@@ -65,4 +66,5 @@ public class SuperPowerTest extends AbstractD2TMTest {
         superPower.update(0.1f);
         Assert.assertEquals(SuperPower.SuperPowerState.DONE, superPower.getState());
     }
+
 }
