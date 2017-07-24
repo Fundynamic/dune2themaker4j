@@ -30,26 +30,13 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void leftClicked() {
-        Coordinate target = getAbsoluteCoordinateTopLeftOfTarget();
+        Coordinate target = battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates);
 
         Coordinate startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
         startCoordinate = startCoordinate.min(entityDataToPlace.getHalfSize());
 
         entityRepository.spawnSuperPower(startCoordinate, entityDataToPlace, player, target);
     }
-
-    public Coordinate getAbsoluteCoordinateTopLeftOfTarget() {
-        // first get absolute viewport coordinates, we can calculate on the battlefield with that
-        Coordinate viewportCoordinate = battleField.translateScreenToViewportCoordinate(mouseCoordinates);
-
-        // now substract half of the structure to place, so we make the structure to place center beneath the mouse
-        Vector2D halfSize = entityDataToPlace.getHalfSize();
-        Coordinate topLeftOfStructure = viewportCoordinate.min(halfSize);
-
-        Cell topLeftCellOfStructure = battleField.getCellByAbsoluteViewportCoordinate(topLeftOfStructure);
-        return topLeftCellOfStructure.getCoordinates();
-    }
-
 
     @Override
     public void rightClicked() {

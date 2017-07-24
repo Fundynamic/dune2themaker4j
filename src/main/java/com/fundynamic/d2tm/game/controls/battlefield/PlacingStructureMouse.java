@@ -47,7 +47,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         // tell battlefield of the created entity
         battleField.entityPlacedOnMap(
                 entityRepository.placeOnMap( // place entity on map
-                        getAbsoluteCoordinateTopLeftOfStructureToPlace(),
+                        battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates),
                         entityDataToPlace,
                         mouse.getControllingPlayer()
                 )
@@ -168,7 +168,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         // moving the mouse. So this won't last unfortunately. (or we should do some kind of message thing so this
         // class knows the state changed and should re-calculate or something like that)
 
-        Coordinate absoluteMapCoordinateOfTopleftOfStructure = getAbsoluteCoordinateTopLeftOfStructureToPlace();
+        Coordinate absoluteMapCoordinateOfTopleftOfStructure = battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates);
 
         // first determine all cells that will be occupied
         mapCoordinatesForEntityToPlace = new ArrayList<>();
@@ -181,18 +181,6 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
                         .map(mapCoordinate -> new PlaceableMapCoordinateCandidate(mapCoordinate, PlaceableState.PLACEABLE))
                         .collect(toList());
 
-    }
-
-    public Coordinate getAbsoluteCoordinateTopLeftOfStructureToPlace() {
-        // first get absolute viewport coordinates, we can calculate on the battlefield with that
-        Coordinate viewportCoordinate = battleField.translateScreenToViewportCoordinate(mouseCoordinates);
-
-        // now substract half of the structure to place, so we make the structure to place center beneath the mouse
-        Vector2D halfSize = entityDataToPlace.getHalfSize();
-        Coordinate topLeftOfStructure = viewportCoordinate.min(halfSize);
-
-        Cell topLeftCellOfStructure = battleField.getCellByAbsoluteViewportCoordinate(topLeftOfStructure);
-        return topLeftCellOfStructure.getCoordinates();
     }
 
     @Override
