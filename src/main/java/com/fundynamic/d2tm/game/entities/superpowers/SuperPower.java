@@ -21,29 +21,32 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class SuperPower extends Entity implements Destructible {
 
-    private Coordinate detonatedAt;
-    private Set<Coordinate> coordinatesToDamage;
-    private Graphics graphics;
-
+    // these are actually Deathhand states (more abstract would be SuperPower states)
     enum SuperPowerState {
         INITIAL, LAUNCHED, EXPLODING, DONE
     }
 
-    private Coordinate target;
     private boolean destroyed;
-    private Coordinate fireStarterCoordinate;
+
+    private Coordinate fireStarterCoordinate;   // where to start launching missile
+    private Coordinate target;                  // where to head to
+    private Coordinate detonatedAt;             // where the projectile exploded (could theoretically be a different coordinate)
+
     private SuperPowerState state;
+
     private float timePassed;
     private float timePassedSinceLastDetonation;
 
-    public SuperPower(Coordinate mapCoordinates, EntityData entityData, Player player, EntityRepository entityRepository) {
-        super(mapCoordinates, null, entityData, player, entityRepository);
-        target = mapCoordinates;
+    // in memory coordinates to damage
+    private Set<Coordinate> coordinatesToDamage;
+
+    public SuperPower(Coordinate coordinate, EntityData entityData, Player player, EntityRepository entityRepository) {
+        super(coordinate, null, entityData, player, entityRepository);
         state = SuperPowerState.INITIAL;
     }
 
     // TODO: onCreate!?
-    private static float RingOfFireTotalTimeDuration = 1;
+    public static float RingOfFireTotalTimeDuration = 1f; // 1 second explosion
 
     @Override
     public void update(float deltaInSeconds) {
@@ -184,7 +187,6 @@ public class SuperPower extends Entity implements Destructible {
     @Override
     public void render(Graphics graphics, int x, int y) {
         // NA
-        this.graphics = graphics;
     }
 
     @Override
@@ -231,4 +233,7 @@ public class SuperPower extends Entity implements Destructible {
         return target;
     }
 
+    public SuperPowerState getState() {
+        return state;
+    }
 }
