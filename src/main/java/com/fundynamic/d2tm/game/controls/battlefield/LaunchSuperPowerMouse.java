@@ -12,9 +12,26 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
+/**
+ *
+ * <h2>When activated?</h2>
+ * <p>
+ * Whenever a super power is selected to deploy on the battlefield.
+ * </p>
+ * <h2>What does this do?</h2>
+ * <h3>Left-click</h3>
+ * <p>
+ * Deploys super power on battlefield and initiates it.
+ * </p>
+ * <h3>Right-click</h3>
+ * <p>
+ * Goes back to NormalMouse mode.
+ * </p>
+ *
+ */
 public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
-    private EntityData entityDataToPlace;
+    private EntityData superPowerEntityData;
     private Entity entityWhoConstructsIt;
     private EntityRepository entityRepository;
 
@@ -22,7 +39,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
         super(battleField);
         this.entityRepository = battleField.getEntityRepository();
 
-        this.entityDataToPlace = placementBuildableEntity.getEntityData();
+        this.superPowerEntityData = placementBuildableEntity.getEntityData();
         this.entityWhoConstructsIt = placementBuildableEntity.getEntityWhoConstructsThis();
 
         mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
@@ -30,12 +47,16 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void leftClicked() {
-        Coordinate target = battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates);
+        Coordinate target = battleField.getAbsoluteCoordinateTopLeftOfTarget(superPowerEntityData, mouseCoordinates);
 
-        Coordinate startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
-        startCoordinate = startCoordinate.min(entityDataToPlace.getHalfSize());
+        Coordinate startCoordinate = Coordinate.zero();
+        if (entityWhoConstructsIt != null) {
+            startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
+        }
 
-        entityRepository.spawnSuperPower(startCoordinate, entityDataToPlace, player, target);
+        startCoordinate = startCoordinate.min(superPowerEntityData.getHalfSize());
+
+        entityRepository.spawnSuperPower(startCoordinate, superPowerEntityData, player, target);
     }
 
     @Override
@@ -63,7 +84,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
     @Override
     public String toString() {
         return "PlacingStructureMouse{" +
-                "entityDataToPlace=" + entityDataToPlace +
+                "superPowerEntityData=" + superPowerEntityData +
                 '}';
     }
 

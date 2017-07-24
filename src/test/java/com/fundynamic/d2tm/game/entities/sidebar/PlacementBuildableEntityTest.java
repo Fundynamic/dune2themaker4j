@@ -17,7 +17,8 @@ public class PlacementBuildableEntityTest {
     @Before
     public void setUp() {
         player = new Player("Human player", Recolorer.FactionColor.BLUE);
-        entityData = new EntityData();
+
+        entityData = new EntityData(); // the thing that is being 'built'
         entityData.buildTimeInSeconds = 4.0f;
     }
 

@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
@@ -131,6 +132,10 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     public boolean isFocusable() {
         return this instanceof Focusable;
+    }
+
+    public boolean isSuperPower() {
+        return this instanceof SuperPower;
     }
 
     /**

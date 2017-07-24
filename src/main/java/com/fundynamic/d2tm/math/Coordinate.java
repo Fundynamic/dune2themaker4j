@@ -18,6 +18,10 @@ public class Coordinate extends Vector2D {
         return new Coordinate(x, y);
     }
 
+    public static Coordinate zero() {
+        return create(0,0);
+    }
+
     public Coordinate(Vector2D vec) {
         this(vec.getX(), vec.getY());
     }
