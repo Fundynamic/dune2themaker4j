@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
@@ -56,7 +57,10 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
         startCoordinate = startCoordinate.min(superPowerEntityData.getHalfSize());
 
-        entityRepository.spawnSuperPower(startCoordinate, superPowerEntityData, player, target);
+        SuperPower superPower = entityRepository.spawnSuperPower(startCoordinate, superPowerEntityData, player, target);
+
+        // tell battlefield of the created entity
+        battleField.entityPlacedOnMap(superPower);
     }
 
     @Override
