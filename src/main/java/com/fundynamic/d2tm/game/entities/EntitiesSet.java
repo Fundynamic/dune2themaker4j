@@ -99,7 +99,7 @@ public class EntitiesSet extends HashSet<Entity> {
     }
 
     /**
-     * Synonym for hasItems()
+     * Synonym for {@link #hasItems()}
      * @return
      */
     public boolean hasAny() {
