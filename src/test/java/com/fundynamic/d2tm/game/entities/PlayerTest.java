@@ -20,8 +20,8 @@ public class PlayerTest extends AbstractD2TMTest {
         // update state should do nothing, since no changes in credit
         player.update(1F);
 
-        Assert.assertEquals(startingCredits, player.getCredits());
-        Assert.assertEquals(startingCredits, player.getAnimatedCredits());
+        assertEquals(startingCredits, player.getCredits());
+        assertEquals(startingCredits, player.getAnimatedCredits());
 
         // Change credit amount
         player.addCredits(50);
@@ -29,8 +29,8 @@ public class PlayerTest extends AbstractD2TMTest {
         // update one hundreth of a second, should increase one credit
         player.update(0.01f);
 
-        Assert.assertEquals(startingCredits + 50, player.getCredits());
-        Assert.assertEquals(startingCredits + 1, player.getAnimatedCredits());
+        assertEquals(startingCredits + 50, player.getCredits());
+        assertEquals(startingCredits + 1, player.getAnimatedCredits());
     }
 
 

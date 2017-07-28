@@ -29,7 +29,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
-import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class PlayingState extends BasicGameState {

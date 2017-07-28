@@ -11,11 +11,12 @@ import java.util.List;
 
 public class TestableEntity extends Entity {
 
+    private String name;
+    private int amountOfMethodCalled;
+
     public TestableEntity(Coordinate coordinate, SpriteSheet spritesheet, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(coordinate, spritesheet, entityData, player, entityRepository);
     }
-
-    private String name;
 
     public String getName() {
         return name;
@@ -25,8 +26,6 @@ public class TestableEntity extends Entity {
         this.name = name;
         return this;
     }
-
-    private int v;
 
     @Override
     public EntityType getEntityType() {
@@ -57,19 +56,19 @@ public class TestableEntity extends Entity {
     }
 
     public Void eventMethod() {
-        v++;
+        amountOfMethodCalled++;
         return null;
     }
 
     public int getAmountEventMethodCalled() {
-        return v;
+        return amountOfMethodCalled;
     }
 
     @Override
     public String toString() {
         return "TestableEntity{" +
                 "name='" + name + '\'' +
-                ", v=" + v +
+                ", amountOfMethodCalled=" + amountOfMethodCalled +
                 '}';
     }
 }

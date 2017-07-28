@@ -37,13 +37,14 @@ public class SuperPower extends Entity implements Destructible {
     private float timePassed;
     private float timePassedSinceLastDetonation;
 
+    public static float RingOfFireTotalTimeDuration = 1f; // 1 second explosion
+
     public SuperPower(Coordinate coordinate, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(coordinate, null, entityData, player, entityRepository);
         state = SuperPowerState.INITIAL;
     }
 
     // TODO: onCreate!?
-    public static float RingOfFireTotalTimeDuration = 1f; // 1 second explosion
 
     @Override
     public void update(float deltaInSeconds) {
@@ -82,6 +83,9 @@ public class SuperPower extends Entity implements Destructible {
 
                 break;
             case DONE:
+                destroyed = true;
+                break;
+            default:
                 destroyed = true;
                 break;
         }

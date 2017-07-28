@@ -148,7 +148,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
     @Test
     public void getFirst() {
-        Assert.assertNotNull(entitiesSet.getFirst()); // no order is guaranteed...
+        assertNotNull(entitiesSet.getFirst()); // no order is guaranteed...
     }
 
     @Test

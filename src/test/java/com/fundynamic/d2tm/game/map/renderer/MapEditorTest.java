@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.map.renderer;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;

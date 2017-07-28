@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.map;
 
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.graphics.Shroud;

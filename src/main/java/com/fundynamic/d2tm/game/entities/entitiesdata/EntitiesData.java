@@ -1,10 +1,10 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
-import com.fundynamic.d2tm.game.entities.entitiesdata.ini.*;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.entitiesdata.ini.*;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.types.SoundData;
 import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.Image;
@@ -286,10 +286,8 @@ public class EntitiesData {
     }
 
     public String getAndEnsureWeaponId(String weaponId, String id) {
-        if (idProvided(weaponId)) {
-            if (!tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
-                throw new IllegalArgumentException("entity " + id + " property [Weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
-            }
+        if (idProvided(weaponId) && !tryGetEntityData(EntityType.PROJECTILE, weaponId)) {
+            throw new IllegalArgumentException("entity " + id + " property [Weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
         }
         return weaponId;
     }

@@ -9,14 +9,12 @@ import org.newdawn.slick.Input;
 
 public class DebugKeysListener extends AbstractKeyListener {
 
-    private final EntityRepository entityRepository;
     private final BattleField battleField;
     private final Player player;
 
     public DebugKeysListener(BattleField battleField, Player player, EntityRepository entityRepository) {
         this.battleField = battleField;
         this.player = player;
-        this.entityRepository = entityRepository;
     }
 
 

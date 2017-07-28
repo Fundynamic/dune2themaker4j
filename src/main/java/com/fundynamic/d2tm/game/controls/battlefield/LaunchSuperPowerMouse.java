@@ -81,11 +81,6 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
     }
 
     @Override
-    public void movedTo(Vector2D coordinates) {
-        super.movedTo(coordinates);
-    }
-
-    @Override
     public String toString() {
         return "PlacingStructureMouse{" +
                 "superPowerEntityData=" + superPowerEntityData +

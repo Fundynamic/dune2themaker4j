@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.FadingSelectionCentered;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibilityCentered;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
@@ -24,8 +23,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**

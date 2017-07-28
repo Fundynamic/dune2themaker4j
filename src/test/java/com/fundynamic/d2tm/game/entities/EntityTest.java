@@ -104,7 +104,7 @@ public class EntityTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void Entity1EmitsDummyEventCallsExpectedMethodAndRaisesValue() {
+    public void entity1EmitsDummyEventCallsExpectedMethodAndRaisesValue() {
         entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
 
         // at first we expect no methods have been called yet (no events happened)
@@ -146,7 +146,7 @@ public class EntityTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void Entity1EmitsDummyEventCallsExpectedMethodAndRaisesValueAtMultipleSubscribers() {
+    public void entity1EmitsDummyEventCallsExpectedMethodAndRaisesValueAtMultipleSubscribers() {
         TestableEntity entity3 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("Entity3");
 
@@ -166,7 +166,7 @@ public class EntityTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void SubscribingMoreThanOnceOnSameEntityWilCallMethodMultipleTimes() {
+    public void subscribingMoreThanOnceOnSameEntityWilCallMethodMultipleTimes() {
         // woops subscribing too much
         entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());
         entity1.onEvent(EventType.DUMMY, entity2, s -> s.eventMethod());

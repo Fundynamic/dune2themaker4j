@@ -8,7 +8,6 @@ import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 
-import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;

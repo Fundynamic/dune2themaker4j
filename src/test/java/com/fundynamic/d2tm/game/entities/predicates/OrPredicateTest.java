@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.entities.Predicate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class OrPredicateTest {
