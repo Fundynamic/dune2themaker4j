@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.controls;
+package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;

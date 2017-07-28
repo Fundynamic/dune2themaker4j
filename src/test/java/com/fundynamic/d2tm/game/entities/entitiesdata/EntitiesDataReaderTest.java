@@ -1,15 +1,20 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.types.SoundData;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import java.util.List;
+
 import static com.fundynamic.d2tm.game.AbstractD2TMTest.makeEntitiesDataReader;
+import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -35,6 +40,18 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
+    public void readsSoundsFromIniFile() {
+        readFromTestRulesIni();
+
+        List<SoundData> sounds = entitiesData.getSounds();
+
+        Assert.assertEquals(sounds.size(), 1);
+
+        SoundData soundData = sounds.get(0);
+        Assert.assertNotNull(soundData.sound);
+    }
+
+    @Test
     public void readsBuildingStructureFromIniFile() {
         readFromTestRulesIni();
 
@@ -52,7 +69,7 @@ public class EntitiesDataReaderTest {
 
         // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
         // therefor we do times 3!
-        float value = ((Game.TILE_SIZE) * 3) + Game.HALF_TILE; // we can do half-tile because it is a 64x64 structure
+        float value = ((TILE_SIZE) * 3) + HALF_TILE; // we can do half-tile because it is a 64x64 structure
         assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
     }
 
@@ -68,27 +85,47 @@ public class EntitiesDataReaderTest {
     public void readsSimpleStructureFromIniFile() {
         readFromTestRulesIni();
 
-        EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
-        assertThat(constyard, is(not(nullValue())));
-        assertThat(constyard.hitPoints, is(283));
-        assertThat(constyard.image, is(not(nullValue())));
-        assertThat(constyard.getWidth(), is(64));
-        assertThat(constyard.getHeight(), is(64));
-        assertThat(constyard.sight, is(4));
-        assertThat(constyard.explosionId, is("BOOM"));
-        assertThat(constyard.buildIcon, is(not(nullValue())));
-        assertThat(constyard.entityBuilderType, is(EntityBuilderType.NONE));
-        assertThat(constyard.buildTimeInSeconds, is(5.0f));
-        assertThat(constyard.buildCost, is(250));
+        EntityData windtrap = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
+        assertThat(windtrap, is(not(nullValue())));
+        assertThat(windtrap.hitPoints, is(283));
+        assertThat(windtrap.image, is(not(nullValue())));
+        assertThat(windtrap.type, is(EntityType.STRUCTURE));
+        assertThat(windtrap.getWidth(), is(64));
+        assertThat(windtrap.getHeight(), is(64));
+        assertThat(windtrap.sight, is(4));
+        assertThat(windtrap.explosionId, is("BOOM"));
+        assertThat(windtrap.buildIcon, is(not(nullValue())));
+        assertThat(windtrap.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(windtrap.buildTimeInSeconds, is(5.0f));
+        assertThat(windtrap.buildCost, is(250));
+    }
+
+    @Test
+    public void readsSuperPowerFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData deathhand = entitiesData.getEntityData(EntityType.SUPERPOWER, EntitiesData.DEATHHAND);
+
+        assertThat(deathhand, is(not(nullValue())));
+        assertThat(deathhand.type, is(EntityType.SUPERPOWER));
+        assertThat(deathhand.buildIcon, is(not(nullValue())));
+        assertThat(deathhand.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(deathhand.buildTimeInSeconds, is(5.0f));
+        assertThat(deathhand.buildCost, is(0));
+        assertThat(deathhand.weaponId, is("RIFLE"));
+        assertThat(deathhand.hasSound(), is(false));
+        assertThat(deathhand.hasExplosionId(), is(true));
+        assertThat(deathhand.explosionId, is("BOOM"));
     }
 
     @Test
     public void readsUnitFromIniFile() {
         readFromTestRulesIni();
 
-        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, "QUAD");
+        EntityData quad = entitiesData.getEntityData(EntityType.UNIT, EntitiesData.QUAD);
         assertThat(quad, is(not(nullValue())));
         assertThat(quad.image, is(not(nullValue())));
+        assertThat(quad.type, is(EntityType.UNIT));
         assertThat(quad.hitPoints, is(434));
         assertThat(quad.moveSpeed, is(1.5F));
         assertThat(quad.turnSpeed, is(0.75F));
@@ -110,11 +147,17 @@ public class EntitiesDataReaderTest {
         EntityData rifle = entitiesData.getEntityData(EntityType.PROJECTILE, "RIFLE");
         assertThat(rifle, is(not(nullValue())));
         assertThat(rifle.image, is(not(nullValue())));
+        assertThat(rifle.type, is(EntityType.PROJECTILE));
         assertThat(rifle.getWidth(), is(6));
         assertThat(rifle.getHeight(), is(6));
+        assertThat(rifle.hasExplosionId(), is(true));
         assertThat(rifle.explosionId, is("BOOM"));
         assertThat(rifle.moveSpeed, is(160f));
         assertThat(rifle.damage, is(28));
+        assertThat(rifle.hasSound(), is(true));
+        assertThat(rifle.maxAscensionHeight, is(83));
+        assertThat(rifle.maxAscensionAtFlightPercentage, is(0.23F));
+        assertThat(rifle.startToDescendPercentage, is(0.87F));
     }
 
     @Test
@@ -123,9 +166,11 @@ public class EntitiesDataReaderTest {
 
         EntityData boom = entitiesData.getEntityData(EntityType.PARTICLE, "BOOM");
         assertThat(boom, is(not(nullValue())));
+        assertThat(boom.type, is(EntityType.PARTICLE));
         assertThat(boom.image, is(not(nullValue())));
         assertThat(boom.getWidth(), is(48));
         assertThat(boom.getHeight(), is(48));
+        assertThat(boom.hasSound(), is(true));
     }
 
     @Test
@@ -134,7 +179,7 @@ public class EntitiesDataReaderTest {
             entitiesData = entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules-with-wrong-weaponid-unit.ini"));
             fail("Expected to have thrown an illegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("unit QUAD [weapon] refers to non-existing [WEAPONS/THIS_ID_DOES_NOT_EXIST]"));
+            assertThat(e.getMessage(), is("entity QUAD property [Weapon] refers to non-existing [WEAPONS/THIS_ID_DOES_NOT_EXIST]"));
         }
     }
 

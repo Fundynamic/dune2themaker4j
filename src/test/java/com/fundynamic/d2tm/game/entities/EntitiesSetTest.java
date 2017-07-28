@@ -4,10 +4,12 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
 import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import com.fundynamic.d2tm.math.Vector2D;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
@@ -16,7 +18,7 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class EntitiesSetTest extends AbstractD2TMTest {
@@ -29,6 +31,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
     private int destroyers;
     private int moveableUnitsOfPlayerOne;
     private Coordinate topLeftFirstQuad;
+    private Unit quad;
 
     @Before
     public void setUp() throws SlickException {
@@ -41,7 +44,8 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
         // player one has 4 units and 2 structures
         topLeftFirstQuad = Coordinate.create(320, 320);
-        entitiesSet.add(makeUnit(player, topLeftFirstQuad, "QUAD"));
+        quad = makeUnit(player, topLeftFirstQuad, "QUAD");
+        entitiesSet.add(quad);
         entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(64, 0)), "QUAD"));
         entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(0, 64)), "QUAD"));
         entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(640, 640)), "QUAD"));
@@ -129,6 +133,28 @@ public class EntitiesSetTest extends AbstractD2TMTest {
                         )
                 );
         assertEquals(3, result.size());
+    }
+
+    @Test
+    public void exclude() {
+        assertTrue(entitiesSet.contains(quad));
+
+        // Act
+        EntitiesSet newSet = entitiesSet.exclude(quad);
+
+        assertTrue(entitiesSet.contains(quad));
+        assertFalse(newSet.contains(quad));
+    }
+
+    @Test
+    public void getFirst() {
+        assertNotNull(entitiesSet.getFirst()); // no order is guaranteed...
+    }
+
+    @Test
+    public void hasItemsAndHasAny() {
+        assertTrue(entitiesSet.hasItems());
+        assertTrue(entitiesSet.hasAny());
     }
 
     class DestroyedEntity extends Entity implements Destructible {

@@ -1,6 +1,6 @@
-package com.fundynamic.d2tm.game.entities;
+package com.fundynamic.d2tm.game.types;
 
-import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
@@ -13,9 +13,11 @@ import org.newdawn.slick.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 /**
  * <h1>Overview</h1>
- * This is an object representation of an Entity within a `rules.ini` file. The {@link EntitiesData} class contains
+ * This is an object representation of an Entity. The {@link EntitiesData} class contains
  * all objects after reading the rules.ini file. The interpretation of the file and the construction of an {@link EntityData} class
  * is done by the {@link EntitiesDataReader}.
  *
@@ -26,7 +28,7 @@ import java.util.List;
  *
  *      [STRUCTURES/CONSTYARD]
  *      image=structures/2x2_constyard.png
- *      hitpoints=2000
+ *      hitPoints=2000
  *      width=64
  *      height=64
  *      sight=5
@@ -39,7 +41,10 @@ public class EntityData {
 
     public static final String UNKNOWN = "UNKNOWN";
 
-    public String name;             // the name used in the INI file (ie [QUAD] without [])
+    /**
+     * the name used in the INI file (ie [QUAD] without [])
+     */
+    public String name;
 
     // Kind of entity it reflects
     public EntityType type;
@@ -61,6 +66,10 @@ public class EntityData {
     private int height;             // in pixels
     private int widthInCells;       // in cells, derived from pixels
     private int heightInCells;      // in cells, derived from pixels
+
+    public int maxAscensionHeight; // in pixels, how high a projectile can ascend when 'launched'
+    public float startToDescendPercentage; // normalised value (between 0 and 1.0), when should descend be initiated?
+    public float maxAscensionAtFlightPercentage; // normalised value (between 0 and 1.0), when should the projectile be at maxAscensionHeight during flight?
 
     public int sight;
 
@@ -90,6 +99,8 @@ public class EntityData {
 
     public boolean isHarvester;
 
+    public SoundData soundData = null;          // for playing sound if required
+
     public EntityData() {
     }
 
@@ -105,12 +116,12 @@ public class EntityData {
 
     public void setWidth(int width) {
         this.width = width;
-        widthInCells = (int) Math.ceil((float) width / Game.TILE_SIZE);
+        widthInCells = (int) Math.ceil((float) width / TILE_SIZE);
     }
 
     public void setHeight(int height) {
         this.height = height;
-        heightInCells = (int) Math.ceil((float) height / Game.TILE_SIZE);
+        heightInCells = (int) Math.ceil((float) height / TILE_SIZE);
     }
 
     public int getWidth() {
@@ -188,6 +199,10 @@ public class EntityData {
         return !UNKNOWN.equals(weaponId);
     }
 
+    public boolean hasSound() {
+        return soundData != null;
+    }
+
     public String getWeaponIdKey() {
         return constructKey(EntityType.PROJECTILE, weaponId);
     }
@@ -239,6 +254,10 @@ public class EntityData {
         return EntityType.PARTICLE.equals(this.type);
     }
 
+    public boolean isTypeSuperPower() {
+        return EntityType.SUPERPOWER.equals(this.type);
+    }
+
     public boolean isTypeProjectile() {
         return EntityType.PROJECTILE.equals(this.type);
     }
@@ -253,8 +272,8 @@ public class EntityData {
         List<MapCoordinate> result = new ArrayList<>(widthInCells * heightInCells);
         for (int x = 0; x < widthInCells; x++) {
             for (int y = 0; y < heightInCells; y++) {
-                int vecX = coordinate.getXAsInt() + (x * Game.TILE_SIZE);
-                int vecY = coordinate.getYAsInt() + (y * Game.TILE_SIZE);
+                int vecX = coordinate.getXAsInt() + (x * TILE_SIZE);
+                int vecY = coordinate.getYAsInt() + (y * TILE_SIZE);
                 result.add(Coordinate.create(vecX, vecY).toMapCoordinate());
             }
         }
@@ -273,7 +292,7 @@ public class EntityData {
         List<MapCoordinate> result = getAllCellsAsCoordinates(coordinate);
 
         List<Coordinate> centered = new ArrayList<>(result.size());
-        Vector2D halfCell = Vector2D.create(Game.TILE_SIZE / 2, Game.TILE_SIZE / 2);
+        Vector2D halfCell = Vector2D.create(TILE_SIZE / 2, TILE_SIZE / 2);
         for (MapCoordinate resultCoordinate : result) {
             centered.add(resultCoordinate.toCoordinate().add(halfCell));
         }

@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class SingleEntityBuilder implements EntityBuilder {
     public SingleEntityBuilder(List<EntityData> entityDatasToBuild, Entity constructingForEntity, Player player) {
         for (EntityData entityDataToBuild : entityDatasToBuild) {
             // TODO: make more flexible!!
-            if (entityDataToBuild.isTypeStructure()) {
+            if (entityDataToBuild.isTypeStructure() || entityDataToBuild.isTypeSuperPower()) {
                 buildableEntities.add(new PlacementBuildableEntity(entityDataToBuild, player, constructingForEntity));
             } else {
                 buildableEntities.add(new SpawningBuildableEntity(entityDataToBuild, player));

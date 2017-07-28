@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.units.UnitFacings;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
@@ -16,6 +17,8 @@ public class Projectile extends Entity implements Moveable, Destructible {
     // state
     private Coordinate target;
     private boolean destroyed;
+    private float height = 0F; // supposed 'height' of projectile
+    private float distanceCalculatedALaunch;
 
     public Projectile(Coordinate mapCoordinates, SpriteSheet spriteSheet, Player player,
                       EntityData entityData, EntityRepository entityRepository) {
@@ -32,7 +35,19 @@ public class Projectile extends Entity implements Moveable, Destructible {
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
-        graphics.drawImage(sprite, x, y);
+
+        if (height > 0) {
+            drawShadowImage(graphics, x, y, sprite);
+        }
+
+        graphics.drawImage(sprite, x, (y - height));
+    }
+
+    public void drawShadowImage(Graphics graphics, int x, int y, Image sprite) {
+        sprite.setImageColor(0, 0, 0, 0.5f); // set color of image to black, transparent
+        int shadowX = x + Math.round(height / 8);
+        graphics.drawImage(sprite, shadowX, y);
+        sprite.setImageColor(1, 1, 1, 1); // restore drawing to opaque
     }
 
     public Image getSprite() {
@@ -60,9 +75,17 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
             Vector2D delta = normalised.scale(timeCorrectedSpeed);
             coordinate = coordinate.add(delta);
+
+            if (canAscendAndDescend()) {
+                if (shouldAscend()) {
+                    ascend();
+                } else if (shouldDescend()) {
+                    descend();
+                }
+            }
         }
 
-        if (target.distance(coordinate) < 0.1F) {
+        if (getCurrentDistanceToTarget() < 0.1F) {
             if (entityData.hasExplosionId()) {
                 entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
             }
@@ -82,9 +105,50 @@ public class Projectile extends Entity implements Moveable, Destructible {
         }
     }
 
+    public void descend() {
+        if (height > 0) {
+            float maxDescensionAtFlightPercentage = 1f - entityData.startToDescendPercentage;
+
+            float descendProgress = 1.0f - getFlightProgress();
+            float progress = descendProgress * (1 / maxDescensionAtFlightPercentage);
+
+            height = Math.min(entityData.maxAscensionHeight, progress * entityData.maxAscensionHeight);
+            if (height < 0) height = 0;
+        }
+    }
+
+    public boolean shouldDescend() {
+        return getFlightProgress() > entityData.startToDescendPercentage;
+    }
+
+    public void ascend() {
+        if (height < entityData.maxAscensionHeight) {
+            height = (getFlightProgress() * entityData.maxAscensionHeight) * (1 / entityData.maxAscensionAtFlightPercentage);
+            if (height >= entityData.maxAscensionHeight) height = entityData.maxAscensionHeight;
+        }
+    }
+
+    public boolean shouldAscend() {
+        return getFlightProgress() < entityData.maxAscensionAtFlightPercentage;
+    }
+
+    public boolean canAscendAndDescend() {
+        return entityData.maxAscensionHeight > 0;
+    }
+
+    public float getFlightProgress() {
+        return 1.0f - (getCurrentDistanceToTarget() / distanceCalculatedALaunch);
+    }
+
+    public float getCurrentDistanceToTarget() {
+        return target.distance(coordinate);
+    }
+
     @Override
-    public void moveTo(Vector2D target) {
-        this.target = new Coordinate(target);
+    public void moveTo(Vector2D moveToTarget) {
+        Coordinate newTarget = new Coordinate(moveToTarget);
+        distanceCalculatedALaunch = target.distance(newTarget);
+        this.target = newTarget;
     }
 
     @Override

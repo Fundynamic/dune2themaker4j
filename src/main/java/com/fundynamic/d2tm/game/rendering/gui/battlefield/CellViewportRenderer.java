@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 /**
  * Responsible for selecting cells in view and calling the renderer for those drawing positions.
  *
@@ -17,9 +19,9 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
     private final int cellsThatFitVertically;
     private final Map map;
 
-    public CellViewportRenderer(Map map, int tileSize, Vector2D windowDimensions) {
+    public CellViewportRenderer(Map map, Vector2D windowDimensions) {
         this.map = map;
-        this.tileSize = tileSize;
+        this.tileSize = TILE_SIZE;
         cellsThatFitHorizontally = (windowDimensions.getXAsInt() / tileSize) + 1;
         cellsThatFitVertically = (windowDimensions.getYAsInt() / tileSize) + 1;
     }

@@ -17,4 +17,10 @@ public class CoordinateIsWithinEntity extends Predicate<Entity> {
         return entity.isVectorWithin(vector);
     }
 
+    @Override
+    public String toString() {
+        return "CoordinateIsWithinEntity{" +
+                "vector=" + vector +
+                '}';
+    }
 }

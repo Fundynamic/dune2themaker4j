@@ -8,21 +8,30 @@ import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Bootstrap;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 
 public class Game extends StateBasedGame {
 
-    public static final int SCREEN_WIDTH = 800;
-    public static final int SCREEN_HEIGHT = 600;
+    public static final String GAME_TITLE = "Dune II - The Maker";
 
-    public static final int TILE_SIZE = 32;
-    public static final int HALF_TILE = TILE_SIZE / 2;
+    public static final int SCREEN_WIDTH = 1024;
+    public static final int SCREEN_HEIGHT = 768;
+    public static final boolean SHOW_FPS = false;
+    public static final boolean VSYNC = true;
 
-    public static final boolean DEBUG_INFO = false;
-    // if true, it speeds up some things so we can demo it faster
-    public static final boolean RECORDING_VIDEO = false;
+    public static boolean DEBUG_INFO = false;
+    // if 'recording' is passed as argument then the game will use 'demo settings' to make it run faster
+    public static boolean RECORDING_VIDEO = false;
+    // if 'fullscreen' is passed as argument then the game will be rendered in fullscreen
+    public static boolean FULLSCREEN = false;
 
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -42,8 +51,8 @@ public class Game extends StateBasedGame {
                 )
         );
 
-        container.setShowFPS(false);
-        container.setVSync(true);
+        container.setShowFPS(SHOW_FPS);
+        container.setVSync(VSYNC);
 
         PlayingState playingState = new PlayingState(
                 container,
@@ -52,15 +61,31 @@ public class Game extends StateBasedGame {
                 new Shroud(
                     imageRepository.loadAndCache("shroud_edges.png"),
                         TILE_SIZE
-                ),
-                TILE_SIZE
+                )
         );
+
+        SoundStore.get().setSoundVolume(0.2f);
+        SoundStore.get().setMusicVolume(0.5f);
 
         addState(playingState);
     }
 
+    /**
+     * Main entry point
+     * @param args
+     */
     public static void main(String[] args) {
-        Bootstrap.runAsApplication(new Game("Dune II - The Maker"), SCREEN_WIDTH, SCREEN_HEIGHT, false);
+        List<String> argsList = Arrays.asList(args);
+        RECORDING_VIDEO = argsList.contains("recording");
+        DEBUG_INFO = argsList.contains("debug");
+        FULLSCREEN = argsList.contains("fullscreen");
+
+        Bootstrap.runAsApplication(
+                new Game(GAME_TITLE),
+                SCREEN_WIDTH,
+                SCREEN_HEIGHT,
+                FULLSCREEN
+            );
     }
 
 }

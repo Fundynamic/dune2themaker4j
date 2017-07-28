@@ -3,9 +3,9 @@ package com.fundynamic.d2tm.game.entities.particle;
 
 import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -16,6 +16,7 @@ public class Particle extends Entity implements Destructible {
     private boolean destroyed = false;
     private float sprite = 0;
     private float animationSpeed;
+    private float alpha = 1.0f;
 
     public Particle(Coordinate coordinate, SpriteSheet spriteSheet, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate, spriteSheet, entityData, null, entityRepository);
@@ -31,7 +32,9 @@ public class Particle extends Entity implements Destructible {
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
+        sprite.setImageColor(1, 1, 1, alpha);
         graphics.drawImage(sprite, x, y);
+        sprite.setImageColor(1, 1, 1, 1);
     }
 
     public Image getSprite() {
@@ -41,6 +44,12 @@ public class Particle extends Entity implements Destructible {
     @Override
     public void update(float deltaInSeconds) {
         sprite += EntityData.getRelativeSpeed(animationSpeed, deltaInSeconds);
+
+        if ("SMOKE".equals(this.entityData.name)) {
+            alpha = 1f - (sprite / spritesheet.getHorizontalCount());
+        } else {
+            alpha = 1.5f - (sprite / spritesheet.getHorizontalCount()); // all other sprites never fade out entirely
+        }
 
         if (sprite >= spritesheet.getHorizontalCount()) {
             destroyed = true;

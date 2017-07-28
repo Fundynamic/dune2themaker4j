@@ -29,7 +29,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
-import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class PlayingState extends BasicGameState {
 
@@ -39,8 +39,6 @@ public class PlayingState extends BasicGameState {
     private final Shroud shroud;
     private final Input input;
     private final Vector2D screenResolution;
-
-    private final int tileSize;
 
     private Player human;
     private Player cpu;
@@ -61,10 +59,9 @@ public class PlayingState extends BasicGameState {
     private MapEditor mapEditor;
     private Map map;
 
-    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud, int tileSize) throws SlickException {
+    public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud) throws SlickException {
         this.terrainFactory = terrainFactory;
         this.shroud = shroud;
-        this.tileSize = tileSize;
         this.input = gameContainer.getInput();
         this.screenResolution = getResolution();
         this.imageRepository = imageRepository;
@@ -88,7 +85,7 @@ public class PlayingState extends BasicGameState {
         cpu.setCredits(2000);
 
         mapEditor = new MapEditor(terrainFactory);
-        map = new Map(shroud, 64, 64);
+        map = new Map(shroud, 128, 128);
 
         entityRepository = createEntityRepository();
 
@@ -105,7 +102,7 @@ public class PlayingState extends BasicGameState {
 
         guiComposite.addGuiElement(battlefield);
 
-        // topbar
+        // topbar / moneybar
         guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human));
 
         // sidebar
@@ -132,7 +129,7 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));
-        input.addKeyListener(new DebugKeysListener(battlefield, human));
+        input.addKeyListener(new DebugKeysListener(battlefield, human, entityRepository));
         input.addKeyListener(new QuitGameKeyListener(gameContainer));
 
         initializeMap(entityRepository, human, cpu);
@@ -143,7 +140,7 @@ public class PlayingState extends BasicGameState {
         BattleField battlefield;
 
         try {
-            float moveSpeed = 30 * tileSize;
+            float moveSpeed = 30 * TILE_SIZE;
             Vector2D viewingVector = Vector2D.create(32, 32);
 
             Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, (HEIGHT_OF_TOP_BAR + HEIGHT_OF_BOTTOM_BAR));
@@ -161,7 +158,6 @@ public class PlayingState extends BasicGameState {
                     getMap(),
                     mouse,
                     moveSpeed,
-                    tileSize,
                     human,
                     image,
                     entityRepository);
@@ -181,7 +177,11 @@ public class PlayingState extends BasicGameState {
     }
 
     public EntityRepository createEntityRepository() throws SlickException {
-        return new EntityRepository(getMap(), new Recolorer(), new EntitiesDataReader().fromRulesIni());
+        return new EntityRepository(
+                getMap(),
+                new Recolorer(),
+                new EntitiesDataReader().fromRulesIni()
+        );
     }
 
     public void initializeMap(EntityRepository entityRepository, Player human, Player cpu) throws SlickException {
@@ -192,12 +192,15 @@ public class PlayingState extends BasicGameState {
 
         // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 2), "QUAD", human);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(8, 2), "QUAD", human);
         entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
 
         // cpu entities
-//        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), "QUAD", cpu);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(40, 40), "QUAD", cpu);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(50, 50), "QUAD", cpu);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(30, 32), "QUAD", cpu);
+//        entityRepository.placeUnitOnMap(MapCoordinate.create(34, 43), "QUAD", cpu);
         entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
@@ -208,8 +211,8 @@ public class PlayingState extends BasicGameState {
 
         Font font = graphics.getFont();
 
+        // TODO: Proper end-game conditions and dealing with them
         if (cpu.aliveEntities() < 1) {
-            // why like this!?
             font.drawString(10, 220, "Enemy player has been destroyed. You have won the game.", Color.green);
         }
 

@@ -53,6 +53,7 @@ public class RenderQueue {
         entityTypeToLayerMap.put(EntityType.UNIT, 1);
         entityTypeToLayerMap.put(EntityType.STRUCTURE, 1);
         entityTypeToLayerMap.put(EntityType.PROJECTILE, 3);
+        entityTypeToLayerMap.put(EntityType.SUPERPOWER, 3); // super power shares same layer as projectile (TODO: check)
         // layer 4 == gui (health bar and stuff)
         entityTypeToLayerMap.put(EntityType.PARTICLE, 5);
     }

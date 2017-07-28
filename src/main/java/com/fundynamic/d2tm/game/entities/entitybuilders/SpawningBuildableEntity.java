@@ -1,7 +1,7 @@
 package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 
 /**

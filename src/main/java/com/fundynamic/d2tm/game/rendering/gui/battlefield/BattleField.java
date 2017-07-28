@@ -10,6 +10,7 @@ import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
@@ -57,7 +58,6 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                        Map map,
                        Mouse mouse,
                        float moveSpeed,
-                       int tileSize,
                        Player player,
                        Image buffer,
                        EntityRepository entityRepository) throws SlickException {
@@ -69,13 +69,13 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         this.mouseBehavior = new NormalMouse(this);
 
-        this.viewingVectorPerimeter = map.createViewablePerimeter(size, tileSize);
+        this.viewingVectorPerimeter = map.createViewablePerimeter(size);
         this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
 
         this.viewingVector = viewingVector;
-        this.cellViewportRenderer = new CellViewportRenderer(map, tileSize, size);
+        this.cellViewportRenderer = new CellViewportRenderer(map, size);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(player, map.getShroud());
 
@@ -166,10 +166,23 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         graphics.drawImage(buffer, drawingVector.getX(), drawingVector.getY());
     }
 
+    public Coordinate getAbsoluteCoordinateTopLeftOfTarget(EntityData entityDataToPlace, Vector2D mouseCoordinates) {
+        // first get absolute viewport coordinates, we can calculate on the battlefield with that
+        Coordinate viewportCoordinate = translateScreenToViewportCoordinate(mouseCoordinates);
+
+        // now substract half of the structure to place, so we make the structure to place center beneath the mouse
+        Vector2D halfSize = entityDataToPlace.getHalfSize();
+        Coordinate topLeftOfEntity = viewportCoordinate.min(halfSize);
+
+        Cell topLeftCellOfEntity = getCellByAbsoluteViewportCoordinate(topLeftOfEntity);
+        return topLeftCellOfEntity.getCoordinates();
+    }
+
+
     /**
      * <p>
      *     This method takes an absoluteMapCoordinate and translates this into a Viewport coordinate. This means
-     *     effectively that any given coordinate is substracted by the camera(viewport) position.
+     *     effectively that any given coordinate is subtracted by the camera(viewport) position.
      * </p>
      * <h2>Usage</h1>
      * <p>

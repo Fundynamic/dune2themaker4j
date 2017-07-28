@@ -8,8 +8,8 @@ import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.entities.units.states.DyingState;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -62,6 +62,12 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         if (entityData.entityBuilderType == EntityBuilderType.UNITS) {
             for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
                 entityDatas.add(entityRepository.getEntityData(EntityType.UNIT, buildableEntity));
+            }
+        }
+
+        if (entityData.entityBuilderType == EntityBuilderType.SUPERPOWERS) {
+            for (String buildableEntity : entityData.getEntityDataKeysToBuild()) {
+                entityDatas.add(entityRepository.getEntityData(EntityType.SUPERPOWER, buildableEntity));
             }
         }
 

@@ -10,12 +10,13 @@ import com.fundynamic.d2tm.game.entities.units.states.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
-import static com.fundynamic.d2tm.Game.TILE_SIZE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * Should become observable with RxJava!
@@ -120,6 +121,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
                 if (enemyEntities.isEmpty()) {
                     if (this.getPlayer().isCPU()) {
+                        //TODO: all enemy units seem to attack always!?
                         float distance = 131072; // 64X64X32
                         Entity enemyToAttack = null;
                         for (Entity entity : entities) {

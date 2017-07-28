@@ -1,15 +1,16 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.EnrichableAbsoluteRenderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * A spritesheet, which contains images that represent several 'facings' of a unit. Ie the body or
@@ -44,8 +45,8 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         this.animationSpeed = entityData.animationSpeed;
 
         this.drawCorrectionVec = Vector2D.create(
-                (Game.TILE_SIZE - entityData.getWidth()) / 2,
-                (Game.TILE_SIZE - entityData.getHeight()) / 2
+                (TILE_SIZE - entityData.getWidth()) / 2,
+                (TILE_SIZE - entityData.getHeight()) / 2
         );
 
         int possibleFacings = getHorizontalCount();

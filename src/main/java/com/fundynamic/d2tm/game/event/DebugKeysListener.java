@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.event;
 
 
+import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
@@ -11,7 +12,7 @@ public class DebugKeysListener extends AbstractKeyListener {
     private final BattleField battleField;
     private final Player player;
 
-    public DebugKeysListener(BattleField battleField, Player player) {
+    public DebugKeysListener(BattleField battleField, Player player, EntityRepository entityRepository) {
         this.battleField = battleField;
         this.player = player;
     }

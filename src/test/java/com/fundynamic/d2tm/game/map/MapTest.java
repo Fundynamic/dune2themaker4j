@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 

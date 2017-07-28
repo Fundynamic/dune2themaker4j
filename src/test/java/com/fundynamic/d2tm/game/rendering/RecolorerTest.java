@@ -38,7 +38,7 @@ public class RecolorerTest {
 
         assertThat(recolorer.isColorToRecolor(color), is(false));
 
-        Color newColor = recolorer.recolorToFactionColor(color, Recolorer.FactionColor.BLUE);
+        Color newColor = recolorer.createCopyRecoloredToFactionColor(color, Recolorer.FactionColor.BLUE);
 
         assertThat(color, is(newColor));
     }
@@ -53,7 +53,7 @@ public class RecolorerTest {
     @Test
     public void shouldRecolorRedToBlue() {
         for (Color color : colorsToRecolor) {
-            Color newColor = recolorer.recolorToFactionColor(color, Recolorer.FactionColor.BLUE);
+            Color newColor = recolorer.createCopyRecoloredToFactionColor(color, Recolorer.FactionColor.BLUE);
             Color expectedColor = new Color(color.getBlue(), color.getGreen(), color.getRed(), color.getAlpha());
             Assert.assertEquals("Expected " + Colors.toString(expectedColor) + " but got " + Colors.toString(newColor), expectedColor, newColor);
         }
@@ -62,7 +62,7 @@ public class RecolorerTest {
     @Test
     public void shouldRecolorRedToGreen() {
         for (Color color : colorsToRecolor) {
-            Color newColor = recolorer.recolorToFactionColor(color, Recolorer.FactionColor.GREEN);
+            Color newColor = recolorer.createCopyRecoloredToFactionColor(color, Recolorer.FactionColor.GREEN);
             Color expectedColor = new Color(color.getGreen(), color.getRed(), color.getBlue(), color.getAlpha());
             assertThat(newColor, is(expectedColor));
         }
@@ -71,7 +71,7 @@ public class RecolorerTest {
     @Test
     public void shouldKeepRedColorsRed() {
         for (Color color : colorsToRecolor) {
-            Color newColor = recolorer.recolorToFactionColor(color, Recolorer.FactionColor.RED);
+            Color newColor = recolorer.createCopyRecoloredToFactionColor(color, Recolorer.FactionColor.RED);
             assertThat(newColor, is(color));
         }
     }

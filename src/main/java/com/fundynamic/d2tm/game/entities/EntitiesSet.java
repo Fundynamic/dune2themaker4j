@@ -36,26 +36,24 @@ public class EntitiesSet extends HashSet<Entity> {
         return result;
     }
 
+    /**
+     * Short hand method that calls the `build` method on the predicateBuilder
+     * @param predicateBuilder
+     * @return
+     */
     public EntitiesSet filter(PredicateBuilder predicateBuilder) {
-        Predicate predicate = predicateBuilder.build();
-        return filter(predicate);
+        return filter(predicateBuilder.build());
     }
 
     public List<Entity> toList() {
         return new ArrayList<>(this);
     }
 
-    public boolean hasAny() {
-        return size() > 0;
-    }
-
-    public boolean hasOne() {
-        return size() == 1;
-    }
-
     /**
      *
-     * Returns first element or null when size is 0
+     * Returns first element or null when size is 0.
+     *
+     * Be aware, that since this is a set, its order is not guaranteed.
      *
      * @return
      */
@@ -100,6 +98,18 @@ public class EntitiesSet extends HashSet<Entity> {
         return !isEmpty();
     }
 
+    /**
+     * Synonym for {@link #hasItems()}
+     * @return
+     */
+    public boolean hasAny() {
+        return hasItems();
+    }
+
+    public boolean hasOne() {
+        return size() == 1;
+    }
+
     @Override
     public String toString() {
         String result = "";
@@ -114,12 +124,8 @@ public class EntitiesSet extends HashSet<Entity> {
     }
 
     public EntitiesSet exclude(Entity entityToExclude) {
-        EntitiesSet entitiesSet = new EntitiesSet();
-        for (Entity entity : this) {
-            if (!entity.equals(entityToExclude)) {
-                entitiesSet.add(entity);
-            }
-        }
+        EntitiesSet entitiesSet = EntitiesSet.fromSet(this);
+        entitiesSet.remove(entityToExclude);
         return entitiesSet;
     }
 

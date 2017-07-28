@@ -21,6 +21,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -39,7 +40,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
 
         final Map originalMap = map;
 
-        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud, TILE_SIZE) {
+        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud) {
             @Override
             public EntityRepository createEntityRepository() throws SlickException {
                 return entityRepository;

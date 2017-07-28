@@ -1,8 +1,7 @@
-package com.fundynamic.d2tm.game.controls;
+package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.controls.battlefield.DraggingSelectionBoxMouse;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.math.Coordinate;

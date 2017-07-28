@@ -2,14 +2,23 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
 
 /**
  * <h1>General</h1>
- * An entity that can be built by a {@link com.fundynamic.d2tm.game.behaviors.EntityBuilder}. It contains little
- * state giving hints if it can be built, its progress and so forth.
+ * <p>
+ * This is an object that holds a reference to the EntityData it is 'building'. The super methods of
+ * {@link AbstractBuildableEntity} do the time-based progress logic. This `Placement` entity simply sets
+ * the state to {@link BuildableState}<em>BUILDING_FINISHED_AWAITS_PLACEMENT</em>, so that an entity is not just
+ * spawned, but awaiting action from the GUI to place this entity.
+ * </p>
+ * <p>
+ *     Once this object is 'placed' on the map, to get the actual thing that is built, get the
+ *     EntityData from this object. If you want to know 'who' (which entity) was 'building' this
+ *     use the {@link entityWhoConstructsThis}
+ * </p>
  */
 public class PlacementBuildableEntity extends AbstractBuildableEntity {
 

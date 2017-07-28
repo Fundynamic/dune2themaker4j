@@ -1,9 +1,8 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
@@ -13,10 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class EntitiesDataTest extends AbstractD2TMTest {
 
@@ -30,8 +28,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     public void createUnitCreatesUnitData() throws SlickException {
         int widthInPixels = 32;
         int heightInPixels = 32;
-        int widthInCells = widthInPixels / Game.TILE_SIZE;
-        int heightInCells = heightInPixels / Game.TILE_SIZE;
+        int widthInCells = widthInPixels / TILE_SIZE;
+        int heightInCells = heightInPixels / TILE_SIZE;
         int hitPoints = 150;
         String idOfEntity = "1";
         int sight = 2;
@@ -61,7 +59,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         iniDataUnit.attackRate = attackRate;
         iniDataUnit.weaponId = weaponId;
         iniDataUnit.explosionId = explosionId;
-        iniDataUnit.hitpoints = hitPoints;
+        iniDataUnit.hitPoints = hitPoints;
         iniDataUnit.buildTimeInSeconds = 1.0F;
         iniDataUnit.buildCost = buildCost;
 
@@ -104,8 +102,8 @@ public class EntitiesDataTest extends AbstractD2TMTest {
     public void createStructureCreatesStructureData() throws SlickException {
         int widthInPixels = 64;
         int heightInPixels = 64;
-        int widthInCells = widthInPixels / Game.TILE_SIZE;
-        int heightInCells = heightInPixels / Game.TILE_SIZE;
+        int widthInCells = widthInPixels / TILE_SIZE;
+        int heightInCells = heightInPixels / TILE_SIZE;
         int hitPoints = 1000;
         String entityBuilderType = "";
         String idOfEntity = "1";

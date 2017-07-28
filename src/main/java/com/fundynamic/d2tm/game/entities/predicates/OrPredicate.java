@@ -15,6 +15,11 @@ public class OrPredicate extends Predicate<Entity> {
         this.predicates = predicates;
     }
 
+    public OrPredicate(Predicate<Entity> predicate) {
+        this();
+        addPredicate(predicate);
+    }
+
     public OrPredicate() {
         this(new LinkedList<Predicate<Entity>>());
     }

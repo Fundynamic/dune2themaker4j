@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
-import com.fundynamic.d2tm.game.entities.EntityData;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
@@ -17,7 +17,8 @@ public class PlacementBuildableEntityTest {
     @Before
     public void setUp() {
         player = new Player("Human player", Recolorer.FactionColor.BLUE);
-        entityData = new EntityData();
+
+        entityData = new EntityData(); // the thing that is being 'built'
         entityData.buildTimeInSeconds = 4.0f;
     }
 

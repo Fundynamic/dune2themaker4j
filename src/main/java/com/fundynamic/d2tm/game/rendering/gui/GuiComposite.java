@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.controls.battlefield.LaunchSuperPowerMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.entities.Entity;
@@ -173,7 +174,13 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
      * @param abstractBuildableEntity
      */
     public void wantsToPlaceBuildableEntityOnBattlefield(PlacementBuildableEntity abstractBuildableEntity) {
-        battleField.setMouseBehavior(new PlacingStructureMouse(battleField, abstractBuildableEntity));
+        if (abstractBuildableEntity.getEntityData().isTypeSuperPower()) {
+            battleField.setMouseBehavior(new LaunchSuperPowerMouse(battleField, abstractBuildableEntity));
+        } else if (abstractBuildableEntity.getEntityData().isTypeStructure()) {
+            battleField.setMouseBehavior(new PlacingStructureMouse(battleField, abstractBuildableEntity));
+        } else {
+            throw new IllegalStateException("Dafuq you're doing?");
+        }
     }
 
     /**

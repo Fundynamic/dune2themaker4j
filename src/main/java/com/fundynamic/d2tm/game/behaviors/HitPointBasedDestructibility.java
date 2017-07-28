@@ -5,7 +5,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 /**
- * <h1>Concept of getting destroyed by using hitpoints</h1>
+ * <h1>Concept of getting destroyed by using hitPoints</h1>
  */
 public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderable {
 

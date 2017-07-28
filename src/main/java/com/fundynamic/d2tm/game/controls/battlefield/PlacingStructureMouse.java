@@ -2,12 +2,14 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.terrain.ConstructionGround;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
@@ -43,7 +47,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         // tell battlefield of the created entity
         battleField.entityPlacedOnMap(
                 entityRepository.placeOnMap( // place entity on map
-                        getAbsoluteCoordinateTopLeftOfStructureToPlace(),
+                        battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates),
                         entityDataToPlace,
                         mouse.getControllingPlayer()
                 )
@@ -66,11 +70,21 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         if (hoverCell == null) return;
         if (mapCoordinatesForEntityToPlace.isEmpty()) return;
 
-        MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
+        if (entityDataToPlace.isTypeStructure()) {
+            doLogic(graphics);
+        } else if (entityDataToPlace.isTypeSuperPower()) {
+            mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+        } else {
+            MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
+            Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);
+            SlickUtils.drawImage(graphics, entityDataToPlace.getFirstImage(), coordinateTopLeft);
+        }
+    }
 
+    public void doLogic(Graphics graphics) {
+        MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
         Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);
         SlickUtils.drawImage(graphics, entityDataToPlace.getFirstImage(), coordinateTopLeft);
-
         // Now, do checks if the structure may be placed
         for (PlaceableMapCoordinateCandidate placeableMapCoordinateCandidate : mapCoordinatesForEntityToPlace) {
             Coordinate absoluteMapCoordinate = placeableMapCoordinateCandidate.mapCoordinate.toCoordinate().addHalfTile();
@@ -142,7 +156,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
             }
 
 
-            graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), Game.TILE_SIZE, Game.TILE_SIZE);
+            graphics.fillRect(coordinate.getXAsInt(), coordinate.getYAsInt(), TILE_SIZE, TILE_SIZE);
         }
     }
 
@@ -154,7 +168,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         // moving the mouse. So this won't last unfortunately. (or we should do some kind of message thing so this
         // class knows the state changed and should re-calculate or something like that)
 
-        Coordinate absoluteMapCoordinateOfTopleftOfStructure = getAbsoluteCoordinateTopLeftOfStructureToPlace();
+        Coordinate absoluteMapCoordinateOfTopleftOfStructure = battleField.getAbsoluteCoordinateTopLeftOfTarget(entityDataToPlace, mouseCoordinates);
 
         // first determine all cells that will be occupied
         mapCoordinatesForEntityToPlace = new ArrayList<>();
@@ -167,18 +181,6 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
                         .map(mapCoordinate -> new PlaceableMapCoordinateCandidate(mapCoordinate, PlaceableState.PLACEABLE))
                         .collect(toList());
 
-    }
-
-    public Coordinate getAbsoluteCoordinateTopLeftOfStructureToPlace() {
-        // first get absolute viewport coordinates, we can calculate on the battlefield with that
-        Coordinate viewportCoordinate = battleField.translateScreenToViewportCoordinate(mouseCoordinates);
-
-        // now substract half of the structure to place, so we make the structure to place center beneath the mouse
-        Vector2D halfSize = entityDataToPlace.getHalfSize();
-        Coordinate topLeftOfStructure = viewportCoordinate.min(halfSize);
-
-        Cell topLeftCellOfStructure = battleField.getCellByAbsoluteViewportCoordinate(topLeftOfStructure);
-        return topLeftCellOfStructure.getCoordinates();
     }
 
     @Override

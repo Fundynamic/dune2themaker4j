@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.mockito.Mockito.*;
 
 public class CellBattleFieldRendererTest extends AbstractD2TMTest {
@@ -18,7 +19,7 @@ public class CellBattleFieldRendererTest extends AbstractD2TMTest {
         int screenWidth = 800;
         int screenHeight = 600;
 
-        CellViewportRenderer cellViewportRenderer = new CellViewportRenderer(map, TILE_SIZE, new Vector2D(screenWidth, screenHeight));
+        CellViewportRenderer cellViewportRenderer = new CellViewportRenderer(map, new Vector2D(screenWidth, screenHeight));
 
         Vector2D viewingVector = Vector2D.zero();
 

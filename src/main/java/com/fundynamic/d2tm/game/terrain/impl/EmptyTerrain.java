@@ -7,6 +7,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 
 public class EmptyTerrain implements Terrain {
 
@@ -62,4 +64,7 @@ public class EmptyTerrain implements Terrain {
         return true;
     }
 
+    public static Terrain instance() {
+        return new EmptyTerrain(TILE_SIZE);
+    }
 }

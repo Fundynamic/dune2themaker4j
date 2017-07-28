@@ -12,7 +12,6 @@ import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
-import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.math.Coordinate;
 
 /**
@@ -62,7 +61,6 @@ public class MovableSelectedMouse extends NormalMouse {
                 selectEntity(hoveringOverEntity);
             } else {
                 attackDestructibleIfApplicable(hoveringOverEntity);
-
             }
         } else {
             Coordinate target = cell.getMapCoordinate().toCoordinate();

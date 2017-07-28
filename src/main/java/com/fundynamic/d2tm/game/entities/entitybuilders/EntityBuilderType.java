@@ -7,7 +7,8 @@ import java.util.List;
 public enum EntityBuilderType {
     NONE,            // does not build a thing
     STRUCTURES,      // builds structures
-    UNITS;           // builds units
+    UNITS,           // builds units
+    SUPERPOWERS;      // super powers (death-hand, fremen, etc)
 
     /**
      * For now like this, TODO: optimize (caching, etc)

@@ -2,9 +2,11 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
@@ -13,8 +15,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 
 /**
  * <p>
@@ -130,6 +134,10 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return this instanceof Focusable;
     }
 
+    public boolean isSuperPower() {
+        return this instanceof SuperPower;
+    }
+
     /**
      * Capable of harvesting stuff
      * @return
@@ -184,8 +192,13 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.getHeightInCells();
     }
 
-    public List<MapCoordinate> getAllCellsAsCoordinates() {
+    public List<MapCoordinate> getAllCellsAsMapCoordinates() {
         return entityData.getAllCellsAsCoordinates(coordinate);
+    }
+
+    public List<Coordinate> getAllCellsAsCoordinates() {
+        List<MapCoordinate> allCellsAsCoordinates = entityData.getAllCellsAsCoordinates(coordinate);
+        return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate()).collect(Collectors.toList());
     }
 
     // this basically goes 'around' the entity
@@ -248,5 +261,89 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         boolean result = entityRectangle.isVectorWithin(coordinate);
 //        System.out.println("Checking if Coordinate (" + result + ") : " + coordinate + " is within Rectangle of [" + this.getEntityData().key + "] : " + entityRectangle);
         return result;
+    }
+
+    protected final java.util.Map<EventType, List<EventSubscription<? extends Entity>>> eventTypeListMap = new HashMap();
+
+    public <T extends Entity> void onEvent(EventType eventType, T subscriber, Function<T, Void> eventHandler) {
+        this.onEvent(eventType, subscriber, eventHandler, true);
+    }
+
+    protected <T extends Entity> void onEvent(EventType eventType, T subscriber, Function<T, Void> eventHandler, boolean registerDestroyEventHandler) {
+        if (!eventTypeListMap.containsKey(eventType)) {
+            eventTypeListMap.put(eventType, new LinkedList<>());
+        }
+        addEventSubscription(eventType, subscriber, eventHandler);
+
+        if (registerDestroyEventHandler) {
+            // when the subscriber gets destroyed, let this entity know it happened.
+            subscriber.onEvent(EventType.ENTITY_DESTROYED, this, s -> s.removeEventSubscription(subscriber), false);
+
+            if (subscriber != this) {
+                // when this gets destroyed, tell the *other* subscriber that it happened.
+                this.onEvent(EventType.ENTITY_DESTROYED, subscriber, s -> s.removeEventSubscription(this), false);
+            }
+        }
+    }
+
+    private <T extends Entity> EventSubscription addEventSubscription(EventType eventType, T subscriber, Function<T, Void> eventHandler) {
+        EventSubscription eventSubscription = new EventSubscription(subscriber, eventHandler);
+        if (!eventTypeListMap.get(eventType).contains(eventSubscription)) {
+            eventTypeListMap.get(eventType).add(eventSubscription);
+        }
+        return eventSubscription;
+    }
+
+    protected <T extends Entity> Void removeEventSubscription(T subscriber) {
+        System.out.println(this + " received removeEventSubscription, Entity destroyed is " + subscriber);
+
+        for (List<EventSubscription<? extends Entity>> subscriptions : eventTypeListMap.values()) {
+
+            // find all event subscriptions that have this subscriber
+            List<EventSubscription<? extends Entity>> toBeDeleted = new ArrayList<>();
+            for (EventSubscription subscription : subscriptions) {
+                if (subscription.getSubscriber() == subscriber) { // check by reference!
+                    toBeDeleted.add(subscription);
+                }
+            }
+
+            // delete those
+            for (EventSubscription subscription : toBeDeleted) {
+                subscriptions.remove(subscription);
+            }
+        }
+        return null;
+    }
+
+    public void destroy() {
+        emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
+        eventTypeListMap.clear(); // now clear all our subscriptions explicitly
+    }
+
+    public void emitEvent(EventType eventType) {
+        if (eventTypeListMap.containsKey(eventType)) {
+            for (EventSubscription eventSubscription : eventTypeListMap.get(eventType)){
+                System.out.println(this.toString() + " emits event " + eventType);
+                eventSubscription.invoke();
+            }
+        }
+    }
+
+    class EventSubscription<T extends Entity> {
+        private T subscriber;
+        private Function<T, Void> eventHandler;
+
+        public EventSubscription(T subscriber, Function<T, Void> eventHandler) {
+            this.subscriber = subscriber;
+            this.eventHandler = eventHandler;
+        }
+
+        public void invoke() {
+            eventHandler.apply(subscriber);
+        }
+
+        public T getSubscriber() {
+            return subscriber;
+        }
     }
 }

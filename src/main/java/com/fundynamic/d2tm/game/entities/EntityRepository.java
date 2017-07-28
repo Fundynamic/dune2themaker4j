@@ -1,21 +1,21 @@
 package com.fundynamic.d2tm.game.entities;
 
 
-import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.FadingSelectionCentered;
-import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibilityCentered;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.particle.Particle;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.entities.units.NullRenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
@@ -28,11 +28,15 @@ import java.util.Set;
 /**
  * <h1>General purpose</h1>
  * <p>
- *     An entity repository holds all {@link EntitiesData} and is able to construct new {@link Entity}'s on the provided
- *     {@link EntitiesSet}. This set is also used on (for instance) the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
+ *     This class is responsible for the <em>creation</em> of entities as well as the <em>removal</em> of entities and
+ *     can be considered as the <em><b>global game state of the battlefield</b></em>.
  * </p>
  * <p>
- *     This class is responsible for the <em>creation</em> of entities as well as the removal of entities.
+ *     An entity repository contains all {@link EntitiesData} (blue-prints/types of all entities) and is able to construct
+ *     new {@link Entity}'s on the provided within its internal {@link EntitiesSet}.
+ * </p>
+ * <p>
+ *     This set is used by (for instance) the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
  * </p>
  */
 public class EntityRepository {
@@ -42,6 +46,7 @@ public class EntityRepository {
     private final Recolorer recolorer;
 
     private EntitiesData entitiesData;
+
     private Entity lastCreatedEntity;
 
     private EntitiesSet entitiesSet;
@@ -110,14 +115,14 @@ public class EntityRepository {
         );
     }
 
-    public Entity placeOnMap(Coordinate coordinate, EntityData entityData, Player player) {
+    public Entity placeOnMap(Coordinate startCoordinate, EntityData entityData, Player player) {
         Entity createdEntity;
         Image originalImage = entityData.image;
 
         if (entityData.isTypeStructure()) {
-            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Structure(
-                    coordinate,
+                    startCoordinate,
                     makeSpriteSheet(entityData, recoloredImage),
                     player,
                     entityData,
@@ -125,10 +130,10 @@ public class EntityRepository {
             );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
-            Image recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             createdEntity = new Unit(
                     map,
-                    coordinate,
+                    startCoordinate,
                     makeRenderableWithFacingLogic(entityData, recoloredImage, entityData.turnSpeed),
                     makeRenderableWithFacingLogic(entityData, entityData.barrelImage, entityData.turnSpeedCannon),
                     new FadingSelectionCentered(entityData.getWidth(), entityData.getHeight()),
@@ -140,23 +145,25 @@ public class EntityRepository {
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeProjectile()) {
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, originalImage);
-            createdEntity = new Projectile(coordinate, spriteSheet, player, entityData, this);
+            createdEntity = new Projectile(startCoordinate, spriteSheet, player, entityData, this);
             return placeOnMap(createdEntity);
-        }  else if (entityData.isTypeParticle()) {
+        } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
             if (entityData.recolor) {
-                recoloredImage = recolorer.recolorToFactionColor(originalImage, player.getFactionColor());
+                recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
             }
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
-            createdEntity = new Particle(coordinate, spriteSheet, entityData, this);
+            createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);
             return placeOnMap(createdEntity);
+        } else if (entityData.isTypeSuperPower()) {
+            throw new IllegalArgumentException("Don't use placeOnMap, but use method spawnSuperPower method instead.");
         } else {
             throw new IllegalArgumentException("Unknown type " + entityData.type);
         }
     }
 
-    public Entity placeOnMap(Entity createdEntity) {
-        return addEntityToList(map.revealShroudFor(createdEntity));
+    public <T extends Entity> T placeOnMap(T createdEntity) {
+        return (T) addEntityToList(map.revealShroudFor(createdEntity));
     }
 
     public Entity addEntityToList(Entity entity) {
@@ -177,6 +184,7 @@ public class EntityRepository {
 
     public void removeEntity(Entity entity) {
         entity.removeFromPlayerSet(entity);
+        entity.destroy();
         entitiesSet.remove(entity);
     }
 
@@ -228,21 +236,25 @@ public class EntityRepository {
         return ofType(EntityType.UNIT);
     }
 
+    public EntitiesSet findDestructibleEntities(Coordinate... absoluteMapCoordinates) {
+        return filter(
+                Predicate.builder().
+                    isDestructible().
+                    vectorWithin(absoluteMapCoordinates)
+        );
+    }
+
+    public EntitiesSet findDestructibleEntities(Set<Coordinate> absoluteMapCoordinates) {
+        return findDestructibleEntities(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
+    }
+
     public EntitiesSet findAliveEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
+                        isAlive().
                         vectorWithin(absoluteMapCoordinates)
-                        .isAlive()
 
-        );
-    }
-
-    public EntitiesSet findEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {
-        return filter(
-                Predicate.builder().
-                        ofTypes(types).
-                        vectorWithin(absoluteMapCoordinates)
         );
     }
 
@@ -250,6 +262,14 @@ public class EntityRepository {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
+                        withinRange(coordinate, range)
+        );
+    }
+
+    public EntitiesSet findDestructibleEntitiesWithinDistance(Coordinate coordinate, float range) {
+        return filter(
+                Predicate.builder().
+                        isDestructible().
                         withinRange(coordinate, range)
         );
     }
@@ -300,6 +320,22 @@ public class EntityRepository {
             return isPassable(entity, mapCoordinate);
         }
         return new PassableResult(false);
+    }
+
+    /**
+     * Super powers are special, they need to be created using this method.
+     *
+     * @param fireStarterCoordinate
+     * @param superPowerEntityData
+     * @param player
+     * @param target
+     * @return
+     */
+    public SuperPower spawnSuperPower(Coordinate fireStarterCoordinate, EntityData superPowerEntityData, Player player, Coordinate target) {
+        SuperPower superPower = new SuperPower(Coordinate.create(0,0), superPowerEntityData, player, this);
+        superPower.setFireStarterCoordinate(fireStarterCoordinate);
+        superPower.setTarget(target);
+        return placeOnMap(superPower);
     }
 
     public class PassableResult {

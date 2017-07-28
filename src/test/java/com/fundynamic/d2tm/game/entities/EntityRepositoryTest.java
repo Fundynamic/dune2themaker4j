@@ -2,17 +2,20 @@ package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.internal.util.collections.Sets;
 import org.newdawn.slick.SlickException;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class EntityRepositoryTest extends AbstractD2TMTest {
 
@@ -38,6 +41,43 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(132, 132), EntityType.UNIT);
         assertThat(entities, is(empty()));
     }
+
+    @Test
+    public void findAliveEntitiesAtMultipleCoordinates() throws SlickException {
+        Unit unit1 = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
+        Unit unit2 = makeUnit(player, Coordinate.create(64, 32), EntitiesData.QUAD);
+
+
+        // Single coordinate passed, expected unit1
+        EntitiesSet destructibleEntities = entityRepository.findDestructibleEntities(Coordinate.create(32, 32));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Single coordinate passed, as Set
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Two coordinate passed, as Set, only one coordinate would yield result
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32), Coordinate.create(320, 320)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(1));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+
+        // Two coordinate passed, as Set, two entities should be found
+        destructibleEntities = entityRepository.findDestructibleEntities(Sets.newSet(Coordinate.create(32, 32), Coordinate.create(64, 32)));
+
+        assertThat(destructibleEntities.hasAny(), is(true));
+        assertThat(destructibleEntities.size(), is(2));
+        assertThat(destructibleEntities.contains(unit1), is(true));
+        assertThat(destructibleEntities.contains(unit2), is(true));
+    }
+
 
     @Test (expected = IllegalArgumentException.class)
     public void throwsExceptionWhenTryingToCreateExplosionOutOfNonParticle() {
@@ -96,4 +136,23 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
         new EntityRepository(map, new Recolorer(), new EntitiesData());
     }
 
+    @Test
+    public void spawnSuperPower() {
+        EntityData deathhand = entityRepository.getEntityData(EntityType.SUPERPOWER, "DEATHHAND");
+        SuperPower superPower = entityRepository.spawnSuperPower(Coordinate.create(322, 123), deathhand, player, Coordinate.zero());
+
+        // expect location of super power to be 0,0, since it won't matter anyway.
+        // the super power is a script
+        assertThat(superPower.getCoordinate(), is(Coordinate.zero()));
+    }
+
+    @Test
+    public void createSuperWeaponUsingPlaceOnMapThrowsException() {
+        try {
+            entityRepository.placeOnMap(Coordinate.zero(), EntityType.SUPERPOWER, "DEATHHAND", player);
+            fail("Expected exception to be thrown");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Don't use placeOnMap, but use method spawnSuperPower method instead.", e.getMessage());
+        }
+    }
 }
