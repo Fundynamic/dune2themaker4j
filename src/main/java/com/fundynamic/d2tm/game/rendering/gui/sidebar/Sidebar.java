@@ -115,7 +115,9 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
      * @param entity
      */
     public void entityPlacedOnMap(Entity entity) {
-        guiElement.entityPlacedOnMap(entity);
+        if (guiElement != null) {
+            guiElement.entityPlacedOnMap(entity);
+        }
     }
 
     public void hideEntityBuilderGui() {
