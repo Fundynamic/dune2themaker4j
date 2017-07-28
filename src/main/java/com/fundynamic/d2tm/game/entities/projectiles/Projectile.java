@@ -37,17 +37,24 @@ public class Projectile extends Entity implements Moveable, Destructible {
         Image sprite = getSprite();
 
         if (height > 0) {
-            drawShadowImage(graphics, x, y, sprite);
+            int shadowX = x + Math.round(height / 8);
+
+            float shadowTransparancy = 0.5f;
+            shadowTransparancy -= (0.4f * (height/entityData.maxAscensionHeight));
+            shadowTransparancy = Math.max(shadowTransparancy, 0f);
+            sprite.setImageColor(0, 0, 0, shadowTransparancy); // set color of image to black, transparent
+
+            float shadowScale = 1.0f + (0.25f * (height/entityData.maxAscensionHeight));
+            float scale = 1.0f + (0.5f * (height/entityData.maxAscensionHeight));
+
+            graphics.setAntiAlias(true);
+            sprite.draw(shadowX, y, shadowScale);
+            graphics.setAntiAlias(false);
+            sprite.setImageColor(1, 1, 1, 1); // restore drawing to opaque
+            sprite.draw(x, (y - height), scale);
+        } else {
+            graphics.drawImage(sprite, x, (y - height));
         }
-
-        graphics.drawImage(sprite, x, (y - height));
-    }
-
-    public void drawShadowImage(Graphics graphics, int x, int y, Image sprite) {
-        sprite.setImageColor(0, 0, 0, 0.5f); // set color of image to black, transparent
-        int shadowX = x + Math.round(height / 8);
-        graphics.drawImage(sprite, shadowX, y);
-        sprite.setImageColor(1, 1, 1, 1); // restore drawing to opaque
     }
 
     public Image getSprite() {
