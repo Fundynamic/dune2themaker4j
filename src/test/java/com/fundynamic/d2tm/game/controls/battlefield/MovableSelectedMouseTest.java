@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.units.Unit;

@@ -130,9 +130,9 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates); // 320, 320
 
-        Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down
+        Vector2D mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down (352, 352)
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
 
         assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));

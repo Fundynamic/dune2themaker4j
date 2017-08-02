@@ -13,6 +13,7 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 
 /**
  *
@@ -63,7 +64,8 @@ public class MovableSelectedMouse extends NormalMouse {
                 attackDestructibleIfApplicable(hoveringOverEntity);
             }
         } else {
-            Coordinate target = cell.getMapCoordinate().toCoordinate();
+            MapCoordinate mapCoordinate = cell.getMapCoordinate();
+            Coordinate target = mapCoordinate.toCoordinate();
 
             EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
             if (harvestersSelected.hasAny() && entitiesSetOfAllMovable.sameSizeAs(harvestersSelected)) {

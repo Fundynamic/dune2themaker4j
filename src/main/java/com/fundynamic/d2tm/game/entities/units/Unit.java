@@ -12,9 +12,12 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
+
+import java.util.List;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -236,7 +239,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
         EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
         entities = entities.exclude(this); // do not count ourselves as blocking
-        Cell cell = map.getCellByAbsoluteMapCoordinates(new Coordinate(intendedMapCoordinatesToMoveTo));
+        Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
 
         return entities.isEmpty() &&
                 cell.isPassable(this) &&
@@ -244,14 +247,39 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+        Coordinate bestCoordinate = null;
+        float closest = map.getHeight() * map.getHeight();
+
+        for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
+            Coordinate coordinate = mapCoordinate.toCoordinate();
+            boolean canMoveToCell = canMoveToCell(coordinate);
+            if (!canMoveToCell) continue;
+
+            float distance = coordinate.addHalfTile().distance(target);
+            if (distance <= closest) {
+                closest = distance;
+                bestCoordinate = mapCoordinate.toCoordinate();
+            }
+        }
+
+        if (bestCoordinate != null) {
+            return bestCoordinate;
+        }
+
+        // fall back to old behavior if we can't find a good destination, which basically means it will try to go to the
+        // direct path which is probably blocked (else it was found in the previous statements above)
         int nextXCoordinate = coordinate.getXAsInt();
         int nextYCoordinate = coordinate.getYAsInt();
+
+        // the most direct way to target
+        Coordinate bestNextIntendedCoordinateToMoveTo = Coordinate.create(nextXCoordinate, nextYCoordinate);
+
         if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
         if (target.getXAsInt() > coordinate.getXAsInt()) nextXCoordinate += TILE_SIZE;
         if (target.getYAsInt() < coordinate.getYAsInt()) nextYCoordinate -= TILE_SIZE;
         if (target.getYAsInt() > coordinate.getYAsInt()) nextYCoordinate += TILE_SIZE;
-
-        return Coordinate.create(nextXCoordinate, nextYCoordinate);
+        return bestNextIntendedCoordinateToMoveTo;
     }
 
     public boolean hasNoNextCellToMoveTo() {

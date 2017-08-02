@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -37,6 +38,7 @@ public class EntityTest extends AbstractD2TMTest {
 
         entity1 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("Entity1");
+
         entity2 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("Entity2");
     }
@@ -74,6 +76,32 @@ public class EntityTest extends AbstractD2TMTest {
 
         Assert.assertEquals(3, upLeftOfTopLeft.getXAsInt());
         Assert.assertEquals(3, upLeftOfTopLeft.getYAsInt());
+    }
+
+    @Test
+    public void getAllSurroundingCoordinatesOfAnEntityThatIsOneCellBig() {
+        EntityData entityData = new EntityData();
+        entityData.setWidth(Cell.TILE_SIZE);
+        entityData.setHeight(Cell.TILE_SIZE);
+
+        TestableEntity smallEntity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("SmallEntity");
+
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsCoordinates();
+
+        Assert.assertEquals(8, allSurroundingCellsAsCoordinates.size());
+
+        // we expect the first tile to be at 1 tile above and 1 tile left to the entity1:
+        MapCoordinate upLeftOfTopLeft = allSurroundingCellsAsCoordinates.get(0);
+
+        MapCoordinate topLeftMapCoordinate = this.topLeftCoordinate.toMapCoordinate();
+        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() - 1, upLeftOfTopLeft.getXAsInt());
+        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() - 1, upLeftOfTopLeft.getYAsInt());
+
+        MapCoordinate downRight = allSurroundingCellsAsCoordinates.get(7); // last one
+
+        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() + 1, downRight.getXAsInt());
+        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() + 1, downRight.getYAsInt());
     }
 
     //////////////////////////////////////////////////
