@@ -33,6 +33,7 @@ public class EntityTest extends AbstractD2TMTest {
         super.setUp();
         topLeftCoordinate = Coordinate.create(TILE_SIZE * 4, TILE_SIZE * 4); // 4X32 = 128
         entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
         entityData.setWidth(64);
         entityData.setHeight(64);
 
@@ -81,6 +82,7 @@ public class EntityTest extends AbstractD2TMTest {
     @Test
     public void getAllSurroundingCoordinatesOfAnEntityThatIsOneCellBig() {
         EntityData entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
         entityData.setWidth(Cell.TILE_SIZE);
         entityData.setHeight(Cell.TILE_SIZE);
 

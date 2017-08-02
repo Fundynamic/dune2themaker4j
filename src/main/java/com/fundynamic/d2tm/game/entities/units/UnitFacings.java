@@ -121,15 +121,15 @@ public enum UnitFacings {
     }
 
     public static UnitFacings getFacing(Entity from, Entity to) {
-        return getFacing(from.getCenteredCoordinate(), to.getCenteredCoordinate());
+        return getFacing(from.getCenteredCoordinateOfEntity(), to.getCenteredCoordinateOfEntity());
     }
 
     public static int getFacingInt(Entity from, Entity to) {
-        return getFacing(from.getCenteredCoordinate(), to.getCenteredCoordinate()).getValue();
+        return getFacing(from.getCenteredCoordinateOfEntity(), to.getCenteredCoordinateOfEntity()).getValue();
     }
 
     public static int getFacingInt(Entity from, Vector2D to) {
-        return getFacing(from.getCenteredCoordinate(), to).getValue();
+        return getFacing(from.getCenteredCoordinateOfEntity(), to).getValue();
     }
 
     public static int getFacingInt(Vector2D from, Vector2D to) {

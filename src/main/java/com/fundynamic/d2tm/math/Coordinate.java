@@ -1,8 +1,6 @@
 package com.fundynamic.d2tm.math;
 
 
-import com.fundynamic.d2tm.Game;
-
 import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -26,12 +24,17 @@ public class Coordinate extends Vector2D {
         this(vec.getX(), vec.getY());
     }
 
+    private MapCoordinate mapCoordinate;
+
     public Coordinate(float x, float y) {
         super(x, y);
     }
 
     public MapCoordinate toMapCoordinate() {
-        return MapCoordinate.create(getX() / TILE_SIZE, getY() / TILE_SIZE);
+        if (mapCoordinate == null) {
+            mapCoordinate = MapCoordinate.create(getX() / TILE_SIZE, getY() / TILE_SIZE);
+        }
+        return mapCoordinate;
     }
 
     public Coordinate add(Vector2D vec) {

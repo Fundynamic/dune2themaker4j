@@ -167,7 +167,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         if (Game.DEBUG_INFO) {
             // render build-range
-            Vector2D halfSize = getHalfSize();
+            Vector2D halfSize = getHalfSizeOfEntity();
             Circle circle = new Circle(x + halfSize.getXAsInt(), y + halfSize.getYAsInt(), entityData.buildRange);
             graphics.setColor(Colors.YELLOW_ALPHA_32);
             ShapeRenderer.fill(circle);

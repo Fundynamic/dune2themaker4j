@@ -40,8 +40,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private RenderQueueEnrichableWithFacingLogic bodyFacing;
     private RenderQueueEnrichableWithFacingLogic cannonFacing;
 
-    private Vector2D target;                // the (end) goal to attack/move
-    private Vector2D nextTargetToMoveTo;    // the next step/target to move to (ie, this is a step towards the 'real' target)
+    private Coordinate target;                // the (end) goal to attack/move
+    private Coordinate nextTargetToMoveTo;    // the next step/target to move to (ie, this is a step towards the 'real' target)
 
     // Dependencies
     private final Map map;
@@ -118,14 +118,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 guardTimer = 0F;
 
                 // scan environment within range for enemies
-                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
+                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinateOfEntity(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
 
                 EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
 
                 if (enemyEntities.isEmpty()) {
                     if (this.getPlayer().isCPU()) {
-                        //TODO: all enemy units seem to attack always!?
-                        float distance = 131072; // 64X64X32
+                        //TODO: enemy units scan entire map... (shouldnt do that ;-))
+                        float distance = map.getHeight() * map.getWidth() * Cell.TILE_SIZE;
                         Entity enemyToAttack = null;
                         for (Entity entity : entities) {
                             if (!(entity instanceof Unit)) continue;
@@ -216,7 +216,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
                         while(attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
+                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSizeOfEntity()), entityData.weaponId, this);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
                         }
@@ -236,7 +236,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
-    public boolean canMoveToCell(Coordinate intendedMapCoordinatesToMoveTo) {
+    public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
         EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
         entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
@@ -247,39 +247,47 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
-        Coordinate bestCoordinate = null;
-        float closest = map.getHeight() * map.getHeight();
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = getMapCoordinates(coordinate.toMapCoordinate());
 
-        for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
-            Coordinate coordinate = mapCoordinate.toCoordinate();
-            boolean canMoveToCell = canMoveToCell(coordinate);
-            if (!canMoveToCell) continue;
+        float distanceToTarget = distanceTo(target);
 
-            float distance = coordinate.addHalfTile().distance(target);
-            if (distance <= closest) {
-                closest = distance;
-                bestCoordinate = mapCoordinate.toCoordinate();
+        Coordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
+
+        if (bestCoordinate == null) {
+            // almost there
+            // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
+            // occupied then stop? (5 because that is 'half surrounded')
+            // TODO: even better than previous todo, implement path finding...
+            if (distanceToTarget <= Cell.TILE_SIZE) {
+                target = coordinate;
+                nextTargetToMoveTo = coordinate;
+                bestCoordinate = coordinate;
+            } else {
+                // fall back if we have to take a 'detour'
+                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + Cell.TILE_SIZE);
             }
         }
 
         if (bestCoordinate != null) {
             return bestCoordinate;
         }
+        return coordinate;
+    }
 
-        // fall back to old behavior if we can't find a good destination, which basically means it will try to go to the
-        // direct path which is probably blocked (else it was found in the previous statements above)
-        int nextXCoordinate = coordinate.getXAsInt();
-        int nextYCoordinate = coordinate.getYAsInt();
+    public Coordinate findClosestCoordinateTowards(List<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float closest) {
+        Coordinate bestCoordinate = null;
+        for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
+            Coordinate coordinate = mapCoordinate.toCoordinate();
+            boolean isCellPassableForMe = isCellPassableForMe(coordinate);
+            if (!isCellPassableForMe) continue;
 
-        // the most direct way to target
-        Coordinate bestNextIntendedCoordinateToMoveTo = Coordinate.create(nextXCoordinate, nextYCoordinate);
-
-        if (target.getXAsInt() < coordinate.getXAsInt()) nextXCoordinate -= TILE_SIZE;
-        if (target.getXAsInt() > coordinate.getXAsInt()) nextXCoordinate += TILE_SIZE;
-        if (target.getYAsInt() < coordinate.getYAsInt()) nextYCoordinate -= TILE_SIZE;
-        if (target.getYAsInt() > coordinate.getYAsInt()) nextYCoordinate += TILE_SIZE;
-        return bestNextIntendedCoordinateToMoveTo;
+            float distance = coordinate.distance(target);
+            if (distance < closest) {
+                closest = distance;
+                bestCoordinate = mapCoordinate.toCoordinate();
+            }
+        }
+        return bestCoordinate;
     }
 
     public boolean hasNoNextCellToMoveTo() {
@@ -289,9 +297,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public String toString() {
         return "Unit [" +
-                "sight=" + getSight() +
-                "entityType=" + getEntityType() +
-                "image=" + getEntityData().image +
+                "name=" + getEntityData().name +
                 ", player=" + super.player +
                 ", hitPoints=" + hitPointBasedDestructibility +
                 ", coordinate=" + super.coordinate +
@@ -332,19 +338,19 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     @Override
-    public void moveTo(Vector2D absoluteMapCoordinates) {
+    public void moveTo(Coordinate absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
         this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
-        this.setState(new GoalResolverState(this, entityRepository, map));
+        setToGoalResolverState();
     }
 
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
         if (player.isCPU()) {
             if (origin == null) {
-                Vector2D target = coordinate;
+                Coordinate target = coordinate;
                 // keep thinking of a random position to move to
                 while (target.equals(coordinate)) {
                     target = getRandomVectorToMoveTo();
@@ -360,7 +366,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         hitPointBasedDestructibility.takeDamage(hitPoints);
     }
 
-    public Vector2D getRandomVectorToMoveTo() {
+    public Coordinate getRandomVectorToMoveTo() {
         // we're hit and we don't have an idea where it came from
         int correctX = Random.getRandomBetween(-1, 2) * TILE_SIZE;
         int correctY = Random.getRandomBetween(-1, 2) * TILE_SIZE;
@@ -429,11 +435,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return this.getCoordinate().add(this.offset);
     }
 
-    @Override
-    public Coordinate getCenteredCoordinate() {
-        return super.getCenteredCoordinate().add(offset);
-    }
-
     public boolean hasFocus() {
         return fadingSelection.hasFocus();
     }
@@ -484,6 +485,42 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         setState(new HarvestingState(this, entityRepository, map));
     }
 
+    /**
+     * Order unit to move to a cell. Puts it into the MoveToCellState and remembers the intent
+     * to move to this cell so that other units will not attempt the same movement.
+     * @param nextIntendedCoordinatesToMoveTo
+     */
+    public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
+        nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
+        bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
+
+        UnitMoveIntents.instance.addIntent(nextTargetToMoveTo, this);
+
+        setState(new MoveToCellState(this, entityRepository, map));
+    }
+
+    /**
+     * Unit arrived at cell. Will put unit in GoalResolverState and removes the intent it
+     * previously had given.
+     * @param coordinateToMoveTo
+     */
+    public void arrivedAtCell(Coordinate coordinateToMoveTo) {
+        this.coordinate = coordinateToMoveTo;
+        this.nextTargetToMoveTo = coordinateToMoveTo;
+
+        UnitMoveIntents.instance.removeIntent(coordinateToMoveTo);
+
+        // TODO: replace with some event "unit moved to coordinate" which is picked up
+        // elsewhere (Listener?)
+        map.revealShroudFor(this.coordinate.toMapCoordinate(), getSight(), player);
+
+        setToGoalResolverState();
+    }
+
+    public void setToGoalResolverState() {
+        setState(new GoalResolverState(this, entityRepository, map));
+    }
+
     public boolean isAnimating() {
         return bodyFacing.isAnimating();
     }
@@ -496,30 +533,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.stopAndResetAnimating();
     }
 
-    public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
-        nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
-        bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
-
-        UnitMoveIntents.instance.addIntent(nextTargetToMoveTo, this);
-
-        setState(new MoveToCellState(this, entityRepository, map));
-    }
-
     public Vector2D getTarget() {
         return target;
-    }
-
-    public void arrivedAtCell(Coordinate coordinateToMoveTo) {
-        this.coordinate = coordinateToMoveTo;
-        this.nextTargetToMoveTo = coordinateToMoveTo;
-
-        UnitMoveIntents.instance.removeIntent(coordinateToMoveTo);
-
-        // TODO: replace with some event "unit moved to coordinate" which is picked up
-        // elsewhere (Listener?)
-        map.revealShroudFor(this.coordinate.toMapCoordinate(), getSight(), player);
-
-        setState(new GoalResolverState(this, entityRepository, map));
     }
 
     public RenderQueueEnrichableWithFacingLogic getBodyFacing() {

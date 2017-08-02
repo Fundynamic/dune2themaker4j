@@ -87,7 +87,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
 
         if (getCurrentDistanceToTarget() < 0.1F) {
             if (entityData.hasExplosionId()) {
-                entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
+                entityRepository.explodeAt(getCenteredCoordinateOfEntity(), entityData, player);
             }
 
             // do damage on cell / range of cells
@@ -145,7 +145,7 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     @Override
-    public void moveTo(Vector2D moveToTarget) {
+    public void moveTo(Coordinate moveToTarget) {
         Coordinate newTarget = new Coordinate(moveToTarget);
         distanceCalculatedALaunch = target.distance(newTarget);
         this.target = newTarget;

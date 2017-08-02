@@ -104,7 +104,8 @@ public class EntityData {
     public EntityData() {
     }
 
-    public EntityData(int width, int height, int sight) {
+    public EntityData(EntityType entityType, int width, int height, int sight) {
+        this.type = entityType;
         setWidth(width);
         setHeight(height);
         this.sight = sight;
@@ -116,12 +117,26 @@ public class EntityData {
 
     public void setWidth(int width) {
         this.width = width;
-        widthInCells = (int) Math.ceil((float) width / TILE_SIZE);
+        if (this.type == null) throw new IllegalStateException("You can only set width after you have set type");
+
+        // units are always 1 cell in height (for now)
+        if (this.type == EntityType.UNIT) {
+            widthInCells = 1;
+        } else {
+            widthInCells = (int) Math.ceil((float) width / TILE_SIZE);
+        }
     }
 
     public void setHeight(int height) {
         this.height = height;
-        heightInCells = (int) Math.ceil((float) height / TILE_SIZE);
+        if (this.type == null) throw new IllegalStateException("You can only set height after you have set type");
+
+        // units are always 1 cell in height (for now)
+        if (this.type == EntityType.UNIT) {
+            heightInCells = 1;
+        } else {
+            heightInCells = (int) Math.ceil((float) height / TILE_SIZE);
+        }
     }
 
     public int getWidth() {

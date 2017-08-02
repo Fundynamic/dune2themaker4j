@@ -1,9 +1,9 @@
 package com.fundynamic.d2tm.game.behaviors;
 
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 
 public interface Moveable {
 
-    void moveTo(Vector2D target);
+    void moveTo(Coordinate target);
 
 }

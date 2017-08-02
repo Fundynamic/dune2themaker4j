@@ -10,7 +10,6 @@ import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
 /**
@@ -52,7 +51,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
         Coordinate startCoordinate = Coordinate.zero();
         if (entityWhoConstructsIt != null) {
-            startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
+            startCoordinate = entityWhoConstructsIt.getCenteredCoordinateOfEntity();
         }
 
         startCoordinate = startCoordinate.min(superPowerEntityData.getHalfSize());

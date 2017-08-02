@@ -37,4 +37,23 @@ public class MapCoordinate extends Vector2D {
     public MapCoordinate add(float correctX, float correctY) {
         return add(correctX, correctY);
     }
+
+    public boolean isAdjacentTo(MapCoordinate mapCoordinate) {
+        if (mapCoordinate == null) return false;
+        return distanceInMapCoords(mapCoordinate) == 1;
+    }
+
+    /**
+     * This gives a 'distance' within map coordinates. You can visualise this as 'the longest axis diff wins'.
+     * Meaning, a coordinate at 10,10 compared to 12,10 has a distance of 2. But so is 10,10 to 12,9.
+     *
+     * You might expect this to be a distance of 2,4... because the Y axis is also changed, yet this
+     * returns 2 'cells' distance.
+     *
+     * @param mapCoordinate
+     * @return
+     */
+    public int distanceInMapCoords(MapCoordinate mapCoordinate) {
+        return (int) distance(mapCoordinate);
+    }
 }
