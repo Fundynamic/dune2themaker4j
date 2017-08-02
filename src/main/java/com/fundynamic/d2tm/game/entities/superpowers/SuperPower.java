@@ -55,6 +55,9 @@ public class SuperPower extends Entity implements Destructible {
                 projectile.moveTo(target);
                 state = LAUNCHED;
                 break;
+            case LAUNCHED:
+                // wait for detonation
+                break;
             case EXPLODING:
                 timePassed += deltaInSeconds;
                 timePassedSinceLastDetonation += deltaInSeconds;
