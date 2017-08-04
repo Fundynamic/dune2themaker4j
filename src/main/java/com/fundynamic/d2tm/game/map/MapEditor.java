@@ -89,13 +89,14 @@ public class MapEditor {
         int maxY = map.getHeight() - 5;
 
         int amountOfStuff = 1 + (map.getWidth() + map.getHeight()) / 32; // 32 = arbitrary number (not tile size ;-))
+        int amountOfSpiceStuff = amountOfStuff += 5;
 
         int surface = map.getSurfaceAreaInTiles();
         int spiceFieldSize = (int)(surface * 0.05);
         int spiceCircularSize = 6;
         int spiceHillSize = (int)(spiceFieldSize * 0.05); // part of spiceFieldSize
 
-        for (int f = 0; f < amountOfStuff; f++) {
+        for (int f = 0; f < amountOfSpiceStuff; f++) {
             Vector2D randomVec = Vector2D.random(minX, maxX, minY, maxY);
             createCircularField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceCircularSize);
             createField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceFieldSize);

@@ -31,7 +31,7 @@ public class SeekSpiceState extends UnitState {
 
         Cell cell = Random.getRandomItem(possibleCandidateCells);
         if (cell != null) {
-            unit.harvestAt(cell.getCoordinates());
+            unit.harvestAt(cell.getCoordinate());
         }
     }
 

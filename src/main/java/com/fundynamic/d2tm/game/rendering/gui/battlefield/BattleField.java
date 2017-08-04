@@ -174,7 +174,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         Coordinate topLeftOfEntity = viewportCoordinate.min(halfSize);
 
         Cell topLeftCellOfEntity = getCellByAbsoluteViewportCoordinate(topLeftOfEntity);
-        return topLeftCellOfEntity.getCoordinates();
+        return topLeftCellOfEntity.getCoordinate();
     }
 
 

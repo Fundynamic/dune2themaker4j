@@ -21,7 +21,13 @@ public class HarvesterDeliveryIntents {
         if (whoClaimedWhatAlready != null && !whoClaimedWhatAlready.equals(who)) {
             throw new IllegalStateException("Entity " + who + " intended to place delivery intent for " + what + " but it was already claimed by " + whoClaimedWhatAlready + ", therefor the claim was invalid.");
         }
+        System.out.println("addDeliveryIntent at " + what + " by " + who);
         intentions.put(what, who);
+    }
+
+    public boolean hasDeliveryIntentAt(Entity what, Entity who) {
+        Entity entity = intentions.get(what);
+        return who.equals(entity);
     }
 
     public boolean canDeliverAt(Entity what, Entity who) {
@@ -34,8 +40,8 @@ public class HarvesterDeliveryIntents {
         if (!intentions.containsKey(what)) {
             throw new IllegalArgumentException("Cannot remove intent for " + what + ", because it is not known. These are known: " + intentions);
         }
+        System.out.println("removeDeliveryIntent at " + what);
         intentions.remove(what);
-
     }
 
     public void removeAllIntentsBy(Entity entityWhoPossiblyClaimed) {
@@ -50,6 +56,6 @@ public class HarvesterDeliveryIntents {
         }
 
         // remove all from intentions
-        entitiesToRemove.forEach(e -> intentions.remove(e));
+        entitiesToRemove.forEach(this::removeDeliveryIntent);
     }
 }

@@ -101,8 +101,8 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
         EntitiesSet entities = entityRepository.filter(
                 Predicate.builder().
-                        vectorWithin(hoverCell.getCoordinates()).
-                isSelectable()
+                    vectorWithin(hoverCell.getCoordinate()).
+                    isSelectable()
         );
 
         Entity entity = entities.getFirst();

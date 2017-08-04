@@ -392,7 +392,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         List<Coordinate> allCellsAsCoordinates = getAllCellsAsCenteredCoordinates();
         if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
         Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
-        return closest;
+        return closest.minHalfTile();
     }
 
     /**

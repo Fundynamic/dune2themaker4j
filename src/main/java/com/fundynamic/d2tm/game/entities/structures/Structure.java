@@ -90,7 +90,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             thinkTimer += deltaInSeconds;
             while (thinkTimer > 0.5F) {
                 thinkTimer -= 0.5F;
-                player.addCredits(5);
+//                player.addCredits(5);
             }
         }
 

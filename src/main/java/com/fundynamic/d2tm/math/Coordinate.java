@@ -49,6 +49,10 @@ public class Coordinate extends Vector2D {
         return new Coordinate(getX() + HALF_TILE, getYAsInt() + HALF_TILE);
     }
 
+    public Coordinate minHalfTile() {
+        return new Coordinate(getX() - HALF_TILE, getYAsInt() - HALF_TILE);
+    }
+
     public static Coordinate create(Vector2D vector2D) {
         return new Coordinate(vector2D.getX(), vector2D.getY());
     }

@@ -95,7 +95,7 @@ public class Cell {
      * {@link MapCoordinate} using {@link MapCoordinate#toCoordinate()}
      * @return
      */
-    public Coordinate getCoordinates() {
+    public Coordinate getCoordinate() {
         return mapCoordinate.toCoordinate();
     }
 

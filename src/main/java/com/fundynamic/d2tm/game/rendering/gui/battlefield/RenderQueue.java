@@ -50,7 +50,7 @@ public class RenderQueue {
 
     static {
         entityTypeToLayerMap.put(EntityType.NONE, 0);
-        entityTypeToLayerMap.put(EntityType.UNIT, 1);
+        entityTypeToLayerMap.put(EntityType.UNIT, 2);
         entityTypeToLayerMap.put(EntityType.STRUCTURE, 1);
         entityTypeToLayerMap.put(EntityType.PROJECTILE, 3);
         entityTypeToLayerMap.put(EntityType.SUPERPOWER, 3); // super power shares same layer as projectile (TODO: check)

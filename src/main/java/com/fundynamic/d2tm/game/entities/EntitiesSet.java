@@ -36,6 +36,10 @@ public class EntitiesSet extends HashSet<Entity> {
         return result;
     }
 
+    public EntitiesSet filterRefineries() {
+        return filter(Predicate.isRefinery());
+    }
+
     /**
      * Short hand method that calls the `build` method on the predicateBuilder
      * @param predicateBuilder

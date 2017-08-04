@@ -44,6 +44,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     private Coordinate target;                // the (end) goal to attack/move
     private Coordinate nextTargetToMoveTo;    // the next step/target to move to (ie, this is a step towards the 'real' target)
+    private Coordinate lastSeenSpiceAt;       // the coordinate we have seen spice for the last time when harvesting
 
     // Dependencies
     private final Map map;
@@ -66,6 +67,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = coordinate;
+        this.lastSeenSpiceAt = coordinate;
         this.nextTargetToMoveTo = coordinate;
         this.offset = Vector2D.zero();
         this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
@@ -238,12 +240,27 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
-        entities = entities.exclude(this); // do not count ourselves as blocking
         Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
 
+        if (!cell.isPassable(this)) return false; // no need to further check if terrain does not allow movement
+
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
+        entities = entities.exclude(this); // do not count ourselves as blocking
+
+        if (isHarvester() && isDoneHarvesting()) {
+            if (entities.hasOne()) {
+                Entity blockingEntity = entities.getFirst();
+                if (blockingEntity.isRefinery() &&
+                    HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(blockingEntity, this)) {
+                    // the thing that blocks us is the refinery where we wanted to go
+                    // then allow it.
+                    return true;
+                }
+            }
+        }
+
+        // all other units & cases
         return entities.isEmpty() &&
-                cell.isPassable(this) &&
                 UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this);
     }
 
@@ -565,6 +582,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void harvest(int amount) {
         Cell unitCell = map.getCellFor(this);
+        lastSeenSpiceAt = coordinate;
         harvested += unitCell.harvest(amount); // note, harvest method may return lower number than desired harvest amount
     }
 
@@ -594,12 +612,34 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
 
         if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
+            System.out.println("returnToRefinery) Will deliver to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
             HarvesterDeliveryIntents.instance.addDeliveryIntent(refinery, this);
             moveTo(closestCoordinateTo);
         } else {
+            System.out.println("returnToRefinery) Move close to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());
             moveTo(closestCoordinateTo);
         }
+    }
+
+    public void emptyHarvestedSpiceAt(Entity refinery) {
+        if (!refinery.isRefinery()) throw new IllegalArgumentException("Cannot empty harvester at non-refinery entity " + refinery);
+        // do not remove intent yet, do that once we are finished
+        setState(new EmptyHarvesterState(this, entityRepository, map, refinery));
+    }
+
+    public boolean hasSpiceToUnload() {
+        return harvested > 0;
+    }
+
+    public void depositSpice() {
+        int amountToDeposit = Math.min(this.harvested, 5);
+        this.harvested -= amountToDeposit;
+        this.player.addCredits(amountToDeposit);
+    }
+
+    public Coordinate lastSeenSpiceAt() {
+        return lastSeenSpiceAt;
     }
 }

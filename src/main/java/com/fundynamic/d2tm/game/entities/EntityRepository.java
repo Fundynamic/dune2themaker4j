@@ -196,6 +196,13 @@ public class EntityRepository {
         return entitiesSet.filter(predicateBuilder);
     }
 
+    public EntitiesSet findEntitiesAt(Coordinate coordinate) {
+        return filter(
+                Predicate.builder().
+                        vectorWithin(coordinate)
+        );
+    }
+
     public EntitiesSet filter(Predicate<Entity> predicate) {
         return entitiesSet.filter(predicate);
     }
