@@ -67,23 +67,27 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void leftClicked() {
-        if (focussedRenderableBuildableEntity != null) {
-            if (!entityBuilder.isBuildingAnEntity()) {
-                // construct it:
-                // 1. tell it to construct
-                entityBuilder.buildEntity(focussedRenderableBuildableEntity.getAbstractBuildableEntity());
-            } else {
-                // TODO: Is done constructing.
-                if (entityBuilder.isAwaitingPlacement()) {
-                    // TODO move to BattlefieldInteractable interface?!
-                    AbstractBuildableEntity abstractBuildableEntity = focussedRenderableBuildableEntity.getAbstractBuildableEntity();
-                    guiComposite.wantsToPlaceBuildableEntityOnBattlefield(abstractBuildableEntity);
-                }
-            }
+        if (focussedRenderableBuildableEntity == null) return;
+        AbstractBuildableEntity abstractBuildableEntity = focussedRenderableBuildableEntity.getAbstractBuildableEntity();
 
-            // update state of this entity
-            focussedRenderableBuildableEntity.leftClicked();
+        // not constructing anything, so start building it.
+        if (!entityBuilder.isBuildingAnEntity()) {
+            // construct it:
+            // 1. tell it to construct
+            entityBuilder.buildEntity(abstractBuildableEntity);
+        } else {
+            // it is building anything, so lets check the progress:
+
+            // does it await placement?
+            if (entityBuilder.isAwaitingPlacement(abstractBuildableEntity)) {
+                // TODO move to BattlefieldInteractable interface?!
+
+                guiComposite.wantsToPlaceBuildableEntityOnBattlefield(abstractBuildableEntity);
+            }
         }
+
+        // update state of this entity
+        focussedRenderableBuildableEntity.leftClicked();
     }
 
     @Override
@@ -131,13 +135,13 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         if (!entityBuilder.isBuildingAnEntity()) {
             // not building anything, that is weird?
             throw new IllegalStateException("Did not expect this");
-        } else {
-            if (entityBuilder.isAwaitingPlacement()) {
-                entityBuilder.entityIsDelivered(entity);
-            } else {
-                // for now...
-                throw new IllegalStateException("Would expect to have an entityBuilder selected with the entity that just has been placed.");
-            }
         }
+
+        // if nothing was awaiting placement, throw an exception as well
+        if (!entityBuilder.isAwaitingPlacement(entity.getEntityData())) {
+            throw new IllegalStateException("Would expect to have an entityBuilder selected with the entity that just has been placed.");
+        }
+
+        entityBuilder.entityIsDelivered(entity);
     }
 }

@@ -373,4 +373,5 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     public void entityPlacedOnMap(Entity entity) {
         guiComposite.entityPlacedOnMap(entity);
     }
+
 }

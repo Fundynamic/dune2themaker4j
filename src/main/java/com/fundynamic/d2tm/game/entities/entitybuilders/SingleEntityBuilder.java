@@ -63,8 +63,13 @@ public class SingleEntityBuilder implements EntityBuilder {
     }
 
     @Override
-    public boolean isAwaitingPlacement() {
-        return isBuildingAnEntity() && buildingEntity.awaitsPlacement();
+    public boolean isAwaitingPlacement(AbstractBuildableEntity placementBuildableEntity) {
+        return isBuildingAnEntity() && buildingEntity.isSameConstructedEntity(placementBuildableEntity) && buildingEntity.awaitsPlacement();
+    }
+
+    @Override
+    public boolean isAwaitingPlacement(EntityData entityData) {
+        return isBuildingAnEntity() && buildingEntity.getEntityData().equals(entityData) && buildingEntity.awaitsPlacement();
     }
 
     @Override

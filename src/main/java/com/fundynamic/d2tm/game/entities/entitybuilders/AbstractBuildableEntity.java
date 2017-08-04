@@ -126,4 +126,11 @@ public abstract class AbstractBuildableEntity implements Updateable {
     public int getBuildCost() {
         return entityData.buildCost;
     }
+
+    public boolean isSameConstructedEntity(AbstractBuildableEntity placementBuildableEntity) {
+        if (placementBuildableEntity == null) return false;
+        return entityData.equals(placementBuildableEntity.getEntityData());
+    }
+
+
 }

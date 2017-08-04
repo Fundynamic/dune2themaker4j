@@ -325,4 +325,88 @@ public class EntityData {
     public List<String> getEntityDataKeysToBuild() {
         return StringUtils.splitLenientToList(buildList, ",");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EntityData that = (EntityData) o;
+
+        if (Float.compare(that.buildTimeInSeconds, buildTimeInSeconds) != 0) return false;
+        if (Float.compare(that.buildRange, buildRange) != 0) return false;
+        if (buildCost != that.buildCost) return false;
+        if (facings != that.facings) return false;
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        if (widthInCells != that.widthInCells) return false;
+        if (heightInCells != that.heightInCells) return false;
+        if (maxAscensionHeight != that.maxAscensionHeight) return false;
+        if (Float.compare(that.startToDescendPercentage, startToDescendPercentage) != 0) return false;
+        if (Float.compare(that.maxAscensionAtFlightPercentage, maxAscensionAtFlightPercentage) != 0) return false;
+        if (sight != that.sight) return false;
+        if (Float.compare(that.moveSpeed, moveSpeed) != 0) return false;
+        if (Float.compare(that.turnSpeed, turnSpeed) != 0) return false;
+        if (Float.compare(that.turnSpeedCannon, turnSpeedCannon) != 0) return false;
+        if (Float.compare(that.attackRate, attackRate) != 0) return false;
+        if (Float.compare(that.attackRange, attackRange) != 0) return false;
+        if (damage != that.damage) return false;
+        if (hitPoints != that.hitPoints) return false;
+        if (Float.compare(that.animationSpeed, animationSpeed) != 0) return false;
+        if (recolor != that.recolor) return false;
+        if (Float.compare(that.chop, chop) != 0) return false;
+        if (Float.compare(that.halfChop, halfChop) != 0) return false;
+        if (isHarvester != that.isHarvester) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (type != that.type) return false;
+        if (entityBuilderType != that.entityBuilderType) return false;
+        if (buildIcon != null ? !buildIcon.equals(that.buildIcon) : that.buildIcon != null) return false;
+        if (buildList != null ? !buildList.equals(that.buildList) : that.buildList != null) return false;
+        if (image != null ? !image.equals(that.image) : that.image != null) return false;
+        if (barrelImage != null ? !barrelImage.equals(that.barrelImage) : that.barrelImage != null) return false;
+        if (weaponId != null ? !weaponId.equals(that.weaponId) : that.weaponId != null) return false;
+        if (explosionId != null ? !explosionId.equals(that.explosionId) : that.explosionId != null) return false;
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        return soundData != null ? soundData.equals(that.soundData) : that.soundData == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (entityBuilderType != null ? entityBuilderType.hashCode() : 0);
+        result = 31 * result + (buildTimeInSeconds != +0.0f ? Float.floatToIntBits(buildTimeInSeconds) : 0);
+        result = 31 * result + (buildRange != +0.0f ? Float.floatToIntBits(buildRange) : 0);
+        result = 31 * result + buildCost;
+        result = 31 * result + (buildIcon != null ? buildIcon.hashCode() : 0);
+        result = 31 * result + (buildList != null ? buildList.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (barrelImage != null ? barrelImage.hashCode() : 0);
+        result = 31 * result + facings;
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + widthInCells;
+        result = 31 * result + heightInCells;
+        result = 31 * result + maxAscensionHeight;
+        result = 31 * result + (startToDescendPercentage != +0.0f ? Float.floatToIntBits(startToDescendPercentage) : 0);
+        result = 31 * result + (maxAscensionAtFlightPercentage != +0.0f ? Float.floatToIntBits(maxAscensionAtFlightPercentage) : 0);
+        result = 31 * result + sight;
+        result = 31 * result + (moveSpeed != +0.0f ? Float.floatToIntBits(moveSpeed) : 0);
+        result = 31 * result + (turnSpeed != +0.0f ? Float.floatToIntBits(turnSpeed) : 0);
+        result = 31 * result + (turnSpeedCannon != +0.0f ? Float.floatToIntBits(turnSpeedCannon) : 0);
+        result = 31 * result + (attackRate != +0.0f ? Float.floatToIntBits(attackRate) : 0);
+        result = 31 * result + (attackRange != +0.0f ? Float.floatToIntBits(attackRange) : 0);
+        result = 31 * result + (weaponId != null ? weaponId.hashCode() : 0);
+        result = 31 * result + damage;
+        result = 31 * result + hitPoints;
+        result = 31 * result + (explosionId != null ? explosionId.hashCode() : 0);
+        result = 31 * result + (animationSpeed != +0.0f ? Float.floatToIntBits(animationSpeed) : 0);
+        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (recolor ? 1 : 0);
+        result = 31 * result + (chop != +0.0f ? Float.floatToIntBits(chop) : 0);
+        result = 31 * result + (halfChop != +0.0f ? Float.floatToIntBits(halfChop) : 0);
+        result = 31 * result + (isHarvester ? 1 : 0);
+        result = 31 * result + (soundData != null ? soundData.hashCode() : 0);
+        return result;
+    }
 }

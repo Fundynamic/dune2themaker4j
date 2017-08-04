@@ -24,6 +24,11 @@ import static java.util.stream.Collectors.toList;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
+/**
+ * Renders a normal mouse cursor with the Structure to be placed, along with visual information
+ * about what happens when placing structure. Ie, it will show if a structure can be placed or not, but also
+ * how 'well' the structure can be placed. (latter one to be developed, but implementation should be here)
+ */
 public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
     private EntityData entityDataToPlace;

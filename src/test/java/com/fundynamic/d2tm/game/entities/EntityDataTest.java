@@ -103,4 +103,21 @@ public class EntityDataTest extends AbstractD2TMTest {
         Assert.assertEquals("REFINERY", entityDataKeysToBuild.get(1));
     }
 
+    @Test
+    public void equals() {
+        EntityData one = new EntityData();
+        one.type = EntityType.UNIT;
+        one.name = "Foo";
+        one.setHeight(32);
+        one.setWidth(32);
+
+        EntityData two = new EntityData();
+        two.type = EntityType.UNIT;
+        two.name = "Foo";
+        two.setHeight(32);
+        two.setWidth(32);
+
+        Assert.assertEquals(one, two);
+    }
+
 }
