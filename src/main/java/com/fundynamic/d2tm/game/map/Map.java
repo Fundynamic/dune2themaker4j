@@ -13,6 +13,8 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 /**
  *
  * This class represents the game map data.
@@ -20,8 +22,6 @@ import java.util.List;
  *
  */
 public class Map {
-
-    private static final int TILE_SIZE = 32; // If possible, get rid of this!
 
     private Shroud shroud;
     private final int height, width;
