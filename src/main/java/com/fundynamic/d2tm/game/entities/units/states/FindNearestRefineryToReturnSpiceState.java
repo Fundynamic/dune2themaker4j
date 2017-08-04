@@ -39,6 +39,9 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
             Structure refinery = (Structure) e;
             // TODO-HARVESTER: filter out refinery that is already occupied
             return e != null;
+        }).sorted((e1, e2) -> {
+            // find closest
+            return Float.compare(e1.distance(unit), e2.distance(unit));
         }).findFirst().orElse(null);
 
         unit.returnToRefinery(nearestUnoccupiedRefinery);
