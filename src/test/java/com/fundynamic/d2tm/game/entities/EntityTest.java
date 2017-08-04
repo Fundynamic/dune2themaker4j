@@ -239,4 +239,31 @@ public class EntityTest extends AbstractD2TMTest {
     }
 
     // destroy without any events set, check NPE , etc
+
+    @Test
+    public void getCenteredCoordinateOfEntity() {
+        int widthInPixels = 96;
+        int heightInPixels = 96;
+
+        EntityData entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
+        entityData.setWidth(widthInPixels);
+        entityData.setHeight(heightInPixels);
+
+        Coordinate topLeftCoordinate = Coordinate.create(160, 224); // MapCell 5x7
+        Entity entity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("Refinery");
+
+        // Expectation
+        Coordinate expectedCenteredCoordinate = Coordinate.create(
+                topLeftCoordinate.getXAsInt() + (widthInPixels / 2),
+                topLeftCoordinate.getYAsInt() + (heightInPixels / 2)
+        );
+
+        // Act
+        Coordinate centeredCoordinateOfEntity = entity.getCenteredCoordinateOfEntity();
+
+        assertThat(centeredCoordinateOfEntity, is(expectedCenteredCoordinate));
+
+    }
 }
