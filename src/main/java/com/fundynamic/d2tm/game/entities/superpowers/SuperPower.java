@@ -39,7 +39,7 @@ public class SuperPower extends Entity implements Destructible {
 
     public SuperPower(Coordinate coordinate, EntityData entityData, Player player, EntityRepository entityRepository) {
         super(coordinate, null, entityData, player, entityRepository);
-        state = SuperPowerState.INITIAL;
+        state = INITIAL;
     }
 
     // TODO: onCreate!?
