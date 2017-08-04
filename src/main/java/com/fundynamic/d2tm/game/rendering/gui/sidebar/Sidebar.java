@@ -9,7 +9,7 @@ import org.newdawn.slick.Graphics;
 
 /**
  * <p>
- *     The sidebar is located at the right and offers interactions with entities. For example, structures
+ *     The sidebar offers interactions with entities. For example, structures
  *     can interact with the sidebar to offer things to build.
  * </p>
  * <p>

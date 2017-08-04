@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fancy name for a 'build icon'
+ * A fancy name for a 'build icon', part of the Sidebar
  */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
-    // the entity that is building other entities
+    // The entity that is building other entities, ie a Structure
     private EntityBuilder entityBuilder;
 
-    // requires communication with BattleField so that we can instantiate the 'place structure mouse' at the battlefield
+    // Requires communication with BattleField so that we can instantiate the 'place structure mouse' at the battlefield
     // once construction is completed.
     private GuiComposite guiComposite;
 
@@ -132,8 +132,8 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void entityPlacedOnMap(Entity entity) {
+        // if we where not building anything, throw an exception
         if (!entityBuilder.isBuildingAnEntity()) {
-            // not building anything, that is weird?
             throw new IllegalStateException("Did not expect this");
         }
 
