@@ -9,14 +9,19 @@ import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -214,6 +219,23 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
         assertThat(second.screenX, is(16)); // unitX - viewportVecX
         assertThat(second.screenY, is(16)); // unitY - viewportVecY
+    }
+
+    @Test
+    public void canHarvestWhenHarvesterAndOnHarvestableCell() {
+        // make an all spice map
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
+
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), "HARVESTER");
+
+        assertThat(unit.canHarvest(), is(true));
+    }
+
+    @Test
+    public void canHarvestIsFalseWhenNotHarvester() {
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
+        assertThat(unit.canHarvest(), is(false));
     }
 
     public static SpriteSheet makeSpriteSheet() {

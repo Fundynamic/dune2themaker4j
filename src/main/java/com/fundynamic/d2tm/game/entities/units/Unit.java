@@ -15,6 +15,7 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // state
     private UnitState state;
+    private int harvested;
 
     // Behaviors
     private FadingSelection fadingSelection;
@@ -68,6 +70,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.offset = Vector2D.zero();
         this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
         this.state = new IdleState(this, entityRepository, map);
+        this.harvested = 0;
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
@@ -84,19 +87,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         bodyFacing.render(graphics, drawX, drawY);
         cannonFacing.render(graphics, drawX, drawY);
+
+        if (isHarvester()) {
+            graphics.setColor(Color.white);
+            graphics.drawString("" + harvested, drawX, drawY - 12);
+        }
     }
 
     @Override
     public void update(float deltaInSeconds) {
         if (hitPointBasedDestructibility.hasDied()) {
             die();
-        }
-
-        Cell unitCell = map.getCellFor(this);
-
-        // we can harvest
-        if (isHarvester() && unitCell.isHarvestable()) {
-            harvesting();
         }
 
         state.update(deltaInSeconds);
@@ -215,7 +216,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
-                        while(attackTimer > 1.0F) {
+                        while (attackTimer > 1.0F) {
                             Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
@@ -454,7 +455,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return Vector2D.create(TILE_SIZE, TILE_SIZE);
     }
 
-    public void harvest(Coordinate target) {
+    /**
+     * Same as {@link #moveTo(Coordinate)}
+     *
+     * @param target
+     */
+    public void harvestAt(Coordinate target) {
         moveTo(target);
     }
 
@@ -489,6 +495,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     /**
      * Order unit to move to a cell. Puts it into the MoveToCellState and remembers the intent
      * to move to this cell so that other units will not attempt the same movement.
+     *
      * @param nextIntendedCoordinatesToMoveTo
      */
     public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
@@ -503,6 +510,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     /**
      * Unit arrived at cell. Will put unit in GoalResolverState and removes the intent it
      * previously had given.
+     *
      * @param coordinateToMoveTo
      */
     public void arrivedAtCell(Coordinate coordinateToMoveTo) {
@@ -540,5 +548,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public RenderQueueEnrichableWithFacingLogic getBodyFacing() {
         return bodyFacing;
+    }
+
+    public boolean canHarvest() {
+        Cell unitCell = map.getCellFor(this);
+        return unitCell.isHarvestable();
+    }
+
+    public void harvestCell() {
+        // TODO: make this time based, like movespeed
+        // TODO: get this from entityData
+        int amount = 1;
+        Cell unitCell = map.getCellFor(this);
+        harvested += unitCell.harvest(amount); // note, harvest method may return lower number than desired harvest amount
     }
 }

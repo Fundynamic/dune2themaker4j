@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.entities.units.states;
 
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 
 public class HarvestingState extends UnitState {
@@ -14,11 +13,10 @@ public class HarvestingState extends UnitState {
 
     @Override
     public void update(float deltaInSeconds) {
-        Cell cellByMapCoordinates = map.getCellByMapCoordinates(unit.getCoordinate().toMapCoordinate());
-
         // we can harvest
-        if (cellByMapCoordinates.isHarvestable()) {
-            cellByMapCoordinates.harvest(5);
+        if (unit.canHarvest()) {
+            unit.harvestCell();
+
             if (!unit.isAnimating()) {
                 unit.startAnimating();
             }

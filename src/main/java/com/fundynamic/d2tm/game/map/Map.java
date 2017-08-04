@@ -268,4 +268,5 @@ public class Map {
     public int getSurfaceAreaInTiles() {
         return width * height;
     }
+
 }

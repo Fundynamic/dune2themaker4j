@@ -15,7 +15,11 @@ public class IdleState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (unit.isHarvester()) {
-            unit.seekSpice();
+            if (unit.canHarvest()) {
+                unit.harvesting();
+            } else {
+                unit.seekSpice();
+            }
         }
     }
 

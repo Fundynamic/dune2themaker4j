@@ -71,7 +71,7 @@ public class MovableSelectedMouse extends NormalMouse {
             if (harvestersSelected.hasAny() && entitiesSetOfAllMovable.sameSizeAs(harvestersSelected)) {
                 if (cell.isHarvestable()) {
                     for (Entity entity : entitiesSetOfAllMovable) {
-                        ((Unit) entity).harvest(target);
+                        ((Unit) entity).harvestAt(target);
                     }
                 } else {
                     for (Entity entity : entitiesSetOfAllMovable) {
