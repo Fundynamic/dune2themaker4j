@@ -22,8 +22,8 @@ public class Game extends StateBasedGame {
 
     public static final String GAME_TITLE = "Dune II - The Maker";
 
-    public static final int SCREEN_WIDTH = 1024;
-    public static final int SCREEN_HEIGHT = 768;
+    public static final int SCREEN_WIDTH = 800;
+    public static final int SCREEN_HEIGHT = 600;
     public static final boolean SHOW_FPS = false;
     public static final boolean VSYNC = true;
 
