@@ -6,14 +6,16 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Input;
 
 /**
- * Listens to mouse events and passes them to our mouse class.
+ * Listens to (Slick) mouse events and passes them to the {@link Mouse} class.
  */
 public class MouseListener extends AbstractMouseListener {
 
     private final Mouse mouse;
+    private Vector2D mouseScreenPosition;
 
     public MouseListener(Mouse mouse) {
         this.mouse = mouse;
+        this.mouseScreenPosition = Vector2D.zero();
     }
 
     @Override
@@ -46,12 +48,12 @@ public class MouseListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        mouse.movedTo(Vector2D.create(newx, newy));
+        mouse.movedTo(mouseScreenPosition.update(newx,  newy));
     }
 
     @Override
     public void mouseDragged(int oldx, int oldy, int newx, int newy) {
-        mouse.draggedToCoordinates(Vector2D.create(newx, newy));
+        mouse.draggedToCoordinates(mouseScreenPosition.update(newx,  newy));
     }
 
 }
