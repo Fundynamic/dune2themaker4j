@@ -22,13 +22,16 @@ public class SpiceHill extends DuneTerrain implements Harvestable {
         return TERRAIN_SPICE_HILL;
     }
 
-    public int harvest(int spice) {
-        this.spice -= spice;
-        if (this.spice <= 0) {
-            cell.changeTerrain(new Spice(theme, cell, 100));
-            cell.smoothSurroundingCells();
+    public int harvest(int amount) {
+        if (spice > amount) {
+            spice -= amount;
+            return amount;
         }
-        return spice;
+        int remaining = spice;
+        spice = 0;
+        cell.changeTerrain(new Spice(theme, cell, 100));
+        cell.smoothSurroundingCells();
+        return remaining;
     }
 
 }
