@@ -224,12 +224,25 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void canHarvestWhenHarvesterAndOnHarvestableCell() {
         // make an all spice map
-        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)) {
+            @Override
+            public int getSpiceAmount() {
+                return 1000;
+            }
+        });
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
         Unit unit = makeUnit(player, Coordinate.create(48, 48), "HARVESTER");
 
         assertThat(unit.canHarvest(), is(true));
+        assertThat(unit.isDoneHarvesting(), is(false));
+
+        unit.harvest(700);
+
+        // still spice remaining, but the harvester is full
+        // so: can? yes, isDoneHarvesting? yes
+        assertThat(unit.canHarvest(), is(true));
+        assertThat(unit.isDoneHarvesting(), is(true));
     }
 
     @Test

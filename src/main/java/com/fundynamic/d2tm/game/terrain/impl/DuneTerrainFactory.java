@@ -23,16 +23,24 @@ public class DuneTerrainFactory implements TerrainFactory {
             case DuneTerrain.TERRAIN_SAND_HILL:
                 return new SandHill(theme);
             case DuneTerrain.TERRAIN_SPICE:
-                return new Spice(theme, cell, Random.getRandomBetween(150, 250));
+                return new Spice(theme, cell, getSpiceAmount());
             case DuneTerrain.TERRAIN_MOUNTAIN:
                 return new Mountain(theme);
             case DuneTerrain.TERRAIN_SPICE_HILL:
-                return new SpiceHill(theme, cell, Random.getRandomBetween(350, 500));
+                return new SpiceHill(theme, cell, getSpiceHillAmount());
             case DuneTerrain.CONCRETE:
                 return new ConcreteSlab(theme);
             default:
                 throw new IndexOutOfBoundsException("Invalid value for terrainType: " + terrainType);
         }
+    }
+
+    public int getSpiceHillAmount() {
+        return Random.getRandomBetween(350, 500);
+    }
+
+    public int getSpiceAmount() {
+        return Random.getRandomBetween(150, 250);
     }
 
 }

@@ -557,10 +557,22 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void harvestCell() {
+        startAnimating(); // TODO: make this 'harvesting animation'
         // TODO: make this time based, like movespeed
         // TODO: get this from entityData
-        int amount = 1;
+        harvest(1);
+    }
+
+    public void harvest(int amount) {
         Cell unitCell = map.getCellFor(this);
         harvested += unitCell.harvest(amount); // note, harvest method may return lower number than desired harvest amount
+    }
+
+    public boolean isDoneHarvesting() {
+        return harvested >= 700; // TODO: make harvest capacity configurable (entityData)
+    }
+
+    public void findNearestRefineryToReturnSpice() {
+        setState(new FindNearestRefineryToReturnSpiceState(this, entityRepository, map));
     }
 }
