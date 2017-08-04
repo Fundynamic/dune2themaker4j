@@ -6,6 +6,9 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Coordinate;
 
+/**
+ * Determine what to do to get to the given goal.
+ */
 public class GoalResolverState extends UnitState {
 
     public GoalResolverState(Unit unit, EntityRepository entityRepository, Map map) {
@@ -14,6 +17,7 @@ public class GoalResolverState extends UnitState {
 
     @Override
     public void update(float deltaInSeconds) {
+
         if (!unit.shouldMove()) {
             unit.idle();
             return;
@@ -21,7 +25,7 @@ public class GoalResolverState extends UnitState {
 
         if (unit.hasNoNextCellToMoveTo()) {
             Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
-            if (unit.canMoveToCell(nextIntendedCoordinatesToMoveTo)) {
+            if (unit.isCellPassableForMe(nextIntendedCoordinatesToMoveTo)) {
                 unit.moveToCell(nextIntendedCoordinatesToMoveTo);
             }
         } else {

@@ -1,12 +1,10 @@
 package com.fundynamic.d2tm.math;
 
-import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.terrain.Terrain;
-
 import java.util.List;
 
 public class Random {
 
+    private static java.util.Random random = new java.util.Random();
     /**
      * Returns value between min *until* max, not including max.
      *
@@ -22,7 +20,8 @@ public class Random {
     }
 
     public static int getInt(int max) {
-        return (int) (Math.random() * max);
+        if (max == 0) return 0;
+        return random.nextInt(max);
     }
 
     /**

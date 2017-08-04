@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
+import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
@@ -48,6 +49,11 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     protected Entity origin; // which entity created this entity? (if applicable)
 
+    /**
+     * top left *cell* coordinate, not the top-left of unit image!
+     * ie, even a Harvester (with 48x48 image size) is positioned on 32,32, a trike is as well.
+     * both units are rendered differently, but that is taken care of the {@link RenderQueueEnrichableWithFacingLogic}
+     **/
     protected Coordinate coordinate;
 
     public Entity(Coordinate coordinate, SpriteSheet spritesheet, EntityData entityData, Player player, EntityRepository entityRepository) {
@@ -88,6 +94,26 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      */
     public float distance(Entity other) {
         return getCenteredCoordinate().distance(other.getCenteredCoordinate());
+    }
+
+    /**
+     * Returns distance from this entity to other Coordinate. Uses centered coordinate as start
+     * coordinate. Does not influence given otherCoordinate param
+     * @param otherCoordinate
+     * @return
+     */
+    public float distanceTo(Coordinate otherCoordinate) {
+        return getCenteredCoordinate().distance(otherCoordinate);
+    }
+
+    /**
+     * Returns distance from this entity to other Map coordinate in 'cells'.
+     *
+     * @param otherCoordinate
+     * @return
+     */
+    public int distanceToInMapCoords(MapCoordinate otherCoordinate) {
+        return coordinate.toMapCoordinate().distanceInMapCoords(otherCoordinate);
     }
 
     public int getX() {
@@ -159,8 +185,8 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return false;
     }
 
-    public Vector2D getRandomPositionWithin() {
-        return Vector2D.random(getX(), getX() + entityData.getWidth(), getY(), getY() + entityData.getHeight());
+    public Coordinate getRandomPositionWithin() {
+        return new Coordinate(Vector2D.random(getX(), getX() + entityData.getWidth(), getY(), getY() + entityData.getHeight()));
     }
 
     public Vector2D getDimensions() {
@@ -201,13 +227,16 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate()).collect(Collectors.toList());
     }
 
-    // this basically goes 'around' the entity
     public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
-        MapCoordinate mapCoordinate = coordinate.toMapCoordinate();
-        ArrayList<MapCoordinate> result = new ArrayList<>();
+        return getMapCoordinates(coordinate.toMapCoordinate()); // coordinate == top left
+    }
 
-        int currentX = mapCoordinate.getXAsInt();
-        int currentY = mapCoordinate.getYAsInt();
+    // this basically goes 'around' the entity, starting from top-left
+    public List<MapCoordinate> getMapCoordinates(MapCoordinate topLeftMapCoordinate) {
+        int currentX = topLeftMapCoordinate.getXAsInt();
+        int currentY = topLeftMapCoordinate.getYAsInt();
+
+        ArrayList<MapCoordinate> result = new ArrayList<>();
 
         // first row
         int topRowY = currentY - 1;
@@ -216,12 +245,13 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
             result.add(MapCoordinate.create(calculatedX, topRowY));
         }
 
+        int leftX = (currentX - 1);
+
         // then all 'sides' of the structure (left and right)
         for (int y = 0; y < entityData.getHeightInCells(); y++) {
             int calculatedY = currentY + y;
 
             // left side
-            int leftX = (currentX - 1);
             result.add(MapCoordinate.create(leftX, calculatedY));
 
             // right side
@@ -232,7 +262,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         // bottom row
         int bottomRowY = currentY + entityData.getHeightInCells();
         for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
-            int calculatedX = (currentX - 1) + x;
+            int calculatedX = leftX + x;
             result.add(MapCoordinate.create(calculatedX, bottomRowY));
         }
 

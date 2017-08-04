@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class Cell {
 
     public static final int TILE_SIZE = 32;
+    public static final int TILE_SIZE_ZERO_BASED = TILE_SIZE - 1;
     public static final int HALF_TILE = TILE_SIZE / 2;
 
     private final Map map;

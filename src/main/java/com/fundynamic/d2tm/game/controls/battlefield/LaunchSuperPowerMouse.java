@@ -10,7 +10,6 @@ import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.Coordinate;
-import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
 /**

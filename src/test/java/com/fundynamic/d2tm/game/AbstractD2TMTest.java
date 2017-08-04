@@ -251,7 +251,7 @@ public abstract class AbstractD2TMTest {
     }
 
     public Structure makeStructure(Player player, int hitPoints, int widthInCells, int heightInCells, int sight, final Coordinate coordinate) {
-        EntityData entityData = new EntityData(widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
+        EntityData entityData = new EntityData(EntityType.STRUCTURE, widthInCells * TILE_SIZE, heightInCells * TILE_SIZE, sight);
         entityData.entityBuilderType = EntityBuilderType.UNITS;
         entityData.buildList = "QUAD";
         entityData.hitPoints = hitPoints;

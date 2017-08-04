@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.math.Coordinate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class UnitMoveIntentsTest {
 
-    public static final Vector2D VEC_23_23 = Vector2D.create(23, 23);
+    public static final Coordinate VEC_23_23 = Coordinate.create(23, 23);
     private UnitMoveIntents unitMoveIntents;
     private NullEntity entityOne;
     private NullEntity entityTwo;

@@ -303,9 +303,9 @@ public class EntitiesData {
         EntityData entityData = new EntityData();
         entityData.image = loadImage(pathToImage);
         entityData.barrelImage = loadImage(pathToBarrelImage);
+        entityData.type = entityType;
         entityData.setWidth(widthInPixels);
         entityData.setHeight(heightInPixels);
-        entityData.type = entityType;
         entityData.sight = sight;
         entityData.moveSpeed = moveSpeed;
         entityData.hitPoints = hitPoints;

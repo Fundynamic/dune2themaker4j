@@ -36,7 +36,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        EntityData entityData = new EntityData(32, 32, 10);
+        EntityData entityData = new EntityData(EntityType.UNIT, 32, 32, 10);
 
         entitiesSet = new EntitiesSet();
 

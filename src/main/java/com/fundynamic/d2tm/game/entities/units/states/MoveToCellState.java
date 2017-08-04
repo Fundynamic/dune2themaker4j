@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.units.states;
 
 
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
@@ -42,21 +43,21 @@ public class MoveToCellState extends UnitState {
         if (nextTargetToMoveTo.getYAsInt() > coordinate.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
-        if (offsetX > 31) {
+        if (offsetX > Cell.TILE_SIZE_ZERO_BASED) {
             offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(32, 0));
+            vecToAdd = vecToAdd.add(Vector2D.create(Cell.TILE_SIZE, 0));
         }
-        if (offsetX < -31) {
+        if (offsetX < -Cell.TILE_SIZE_ZERO_BASED) {
             offsetX = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(-32, 0));
+            vecToAdd = vecToAdd.add(Vector2D.create(-Cell.TILE_SIZE, 0));
         }
-        if (offsetY > 31) {
+        if (offsetY > Cell.TILE_SIZE_ZERO_BASED) {
             offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, 32));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, Cell.TILE_SIZE));
         }
-        if (offsetY < -31) {
+        if (offsetY < -Cell.TILE_SIZE_ZERO_BASED) {
             offsetY = 0;
-            vecToAdd = vecToAdd.add(Vector2D.create(0, -32));
+            vecToAdd = vecToAdd.add(Vector2D.create(0, -Cell.TILE_SIZE));
         }
 
         // Arrived at intended next target cell

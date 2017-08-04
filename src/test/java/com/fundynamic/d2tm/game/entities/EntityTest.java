@@ -32,11 +32,13 @@ public class EntityTest extends AbstractD2TMTest {
         super.setUp();
         topLeftCoordinate = Coordinate.create(TILE_SIZE * 4, TILE_SIZE * 4); // 4X32 = 128
         entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
         entityData.setWidth(64);
         entityData.setHeight(64);
 
         entity1 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("Entity1");
+
         entity2 = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("Entity2");
     }
@@ -74,6 +76,33 @@ public class EntityTest extends AbstractD2TMTest {
 
         Assert.assertEquals(3, upLeftOfTopLeft.getXAsInt());
         Assert.assertEquals(3, upLeftOfTopLeft.getYAsInt());
+    }
+
+    @Test
+    public void getAllSurroundingCoordinatesOfAnEntityThatIsOneCellBig() {
+        EntityData entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
+        entityData.setWidth(TILE_SIZE);
+        entityData.setHeight(TILE_SIZE);
+
+        TestableEntity smallEntity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("SmallEntity");
+
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsCoordinates();
+
+        Assert.assertEquals(8, allSurroundingCellsAsCoordinates.size());
+
+        // we expect the first tile to be at 1 tile above and 1 tile left to the entity1:
+        MapCoordinate upLeftOfTopLeft = allSurroundingCellsAsCoordinates.get(0);
+
+        MapCoordinate topLeftMapCoordinate = this.topLeftCoordinate.toMapCoordinate();
+        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() - 1, upLeftOfTopLeft.getXAsInt());
+        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() - 1, upLeftOfTopLeft.getYAsInt());
+
+        MapCoordinate downRight = allSurroundingCellsAsCoordinates.get(7); // last one
+
+        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() + 1, downRight.getXAsInt());
+        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() + 1, downRight.getYAsInt());
     }
 
     //////////////////////////////////////////////////
@@ -209,4 +238,31 @@ public class EntityTest extends AbstractD2TMTest {
     }
 
     // destroy without any events set, check NPE , etc
+
+    @Test
+    public void getCenteredCoordinateOfEntity() {
+        int widthInPixels = 96;
+        int heightInPixels = 96;
+
+        EntityData entityData = new EntityData();
+        entityData.type = EntityType.STRUCTURE;
+        entityData.setWidth(widthInPixels);
+        entityData.setHeight(heightInPixels);
+
+        Coordinate topLeftCoordinate = Coordinate.create(160, 224); // MapCell 5x7
+        Entity entity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
+                setName("Refinery");
+
+        // Expectation
+        Coordinate expectedCenteredCoordinate = Coordinate.create(
+                topLeftCoordinate.getXAsInt() + (widthInPixels / 2),
+                topLeftCoordinate.getYAsInt() + (heightInPixels / 2)
+        );
+
+        // Act
+        Coordinate centeredCoordinateOfEntity = entity.getCenteredCoordinate();
+
+        assertThat(centeredCoordinateOfEntity, is(expectedCenteredCoordinate));
+
+    }
 }

@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBeh
 import com.fundynamic.d2tm.game.controls.battlefield.CellBasedMouseBehavior;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.Perimeter;
