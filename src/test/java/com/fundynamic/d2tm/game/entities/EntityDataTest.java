@@ -104,7 +104,7 @@ public class EntityDataTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void equals() {
+    public void equalsTest() {
         EntityData one = new EntityData();
         one.type = EntityType.UNIT;
         one.name = "Foo";
@@ -118,6 +118,19 @@ public class EntityDataTest extends AbstractD2TMTest {
         two.setWidth(32);
 
         Assert.assertEquals(one, two);
+        Assert.assertEquals(two, one);
+        Assert.assertTrue(one.hashCode() == two.hashCode());
     }
 
+    @Test
+    public void equalsNotTest() {
+        EntityData one = new EntityData();
+        one.type = EntityType.UNIT;
+        one.name = "Foo";
+        one.setHeight(32);
+        one.setWidth(32);
+
+        Assert.assertNotEquals(one, null);
+    }
+    
 }
