@@ -12,6 +12,8 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
  */
 public class Coordinate extends Vector2D {
 
+    private MapCoordinate mapCoordinate;
+
     public static Coordinate create(float x, float y) {
         return new Coordinate(x, y);
     }
@@ -23,8 +25,6 @@ public class Coordinate extends Vector2D {
     public Coordinate(Vector2D vec) {
         this(vec.getX(), vec.getY());
     }
-
-    private MapCoordinate mapCoordinate;
 
     public Coordinate(float x, float y) {
         super(x, y);

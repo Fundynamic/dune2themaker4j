@@ -125,7 +125,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 if (enemyEntities.isEmpty()) {
                     if (this.getPlayer().isCPU()) {
                         //TODO: enemy units scan entire map... (shouldnt do that ;-))
-                        float distance = map.getHeight() * map.getWidth() * Cell.TILE_SIZE;
+                        float distance = map.getHeight() * map.getWidth() * TILE_SIZE;
                         Entity enemyToAttack = null;
                         for (Entity entity : entities) {
                             if (!(entity instanceof Unit)) continue;
@@ -258,13 +258,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
             // occupied then stop? (5 because that is 'half surrounded')
             // TODO: even better than previous todo, implement path finding...
-            if (distanceToTarget <= Cell.TILE_SIZE) {
+            if (distanceToTarget <= TILE_SIZE) {
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
                 bestCoordinate = coordinate;
             } else {
                 // fall back if we have to take a 'detour'
-                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + Cell.TILE_SIZE);
+                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + TILE_SIZE);
             }
         }
 
@@ -274,16 +274,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return coordinate;
     }
 
-    public Coordinate findClosestCoordinateTowards(List<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float closest) {
+    public Coordinate findClosestCoordinateTowards(List<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
         Coordinate bestCoordinate = null;
+        float shortestDistance = maxDistance;
         for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
             Coordinate coordinate = mapCoordinate.toCoordinate();
             boolean isCellPassableForMe = isCellPassableForMe(coordinate);
             if (!isCellPassableForMe) continue;
 
             float distance = coordinate.distance(target);
-            if (distance < closest) {
-                closest = distance;
+            if (distance < shortestDistance) {
+                shortestDistance = distance;
                 bestCoordinate = mapCoordinate.toCoordinate();
             }
         }

@@ -83,8 +83,8 @@ public class EntityTest extends AbstractD2TMTest {
     public void getAllSurroundingCoordinatesOfAnEntityThatIsOneCellBig() {
         EntityData entityData = new EntityData();
         entityData.type = EntityType.STRUCTURE;
-        entityData.setWidth(Cell.TILE_SIZE);
-        entityData.setHeight(Cell.TILE_SIZE);
+        entityData.setWidth(TILE_SIZE);
+        entityData.setHeight(TILE_SIZE);
 
         TestableEntity smallEntity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("SmallEntity");
