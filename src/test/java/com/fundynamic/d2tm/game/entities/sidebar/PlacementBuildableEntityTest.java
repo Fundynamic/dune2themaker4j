@@ -1,9 +1,9 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.types.EntityData;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

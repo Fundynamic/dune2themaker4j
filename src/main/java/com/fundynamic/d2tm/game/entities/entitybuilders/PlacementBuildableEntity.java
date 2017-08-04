@@ -2,9 +2,9 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
+import com.fundynamic.d2tm.game.types.EntityData;
 
 /**
  * <h1>General</h1>

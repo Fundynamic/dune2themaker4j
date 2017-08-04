@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.behaviors;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
+import com.fundynamic.d2tm.game.types.EntityData;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ public interface EntityBuilder extends Updateable {
     List<AbstractBuildableEntity> getBuildList();
 
     /**
-     * Returns true if construction of an entity is still busy.
-     * Returns true when construction is finished, but requires placement.
+     * Returns if construction of an entity is still busy or when construction is finished, but requires placement / spawning.
+     *
      * @return
      */
     boolean isBuildingAnEntity();
@@ -29,10 +30,18 @@ public interface EntityBuilder extends Updateable {
     void buildEntity(AbstractBuildableEntity placementBuildableEntity);
 
     /**
-     * Returns true when construction is completed and awaits placements - ie, needs player interaction
+     * Returns true when construction is completed and awaits placements - ie, needs player interaction.
+     * Uses entityData comparison to confirm, taken from abstractBuildableEntity
      * @return
      */
-    boolean isAwaitingPlacement();
+    boolean isAwaitingPlacement(AbstractBuildableEntity placementBuildableEntity);
+
+    /**
+     * Same as above, by using entityData
+     * @param entityData
+     * @return
+     */
+    boolean isAwaitingPlacement(EntityData entityData);
 
     /**
      * Returns true when construction is completed and awaits being spawned

@@ -22,7 +22,8 @@ import java.util.List;
 /**
  * <h1>General</h1>
  * <p>
- *     This class represents all GUI elements in the game.
+ *     This class represents all GUI elements in the game. It can be considered the 'root
+ *     GUI object.
  * </p>
  * <h2>Rendering</h2>
  * <p>
@@ -32,14 +33,17 @@ import java.util.List;
  * <p>
  *     This updates all gui elements in the order they have been added (first in, first updated)
  * </p>
- * <b>{@link MouseBehavior} events</b>
+ * <h2>{@link MouseBehavior} events</h2>
  * <p>
- *     Mouse events are propagated from the {@link com.fundynamic.d2tm.game.controls.Mouse} class.
+ *     The {@link com.fundynamic.d2tm.game.controls.Mouse} class will propagate any MouseBehavior to this class.
  * </p>
  * <p>
- *     This class listens to mouse events. Based on {@link #movedTo(Vector2D)} it will determine
- *     which guiElement is focussed on, stored in {@link #activeGuiElement}. All other mouse events
- *     are propagated to {@link #activeGuiElement}.
+ *     <b>Example:</b>
+ *     Suppose Mouse recieves a Move event, based on {@link #movedTo(Vector2D)}. This will help tell the guiComposite
+ *     which guiElement is focussed on. This is in turn stored in {@link #activeGuiElement}.
+ * </p>
+ * <p>
+ *     When an active gui element is present, all mouse events are also propagated to {@link #activeGuiElement}.
  * </p>
  */
 public class GuiComposite implements Renderable, Updateable, MouseBehavior, BattleFieldInteractable {
@@ -157,15 +161,16 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
     }
 
     /**
-     * Event: An entity builder is selected
-     * @param entityBuilder
+     * Event: An entity is selected
+     * @param entity
      */
-    public void entityBuilderSelected(Entity entityBuilder) {
-        if (!entityBuilder.isEntityBuilder()) {
+    public void entityBuilderSelected(Entity entity) {
+        if (!entity.isEntityBuilder()) {
             throw new IllegalArgumentException("Can only select entities which implement entity builder from here on");
         }
-        if (entityBuilder.isEntityTypeStructure()) {
-            sidebar.showEntityBuilderGuiFor((EntityBuilder) entityBuilder);
+
+        if (entity.isEntityTypeStructure()) {
+            sidebar.showEntityBuilderGuiFor((EntityBuilder) entity);
         }
     }
 

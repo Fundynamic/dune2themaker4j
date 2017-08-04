@@ -3,8 +3,8 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.types.EntityData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +63,13 @@ public class SingleEntityBuilder implements EntityBuilder {
     }
 
     @Override
-    public boolean isAwaitingPlacement() {
-        return isBuildingAnEntity() && buildingEntity.awaitsPlacement();
+    public boolean isAwaitingPlacement(AbstractBuildableEntity placementBuildableEntity) {
+        return isBuildingAnEntity() && buildingEntity.isSameConstructedEntity(placementBuildableEntity) && buildingEntity.awaitsPlacement();
+    }
+
+    @Override
+    public boolean isAwaitingPlacement(EntityData entityData) {
+        return isBuildingAnEntity() && buildingEntity.getEntityData().equals(entityData) && buildingEntity.awaitsPlacement();
     }
 
     @Override

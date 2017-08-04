@@ -2,9 +2,9 @@ package com.fundynamic.d2tm.game.entities.entitybuilders;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
+import com.fundynamic.d2tm.game.types.EntityData;
 import org.newdawn.slick.Image;
 
 /**
@@ -126,4 +126,11 @@ public abstract class AbstractBuildableEntity implements Updateable {
     public int getBuildCost() {
         return entityData.buildCost;
     }
+
+    public boolean isSameConstructedEntity(AbstractBuildableEntity placementBuildableEntity) {
+        if (placementBuildableEntity == null) return false;
+        return entityData.equals(placementBuildableEntity.getEntityData());
+    }
+
+
 }

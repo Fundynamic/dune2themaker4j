@@ -109,6 +109,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.entityBuilder.update(deltaInSeconds);
 
+        handleUnitConstructedAndNeedsToBeSpawnedLogic();
+    }
+
+    public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
             List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
             Unit firstEntityThatBlocksExit = null;
@@ -138,6 +142,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             // we did not succeed in spawning an entity
             if (isAwaitingSpawning()) {
                 // TODO: fly it in, nudge other units to move away, etc.
+                // For now we just kill the blocking unit or we forget about it
 
                 // THIS IS JUST FOR FUN
                 if (firstEntityThatBlocksExit != null) {
@@ -258,8 +263,13 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     @Override
-    public boolean isAwaitingPlacement() {
-        return this.entityBuilder.isAwaitingPlacement();
+    public boolean isAwaitingPlacement(AbstractBuildableEntity placementBuildableEntity) {
+        return this.entityBuilder.isAwaitingPlacement(placementBuildableEntity);
+    }
+
+    @Override
+    public boolean isAwaitingPlacement(EntityData entityData) {
+        return this.entityBuilder.isAwaitingPlacement(entityData);
     }
 
     @Override

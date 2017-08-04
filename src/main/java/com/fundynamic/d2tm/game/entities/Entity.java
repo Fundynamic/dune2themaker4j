@@ -16,7 +16,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -228,11 +231,11 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     }
 
     public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
-        return getMapCoordinates(coordinate.toMapCoordinate()); // coordinate == top left
+        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate()); // coordinate == top left
     }
 
     // this basically goes 'around' the entity, starting from top-left
-    public List<MapCoordinate> getMapCoordinates(MapCoordinate topLeftMapCoordinate) {
+    private List<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(MapCoordinate topLeftMapCoordinate) {
         int currentX = topLeftMapCoordinate.getXAsInt();
         int currentY = topLeftMapCoordinate.getYAsInt();
 

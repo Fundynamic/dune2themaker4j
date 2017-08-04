@@ -247,7 +247,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = getMapCoordinates(coordinate.toMapCoordinate());
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
 
         float distanceToTarget = distanceTo(target);
 

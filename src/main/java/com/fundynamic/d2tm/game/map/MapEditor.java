@@ -10,6 +10,9 @@ import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
+import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 public class MapEditor {
 
     private static final int BIT_MASK_NONE = 0;
@@ -128,13 +131,10 @@ public class MapEditor {
     public void createCircularField(Map map, Vector2D centerPosition, int terrainType, int size) {
         if (size < 1) return;
 
-        int TILE_SIZE = 32;
-        float halfATile = TILE_SIZE / 2;
-
         // convert to absolute pixel coordinates
         Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(
                 centerPosition.getXAsInt(), centerPosition.getYAsInt()).
-                add(Vector2D.create(halfATile, halfATile));
+                add(Vector2D.create(HALF_TILE, HALF_TILE));
 
         double centerX = asPixelsCentered.getX();
         double centerY = asPixelsCentered.getY();
