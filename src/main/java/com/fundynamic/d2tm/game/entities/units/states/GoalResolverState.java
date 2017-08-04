@@ -20,12 +20,16 @@ public class GoalResolverState extends UnitState {
 
         if (!unit.shouldMove()) {
             unit.idle();
+            unit.stopAndResetAnimating();
             return;
         }
 
         if (unit.hasNoNextCellToMoveTo()) {
             Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
             if (unit.isCellPassableForMe(nextIntendedCoordinatesToMoveTo)) {
+                if (!unit.isHarvester()) {
+                    unit.startAnimating();
+                }
                 unit.moveToCell(nextIntendedCoordinatesToMoveTo);
             }
         } else {
