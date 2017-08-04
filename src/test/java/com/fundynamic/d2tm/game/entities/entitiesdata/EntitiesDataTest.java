@@ -2,12 +2,12 @@ package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityNotFoundException;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataStructure;
 import com.fundynamic.d2tm.game.entities.entitiesdata.ini.IniDataUnit;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.types.EntityData;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;

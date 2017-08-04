@@ -3,12 +3,12 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
+import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import org.newdawn.slick.Graphics;
 

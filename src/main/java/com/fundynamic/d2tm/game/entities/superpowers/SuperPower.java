@@ -12,9 +12,7 @@ import org.newdawn.slick.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.DONE;
-import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.EXPLODING;
-import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.LAUNCHED;
+import static com.fundynamic.d2tm.game.entities.superpowers.SuperPower.SuperPowerState.*;
 import static com.fundynamic.d2tm.game.map.Cell.HALF_TILE;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 

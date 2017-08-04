@@ -16,7 +16,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

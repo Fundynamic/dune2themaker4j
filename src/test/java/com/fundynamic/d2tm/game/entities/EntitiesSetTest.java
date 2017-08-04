@@ -9,7 +9,6 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;

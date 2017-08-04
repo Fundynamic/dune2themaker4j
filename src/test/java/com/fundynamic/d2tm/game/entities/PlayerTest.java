@@ -3,12 +3,9 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class PlayerTest extends AbstractD2TMTest {

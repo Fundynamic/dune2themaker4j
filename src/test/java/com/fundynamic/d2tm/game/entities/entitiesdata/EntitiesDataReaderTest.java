@@ -1,9 +1,9 @@
 package com.fundynamic.d2tm.game.entities.entitiesdata;
 
 import com.fundynamic.d2tm.Game;
-import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.game.types.SoundData;
 import org.junit.Assert;
 import org.junit.Before;

@@ -20,9 +20,8 @@ import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Renders a normal mouse cursor with the Structure to be placed, along with visual information
