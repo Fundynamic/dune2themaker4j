@@ -83,7 +83,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @return
      */
     public Coordinate getCenteredCoordinateOfEntity() {
-        return coordinate.addHalfTile();
+        return coordinate.add(getHalfSizeOfEntity());
     }
 
     /**
