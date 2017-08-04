@@ -266,6 +266,15 @@ public class EntityRepository {
         );
     }
 
+    public EntitiesSet findRefineriesWithinDistance(Coordinate coordinate, float range, Player player) {
+        return filter(
+                Predicate.builder().
+                        forPlayer(player).
+                        isRefinery().
+                        withinRange(coordinate, range)
+        );
+    }
+
     public EntitiesSet findDestructibleEntitiesWithinDistance(Coordinate coordinate, float range) {
         return filter(
                 Predicate.builder().

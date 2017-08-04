@@ -119,7 +119,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 guardTimer = 0F;
 
                 // scan environment within range for enemies
-                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
+                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * TILE_SIZE, EntityType.UNIT, EntityType.STRUCTURE);
 
                 EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
 
@@ -557,9 +557,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void harvestCell() {
-        startAnimating(); // TODO: make this 'harvesting animation'
-        // TODO: make this time based, like movespeed
-        // TODO: get this from entityData
+        startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
+        // TODO-HARVESTER: make this time based, like movespeed
+        // TODO-HARVESTER: get this from entityData
         harvest(1);
     }
 
@@ -569,10 +569,16 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean isDoneHarvesting() {
-        return harvested >= 700; // TODO: make harvest capacity configurable (entityData)
+        return harvested >= 700; // TODO-HARVESTER: make harvest capacity configurable (entityData)
     }
 
     public void findNearestRefineryToReturnSpice() {
         setState(new FindNearestRefineryToReturnSpiceState(this, entityRepository, map));
+    }
+
+    public void returnToRefinery(Entity refinery) {
+        if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
+        Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
+        moveTo(closestCoordinateTo);
     }
 }

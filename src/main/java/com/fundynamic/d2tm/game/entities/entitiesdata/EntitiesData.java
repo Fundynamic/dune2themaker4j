@@ -198,6 +198,11 @@ public class EntitiesData {
                 iniDataStructure.hitpoints
         );
 
+        // TODO-HARVESTER: Add 'refinery' property to structure in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
+        if (id.equals(EntitiesData.REFINERY)) {
+            entityData.isRefinery = true;
+        }
+
         // The buildRange is (for now) determined by the size of the structure.
         // Because the range is calculated from the center of the structure.
         // In order to make it 'fair' for larger structures (if any would appear),
@@ -266,8 +271,7 @@ public class EntitiesData {
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
 
-        // NOOOOOO
-        // TODO: Add 'harvester' property to unit in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
+        // TODO-HARVESTER: Add 'harvester' property to unit in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
         if (id.equals(EntitiesData.HARVESTER)) {
             entityData.isHarvester = true;
         }

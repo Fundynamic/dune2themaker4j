@@ -175,6 +175,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.isHarvester;
     }
 
+    /**
+     * Capable of dealing with harvesters to return spice
+     * @return
+     */
+    public boolean isRefinery() {
+        return entityData.isRefinery;
+    }
+
     public abstract EntityType getEntityType();
 
     public boolean isEntityTypeStructure() {
@@ -228,6 +236,11 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     public List<Coordinate> getAllCellsAsCoordinates() {
         List<MapCoordinate> allCellsAsCoordinates = entityData.getAllCellsAsCoordinates(coordinate);
         return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate()).collect(Collectors.toList());
+    }
+
+    public List<Coordinate> getAllCellsAsCenteredCoordinates() {
+        List<MapCoordinate> allCellsAsCoordinates = entityData.getAllCellsAsCoordinates(coordinate);
+        return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate().addHalfTile()).collect(Collectors.toList());
     }
 
     public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
@@ -360,6 +373,18 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
                 eventSubscription.invoke();
             }
         }
+    }
+
+    /**
+     * Look within this entity, if this entity takes up more than 1 coordinate, return the coordinate that
+     * is closest.
+     * @param centeredCoordinate
+     */
+    public Coordinate getClosestCoordinateTo(Coordinate centeredCoordinate) {
+        List<Coordinate> allCellsAsCoordinates = getAllCellsAsCenteredCoordinates();
+        if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
+        Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
+        return closest;
     }
 
     class EventSubscription<T extends Entity> {

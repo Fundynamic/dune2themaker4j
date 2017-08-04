@@ -97,9 +97,10 @@ public class EntityData {
     private float chop = -1f;
     private float halfChop = -1f;
 
-    public boolean isHarvester;
+    public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
+    public boolean isRefinery;      // if true, entity will be something where spice can be delivered
 
-    public SoundData soundData = null;          // for playing sound if required
+    public SoundData soundData = null; // for playing sound if required
 
     public EntityData() {
     }
@@ -198,9 +199,9 @@ public class EntityData {
         return chop;
     }
 
-    public float getHalfChop() {
-        return halfChop;
-    }
+//    public float getHalfChop() {
+//        return halfChop;
+//    }
 
     public int getFacings() {
         return facings;
@@ -357,6 +358,7 @@ public class EntityData {
         if (Float.compare(that.chop, chop) != 0) return false;
         if (Float.compare(that.halfChop, halfChop) != 0) return false;
         if (isHarvester != that.isHarvester) return false;
+        if (isRefinery != that.isRefinery) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (type != that.type) return false;
         if (entityBuilderType != that.entityBuilderType) return false;
@@ -406,6 +408,7 @@ public class EntityData {
         result = 31 * result + (chop != +0.0f ? Float.floatToIntBits(chop) : 0);
         result = 31 * result + (halfChop != +0.0f ? Float.floatToIntBits(halfChop) : 0);
         result = 31 * result + (isHarvester ? 1 : 0);
+        result = 31 * result + (isRefinery ? 1 : 0);
         result = 31 * result + (soundData != null ? soundData.hashCode() : 0);
         return result;
     }

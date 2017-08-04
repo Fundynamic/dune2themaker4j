@@ -45,6 +45,10 @@ public abstract class Predicate<T extends Entity> {
         return IsSelectable.instance;
     }
 
+    public static Predicate<Entity> isRefinery() {
+        return IsRefinery.instance;
+    }
+
     public static Predicate<Entity> ofType(EntityType entityType) {
         return OfType.instance(entityType);
     }
