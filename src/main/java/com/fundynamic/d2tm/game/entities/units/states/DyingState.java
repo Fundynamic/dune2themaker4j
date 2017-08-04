@@ -15,7 +15,7 @@ public class DyingState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         entityRepository.placeExplosionWithCenterAt(
-                unit.getCenteredCoordinateOfEntity(),
+                unit.getCenteredCoordinate(),
                 unit.getPlayer(),
                 unit.getEntityData().explosionId
         );

@@ -19,7 +19,7 @@ public class DistanceToEntity extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        Coordinate entityCoordinate = entity.getCenteredCoordinateOfEntity();
+        Coordinate entityCoordinate = entity.getCenteredCoordinate();
         float distance = entityCoordinate.distance(coordinate);
 //        System.out.println("Distance from " + coordinate + " to " + entityCoordinate + " is " + distance + " which is within range? " + range);
         return distance < range;

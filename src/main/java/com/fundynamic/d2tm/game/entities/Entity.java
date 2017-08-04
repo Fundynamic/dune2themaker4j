@@ -82,8 +82,8 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      *
      * @return
      */
-    public Coordinate getCenteredCoordinateOfEntity() {
-        return coordinate.add(getHalfSizeOfEntity());
+    public Coordinate getCenteredCoordinate() {
+        return coordinate.add(getHalfSize());
     }
 
     /**
@@ -93,7 +93,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @return
      */
     public float distance(Entity other) {
-        return getCenteredCoordinateOfEntity().distance(other.getCenteredCoordinateOfEntity());
+        return getCenteredCoordinate().distance(other.getCenteredCoordinate());
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @return
      */
     public float distanceTo(Coordinate otherCoordinate) {
-        return getCenteredCoordinateOfEntity().distance(otherCoordinate);
+        return getCenteredCoordinate().distance(otherCoordinate);
     }
 
     /**
@@ -198,7 +198,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         // by default do nothing
     }
 
-    public Vector2D getHalfSizeOfEntity() {
+    public Vector2D getHalfSize() {
         return Vector2D.create(entityData.getWidth() / 2, entityData.getHeight() / 2);
     }
 

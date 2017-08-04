@@ -21,7 +21,7 @@ public class EntityIsWithinAreaOfAbsoluteCoordinates extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        Coordinate centered = entity.getCenteredCoordinateOfEntity();
+        Coordinate centered = entity.getCenteredCoordinate();
         boolean result = rectangle.isVectorWithin(centered);
 //        System.out.println("Checking if entity @ [" + centered.getXAsInt() + "," + centered.getYAsInt() + "] is within " + rectangle + " -> " + result);
         return result;

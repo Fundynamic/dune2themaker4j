@@ -51,7 +51,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
         Coordinate startCoordinate = Coordinate.zero();
         if (entityWhoConstructsIt != null) {
-            startCoordinate = entityWhoConstructsIt.getCenteredCoordinateOfEntity();
+            startCoordinate = entityWhoConstructsIt.getCenteredCoordinate();
         }
 
         startCoordinate = startCoordinate.min(superPowerEntityData.getHalfSize());

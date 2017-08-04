@@ -118,7 +118,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 guardTimer = 0F;
 
                 // scan environment within range for enemies
-                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinateOfEntity(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
+                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
 
                 EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
 
@@ -216,7 +216,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
                         while(attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSizeOfEntity()), entityData.weaponId, this);
+                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
                         }

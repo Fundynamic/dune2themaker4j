@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -261,7 +260,7 @@ public class EntityTest extends AbstractD2TMTest {
         );
 
         // Act
-        Coordinate centeredCoordinateOfEntity = entity.getCenteredCoordinateOfEntity();
+        Coordinate centeredCoordinateOfEntity = entity.getCenteredCoordinate();
 
         assertThat(centeredCoordinateOfEntity, is(expectedCenteredCoordinate));
 

@@ -102,7 +102,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
             // Calculate distance first, later do checking
             Entity closestFriendlyStructure = findClosestStructureOfPlayer(battleField.translateViewportCoordinateToAbsoluteMapCoordinate(coordinate));
-            Coordinate constructingEntityCoordinate = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(closestFriendlyStructure.getCenteredCoordinateOfEntity());
+            Coordinate constructingEntityCoordinate = battleField.translateAbsoluteMapCoordinateToViewportCoordinate(closestFriendlyStructure.getCenteredCoordinate());
 
             placeableMapCoordinateCandidate.distance = constructingEntityCoordinate.distance(coordinate);
 
@@ -217,7 +217,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         Entity closestEntityFoundSoFar = null;
 
         for (Entity entity : allStructuresForPlayer) {
-            float distance = entity.getCenteredCoordinateOfEntity().distance(coordinate);
+            float distance = entity.getCenteredCoordinate().distance(coordinate);
             if (distance < closestDistanceFoundSoFar) {
                 closestEntityFoundSoFar = entity;
                 closestDistanceFoundSoFar = distance;

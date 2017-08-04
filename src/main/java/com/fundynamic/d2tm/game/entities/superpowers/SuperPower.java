@@ -177,7 +177,7 @@ public class SuperPower extends Entity implements Destructible {
     }
 
     public Void onProjectileDestroyed(Projectile projectile) {
-        detonatedAt = projectile.getCenteredCoordinateOfEntity();
+        detonatedAt = projectile.getCenteredCoordinate();
         state = EXPLODING;
         return null;
     }
