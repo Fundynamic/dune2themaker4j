@@ -20,6 +20,7 @@ public class Random {
     }
 
     public static int getInt(int max) {
+        if (max == 0) return 0;
         return random.nextInt(max);
     }
 
