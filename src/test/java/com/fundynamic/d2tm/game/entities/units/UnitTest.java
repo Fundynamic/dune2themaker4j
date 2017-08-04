@@ -234,6 +234,10 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void canHarvestIsFalseWhenNotHarvester() {
+        // make an all spice map
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
+
         Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
         assertThat(unit.canHarvest(), is(false));
     }

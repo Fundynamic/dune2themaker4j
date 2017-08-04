@@ -551,6 +551,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean canHarvest() {
+        if (!isHarvester()) return false;
         Cell unitCell = map.getCellFor(this);
         return unitCell.isHarvestable();
     }
