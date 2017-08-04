@@ -114,7 +114,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
-            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
             Unit firstEntityThatBlocksExit = null;
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
                 AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();

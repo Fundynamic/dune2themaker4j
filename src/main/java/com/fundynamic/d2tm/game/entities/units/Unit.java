@@ -248,7 +248,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
 
         float distanceToTarget = distanceTo(target);
 
@@ -576,9 +576,30 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         setState(new FindNearestRefineryToReturnSpiceState(this, entityRepository, map));
     }
 
+    /**
+     * <p>
+     *      Will make this unit move to the refinery.
+     * </p>
+     * <p>
+     *     If there are no delivery claims made for this refinery, then we claim it now and deliver at refinery.
+     * </p>
+     * <p>
+     *     If there is a delivery claim made for this refinery, then we will not make a claim, but move close to the
+     *     refinery instead.
+     * </p>
+     *
+     * @param refinery
+     */
     public void returnToRefinery(Entity refinery) {
         if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
-        Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
-        moveTo(closestCoordinateTo);
+
+        if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
+            Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
+            HarvesterDeliveryIntents.instance.addDeliveryIntent(refinery, this);
+            moveTo(closestCoordinateTo);
+        } else {
+            Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());
+            moveTo(closestCoordinateTo);
+        }
     }
 }

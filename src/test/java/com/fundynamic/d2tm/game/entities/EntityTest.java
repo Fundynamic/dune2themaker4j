@@ -67,7 +67,7 @@ public class EntityTest extends AbstractD2TMTest {
         // EEEE  4
         //
         // 4 + 2 + 2 + 4 => 12 surrounding cells
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = entity1.getAllSurroundingCellsAsCoordinates();
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = entity1.getAllSurroundingCellsAsMapCoordinates();
 
         Assert.assertEquals(12, allSurroundingCellsAsCoordinates.size());
 
@@ -88,7 +88,7 @@ public class EntityTest extends AbstractD2TMTest {
         TestableEntity smallEntity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("SmallEntity");
 
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsCoordinates();
+        List<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsMapCoordinates();
 
         Assert.assertEquals(8, allSurroundingCellsAsCoordinates.size());
 

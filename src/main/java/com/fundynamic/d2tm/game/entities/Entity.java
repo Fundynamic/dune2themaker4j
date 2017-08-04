@@ -243,8 +243,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate().addHalfTile()).collect(Collectors.toList());
     }
 
-    public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
+    public List<MapCoordinate> getAllSurroundingCellsAsMapCoordinates() {
         return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate()); // coordinate == top left
+    }
+
+    public List<Coordinate> getAllSurroundingCellsAsCoordinates() {
+        // coordinate == top left
+        List<MapCoordinate> mapCoordinates = getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate());
+        return mapCoordinates.stream().map(mapCoordinate -> mapCoordinate.toCoordinate()).collect(Collectors.toList());
     }
 
     // this basically goes 'around' the entity, starting from top-left
@@ -363,6 +369,8 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     public void destroy() {
         emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
+        UnitMoveIntents.instance.removeAllIntentsBy(this);
+        HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
         eventTypeListMap.clear(); // now clear all our subscriptions explicitly
     }
 
@@ -382,6 +390,17 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      */
     public Coordinate getClosestCoordinateTo(Coordinate centeredCoordinate) {
         List<Coordinate> allCellsAsCoordinates = getAllCellsAsCenteredCoordinates();
+        if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
+        Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
+        return closest;
+    }
+
+    /**
+     * Look around the entity (surrounding cells) and finds the closets to given parameter
+     * @param centeredCoordinate
+     */
+    public Coordinate getClosestCoordinateAround(Coordinate centeredCoordinate) {
+        List<Coordinate> allCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
         if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
         Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
         return closest;

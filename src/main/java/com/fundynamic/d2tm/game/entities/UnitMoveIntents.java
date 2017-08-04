@@ -3,7 +3,9 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,4 +54,18 @@ public class UnitMoveIntents {
         intendedVectors.remove(target);
     }
 
+    public void removeAllIntentsBy(Entity entityWhoPossiblyClaimed) {
+        List<Entity> entitiesToRemove = new ArrayList<>();
+
+        // find all entities that where claimed by this entity
+        for (MapCoordinate mapCoordinate : intendedVectors.keySet()) {
+            Entity who = intendedVectors.get(mapCoordinate);
+            if (who.equals(entityWhoPossiblyClaimed)) {
+                entitiesToRemove.add(entityWhoPossiblyClaimed);
+            }
+        }
+
+        // remove all from intentions
+        entitiesToRemove.forEach(e -> intendedVectors.remove(e));
+    }
 }

@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities.units.states;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.HarvesterDeliveryIntents;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
@@ -36,11 +37,21 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
         }
 
         Entity nearestUnoccupiedRefinery = entities.stream().filter(e -> {
-            Structure refinery = (Structure) e;
-            // TODO-HARVESTER: filter out refinery that is already occupied
-            return e != null;
-        }).sorted((e1, e2) -> {
-            // find closest
+            return HarvesterDeliveryIntents.instance.canDeliverAt(e, unit); // only filter refineries that are not 'claimed' yet
+        }).sorted((e1, e2) -> { // closest first
+            return Float.compare(e1.distance(unit), e2.distance(unit));
+        }).findFirst().orElse(null);
+
+
+        // found nearby, free, refinery
+        if (nearestUnoccupiedRefinery != null) {
+            unit.returnToRefinery(nearestUnoccupiedRefinery);
+            return;
+        }
+
+        // Darn it, no refinery is free. Move to the closest non-free refinery and await our luck there.
+
+        nearestUnoccupiedRefinery = entities.stream().sorted((e1, e2) -> { // closest first
             return Float.compare(e1.distance(unit), e2.distance(unit));
         }).findFirst().orElse(null);
 
