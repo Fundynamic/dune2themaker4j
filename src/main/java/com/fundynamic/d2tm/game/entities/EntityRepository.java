@@ -105,6 +105,7 @@ public class EntityRepository {
         return entity.setOrigin(origin);
     }
 
+    // TODO-HARVESTER: How is this different compared to unit movement!?
     public PassableResult isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
         Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
         EntitiesSet entities = findAliveEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
@@ -210,6 +211,7 @@ public class EntityRepository {
     public Set<Entity> findMovableWithinRectangleForPlayer(Player player, Rectangle rectangle) {
         return filter(
                 Predicate.builder().
+                        isNotWithinAnotherEntity().
                         selectableMovableForPlayer(player).
                         withinArea(rectangle)
         );

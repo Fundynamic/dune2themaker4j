@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.entities.units.Unit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,7 @@ public class HarvesterDeliveryIntents {
     // VALUE = Entity who made the claim. Ie, Harvester who claims Refinery, Value == Harvester
     private Map<Entity, Entity> intentions = new HashMap<>();
 
-    public void addDeliveryIntent(Entity what, Entity who) {
+    public void addDeliveryIntentTo(Entity what, Entity who) {
         Entity whoClaimedWhatAlready = intentions.get(what);
         if (whoClaimedWhatAlready != null && !whoClaimedWhatAlready.equals(who)) {
             throw new IllegalStateException("Entity " + who + " intended to place delivery intent for " + what + " but it was already claimed by " + whoClaimedWhatAlready + ", therefor the claim was invalid.");
@@ -28,6 +30,10 @@ public class HarvesterDeliveryIntents {
     public boolean hasDeliveryIntentAt(Entity what, Entity who) {
         Entity entity = intentions.get(what);
         return who.equals(entity);
+    }
+
+    public boolean hasDeliveryIntentAt(Entity what) {
+        return intentions.containsKey(what);
     }
 
     public boolean canDeliverAt(Entity what, Entity who) {
@@ -57,5 +63,15 @@ public class HarvesterDeliveryIntents {
 
         // remove all from intentions
         entitiesToRemove.forEach(this::removeDeliveryIntent);
+    }
+
+    public Entity getDeliveryIntentTo(Entity whoPlacedTheIntent) {
+        for (Entity what : intentions.keySet()) {
+            Entity who = intentions.get(what);
+            if (who.equals(whoPlacedTheIntent)) {
+                return what;
+            }
+        }
+        throw new IllegalArgumentException("There is no intent claimed by " + whoPlacedTheIntent);
     }
 }

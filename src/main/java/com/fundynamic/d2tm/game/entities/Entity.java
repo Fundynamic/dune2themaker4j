@@ -44,13 +44,16 @@ import java.util.stream.Collectors;
  */
 public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable {
 
-    // Final properties of unit
+    // Final properties of entity
     protected final EntityData entityData;
     protected final SpriteSheet spritesheet;
     protected final Player player;
     protected final EntityRepository entityRepository;
 
-    protected Entity origin; // which entity created this entity? (if applicable)
+    protected Entity origin; // who, which entity, created this entity? (if applicable)
+
+    protected Entity containsEntity;
+    protected Entity hasEntered;
 
     /**
      * top left *cell* coordinate, not the top-left of unit image!
@@ -404,6 +407,25 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
         Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
         return closest;
+    }
+
+    /**
+     * This entity is entering another entity (given parameter).
+     *
+     * @param whichEntityWillBeEntered
+     */
+    public void enterOtherEntity(Entity whichEntityWillBeEntered) {
+        whichEntityWillBeEntered.containsEntity = this;
+        hasEntered = whichEntityWillBeEntered;
+    }
+
+    public void leaveOtherEntity() {
+        hasEntered.containsEntity = null;
+        hasEntered = null;
+    }
+
+    public boolean isWithinOtherEntity() {
+        return hasEntered != null;
     }
 
     class EventSubscription<T extends Entity> {

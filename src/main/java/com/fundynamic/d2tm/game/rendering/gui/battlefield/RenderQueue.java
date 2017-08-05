@@ -135,7 +135,12 @@ public class RenderQueue {
         }
 
         public void render(Graphics graphics) {
-            renderQueueEnrichable.render(graphics, screenX, screenY);
+            try {
+                renderQueueEnrichable.render(graphics, screenX, screenY);
+            } catch (RuntimeException re) {
+                System.err.println("Error rendering " + renderQueueEnrichable + " -> " + re);
+                re.printStackTrace();
+            }
         }
     }
 }

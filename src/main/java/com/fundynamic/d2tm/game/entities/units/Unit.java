@@ -81,6 +81,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
+        // has entered other entity, thus do not render anything so it appears 'within' another entity
+        // the 'other' entity is responsible for drawing as if the unit has entered.
+        if (hasEntered != null) {
+            return;
+        }
 
         // Todo: get rid of offset, because those are used for cell-by-cell movements. This could
         // perhaps be optimized? (without any offsets?)
@@ -614,7 +619,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
             System.out.println("returnToRefinery) Will deliver to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
-            HarvesterDeliveryIntents.instance.addDeliveryIntent(refinery, this);
+            HarvesterDeliveryIntents.instance.addDeliveryIntentTo(refinery, this);
             moveTo(closestCoordinateTo);
         } else {
             System.out.println("returnToRefinery) Move close to refinery " + refinery);
@@ -634,7 +639,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void depositSpice() {
-        int amountToDeposit = Math.min(this.harvested, 5);
+        int amountToDeposit = Math.min(this.harvested, 1); // TODO-HARVESTER: deposit speed
         this.harvested -= amountToDeposit;
         this.player.addCredits(amountToDeposit);
     }

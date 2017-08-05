@@ -37,6 +37,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
 
     protected void selectEntity(Entity entity) {
         if (!entity.isSelectable()) return;
+        if (entity.isWithinOtherEntity()) return;
         deselectCurrentlySelectedEntities();
         setLastSelectedEntity(entity);
         ((Selectable) entity).select();

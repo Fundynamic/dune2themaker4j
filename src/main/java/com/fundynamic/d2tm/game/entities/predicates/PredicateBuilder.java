@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
+import com.sun.tools.corba.se.idl.constExpr.Not;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -81,6 +82,11 @@ public class PredicateBuilder {
         return isSelectable().
                 forPlayer(player).
                 isMovable();
+    }
+
+    public PredicateBuilder isNotWithinAnotherEntity() {
+        predicates.add(new NotPredicate(IsWithinAnotherEntity.instance));
+        return this;
     }
 
     public PredicateBuilder selectedMovableForPlayer(Player player) {

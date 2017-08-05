@@ -78,7 +78,7 @@ public class PlayingState extends BasicGameState {
         Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
 
         if (Game.RECORDING_VIDEO) {
-            human.setCredits(9999);
+            human.setCredits(2200);
         } else {
             human.setCredits(3000);
         }

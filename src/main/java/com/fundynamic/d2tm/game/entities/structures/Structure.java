@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
@@ -23,6 +22,8 @@ import org.newdawn.slick.geom.ShapeRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
+
 public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
 
     private EntityBuilder entityBuilder;
@@ -35,9 +36,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     private float thinkTimer = 0.0f;
 
     // Implementation
-    private float animationTimer;
-    private static final int ANIMATION_FRAME_COUNT = 2;
-    private static final int ANIMATION_FRAMES_PER_SECOND = 5;
+    private float animationTimer = 0.0f;
+    private int animationFrame = 0;
+    private static final int FLAG_ANIMATION_FRAME_COUNT = 2;
 
     private boolean hasSpawnedExplosions;
 
@@ -72,10 +73,32 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         }
 
         this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
+
+        if (entityData.isRefinery) {
+            // spawn harvester somewhere around it
+
+            // TODO-HARVESTER: This is used in the unit spawnment as well, move somewhere, abstract?!
+            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
+                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
+
+                if (passableResult.isPassable()) {
+                    // TODO-HARVESTER: Get the kind of harvester that this refinery requires, from rules.ini?
+                    // entityData?
+                    AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
+                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+                    Entity entity = this.entityRepository.placeOnMap(
+                            absoluteCoordinate,
+                            entityRepository.getEntityData(EntityType.UNIT, HARVESTER), // this can be made configurable
+                            this.player
+                    );
+                    break;
+                }
+            }
+        }
     }
 
     public Image getSprite() {
-        int animationFrame = (int)animationTimer;
         return spritesheet.getSprite(0, animationFrame);
     }
 
@@ -84,19 +107,34 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+        float animationSpeed = 0.5f;
 
-        // Hack something in so we earn money (for now) - remove this once we have harvesters in place.
-        if (entityData.isTypeStructure() && EntitiesData.REFINERY.equalsIgnoreCase(entityData.name)) {
+        animationTimer += deltaInSeconds;
+        if (animationTimer > animationSpeed) {
+            animationFrame++;
+            animationTimer -= animationSpeed;
+        }
+
+        // TODO-HARVESTER: Introduce structure states, like units!?
+        // If refinery expects delivery then animate the delivery animation
+        if (entityData.isRefinery && HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+            if (containsEntity != null) {
+                if (animationFrame < 5) animationFrame = 5;
+                if (animationFrame > 6) animationFrame -= 2;
+            } else {
+                if (animationFrame < 1) animationFrame = 1;
+                if (animationFrame > 4) animationFrame -= 4;
+            }
+
             thinkTimer += deltaInSeconds;
             while (thinkTimer > 0.5F) {
                 thinkTimer -= 0.5F;
-//                player.addCredits(5);
+            }
+        } else {
+            if (animationFrame >= FLAG_ANIMATION_FRAME_COUNT) {
+                animationFrame = 0;
             }
         }
-
-        // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
-        float offset = deltaInSeconds * ANIMATION_FRAMES_PER_SECOND;
-        animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
 
         this.fadingSelection.update(deltaInSeconds);
 
@@ -114,12 +152,14 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
+            // TODO-HARVESTER: This is used in the constructor as well, move somewhere
             List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
             Unit firstEntityThatBlocksExit = null;
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
-                AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
                 EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
+
                 if (passableResult.isPassable()) {
+                    AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
 
                     Entity entity = this.entityRepository.placeOnMap(

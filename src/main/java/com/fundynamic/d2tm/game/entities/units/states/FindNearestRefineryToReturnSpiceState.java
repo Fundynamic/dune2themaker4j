@@ -27,7 +27,9 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
         EntitiesSet refineriesAtUnitLocation = entitiesAt.filterRefineries();
         if (refineriesAtUnitLocation.hasAny()) {
             // we have arrived at our destination, start dumping credits
-            unit.emptyHarvestedSpiceAt(refineriesAtUnitLocation.getFirst());
+            Entity refinery = refineriesAtUnitLocation.getFirst();
+            unit.emptyHarvestedSpiceAt(refinery);
+            unit.enterOtherEntity(refinery);
             return;
         }
 

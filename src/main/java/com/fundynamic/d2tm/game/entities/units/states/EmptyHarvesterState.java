@@ -28,6 +28,7 @@ public class EmptyHarvesterState extends UnitState {
         } else {
             System.out.println("Harvester is done depositing spice, moving back to " + unit.lastSeenSpiceAt());
             HarvesterDeliveryIntents.instance.removeDeliveryIntent(refinery);
+            unit.leaveOtherEntity();
             unit.harvestAt(unit.lastSeenSpiceAt());
         }
     }

@@ -148,6 +148,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
     public void moveTo(Coordinate moveToTarget) {
         Coordinate newTarget = new Coordinate(moveToTarget);
         distanceCalculatedALaunch = target.distance(newTarget);
+        if (isHarvester()) {
+            HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
+        }
         this.target = newTarget;
     }
 
