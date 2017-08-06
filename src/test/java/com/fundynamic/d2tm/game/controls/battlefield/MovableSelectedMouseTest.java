@@ -51,7 +51,7 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
 
         unit.update(1);
 
-        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(64, 64));
+        assertEquals(Vector2D.create(64, 64), unit.getNextTargetToMoveTo());
     }
 
     @Test

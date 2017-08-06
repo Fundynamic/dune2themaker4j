@@ -56,4 +56,15 @@ public class MapCoordinate extends Vector2D {
     public int distanceInMapCoords(MapCoordinate mapCoordinate) {
         return (int) distance(mapCoordinate);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (o instanceof MapCoordinate) {
+            MapCoordinate mapCoordinate = (MapCoordinate)o;
+            return mapCoordinate.getXAsInt() == getXAsInt() && mapCoordinate.getYAsInt() == getYAsInt();
+        }
+        return super.equals(o);
+    }
 }

@@ -16,10 +16,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -246,51 +243,74 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate().addHalfTile()).collect(Collectors.toList());
     }
 
-    public List<MapCoordinate> getAllSurroundingCellsAsMapCoordinates() {
-        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate()); // coordinate == top left
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinates() {
+        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(1); // coordinate == top left
     }
 
-    public List<Coordinate> getAllSurroundingCellsAsCoordinates() {
+    public Set<Coordinate> getAllSurroundingCellsAsCoordinates() {
         // coordinate == top left
-        List<MapCoordinate> mapCoordinates = getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate());
-        return mapCoordinates.stream().map(mapCoordinate -> mapCoordinate.toCoordinate()).collect(Collectors.toList());
+        Set<MapCoordinate> mapCoordinates = getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(1);
+        return mapCoordinates
+                .stream()
+                .map(mapCoordinate -> mapCoordinate.toCoordinate())
+                .collect(
+                        Collectors.toSet()
+                );
     }
 
-    // this basically goes 'around' the entity, starting from top-left
-    private List<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(MapCoordinate topLeftMapCoordinate) {
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(int distance) {
+        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate(), distance, new HashSet<>());
+    }
+
+    /**
+     * Goes around entity. Basically as a 'rectangle' around entity. Starting from the highest distance, then recursively
+     * repeating logic until distance == 1
+     * @param topLeftMapCoordinate
+     * @param distance
+     * @return
+     */
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(MapCoordinate topLeftMapCoordinate, int distance, Set<MapCoordinate> alreadyFound) {
         int currentX = topLeftMapCoordinate.getXAsInt();
         int currentY = topLeftMapCoordinate.getYAsInt();
 
-        ArrayList<MapCoordinate> result = new ArrayList<>();
-
         // first row
-        int topRowY = currentY - 1;
-        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
-            int calculatedX = (currentX - 1) + x;
-            result.add(MapCoordinate.create(calculatedX, topRowY));
+        int topLeftYMinusDistance = currentY - distance;
+        int topLeftXMinusDistance = currentX - distance;
+
+        int totalWidth = (distance + entityData.getWidthInCells() + distance) - 1;
+        int totalHeight = (distance + entityData.getHeightInCells() + distance) - 1;
+
+        Set<MapCoordinate> result = new HashSet<>(alreadyFound);
+
+        // -1, because it is 0 based
+        for (int x = 0; x <= totalWidth; x++) {
+            result.add(MapCoordinate.create(topLeftXMinusDistance + x, topLeftYMinusDistance));
         }
 
-        int leftX = (currentX - 1);
-
         // then all 'sides' of the structure (left and right)
-        for (int y = 0; y < entityData.getHeightInCells(); y++) {
-            int calculatedY = currentY + y;
+        // also start one row 'lower' since we do not want to calculate the top left/right twice (as we did it
+        // in the above loop already)
+        // totalHeight - 2 for same reason, -1 == zero based, -2 to reduce one row
+        for (int y = 1; y <= (totalHeight - 1); y++) {
+            int calculatedY = topLeftYMinusDistance + y;
 
             // left side
-            result.add(MapCoordinate.create(leftX, calculatedY));
+            result.add(MapCoordinate.create(topLeftXMinusDistance, calculatedY));
 
             // right side
-            int rightX = (currentX + entityData.getWidthInCells());
+            int rightX = topLeftXMinusDistance + totalWidth;
             result.add(MapCoordinate.create(rightX, calculatedY));
         }
 
         // bottom row
-        int bottomRowY = currentY + entityData.getHeightInCells();
-        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
-            int calculatedX = leftX + x;
-            result.add(MapCoordinate.create(calculatedX, bottomRowY));
+        int bottomRowY = topLeftYMinusDistance + totalHeight;
+        for (int x = 0; x <= totalWidth; x++) {
+            result.add(MapCoordinate.create(topLeftXMinusDistance + x, bottomRowY));
         }
 
+        if (distance > 1) {
+            return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(topLeftMapCoordinate, (distance-1), result);
+        }
         return result;
     }
 
@@ -403,9 +423,13 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @param centeredCoordinate
      */
     public Coordinate getClosestCoordinateAround(Coordinate centeredCoordinate) {
-        List<Coordinate> allCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
-        if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
-        Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
+        Set<Coordinate> allCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+        Coordinate closest = allCellsAsCoordinates
+                .stream()
+                .min((c1, c2) ->
+                        Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))
+                )
+                .get();
         return closest;
     }
 

@@ -19,6 +19,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -270,7 +271,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
 
         float distanceToTarget = distanceTo(target);
 
@@ -297,7 +298,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return coordinate;
     }
 
-    public Coordinate findClosestCoordinateTowards(List<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
+    public Coordinate findClosestCoordinateTowards(Set<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
         Coordinate bestCoordinate = null;
         float shortestDistance = maxDistance;
         for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
@@ -366,6 +367,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
         // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
+        HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
         this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
         setToGoalResolverState();
     }
@@ -619,8 +621,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
             System.out.println("returnToRefinery) Will deliver to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
-            HarvesterDeliveryIntents.instance.addDeliveryIntentTo(refinery, this);
             moveTo(closestCoordinateTo);
+            // important to add intention after moveTo, because moveTo removes all intentions
+            HarvesterDeliveryIntents.instance.addDeliveryIntentTo(refinery, this);
         } else {
             System.out.println("returnToRefinery) Move close to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());

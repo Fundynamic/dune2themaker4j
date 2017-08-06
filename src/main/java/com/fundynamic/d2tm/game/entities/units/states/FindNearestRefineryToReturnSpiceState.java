@@ -33,8 +33,11 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
             return;
         }
 
-        int arbitraryTileRange = 24;
-        EntitiesSet entities = entityRepository.findRefineriesWithinDistance(unit.getCenteredCoordinate(), arbitraryTileRange * TILE_SIZE, unit.getPlayer());
+        EntitiesSet entities = entityRepository.findRefineriesWithinDistance(
+                unit.getCenteredCoordinate(),
+                map.getDistanceThatCoversWholeMap(),
+                unit.getPlayer()
+        );
 
         if (entities.isEmpty()) {
             System.out.println("Unit unable to find refinery nearby to return to.");
@@ -45,7 +48,7 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
         Entity nearestUnoccupiedRefinery = entities.stream().filter(e -> {
             return HarvesterDeliveryIntents.instance.canDeliverAt(e, unit); // only filter refineries that are not 'claimed' yet
         }).sorted((e1, e2) -> { // closest first
-            return Float.compare(e1.distance(unit), e2.distance(unit));
+                return Float.compare(e1.distance(unit), e2.distance(unit));
         }).findFirst().orElse(null);
 
 
@@ -56,7 +59,6 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
         }
 
         // Darn it, no refinery is free. Move to the closest non-free refinery and await our luck there.
-
         nearestUnoccupiedRefinery = entities.stream().sorted((e1, e2) -> { // closest first
             return Float.compare(e1.distance(unit), e2.distance(unit));
         }).findFirst().orElse(null);

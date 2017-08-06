@@ -55,6 +55,7 @@ public class MovableSelectedMouse extends NormalMouse {
 
         // hovering over an entity and visible for player
         Cell cell = getHoverCell();
+        if (cell == null) return;
 
         if (!NullEntity.is(hoveringOverEntity) && cell.isVisibleFor(player)) {
             // select entity when entity belongs to player

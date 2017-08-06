@@ -21,6 +21,7 @@ import org.newdawn.slick.geom.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
 
@@ -78,7 +79,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             // spawn harvester somewhere around it
 
             // TODO-HARVESTER: This is used in the unit spawnment as well, move somewhere, abstract?!
-            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+            Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
                 EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
 
@@ -153,7 +154,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
             // TODO-HARVESTER: This is used in the constructor as well, move somewhere
-            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+            Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
             Unit firstEntityThatBlocksExit = null;
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
                 EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);

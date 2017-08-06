@@ -74,7 +74,7 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        Player human = new Player("Human", Recolorer.FactionColor.BLUE);
+        Player human = new Player("Human", Recolorer.FactionColor.GREEN);
         Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
 
         if (Game.RECORDING_VIDEO) {

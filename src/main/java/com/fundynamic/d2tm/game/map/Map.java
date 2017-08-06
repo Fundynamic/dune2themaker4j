@@ -55,23 +55,32 @@ public class Map {
     }
 
     /**
-     * Get the exact cell on screenX,screenY directly from the internals. Only should be used for drawing (not for game logic).
+     * Get the exact cell on x,y directly from the internals. Only should be used for drawing (not for game logic).
      * The map class has an 'invisible border'. So a map of 64x64 is actually 66x66.
      *
-     * @param x
-     * @param y
+     * @param mapX
+     * @param mapY
      * @return
      */
-    public Cell getCell(int x, int y) {
+    public Cell getCell(int mapX, int mapY) {
         try {
-            return cells[x][y];
+            return cells[mapX][mapY];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException("You're going out of bounds!\n" +
-                    "Parameters given: screenX = " + x + ", screenY = " + y + ".\n" +
+                    "Parameters given: screenX = " + mapX + ", screenY = " + mapY + ".\n" +
                     "You must keep within the dimensions:\n" +
                     "Width: 0 to (not on or over!) " + widthWithInvisibleBorder + "\n" +
                     "Height: 0 to (not on or over!) " + heightWithInvisibleBorder);
         }
+    }
+
+    /**
+     * Get cell, like {@link #getCell(int, int)}
+     * @param mapCoordinate
+     * @return
+     */
+    public Cell getCell(MapCoordinate mapCoordinate) {
+        return getCell(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt());
     }
 
     public MapEditor.TerrainFacing getTerrainFacing(int x, int y) {
@@ -95,6 +104,15 @@ public class Map {
         if (correctedY >= heightWithInvisibleBorder) correctedY = heightWithInvisibleBorder - 1;
 
         return getCell(correctedX, correctedY);
+    }
+
+    /**
+     * Same as {@link #getCellProtected(int, int)}
+     * @param mapCoordinate
+     * @return
+     */
+    public Cell getCellProtected(MapCoordinate mapCoordinate) {
+        return getCellProtected(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt());
     }
 
     public Cell getCellWithinBoundariesOrNullObject(int x, int y) {
@@ -269,4 +287,7 @@ public class Map {
         return width * height;
     }
 
+    public float getDistanceThatCoversWholeMap() {
+        return getSurfaceAreaInTiles() * TILE_SIZE;
+    }
 }

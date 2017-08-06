@@ -217,8 +217,8 @@ public abstract class AbstractD2TMTest {
         when(mockedImage.getGraphics()).thenReturn(mockedImageGraphics);
         return new Map(shroud, width, height) {
             @Override
-            public Cell getCell(int x, int y) {
-                Cell cell = super.getCell(x, y);
+            public Cell getCell(int mapX, int mapY) {
+                Cell cell = super.getCell(mapX, mapY);
                 // Some deep stubbing done here, ideally we run within a graphics context, but Travis is unable to
                 cell.setTileImage(mockedImage);
                 return cell;
