@@ -7,7 +7,6 @@ import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
-import com.sun.tools.corba.se.idl.constExpr.Not;
 
 import java.util.LinkedList;
 import java.util.List;

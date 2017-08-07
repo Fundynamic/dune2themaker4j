@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.map;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;

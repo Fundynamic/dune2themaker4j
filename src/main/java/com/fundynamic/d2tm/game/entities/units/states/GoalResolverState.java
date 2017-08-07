@@ -24,7 +24,6 @@ public class GoalResolverState extends UnitState {
         }
 
         if (unit.hasNoNextCellToMoveTo()) {
-            System.out.println("hasNoNextCellToMoveTo");
             Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
             if (unit.isCellPassableForMe(nextIntendedCoordinatesToMoveTo)) {
                 if (!unit.isHarvester()) {

@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
-import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.List;
 import java.util.Set;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;

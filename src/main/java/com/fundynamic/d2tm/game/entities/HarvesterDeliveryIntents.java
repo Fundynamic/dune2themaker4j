@@ -1,7 +1,5 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.game.entities.units.Unit;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +44,10 @@ public class HarvesterDeliveryIntents {
         if (!intentions.containsKey(what)) {
             throw new IllegalArgumentException("Cannot remove intent for " + what + ", because it is not known. These are known: " + intentions);
         }
-        System.out.println("removeDeliveryIntent at " + what);
+        intentions.remove(what);
+    }
+
+    public void removeDeliveryIntentFriendly(Entity what) {
         intentions.remove(what);
     }
 
@@ -62,7 +63,7 @@ public class HarvesterDeliveryIntents {
         }
 
         // remove all from intentions
-        entitiesToRemove.forEach(this::removeDeliveryIntent);
+        entitiesToRemove.forEach(this::removeDeliveryIntentFriendly);
     }
 
     public Entity getDeliveryIntentTo(Entity whoPlacedTheIntent) {

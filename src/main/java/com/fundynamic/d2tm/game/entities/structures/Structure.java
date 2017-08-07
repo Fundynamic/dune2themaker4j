@@ -86,9 +86,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                 if (passableResult.isPassable()) {
                     // TODO-HARVESTER: Get the kind of harvester that this refinery requires, from rules.ini?
                     // entityData?
-                    AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
-                    Entity entity = this.entityRepository.placeOnMap(
+                    this.entityRepository.placeOnMap(
                             absoluteCoordinate,
                             entityRepository.getEntityData(EntityType.UNIT, HARVESTER), // this can be made configurable
                             this.player
