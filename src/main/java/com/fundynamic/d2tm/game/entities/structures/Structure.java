@@ -41,8 +41,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     private int animationFrame = 0;
     private static final int FLAG_ANIMATION_FRAME_COUNT = 2;
 
-    private boolean hasSpawnedExplosions;
-
     public Structure(Coordinate coordinate, SpriteSheet spritesheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate,
                 spritesheet,
@@ -118,6 +116,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         // TODO-HARVESTER: Introduce structure states, like units!?
         // If refinery expects delivery then animate the delivery animation
         if (entityData.isRefinery && HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+
+
             if (containsEntity != null) {
                 if (animationFrame < 5) animationFrame = 5;
                 if (animationFrame > 6) animationFrame -= 2;
@@ -139,10 +139,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.fadingSelection.update(deltaInSeconds);
 
         if (hitPointBasedDestructibility.hasDied()) {
-            hasSpawnedExplosions = true;
-            for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
-                entityRepository.explodeAt(centeredPos, entityData, player);
-            }
+            die();
         }
 
         this.entityBuilder.update(deltaInSeconds);
@@ -258,7 +255,21 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     @Override
     public boolean isDestroyed() {
-        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
+        return hitPointBasedDestructibility.hasDied();
+    }
+
+    @Override
+    public void die() {
+        if (containsEntity != null) {
+            containsEntity.die();
+        }
+
+        for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
+            entityRepository.explodeAt(centeredPos, entityData, player);
+        }
+
+        hitPointBasedDestructibility.die();
+        containsEntity = null;
     }
 
     @Override
@@ -268,6 +279,13 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
+
+        if (HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+            Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
+            LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
+            renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
+        }
+
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate());
             renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());

@@ -76,4 +76,7 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
         return (float)hitPoints / maxHitpoints;
     }
 
+    public void die() {
+        hitPoints = 0;
+    }
 }

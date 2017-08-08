@@ -142,8 +142,12 @@ public class UnitTest extends AbstractD2TMTest {
 
         assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
 
-        unit.update(0.5F); // decide next cell
-        unit.update(0.5F); // start turning
+        unit.update(0.2F);
+        unit.update(0.2F);
+        unit.update(0.2F);
+        unit.update(0.2F);
+        unit.update(0.2F);
+        unit.update(0.2F);
 
         // a QUAD moves 2 squares for 1 second (see rules.ini)
         unit.update(0.5F);

@@ -29,9 +29,10 @@ public class SeekSpiceState extends UnitState {
                 .collect(Collectors.toList());
 
         if (harvestableCells.isEmpty()) {
-            // nothing found...
+            unit.log("Unable to find any spice");
             return;
         }
+
         unit.harvestAt(harvestableCells.get(0).getCoordinate());
     }
 

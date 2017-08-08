@@ -10,20 +10,10 @@ public class IdleState extends UnitState {
         super(unit, entityRepository, map);
     }
 
-    // TODO boredom (after x time turn around randomly)
 
     @Override
     public void update(float deltaInSeconds) {
-        if (unit.isHarvester()) {
-            if (unit.isDoneHarvesting()) {
-                // what if we got here from that state!? this should be a timed thing...
-                unit.findNearestRefineryToReturnSpice();
-            } else if (unit.canHarvest()) {
-                unit.harvesting();
-            } else {
-                unit.seekSpice();
-            }
-        }
+        // TODO boredom (after x time turn around randomly)
     }
 
     @Override

@@ -19,6 +19,10 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import java.util.List;
+
+import static com.fundynamic.d2tm.game.map.Cell.DOUBLE_TILE_SIZE;
+
 /**
  * <p>
  * The battlefield is a view on the map which can be interacted with.
@@ -26,6 +30,8 @@ import org.newdawn.slick.SlickException;
  *
  */
 public class BattleField extends GuiElement implements CellBasedMouseBehavior, EntityEventsListener {
+
+    private final RenderQueue renderQueue;
 
     // DATA RELATED
     private Map map;
@@ -80,6 +86,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         this.buffer = buffer;
         this.bufferGraphics = buffer.getGraphics();
+
+        this.renderQueue = new RenderQueue(this.viewingVector);
     }
 
     @Override
@@ -89,8 +97,6 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
             // render terrain
             cellViewportRenderer.render(bufferGraphics, viewingVector, cellTerrainRenderer);
-
-            RenderQueue renderQueue = getEntitiesToDraw(); // decide which entities to draw
 
             // draw entities
             renderQueue.render(bufferGraphics);
@@ -111,30 +117,35 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                 bufferGraphics.setLineWidth(lineWidth);
             }
 
+            // Debugging info?
+
             drawBufferToGraphics(graphics, getTopLeft());
         } catch (SlickException e) {
             e.printStackTrace();
         }
     }
 
-    private RenderQueue getEntitiesToDraw() {
-        Rectangle rectangle =
-                Rectangle.createWithDimensions(
-                    viewingVector.min(
-                        Vector2D.create(32, 32)
-                    ),
-                    Vector2D.create(getWidthAsInt() + 64, getHeightAsInt() + 64)
-                );
+    public void drawLine(Entity from, Entity to) {
 
-        RenderQueue renderQueue = new RenderQueue(this.viewingVector);
-        renderQueue.put(entityRepository.findEntitiesWithinRectangle(rectangle).toList());
-
-        return renderQueue;
     }
 
     public void update(float delta) {
         Vector2D translation = velocity.scale(delta);
         viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.add(translation));
+        renderQueue.updateCameraPosition(viewingVector);
+
+        renderQueue.clear();
+
+        Rectangle rectangle =
+                Rectangle.createWithDimensions(
+                        viewingVector.min(
+                                Vector2D.create(DOUBLE_TILE_SIZE, DOUBLE_TILE_SIZE)
+                        ),
+                        Vector2D.create(getWidthAsInt() + DOUBLE_TILE_SIZE, getHeightAsInt() + DOUBLE_TILE_SIZE)
+                );
+        List<Entity> entitiesWithinViewport = entityRepository.findEntitiesWithinRectangle(rectangle).toList();
+
+        renderQueue.put(entitiesWithinViewport);
     }
 
     public void moveLeft() {

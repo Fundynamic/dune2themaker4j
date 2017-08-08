@@ -19,7 +19,6 @@ public class GoalResolverState extends UnitState {
     public void update(float deltaInSeconds) {
         if (!unit.shouldMove()) {
             unit.idle();
-            unit.stopAndResetAnimating();
             return;
         }
 
@@ -30,6 +29,8 @@ public class GoalResolverState extends UnitState {
                     unit.startAnimating();
                 }
                 unit.moveToCell(nextIntendedCoordinatesToMoveTo);
+            } else {
+                unit.log("I have no where to go.");
             }
         } else {
             // still have a target, keep moving

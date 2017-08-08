@@ -21,6 +21,11 @@ public class NullEntity extends Entity {
     }
 
     @Override
+    public void die() {
+
+    }
+
+    @Override
     public void render(Graphics graphics, int x, int y) {
 
     }

@@ -15,6 +15,12 @@ public class Vector2DTest {
     }
 
     @Test
+    public void isZero() {
+        Vector2D zero = Vector2D.zero();
+        Assert.assertTrue(zero.isZero());
+    }
+
+    @Test
     public void angles() {
         Vector2D start = new Vector2D(0F, 0F);
         Vector2D target = new Vector2D(10, 10);

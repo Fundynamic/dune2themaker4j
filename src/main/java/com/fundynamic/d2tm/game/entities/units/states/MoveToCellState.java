@@ -17,9 +17,17 @@ public class MoveToCellState extends UnitState {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (unit.getBodyFacing().isFacingDesiredFacing()) {
-            moveToNextCellPixelByPixel(deltaInSeconds);
+        if (unit.shouldTurnBody()) {
+            unit.setTurnBodyState();
+            return;
         }
+
+        if (unit.hasNoNextCellToMoveTo()) {
+            unit.setToGoalResolverState();
+            return;
+        }
+
+        moveToNextCellPixelByPixel(deltaInSeconds);
     }
 
     @Override
@@ -43,6 +51,7 @@ public class MoveToCellState extends UnitState {
         if (nextTargetToMoveTo.getYAsInt() > coordinate.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
+
         if (offsetX > Cell.TILE_SIZE_ZERO_BASED) {
             offsetX = 0;
             vecToAdd = vecToAdd.add(Vector2D.create(Cell.TILE_SIZE, 0));
@@ -61,8 +70,11 @@ public class MoveToCellState extends UnitState {
         }
 
         // Arrived at intended next target cell
-        if (!vecToAdd.equals(Vector2D.zero())) {
+        if (!vecToAdd.isZero()) {
+            unit.log(" arrived at cell");
             unit.arrivedAtCell(coordinate.add(vecToAdd));
+        } else {
+            unit.log("My offset is " + vecToAdd);
         }
 
         unit.setOffset(Vector2D.create(offsetX, offsetY));

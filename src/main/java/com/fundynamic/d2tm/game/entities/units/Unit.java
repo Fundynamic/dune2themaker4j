@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities.units;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
@@ -103,13 +104,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
-        if (hitPointBasedDestructibility.hasDied()) {
+        if (!isDying() && hitPointBasedDestructibility.hasDied()) {
             die();
         }
 
         state.update(deltaInSeconds);
 
-        if (this.isDestroyed()) {
+        if (this.isDestroyed() || isDying()) {
             return;
         }
 
@@ -117,8 +118,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             chaseOrAttack(deltaInSeconds);
         }
 
-        cannonFacing.update(deltaInSeconds);
-        bodyFacing.update(deltaInSeconds);
+        if (!cannonFacing.isFacingDesiredFacing()) {
+            cannonFacing.update(deltaInSeconds);
+        }
 
         if (!shouldMove() && !shouldAttack()) {
             guardTimer += deltaInSeconds;
@@ -238,7 +240,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 entityToAttack = null;
             } else {
-//                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
                 moveTo(entityToAttack.getCoordinate());
             }
         }
@@ -339,6 +340,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      */
     @Override
     public void select() {
+        System.out.println("SELECTING UNIT START " + this.toStringShort() + " ========================= ");
+        System.out.println("Current state " + this.state);
+        System.out.println("Full to string: " + this);
+        System.out.println("SELECTING UNIT END " + this.toStringShort() + " ========================= ");
+
         fadingSelection.select();
     }
 
@@ -363,7 +369,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void idle() {
-        this.setState(new IdleState(this, entityRepository, map));
+        stopAndResetAnimating();
+
+        if (isHarvester()) {
+            this.setState(new IdleHarvesterState(this, entityRepository, map));
+        } else {
+            this.setState(new IdleState(this, entityRepository, map));
+        }
     }
 
     @Override
@@ -372,7 +384,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
         HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
-        this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+
+        cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+
         setToGoalResolverState();
     }
 
@@ -496,12 +510,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (this.state.getClass().equals(state.getClass())) {
             // do not set, same type
         } else {
-            System.out.println("Unit [" + entityData.name + "] sets state from [" + this.state + "] to [" + state + "]");
+            log("set state from [" + this.state + "] to [" + state + "]");
             this.state = state;
         }
     }
 
     public void die() {
+        // a unit can die when a structure dies. A unit does not die without the structure.
+        // but in case it happens, we do need to clean up references
+        hasEntered = null;
         setState(new DyingState(this, entityRepository, map));
     }
 
@@ -532,6 +549,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         UnitMoveIntents.instance.addIntent(nextTargetToMoveTo, this);
 
+        setMoveToCellState();
+    }
+
+    public void setMoveToCellState() {
         setState(new MoveToCellState(this, entityRepository, map));
     }
 
@@ -653,5 +674,21 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public Coordinate lastSeenSpiceAt() {
         return lastSeenSpiceAt;
+    }
+
+    public RenderQueueEnrichableWithFacingLogic getCannonFacing() {
+        return cannonFacing;
+    }
+
+    public void setTurnBodyState() {
+        setState(new TurnBodyTowardsState(this, entityRepository, map));
+    }
+
+    public boolean shouldTurnBody() {
+        return !bodyFacing.isFacingDesiredFacing();
+    }
+
+    public boolean isDying() {
+        return DyingState.DYING_STATE.equals(this.state.toString());
     }
 }

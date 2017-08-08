@@ -61,9 +61,21 @@ public class RenderQueue {
     public RenderQueue(Vector2D cameraPosition) {
         this.cameraPosition = cameraPosition;
 
+        initThingsToRender();
+    }
+
+    private void initThingsToRender() {
         for (int i = 0; i < MAX_LAYERS; i++) {
             thingsToRender.put(i, new ArrayList<>());
         }
+    }
+
+    public void updateCameraPosition(Vector2D cameraPosition) {
+        this.cameraPosition = cameraPosition;
+    }
+
+    public void clear() {
+        initThingsToRender();
     }
 
     /**
@@ -92,13 +104,22 @@ public class RenderQueue {
      * @param renderQueueEnrichable
      */
     public void put(int layer, EnrichableAbsoluteRenderable renderQueueEnrichable, Coordinate renderableCoordinate) {
-        int drawX = renderableCoordinate.getXAsInt() - cameraPosition.getXAsInt();
-        int drawY = renderableCoordinate.getYAsInt() - cameraPosition.getYAsInt();
+        Coordinate screenCoordinate = translate(renderableCoordinate);
+//        int drawX = renderableCoordinate.getXAsInt() - cameraPosition.getXAsInt();
+//        int drawY = renderableCoordinate.getYAsInt() - cameraPosition.getYAsInt();
+        int drawX = screenCoordinate.getXAsInt();
+        int drawY = screenCoordinate.getYAsInt();
 
         ThingToRender thingToRender = new ThingToRender(drawX, drawY, renderQueueEnrichable);
         thingsToRender.get(layer).add(thingToRender);
 
         renderQueueEnrichable.enrichRenderQueue(this);
+    }
+
+    public Coordinate translate(Coordinate coordinate) {
+        return coordinate.min(
+                    Vector2D.create(cameraPosition.getXAsInt(), cameraPosition.getYAsInt())
+            );
     }
 
     /**

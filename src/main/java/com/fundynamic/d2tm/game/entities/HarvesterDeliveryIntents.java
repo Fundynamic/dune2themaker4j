@@ -1,5 +1,7 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.game.entities.structures.Structure;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +60,7 @@ public class HarvesterDeliveryIntents {
         for (Entity what : intentions.keySet()) {
             Entity who = intentions.get(what);
             if (who.equals(entityWhoPossiblyClaimed)) {
-                entitiesToRemove.add(entityWhoPossiblyClaimed);
+                entitiesToRemove.add(what);
             }
         }
 
@@ -74,5 +76,14 @@ public class HarvesterDeliveryIntents {
             }
         }
         throw new IllegalArgumentException("There is no intent claimed by " + whoPlacedTheIntent);
+    }
+
+    /**
+     * Returns entity which placed the intention
+     * @param what
+     * @return
+     */
+    public Entity getDeliveryIntentFrom(Entity what) {
+        return intentions.get(what);
     }
 }

@@ -390,6 +390,10 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return null;
     }
 
+    /**
+     * Called when entity is destroyed by {@link EntityRepository#removeEntity(Entity)}. Do not
+     * call this directly from anywhere else. Instead use {@link #die()}
+     */
     public void destroy() {
         emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
         UnitMoveIntents.instance.removeAllIntentsBy(this);
@@ -451,6 +455,19 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     public boolean isWithinOtherEntity() {
         return hasEntered != null;
     }
+
+    public String toStringShort() {
+        return "[" + this.entityData.name + " (" + this.hashCode() + " at " + coordinate + "]";
+    }
+
+    public void log(String message) {
+        System.out.println(toStringShort() + " - " + message);
+    }
+
+    /**
+     * Initiate dying of entity.
+     */
+    public abstract void die();
 
     class EventSubscription<T extends Entity> {
         private T subscriber;

@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.map.Map;
 
 public class DyingState extends UnitState {
 
+    public static final String DYING_STATE = "DyingState";
 
     public DyingState(Unit unit, EntityRepository entityRepository, Map map) {
         super(unit, entityRepository, map);
@@ -25,7 +26,7 @@ public class DyingState extends UnitState {
 
     @Override
     public String toString() {
-        return "DyingState";
+        return DYING_STATE;
     }
 
 }

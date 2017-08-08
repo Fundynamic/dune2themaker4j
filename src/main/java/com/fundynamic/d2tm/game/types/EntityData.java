@@ -235,7 +235,9 @@ public class EntityData {
         // 700 capacity
         // unloading 700 in 30 secs
         // 23,333333333 per second
-        return getRelativeSpeed(23, deltaInSeconds);
+//        float speed = 23.3333f;
+        float speed = 70;
+        return getRelativeSpeed(speed, deltaInSeconds);
     }
 
     /**

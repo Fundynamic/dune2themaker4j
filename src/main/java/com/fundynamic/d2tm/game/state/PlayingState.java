@@ -20,6 +20,7 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -29,6 +30,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import static com.fundynamic.d2tm.Game.*;
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class PlayingState extends BasicGameState {
@@ -190,18 +192,30 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
+        MapCoordinate playerConstyard = MapCoordinate.create(5, 5);
+        MapCoordinate cpuConstyard = MapCoordinate.create(57, 57);
+
+        // create spice field nearby
+        mapEditor.createCircularField(map, MapCoordinate.create(15, 15), DuneTerrain.TERRAIN_SPICE, 5);
+        mapEditor.createCircularField(map, playerConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+        mapEditor.createCircularField(map, cpuConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+        mapEditor.smooth(map);
+
         // TODO: read from SCENARIO.INI file
         // human entities
-//        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(4, 3), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(5, 3), HARVESTER, human);
+        entityRepository.placeUnitOnMap(MapCoordinate.create(6, 3), HARVESTER, human);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(8, 2), "QUAD", human);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(playerConstyard, EntitiesData.CONSTRUCTION_YARD, human);
 
         // cpu entities
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(40, 40), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(50, 50), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(30, 32), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(34, 43), "QUAD", cpu);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(cpuConstyard, EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
     @Override
