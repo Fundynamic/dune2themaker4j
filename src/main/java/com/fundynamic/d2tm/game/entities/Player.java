@@ -17,7 +17,7 @@ public class Player implements Updateable {
     private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
-    private int credits;
+    private float credits;
     private int animatedCredits;
 
     private float creditsTimer = 0F;
@@ -86,7 +86,7 @@ public class Player implements Updateable {
         shrouded.put(mapCoordinate, true);
     }
 
-    public void addCredits(int credits) {
+    public void addCredits(float credits) {
         this.credits += credits;
     }
 
@@ -108,7 +108,7 @@ public class Player implements Updateable {
     }
 
     public int getCredits() {
-        return credits;
+        return (int)credits;
     }
 
     public int getAnimatedCredits() {
@@ -117,11 +117,12 @@ public class Player implements Updateable {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (animatedCredits != credits) {
+        float desiredCredits = Math.round(this.credits);
+        if (animatedCredits != desiredCredits) {
             creditsTimer += deltaInSeconds;
-            while (creditsTimer > 0.0F && animatedCredits != credits) {
+            while (creditsTimer > 0.0F && animatedCredits != desiredCredits) {
                 creditsTimer -= 0.01;
-                if (animatedCredits < credits) {
+                if (animatedCredits < desiredCredits) {
                     animatedCredits += 1;
                 } else {
                     animatedCredits -= 1;

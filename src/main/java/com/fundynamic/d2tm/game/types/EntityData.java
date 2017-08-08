@@ -231,6 +231,13 @@ public class EntityData {
         return entityType.toString() + "-" + id;
     }
 
+    public float getRelativeDepositSpeed(float deltaInSeconds) {
+        // 700 capacity
+        // unloading 700 in 30 secs
+        // 23,333333333 per second
+        return getRelativeSpeed(23, deltaInSeconds);
+    }
+
     /**
      * This takes time into account as well. This makes the distance of moveSpeed equivalent to 1 second.
      *

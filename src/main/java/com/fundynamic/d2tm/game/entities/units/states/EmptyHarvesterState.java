@@ -24,7 +24,7 @@ public class EmptyHarvesterState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (unit.hasSpiceToUnload()) {
-            unit.depositSpice(/* deltaInSeconds */); // TODO-HARVESTER
+            unit.depositSpice(deltaInSeconds); // TODO-HARVESTER
         } else {
             System.out.println("Harvester is done depositing spice, moving back to " + unit.lastSeenSpiceAt());
             HarvesterDeliveryIntents.instance.removeDeliveryIntent(refinery);

@@ -18,7 +18,6 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-import java.util.List;
 import java.util.Set;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
@@ -32,7 +31,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // state
     private UnitState state;
-    private int harvested;
+    private float harvested;
 
     // Behaviors
     private FadingSelection fadingSelection;
@@ -245,6 +244,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
+    /**
+     * TODO-HARVESTER: check with EntityRepository {@link EntityRepository.PassableResult} {@link EntityRepository#isPassable(Entity, MapCoordinate)}
+     * Possible duplicate!?
+     */
     public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
         Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
 
@@ -295,6 +298,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (bestCoordinate != null) {
             return bestCoordinate;
         }
+        System.out.println("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
         return coordinate;
     }
 
@@ -641,8 +645,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return harvested > 0;
     }
 
-    public void depositSpice() {
-        int amountToDeposit = Math.min(this.harvested, 1); // TODO-HARVESTER: deposit speed
+    public void depositSpice(float deltaInSeconds) {
+        float amountToDeposit = Math.min(this.harvested, entityData.getRelativeDepositSpeed(deltaInSeconds)); // TODO-HARVESTER: deposit speed
         this.harvested -= amountToDeposit;
         this.player.addCredits(amountToDeposit);
     }
