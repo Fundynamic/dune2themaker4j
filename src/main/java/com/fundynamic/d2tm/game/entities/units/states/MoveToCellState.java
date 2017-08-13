@@ -74,7 +74,7 @@ public class MoveToCellState extends UnitState {
             unit.log(" arrived at cell");
             unit.arrivedAtCell(coordinate.add(vecToAdd));
         } else {
-            unit.log("My offset is " + vecToAdd);
+//            unit.log("My offset is " + vecToAdd);
         }
 
         unit.setOffset(Vector2D.create(offsetX, offsetY));
