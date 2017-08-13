@@ -203,10 +203,6 @@ public class PlayingState extends BasicGameState {
 
         // TODO: read from SCENARIO.INI file
         // human entities
-        entityRepository.placeUnitOnMap(MapCoordinate.create(3, 3), HARVESTER, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(4, 3), HARVESTER, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(5, 3), HARVESTER, human);
-        entityRepository.placeUnitOnMap(MapCoordinate.create(6, 3), HARVESTER, human);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(8, 2), "QUAD", human);
         entityRepository.placeStructureOnMap(playerConstyard, EntitiesData.CONSTRUCTION_YARD, human);
 
