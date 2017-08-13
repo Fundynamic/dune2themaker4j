@@ -30,6 +30,7 @@ public class Colors {
     public static final Color BLACK_ALPHA_128 = new Color(0,0,0,128);
     public static final Color WHITE_ALPHA_128 = new Color(255, 255, 255, 128);
     public static final Color RED = new Color(255, 0, 0, 128);
+    public static final Color LIGHT_BLUE = new Color(104, 102, 255, 255);
 
     public static Map<String,Color> colorMap = new HashMap<>();
 

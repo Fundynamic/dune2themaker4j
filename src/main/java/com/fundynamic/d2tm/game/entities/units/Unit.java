@@ -31,13 +31,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // state
     private UnitState state;
-    private float harvested;
+//    private float harvested;
 
     // Behaviors
     private FadingSelection fadingSelection;
 
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
+    protected final HitPointBasedDestructibility harvested;
 
     private RenderQueueEnrichableWithFacingLogic bodyFacing;
     private RenderQueueEnrichableWithFacingLogic cannonFacing;
@@ -72,7 +73,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.offset = Vector2D.zero();
         this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
         this.state = new IdleState(this, entityRepository, map);
-        this.harvested = 0;
+
+        if (entityData.isHarvester) {
+            int maxHarvestingCapacity = 700;
+            this.harvested = new HarvestedCentered(maxHarvestingCapacity, entityData.getWidth(), entityData.getHeight());
+            this.harvested.toZero();
+        } else {
+            this.harvested = null;
+        }
+
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
@@ -94,17 +103,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         bodyFacing.render(graphics, drawX, drawY);
         cannonFacing.render(graphics, drawX, drawY);
-
-        if (isHarvester()) {
-            graphics.setColor(Color.white);
-            graphics.drawString("" + harvested, drawX, drawY - 12);
-        }
     }
 
     @Override
     public void update(float deltaInSeconds) {
         if (!isDying() &&
-            hitPointBasedDestructibility.hasDied()) {
+            hitPointBasedDestructibility.isZero()) {
             die();
         }
 
@@ -415,7 +419,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             }
         }
         // TODO: set state to dying when applicable!?
-        hitPointBasedDestructibility.takeDamage(hitPoints);
+        hitPointBasedDestructibility.reduce(hitPoints);
     }
 
     public Coordinate getRandomVectorToMoveTo() {
@@ -432,7 +436,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public int getHitPoints() {
-        return hitPointBasedDestructibility.getHitPoints();
+        return hitPointBasedDestructibility.getCurrent();
     }
 
     @Override
@@ -475,9 +479,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
+            if (this.harvested != null) {
+                renderQueue.putEntityGui(this.harvested, getCoordinateWithOffset().min(Vector2D.create(0, 6)));
+            }
             renderQueue.putEntityGui(this.fadingSelection, getCoordinateWithOffset());
         } else {
             if (fadingSelection.hasFocus()) {
+                if (this.harvested != null) {
+                    renderQueue.putEntityGui(this.harvested, getCoordinateWithOffset().min(Vector2D.create(0, 6)));
+                }
                 renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
             }
         }
@@ -623,7 +633,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void harvestCell(float deltaInSeconds) {
-        log("Harvesting");
+//        log("Harvesting");
         startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
         // TODO-HARVESTER: make this time based, like movespeed
         // TODO-HARVESTER: get this from entityData
@@ -634,11 +644,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void harvest(int amount) {
         Cell unitCell = map.getCellFor(this);
         lastSeenSpiceAt = coordinate;
-        harvested += unitCell.harvest(amount); // note, harvest method may return lower number than desired harvest amount
+        harvested.add(unitCell.harvest(amount)); // note, harvest method may return lower number than desired harvest amount
     }
 
     public boolean isDoneHarvesting() {
-        return harvested >= 700; // TODO-HARVESTER: make harvest capacity configurable (entityData)
+        return harvested.isMaxed(); //harvested >= 700; // TODO-HARVESTER: make harvest capacity configurable (entityData)
     }
 
     public void findNearestRefineryToReturnSpice() {
@@ -682,12 +692,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean hasSpiceToUnload() {
-        return harvested > 0;
+        return !harvested.isZero();
     }
 
     public void depositSpice(float deltaInSeconds) {
-        float amountToDeposit = Math.min(this.harvested, entityData.getRelativeDepositSpeed(deltaInSeconds)); // TODO-HARVESTER: deposit speed
-        this.harvested -= amountToDeposit;
+        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds); // TODO-HARVESTER: deposit speed
+        this.harvested.reduce(amountToDeposit);
         this.player.addCredits(amountToDeposit);
     }
 

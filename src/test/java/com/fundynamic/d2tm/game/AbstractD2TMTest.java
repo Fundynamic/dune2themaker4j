@@ -261,7 +261,7 @@ public abstract class AbstractD2TMTest {
             public boolean isDestroyed() {
                 // we do this so that we do not have to deal with spawning explosions (which is done in the
                 // update method)
-                return super.hitPointBasedDestructibility.hasDied();
+                return super.hitPointBasedDestructibility.isZero();
             }
 
             @Override

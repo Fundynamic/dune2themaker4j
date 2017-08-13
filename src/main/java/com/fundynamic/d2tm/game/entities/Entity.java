@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
@@ -463,7 +464,9 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     }
 
     public void log(String message) {
-        System.out.println(toStringShort() + " - " + message);
+        if (Game.DEBUG_INFO) {
+            System.out.println(toStringShort() + " - " + message);
+        }
     }
 
     /**

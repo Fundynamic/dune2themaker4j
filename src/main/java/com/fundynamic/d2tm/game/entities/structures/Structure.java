@@ -138,7 +138,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection.update(deltaInSeconds);
 
-        if (hitPointBasedDestructibility.hasDied()) {
+        if (hitPointBasedDestructibility.isZero()) {
             die();
         }
 
@@ -250,12 +250,12 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
-        hitPointBasedDestructibility.takeDamage(hitPoints);
+        hitPointBasedDestructibility.reduce(hitPoints);
     }
 
     @Override
     public boolean isDestroyed() {
-        return hitPointBasedDestructibility.hasDied();
+        return hitPointBasedDestructibility.isZero();
     }
 
     @Override
@@ -268,22 +268,24 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             entityRepository.explodeAt(centeredPos, entityData, player);
         }
 
-        hitPointBasedDestructibility.die();
+        hitPointBasedDestructibility.toZero();
         containsEntity = null;
     }
 
     @Override
     public int getHitPoints() {
-        return hitPointBasedDestructibility.getHitPoints();
+        return hitPointBasedDestructibility.getCurrent();
     }
 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
 
-        if (HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
-            Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
-            LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
-            renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
+        if (Game.DEBUG_INFO) {
+            if (HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+                Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
+                LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
+                renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
+            }
         }
 
         if (isSelected()) {
