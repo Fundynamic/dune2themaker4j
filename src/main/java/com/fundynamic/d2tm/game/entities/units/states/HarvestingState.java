@@ -29,7 +29,7 @@ public class HarvestingState extends UnitState {
             unit.findNearestRefineryToReturnSpice();
         } else {
             if (unit.canHarvest()) {
-                unit.harvestCell(); // actual harvesting of spice here
+                unit.harvestCell(deltaInSeconds); // actual harvesting of spice here
             } else {
                 unit.seekSpice();
             }

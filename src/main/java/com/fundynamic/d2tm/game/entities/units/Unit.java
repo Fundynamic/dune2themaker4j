@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.units;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
@@ -605,11 +604,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return unitCell.isHarvestable();
     }
 
-    public void harvestCell() {
+    public void harvestCell(float deltaInSeconds) {
+        log("Harvesting");
         startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
         // TODO-HARVESTER: make this time based, like movespeed
         // TODO-HARVESTER: get this from entityData
         harvest(1);
+        bodyFacing.update(deltaInSeconds);
     }
 
     public void harvest(int amount) {
