@@ -448,8 +448,10 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     }
 
     public void leaveOtherEntity() {
-        hasEntered.containsEntity = null;
-        hasEntered = null;
+        if (hasEntered != null) {
+            hasEntered.containsEntity = null;
+            hasEntered = null;
+        }
     }
 
     public boolean isWithinOtherEntity() {
@@ -468,6 +470,10 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * Initiate dying of entity.
      */
     public abstract void die();
+
+    public boolean hasMoveAnimation() {
+        return entityData.hasMoveAnimation;
+    }
 
     class EventSubscription<T extends Entity> {
         private T subscriber;

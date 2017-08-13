@@ -21,6 +21,13 @@ public class UnitMoveIntentsTest {
     }
 
     @Test
+    public void removeAllIntentsByEntity() {
+        unitMoveIntents.addIntent(VEC_23_23, entityOne);
+        unitMoveIntents.removeAllIntentsBy(entityOne);
+        Assert.assertFalse(unitMoveIntents.hasIntent(VEC_23_23.toMapCoordinate()));
+    }
+
+    @Test
     public void canClaimVector() {
         unitMoveIntents.addIntent(VEC_23_23, entityOne);
     }

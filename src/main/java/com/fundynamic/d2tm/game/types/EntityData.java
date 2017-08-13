@@ -99,6 +99,7 @@ public class EntityData {
 
     public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
     public boolean isRefinery;      // if true, entity will be something where spice can be delivered
+    public boolean hasMoveAnimation;      // if true, entity can have walking animation and what not
 
     public SoundData soundData = null; // for playing sound if required
 

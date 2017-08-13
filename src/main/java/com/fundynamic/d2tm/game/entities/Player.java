@@ -117,17 +117,18 @@ public class Player implements Updateable {
 
     @Override
     public void update(float deltaInSeconds) {
-        float desiredCredits = Math.round(this.credits);
-        if (animatedCredits != desiredCredits) {
-            creditsTimer += deltaInSeconds;
-            while (creditsTimer > 0.0F && animatedCredits != desiredCredits) {
-                creditsTimer -= 0.01;
-                if (animatedCredits < desiredCredits) {
-                    animatedCredits += 1;
-                } else {
-                    animatedCredits -= 1;
-                }
-            }
-        }
+//        float desiredCredits = Math.round(this.credits);
+        animatedCredits = (int) credits;
+//        if (animatedCredits != desiredCredits) {
+//            creditsTimer += deltaInSeconds;
+//            while (creditsTimer > 0.0F && animatedCredits != desiredCredits) {
+//                creditsTimer -= 0.01;
+//                if (animatedCredits < desiredCredits) {
+//                    animatedCredits += 1;
+//                } else {
+//                    animatedCredits -= 1;
+//                }
+//            }
+//        }
     }
 }

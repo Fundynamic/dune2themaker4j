@@ -23,6 +23,7 @@ public class GoalResolverState extends UnitState {
         }
 
         if (unit.hasNoNextCellToMoveTo()) {
+            unit.stopAndResetAnimating();
             Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
             if (unit.isCellPassableForMe(nextIntendedCoordinatesToMoveTo)) {
                 if (!unit.isHarvester()) {

@@ -55,17 +55,21 @@ public class UnitMoveIntents {
     }
 
     public void removeAllIntentsBy(Entity entityWhoPossiblyClaimed) {
-        List<Entity> entitiesToRemove = new ArrayList<>();
+        List<MapCoordinate> mapCoordinatesToRemove = new ArrayList<>();
 
         // find all entities that where claimed by this entity
         for (MapCoordinate mapCoordinate : intendedVectors.keySet()) {
             Entity who = intendedVectors.get(mapCoordinate);
             if (who.equals(entityWhoPossiblyClaimed)) {
-                entitiesToRemove.add(entityWhoPossiblyClaimed);
+                mapCoordinatesToRemove.add(mapCoordinate);
             }
         }
 
         // remove all from intentions
-        entitiesToRemove.forEach(e -> intendedVectors.remove(e));
+        mapCoordinatesToRemove.forEach(mapCoordinate -> intendedVectors.remove(mapCoordinate));
+    }
+
+    public boolean hasIntent(MapCoordinate mapCoordinate) {
+        return intendedVectors.containsKey(mapCoordinate);
     }
 }

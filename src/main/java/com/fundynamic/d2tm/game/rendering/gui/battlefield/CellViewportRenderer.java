@@ -1,8 +1,12 @@
 package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
+import com.fundynamic.d2tm.game.entities.UnitMoveIntents;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
@@ -43,6 +47,11 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
                 // TODO: 2 responsibilities happening here, one is culling, one is drawing
                 // it is better to separate the two
                 renderer.draw(graphics, map.getCell(x, y), drawX, drawY);
+                boolean unitIntent = UnitMoveIntents.instance.hasIntent(MapCoordinate.create(x, y));
+                if (unitIntent) {
+                    graphics.setColor(Colors.DARK_RED_ALPHA_128);
+                    graphics.fillRect(drawX, drawY, tileSize, tileSize);
+                }
 //                SlickUtils.drawShadowedText(graphics, Colors.WHITE, "" + x + "," + y, drawX, drawY);
             }
         }

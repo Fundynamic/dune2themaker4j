@@ -103,7 +103,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
-        if (!isDying() && hitPointBasedDestructibility.hasDied()) {
+        if (!isDying() &&
+            hitPointBasedDestructibility.hasDied()) {
             die();
         }
 
@@ -256,6 +257,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
         entities = entities.exclude(this); // do not count ourselves as blocking
 
+        if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
+            return false;
+
         if (isHarvester() && isDoneHarvesting()) {
             if (entities.hasOne()) {
                 Entity blockingEntity = entities.getFirst();
@@ -268,9 +272,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             }
         }
 
-        // all other units & cases
-        return entities.isEmpty() &&
-                UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this);
+        // not boarding an entity, so then we only accept movable when it is empty
+        return entities.isEmpty();
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
@@ -345,6 +348,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         System.out.println("SELECTING UNIT END " + this.toStringShort() + " ========================= ");
 
         fadingSelection.select();
+    }
+
+    @Override
+    public void enterOtherEntity(Entity whichEntityWillBeEntered) {
+        super.enterOtherEntity(whichEntityWillBeEntered);
+        deselect();
     }
 
     @Override
@@ -517,7 +526,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void die() {
         // a unit can die when a structure dies. A unit does not die without the structure.
         // but in case it happens, we do need to clean up references
-        hasEntered = null;
+        if (hasEntered != null) {
+            hasEntered.leaveOtherEntity();
+        }
         setState(new DyingState(this, entityRepository, map));
     }
 
@@ -543,6 +554,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      * @param nextIntendedCoordinatesToMoveTo
      */
     public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
+        // TODO: Make this depended on some 'walk/move animation flag'
+        if (entityData.hasMoveAnimation) {
+            startAnimating();
+        } else {
+            stopAndResetAnimating();
+        }
+
         nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
         bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
 
@@ -565,7 +583,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.coordinate = coordinateToMoveTo;
         this.nextTargetToMoveTo = coordinateToMoveTo;
 
-        UnitMoveIntents.instance.removeIntent(coordinateToMoveTo);
+        UnitMoveIntents.instance.removeAllIntentsBy(this);
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
@@ -691,5 +709,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public boolean isDying() {
         return DyingState.DYING_STATE.equals(this.state.toString());
+    }
+
+    public void updateBodyFacing(float deltaInSeconds) {
+        if (bodyFacing == null) return;
+        bodyFacing.update(deltaInSeconds);
     }
 }

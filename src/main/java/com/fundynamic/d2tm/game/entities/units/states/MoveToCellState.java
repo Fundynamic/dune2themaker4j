@@ -36,6 +36,14 @@ public class MoveToCellState extends UnitState {
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {
+        // TODO: Make this depended on some 'walk/move animation flag'
+        if (unit.hasMoveAnimation()) {
+            unit.startAnimating();
+            unit.updateBodyFacing(deltaInSeconds);
+        } else {
+            unit.stopAndResetAnimating();
+        }
+
         Coordinate coordinate = unit.getCoordinate();
         Vector2D offset = unit.getOffset();
         Vector2D nextTargetToMoveTo = unit.getNextTargetToMoveTo();

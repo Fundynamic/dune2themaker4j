@@ -276,6 +276,11 @@ public class EntitiesData {
             entityData.isHarvester = true;
         }
 
+        // TODO: add moveable property
+        if (id.equals(EntitiesData.INFANTRY) || id.equals(EntitiesData.SOLDIER)) {
+            entityData.hasMoveAnimation = true;
+        }
+
         entityData.weaponId = getAndEnsureWeaponId(iniDataUnit.weaponId, id);
 
         String explosionId = iniDataUnit.explosionId;
