@@ -21,7 +21,7 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
     }
 
     public void reduce(float amount) {
-        this.current = Math.max(this.current - amount, 0);
+        this.current = Math.max(this.current - amount, 0f);
     }
 
     public void add(float amount) {

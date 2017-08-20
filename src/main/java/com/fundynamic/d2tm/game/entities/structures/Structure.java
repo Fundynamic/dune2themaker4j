@@ -138,10 +138,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection.update(deltaInSeconds);
 
-        if (hitPointBasedDestructibility.isZero()) {
-            die();
-        }
-
         this.entityBuilder.update(deltaInSeconds);
 
         handleUnitConstructedAndNeedsToBeSpawnedLogic();
@@ -251,6 +247,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
         hitPointBasedDestructibility.reduce(hitPoints);
+        if (hitPointBasedDestructibility.isZero()) {
+            die();
+        }
     }
 
     @Override

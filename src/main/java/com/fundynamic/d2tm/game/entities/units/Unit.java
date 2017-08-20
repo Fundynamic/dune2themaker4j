@@ -106,11 +106,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
-        if (!isDying() &&
-            hitPointBasedDestructibility.isZero()) {
-            die();
-        }
-
         state.update(deltaInSeconds);
 
         if (this.isDestroyed() || isDying()) {
@@ -417,8 +412,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         }
+
         // TODO: set state to dying when applicable!?
         hitPointBasedDestructibility.reduce(hitPoints);
+        if (hitPointBasedDestructibility.isZero()) {
+            die();
+        }
     }
 
     public Coordinate getRandomVectorToMoveTo() {
