@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.game.behaviors.Destroyer;
+import com.fundynamic.d2tm.game.behaviors.Harvester;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.Mouse;
@@ -60,6 +61,15 @@ public class MovableSelectedMouse extends NormalMouse {
         if (!NullEntity.is(hoveringOverEntity) && cell.isVisibleFor(player)) {
             // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
+
+                if (hoveringOverEntity.isRefinery()) {
+                    EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
+                    if (harvestersSelected.hasAny()) {
+                        harvestersSelected.forEach(entity -> ((Harvester)entity).returnToRefinery(hoveringOverEntity));
+                        return;
+                    }
+                }
+
                 selectEntity(hoveringOverEntity);
             } else {
                 attackDestructibleIfApplicable(hoveringOverEntity);

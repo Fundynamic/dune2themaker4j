@@ -24,7 +24,7 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 /**
  * Should become observable with RxJava!
  */
-public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable {
+public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable, Harvester {
 
     public static final int GUARD_TIMER_INTERVAL = 5;
 
@@ -684,6 +684,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         }
     }
 
+    /**
+     * Called when unit is IN a refinery and should start dump resources for money
+     * @param refinery
+     */
     public void emptyHarvestedSpiceAt(Entity refinery) {
         if (!refinery.isRefinery()) throw new IllegalArgumentException("Cannot empty harvester at non-refinery entity " + refinery);
         // do not remove intent yet, do that once we are finished
