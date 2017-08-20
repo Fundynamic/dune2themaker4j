@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.controls;
 
+import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.graphics.ImageRepository;
@@ -7,6 +8,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +37,7 @@ import java.util.Map;
  *     This class propagates the mouse behavior events to its related {@link GuiComposite}.
  * </p>
  */
-public class Mouse implements MouseBehavior {
+public class Mouse implements MouseBehavior, Updateable {
 
     // RENDERING
     public enum MouseImages {
@@ -43,11 +45,16 @@ public class Mouse implements MouseBehavior {
         HOVER_OVER_SELECTABLE_ENTITY,
         MOVE,
         ATTACK,
+        ENTER_STRUCTURE,
         // and other images we can think of (ie, they are not GUI area specific, these are ALL definitions)
         CUSTOM
     }
+
     private MouseImages currentImage;
     private Map<MouseImages, Image> mouseImages = new HashMap<>();
+
+    private float frameToDraw = 0f;
+    private int hotspotX, hotspotY;
 
     // STATE
     private final Player controllingPlayer;
@@ -69,6 +76,7 @@ public class Mouse implements MouseBehavior {
         mouse.setupMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, imageRepository.loadAndCache("mouse/mouse_pick.png"));
         mouse.setupMouseImage(Mouse.MouseImages.MOVE, imageRepository.loadAndCache("mouse/mouse_move.png"));
         mouse.setupMouseImage(Mouse.MouseImages.ATTACK, imageRepository.loadAndCache("mouse/mouse_attack.png"));
+        mouse.setupMouseImage(Mouse.MouseImages.ENTER_STRUCTURE, imageRepository.loadAndCacheSpriteSheet("mouse/mouse_enter.png", 18, 60));
         return mouse;
     }
 
@@ -82,32 +90,56 @@ public class Mouse implements MouseBehavior {
 
     public void setMouseImage(Image image, int hotSpotX, int hotSpotY) {
         if (image == null) throw new IllegalArgumentException("Image to set for mouse cursor may not be null!");
-        if (!mouseImages.containsValue(image)) {
-            this.currentImage = MouseImages.CUSTOM;
-        }
         try {
+            this.hotspotX = hotSpotX;
+            this.hotspotY = hotSpotY;
             gameContainer.setMouseCursor(image, hotSpotX, hotSpotY);
         } catch (SlickException e) {
             throw new CannotSetMouseCursorException(e);
         }
     }
 
-    public void setMouseImageHotSpotCentered(Image image) {
-        if (image == null) throw new IllegalArgumentException("Image to set for mouse cursor may not be null!");
-        if (!mouseImages.containsValue(image)) {
-            this.currentImage = MouseImages.CUSTOM;
-        }
-        try {
-            gameContainer.setMouseCursor(image, image.getWidth() / 2, image.getHeight() / 2);
-        } catch (SlickException e) {
-            throw new CannotSetMouseCursorException(e);
-        }
+    public void setMouseImageDeploySuperPower() {
+        setMouseImageAttack();
     }
 
-    public void setMouseImage(MouseImages key, int hotSpotX, int hotSpotY) {
+    public void setMouseImageMove() {
+        setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+    }
+
+    public void setMouseImageAttack() {
+        setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+    }
+
+    public void setMouseImageNormal() {
+        setMouseImage(MouseImages.NORMAL, 0, 0);
+    }
+
+    public void setMouseImageEnter() {
+        setMouseImage(Mouse.MouseImages.ENTER_STRUCTURE, 9, 30);
+    }
+
+    public void setMouseImageSelectable() {
+        setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
+    }
+
+    private void setMouseImage(MouseImages key, int hotSpotX, int hotSpotY) {
         if (key.equals(this.currentImage)) return;
         this.currentImage = key;
-        setMouseImage(mouseImages.get(key), hotSpotX, hotSpotY);
+        setMouseImage(getMouseImage(), hotSpotX, hotSpotY);
+    }
+
+    public void updateMouseImage() {
+        setMouseImage(getMouseImage(), this.hotspotX, this.hotspotY);
+    }
+
+    public Image getMouseImage() {
+        Image image = mouseImages.get(this.currentImage);
+        if (image instanceof SpriteSheet) {
+            int frame = (int)frameToDraw;
+            return ((SpriteSheet) image).getSprite(frame, 0);
+        }
+        return image;
     }
 
     public void setupMouseImage(MouseImages key, Image image) {
@@ -141,6 +173,20 @@ public class Mouse implements MouseBehavior {
     @Override
     public void leftButtonReleased() {
         guiComposite.leftButtonReleased();
+    }
+
+    @Override
+    public void update(float deltaInSeconds) {
+        if (currentImage == MouseImages.ENTER_STRUCTURE) {
+            float oldFrameToDraw = frameToDraw;
+            frameToDraw += (deltaInSeconds * 10);
+            if ((int) oldFrameToDraw != (int) frameToDraw) {
+                updateMouseImage();
+            }
+            if (frameToDraw > 8) {
+                frameToDraw = 0;
+            }
+        }
     }
 
 }

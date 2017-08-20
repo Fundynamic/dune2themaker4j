@@ -77,7 +77,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
         if (entityDataToPlace.isTypeStructure()) {
             doLogic(graphics);
         } else if (entityDataToPlace.isTypeSuperPower()) {
-            mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+            mouse.setMouseImageDeploySuperPower();
         } else {
             MapCoordinate topLeftMapCoordinate = mapCoordinatesForEntityToPlace.get(0).mapCoordinate;
             Coordinate coordinateTopLeft = battleField.translateMapCoordinateToViewportCoordinate(topLeftMapCoordinate);

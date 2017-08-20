@@ -59,6 +59,7 @@ public class PlayingState extends BasicGameState {
 
     private MapEditor mapEditor;
     private Map map;
+    private Mouse mouse;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -92,7 +93,7 @@ public class PlayingState extends BasicGameState {
 
         guiComposite = new GuiComposite();
 
-        Mouse mouse = Mouse.create(
+        mouse = Mouse.create(
                 human,
                 gameContainer,
                 imageRepository,
@@ -238,6 +239,8 @@ public class PlayingState extends BasicGameState {
         for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
+
+        mouse.update(deltaInSeconds);
 
         human.update(deltaInSeconds);
         cpu.update(deltaInSeconds);

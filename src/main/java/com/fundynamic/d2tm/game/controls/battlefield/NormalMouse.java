@@ -19,7 +19,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
 
     public NormalMouse(BattleField battleField) {
         super(battleField);
-        mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
+        mouse.setMouseImageNormal();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         // Tell battlefield these entities got deselected
         battleField.entitiesDeselected(EntitiesSet.fromSet(entities));
 
-        mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
+        mouse.setMouseImageNormal();
     }
 
     @Override
@@ -80,10 +80,10 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         }
 
         if (entity.isSelectable()) {
-            mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
+            mouse.setMouseImageSelectable();
             ((Selectable) entity).getsFocus();
         } else {
-            mouse.setMouseImage(Mouse.MouseImages.NORMAL, 0, 0);
+            mouse.setMouseImageNormal();
         }
     }
 

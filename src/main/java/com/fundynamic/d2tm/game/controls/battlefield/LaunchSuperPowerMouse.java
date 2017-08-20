@@ -42,7 +42,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
         this.superPowerEntityData = placementBuildableEntity.getEntityData();
         this.entityWhoConstructsIt = placementBuildableEntity.getEntityWhoConstructsThis();
 
-        mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+        mouse.setMouseImageAttack();
     }
 
     @Override
