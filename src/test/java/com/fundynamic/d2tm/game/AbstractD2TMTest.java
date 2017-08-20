@@ -246,6 +246,12 @@ public abstract class AbstractD2TMTest {
         return makeStructure(player, hitPoints, 2, 3, 5, Coordinate.create(32, 32));
     }
 
+    public Structure makeStructure(Player player, MapCoordinate mapCoordinate, String id) {
+        if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
+        if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
+        return (Structure) entityRepository.placeOnMap(mapCoordinate.toCoordinate(), EntityType.STRUCTURE, id, player);
+    }
+
     public Structure makeStructure(Player player, int hitPoints, Coordinate coordinate) {
         return makeStructure(player, hitPoints, 2, 3, 5, coordinate);
     }
@@ -337,6 +343,20 @@ public abstract class AbstractD2TMTest {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
         return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, id, player);
+    }
+
+    /**
+     * <p>
+     *     Creates a unit for player at Map coordinate and given ID. Where ID is the string representation
+     *     of an {@link EntityData}.
+     * </p>
+     * @param player
+     * @param mapCoordinate
+     * @param id
+     * @return {@link Unit} constructed
+     */
+    public Unit makeUnit(Player player, MapCoordinate mapCoordinate, String id) {
+        return makeUnit(player, mapCoordinate.toCoordinate(), id);
     }
 
     // PROJECTILE

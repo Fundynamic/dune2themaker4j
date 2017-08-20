@@ -3,12 +3,10 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.EntitiesSet;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.states.GoalResolverState;
 import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
 import com.fundynamic.d2tm.game.entities.units.states.TurnBodyTowardsState;
@@ -36,6 +34,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -233,7 +232,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void selectedUnitPutsFadingSelectionAndHealthBarOnRenderQueue() {
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.QUAD);
         unit.select();
 
         Vector2D viewportVec = Vector2D.create(32, 32);
@@ -265,7 +264,7 @@ public class UnitTest extends AbstractD2TMTest {
         });
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), "HARVESTER");
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.HARVESTER);
 
         assertThat(unit.canHarvest(), is(true));
         assertThat(unit.isDoneHarvesting(), is(false));
@@ -284,16 +283,61 @@ public class UnitTest extends AbstractD2TMTest {
         MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
+        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.QUAD);
         assertThat(unit.canHarvest(), is(false));
     }
+    
+    @Test
+    public void returnToRefineryThrowsIllegalArgumentExceptionWhenArgumentIsNotARefinery() {
+        try {
+            Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+            Structure constYard = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.CONSTRUCTION_YARD);
+            unit.returnToRefinery(constYard);
+            fail("Expected illegal argument exception");
+        } catch (IllegalArgumentException iae) {
+            Assert.assertEquals("Can only return to refinery type of entity", iae.getMessage());
+        }
+    }
 
-    public static SpriteSheet makeSpriteSheet() {
-        SpriteSheet spriteSheet = mock(SpriteSheet.class);
-        Image image = mock(Image.class);
+    @Test
+    public void returnToRefineryThrowsIllegalArgumentExceptionWhenUnitIsNotAHarvesterType() {
+        try {
+            Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.QUAD);
+            Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+            unit.returnToRefinery(refinery);
+            fail("Expected illegal state exception");
+        } catch (IllegalStateException ise) {
+            Assert.assertEquals("Only harvesters can return to a refinery", ise.getMessage());
+        }
+    }
 
-        when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
-        return spriteSheet;
+    @Test
+    public void firstHarvesterReturnsToRefinery() {
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+
+        // Act
+        unit.returnToRefinery(refinery);
+
+        Entity who = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(refinery);
+        Assert.assertSame(who, unit);
+
+        Assert.assertTrue(unit.getState() instanceof GoalResolverState);
+        Assert.assertEquals(unit.getTarget(), refinery.getCoordinate());
+    }
+
+    @Test
+    public void secondHarvesterMovesToRefinery() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Unit harvester2 = makeUnit(player, MapCoordinate.create(3, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+
+        // Act
+        harvester2.returnToRefinery(refinery);
+        harvester1.returnToRefinery(refinery);
+
+        Entity who = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(refinery);
+        Assert.assertSame(who, harvester2);
     }
 
     public static void updateUnitTimesHundredMilis(Unit unit, int times) {

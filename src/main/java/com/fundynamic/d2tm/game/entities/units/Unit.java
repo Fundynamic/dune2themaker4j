@@ -299,7 +299,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (bestCoordinate != null) {
             return bestCoordinate;
         }
-        System.out.println("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
+        log("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
         return coordinate;
     }
 
@@ -668,16 +668,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      * @param refinery
      */
     public void returnToRefinery(Entity refinery) {
+        if (!this.isHarvester()) throw new IllegalStateException("Only harvesters can return to a refinery");
         if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
 
         if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
-            System.out.println("returnToRefinery) Will deliver to refinery " + refinery);
+            log("returnToRefinery) Will deliver at refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
             moveTo(closestCoordinateTo);
             // important to add intention after moveTo, because moveTo removes all intentions
             HarvesterDeliveryIntents.instance.addDeliveryIntentTo(refinery, this);
         } else {
-            System.out.println("returnToRefinery) Move close to refinery " + refinery);
+            log("returnToRefinery) Move close to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());
             moveTo(closestCoordinateTo);
         }
