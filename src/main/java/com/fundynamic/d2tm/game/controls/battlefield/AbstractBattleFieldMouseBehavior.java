@@ -65,14 +65,6 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
         mouseCoordinates = coordinates;
     }
 
-    public Entity getLastSelectedEntity() {
-        return lastSelectedEntity;
-    }
-
-    public void setLastSelectedEntity(Entity lastSelectedEntity) {
-        this.lastSelectedEntity = lastSelectedEntity;
-    }
-
     /**
      * Returns the cell that the mouse is 'hovering over'. This method may return NULL!
      * @return

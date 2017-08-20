@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
@@ -30,7 +29,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
 
         selectEntity(entity);
 
-        if (selectedEntityBelongsToControllingPlayer() && selectedEntityIsMovable()) {
+        if (entity.belongsToPlayer(player) && entity.isMovable()) {
             setMouseBehavior(new MovableSelectedMouse(battleField));
         }
     }
@@ -39,7 +38,6 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         if (!entity.isSelectable()) return;
         if (entity.isWithinOtherEntity()) return;
         deselectCurrentlySelectedEntities();
-        setLastSelectedEntity(entity);
         ((Selectable) entity).select();
         battleField.entitiesSelected(EntitiesSet.fromSingle(entity));
     }
@@ -48,7 +46,6 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
     public void rightClicked() {
         deselectCurrentlySelectedEntities();
         setMouseBehavior(new NormalMouse(battleField));
-        setLastSelectedEntity(null);
     }
 
     protected void deselectCurrentlySelectedEntities() {
@@ -57,12 +54,6 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
                         forPlayer(player).
                         isSelected().
                         build());
-
-        // here for old stuff
-        Entity lastSelectedEntity = getLastSelectedEntity();
-        if (lastSelectedEntity != null && lastSelectedEntity.isSelectable()) {
-            entities.add(lastSelectedEntity);
-        }
 
         for (Entity entity : entities) {
             ((Selectable) entity).deselect();
@@ -101,20 +92,6 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         if (viewportCoordinates != null) {
             setMouseBehavior(new DraggingSelectionBoxMouse(battleField, entityRepository, viewportCoordinates));
         }
-    }
-
-    protected boolean selectedEntityBelongsToControllingPlayer() {
-        Entity lastSelectedEntity = getLastSelectedEntity();
-        if (lastSelectedEntity == null) return false;
-        Player controllingPlayer = mouse.getControllingPlayer();
-        if (controllingPlayer == null) return false;
-        return lastSelectedEntity.getPlayer().equals(controllingPlayer);
-    }
-
-
-    protected boolean selectedEntityIsMovable() {
-        Entity lastSelectedEntity = getLastSelectedEntity();
-        return lastSelectedEntity.isMovable();
     }
 
     @Override
