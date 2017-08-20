@@ -195,6 +195,11 @@ public abstract class AbstractD2TMTest {
             public Image createImage(Vector2D dimensions) throws SlickException {
                 return mock(Image.class);
             }
+
+            @Override
+            public Image loadSpriteSheet(String path, int spriteWidth, int spriteHeight) {
+                return mock(SpriteSheet.class);
+            }
         };
     }
 
