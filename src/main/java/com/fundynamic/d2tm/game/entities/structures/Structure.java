@@ -115,25 +115,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         // TODO-HARVESTER: Introduce structure states, like units!?
         // If refinery expects delivery then animate the delivery animation
-        if (entityData.isRefinery && HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
-
-
-            if (containsEntity != null) {
-                if (animationFrame < 5) animationFrame = 5;
-                if (animationFrame > 6) animationFrame -= 2;
-            } else {
-                if (animationFrame < 1) animationFrame = 1;
-                if (animationFrame > 4) animationFrame -= 4;
-            }
-
-            thinkTimer += deltaInSeconds;
-            while (thinkTimer > 0.5F) {
-                thinkTimer -= 0.5F;
-            }
+        if (entityData.isRefinery &&
+            HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+            refineryDune2UnitWillEnterRefineryAnimation(deltaInSeconds);
         } else {
-            if (animationFrame >= FLAG_ANIMATION_FRAME_COUNT) {
-                animationFrame = 0;
-            }
+            flagAnimation();
         }
 
         this.fadingSelection.update(deltaInSeconds);
@@ -141,6 +127,27 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.entityBuilder.update(deltaInSeconds);
 
         handleUnitConstructedAndNeedsToBeSpawnedLogic();
+    }
+
+    public void flagAnimation() {
+        if (animationFrame >= FLAG_ANIMATION_FRAME_COUNT) {
+            animationFrame = 0;
+        }
+    }
+
+    public void refineryDune2UnitWillEnterRefineryAnimation(float deltaInSeconds) {
+        if (containsEntity != null) {
+            if (animationFrame < 5) animationFrame = 5;
+            if (animationFrame > 6) animationFrame -= 2;
+        } else {
+            if (animationFrame < 1) animationFrame = 1;
+            if (animationFrame > 4) animationFrame -= 4;
+        }
+
+        thinkTimer += deltaInSeconds;
+        while (thinkTimer > 0.5F) {
+            thinkTimer -= 0.5F;
+        }
     }
 
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
