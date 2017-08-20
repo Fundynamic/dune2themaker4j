@@ -95,7 +95,8 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     @Override
     public void update(float deltaInSeconds) {
         if (!isFacingDesiredFacing()) {
-            currentFacing = UnitFacings.turnTo(currentFacing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
+            float relativeSpeed = EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds);
+            currentFacing = UnitFacings.turnTo(currentFacing, desiredFacing, relativeSpeed);
         }
         if (animating) {
             updateAnimation(deltaInSeconds);
@@ -123,5 +124,20 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         if (frame >= maxFrames) {
             frame -= maxFramesWithoutFirst;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "RenderQueueEnrichableWithFacingLogic{" +
+                "maxFrames=" + maxFrames +
+                ", maxFramesWithoutFirst=" + maxFramesWithoutFirst +
+                ", currentFacing=" + currentFacing +
+                ", desiredFacing=" + desiredFacing +
+                ", turnSpeed=" + turnSpeed +
+                ", animationSpeed=" + animationSpeed +
+                ", frame=" + frame +
+                ", animating=" + animating +
+                ", drawCorrectionVec=" + drawCorrectionVec +
+                '}';
     }
 }

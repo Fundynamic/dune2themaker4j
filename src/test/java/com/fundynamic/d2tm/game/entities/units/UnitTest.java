@@ -9,6 +9,9 @@ import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.entities.units.states.GoalResolverState;
+import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
+import com.fundynamic.d2tm.game.entities.units.states.TurnBodyTowardsState;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
@@ -28,6 +31,7 @@ import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
@@ -135,23 +139,70 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates); // 320, 320
+        // start at 320, 320
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
-        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down (352, 352)
+        // move to right-down (352, 352)
+        // this requires 1 'turn' and 1 cell 'move'
+        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(TILE_SIZE, TILE_SIZE));
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
 
         assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
 
-        unit.update(0.2F);
-        unit.update(0.2F);
-        unit.update(0.2F);
-        unit.update(0.2F);
-        unit.update(0.2F);
-        unit.update(0.2F);
+        // expect unit to be in goal resolver state
+        assertThat(unit.getState(), instanceOf(GoalResolverState.class));
+        updateUnitTimesHundredMilis(unit, 1);
 
-        // a QUAD moves 2 squares for 1 second (see rules.ini)
-        unit.update(0.5F);
+        // goal resolver will move into
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+        updateUnitTimesHundredMilis(unit, 1);
 
+        // the unit will be turning around
+        assertThat(unit.getState(), instanceOf(TurnBodyTowardsState.class));
+        updateUnitTimesHundredMilis(unit, 2);
+
+        // done turning around
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+
+        // update 1 second, thus 10X100ms
+        updateUnitTimesHundredMilis(unit, 10);
+
+        // at destination
+        assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
+    }
+
+    @Test
+    public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
+        // start at 320, 320
+        Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
+
+        // move to left-up
+        // 288, 288
+        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(TILE_SIZE, TILE_SIZE));
+        unit.moveTo(mapCoordinateToMoveTo);
+
+        assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
+
+        // expect unit to be in goal resolver state
+        assertThat(unit.getState(), instanceOf(GoalResolverState.class));
+        updateUnitTimesHundredMilis(unit, 1);
+
+        // goal resolver will move into
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+        updateUnitTimesHundredMilis(unit, 1);
+
+        // the unit will be turning around
+        assertThat(unit.getState(), instanceOf(TurnBodyTowardsState.class));
+        updateUnitTimesHundredMilis(unit, 2);
+
+        // done turning around
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+
+        // update 1 second, thus 10X100ms
+        updateUnitTimesHundredMilis(unit, 10);
+
+        // at destination
         assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
@@ -178,28 +229,6 @@ public class UnitTest extends AbstractD2TMTest {
         EntitiesSet entitiesAtVector = entityRepository.findAliveEntitiesOfTypeAtVector(projectile.getTarget(), EntityType.UNIT);
         Unit first = (Unit) entitiesAtVector.getFirst();
         assertThat(first, equalTo(cpuQuad));
-    }
-
-    @Test
-    public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
-        Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
-
-        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
-        unit.moveTo(mapCoordinateToMoveTo); // move to left-up
-
-        assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
-
-        // for facing, coming from UP to LEFT_UP requires a 1 step
-        unit.update(1); // first decide which movecell, etc
-
-        // we take 0.5F because turnSpeed is 2 'turns' per second. So half a second is 1 facing per update
-        unit.update(0.5F); // turn towards
-
-        // a QUAD moves 2 squares for 1 second (see rules.ini)
-        unit.update(0.5F);
-
-        assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
-        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
 
     @Test
@@ -265,6 +294,12 @@ public class UnitTest extends AbstractD2TMTest {
 
         when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
         return spriteSheet;
+    }
+
+    public static void updateUnitTimesHundredMilis(Unit unit, int times) {
+        for (int i = 0; i < times; i++) {
+            unit.update(0.1f);
+        }
     }
 
 }

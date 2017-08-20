@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities.units.states;
 
 
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.units.RenderQueueEnrichableWithFacingLogic;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 
@@ -21,13 +20,12 @@ public class TurnBodyTowardsState extends UnitState {
             return;
         }
 
-        RenderQueueEnrichableWithFacingLogic bodyFacing = unit.getBodyFacing();
-        bodyFacing.update(deltaInSeconds);
+        unit.updateBodyFacing(deltaInSeconds);
     }
 
     @Override
     public String toString() {
-        return "TurnBodyTowardsState";
+        return "TurnBodyTowardsState, state = " + unit.getBodyFacing();
     }
 
 }

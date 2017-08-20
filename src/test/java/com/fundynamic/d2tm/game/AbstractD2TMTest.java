@@ -113,7 +113,7 @@ public abstract class AbstractD2TMTest {
 
         imageRepository = makeImageRepository();
         entitiesDataReader = makeEntitiesDataReader();
-        entitiesData = entitiesDataReader.fromRulesIni();
+        entitiesData = getEntitiesData();
         entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         // Nice little circular dependency here...
@@ -155,6 +155,10 @@ public abstract class AbstractD2TMTest {
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
+    }
+
+    public EntitiesData getEntitiesData() {
+        return entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
     }
 
     public static EntitiesDataReader makeEntitiesDataReader() {

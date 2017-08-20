@@ -32,7 +32,7 @@ public class MoveToCellState extends UnitState {
 
     @Override
     public String toString() {
-        return "MoveToCellState";
+        return "MoveToCellState, coordinate = " + unit.getCoordinate() + ", nextTargetToMoveTo = " + unit.getNextTargetToMoveTo() + ", offset=" + unit.getOffset();
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {

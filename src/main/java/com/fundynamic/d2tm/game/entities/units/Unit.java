@@ -15,7 +15,6 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.Set;
@@ -31,7 +30,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // state
     private UnitState state;
-//    private float harvested;
 
     // Behaviors
     private FadingSelection fadingSelection;
@@ -75,7 +73,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.state = new IdleState(this, entityRepository, map);
 
         if (entityData.isHarvester) {
-            int maxHarvestingCapacity = 700;
+            int maxHarvestingCapacity = 700; // TODO-HARVESTER: Get from ini file
             this.harvested = new HarvestedCentered(maxHarvestingCapacity, entityData.getWidth(), entityData.getHeight());
             this.harvested.toZero();
         } else {
@@ -724,5 +722,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void updateBodyFacing(float deltaInSeconds) {
         if (bodyFacing == null) return;
         bodyFacing.update(deltaInSeconds);
+    }
+
+    public UnitState getState() {
+        return this.state;
     }
 }

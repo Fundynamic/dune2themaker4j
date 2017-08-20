@@ -127,8 +127,8 @@ public class EntitiesDataReaderTest {
         assertThat(quad.image, is(not(nullValue())));
         assertThat(quad.type, is(EntityType.UNIT));
         assertThat(quad.hitPoints, is(434));
-        assertThat(quad.moveSpeed, is(1.5F));
-        assertThat(quad.turnSpeed, is(0.75F));
+        assertThat(quad.moveSpeed, is(32.0F));
+        assertThat(quad.turnSpeed, is(10.0F));
         assertThat(quad.attackRate, is(2.3F));
         assertThat(quad.attackRange, is(96F));
         assertThat(quad.getWidth(), is(32));
