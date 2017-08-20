@@ -12,6 +12,7 @@ public class MouseListener extends AbstractMouseListener {
 
     private final Mouse mouse;
     private Vector2D mouseScreenPosition;
+    private Vector2D[] mouseStartDragPositions = new Vector2D[2];
 
     public MouseListener(Mouse mouse) {
         this.mouse = mouse;
@@ -25,6 +26,8 @@ public class MouseListener extends AbstractMouseListener {
 
     @Override
     public void mouseClicked(int button, int x, int y, int clickCount) {
+        mouseStartDragPositions[button] = null;
+
         if (clickCount == 1) {
             if (button == Input.MOUSE_LEFT_BUTTON) {
                 mouse.leftClicked();
@@ -36,11 +39,18 @@ public class MouseListener extends AbstractMouseListener {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        // no logic yet
+        mouseStartDragPositions[button] = Vector2D.create(x, y);
     }
 
     @Override
     public void mouseReleased(int button, int x, int y) {
+        if (mouseStartDragPositions[button] != null) {
+            Vector2D delta = mouseStartDragPositions[button].min(mouseScreenPosition);
+            if (Math.abs(delta.getYAsInt()) < 5 && Math.abs(delta.getXAsInt()) < 5) {
+                mouseClicked(button, x, y, 1);
+                return;
+            }
+        }
         if (button == Input.MOUSE_LEFT_BUTTON) {
             mouse.leftButtonReleased();
         }
