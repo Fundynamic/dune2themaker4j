@@ -356,6 +356,10 @@ public class EntityRepository {
         return placeOnMap(superPower);
     }
 
+    public EntitiesSet findDestructibleSelectedEntitiesForPlayer(Player player) {
+        return filter(new PredicateBuilder().selectedForPlayer(player).isDestructible());
+    }
+
     public class PassableResult {
         private boolean isPassable;
         private EntitiesSet entitiesSet;

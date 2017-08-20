@@ -94,6 +94,11 @@ public class PredicateBuilder {
                isMovable();
     }
 
+    public PredicateBuilder selectedForPlayer(Player player) {
+        return isSelected().
+               forPlayer(player);
+    }
+
     public PredicateBuilder selectedDestroyersForPlayer(Player player) {
         return isSelected().
                 forPlayer(player).
