@@ -258,7 +258,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
             return false;
 
-        if (isHarvester() && isDoneHarvesting()) {
+        if (isHarvester()) {
             if (entities.hasOne()) {
                 Entity blockingEntity = entities.getFirst();
                 if (blockingEntity.isRefinery() &&
