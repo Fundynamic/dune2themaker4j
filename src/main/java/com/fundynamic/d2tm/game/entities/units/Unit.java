@@ -76,6 +76,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             int maxHarvestingCapacity = 700; // TODO-HARVESTER: Get from ini file
             this.harvested = new HarvestedCentered(maxHarvestingCapacity, entityData.getWidth(), entityData.getHeight());
             this.harvested.toZero();
+            seekSpice();
         } else {
             this.harvested = null;
         }
