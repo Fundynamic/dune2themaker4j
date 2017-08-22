@@ -32,7 +32,9 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
 
     @Override
     public void leftClicked() {
-        // DO NOTHING
+        NormalMouse normalMouse = new NormalMouse(battleField);
+        setMouseBehavior(normalMouse);
+        normalMouse.leftClicked();
     }
 
     @Override
