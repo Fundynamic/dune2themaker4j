@@ -66,11 +66,30 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
         assertThat(constyard.buildCost, is(1000));
+        assertThat(constyard.isRefinery, is(false));
 
         // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
         // therefor we do times 3!
         float value = ((TILE_SIZE) * 3) + HALF_TILE; // we can do half-tile because it is a 64x64 structure
         assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
+    }
+
+    @Test
+    public void readsRefineryFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData refinery = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY);
+        assertThat(refinery, is(not(nullValue())));
+        assertThat(refinery.hitPoints, is(1500));
+        assertThat(refinery.image, is(not(nullValue())));
+        assertThat(refinery.getWidth(), is(96));
+        assertThat(refinery.getHeight(), is(64));
+        assertThat(refinery.sight, is(5));
+        assertThat(refinery.explosionId, is("BOOM"));
+        assertThat(refinery.buildIcon, is(not(nullValue())));
+        assertThat(refinery.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(refinery.buildCost, is(1000));
+        assertThat(refinery.isRefinery, is(true));
     }
 
     @Test

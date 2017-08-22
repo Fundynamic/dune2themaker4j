@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.utils.StringUtils;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.ini4j.Profile;
 
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader.*;
@@ -27,10 +28,13 @@ public class IniDataStructure {
     public int buildCost;
     public String buildList;
 
+    public boolean refinery;
+
     public IniDataStructure() {
     }
 
     public IniDataStructure(Profile.Section struct) {
+        this.refinery = struct.get(INI_KEYWORD_REFINERY, Boolean.class, false);
         this.image = struct.get(INI_KEYWORD_IMAGE, String.class, null);
         this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class);
         this.height = struct.get(INI_KEYWORD_HEIGHT, Integer.class);

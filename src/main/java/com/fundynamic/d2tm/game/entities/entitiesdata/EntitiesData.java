@@ -198,10 +198,7 @@ public class EntitiesData {
                 iniDataStructure.hitpoints
         );
 
-        // TODO-HARVESTER: Add 'refinery' property to structure in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
-        if (id.equals(EntitiesData.REFINERY)) {
-            entityData.isRefinery = true;
-        }
+        entityData.isRefinery = iniDataStructure.refinery;
 
         // The buildRange is (for now) determined by the size of the structure.
         // Because the range is calculated from the center of the structure.
