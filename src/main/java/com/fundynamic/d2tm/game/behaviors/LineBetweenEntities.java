@@ -20,7 +20,7 @@ public class LineBetweenEntities implements EnrichableAbsoluteRenderable {
     public void render(Graphics graphics, int x, int y) {
         if (to == null) return;
 
-        graphics.setLineWidth(2.0f);
+        graphics.setLineWidth(1.0f);
         graphics.setColor(Color.white);
 
         Coordinate screenCoordinate = renderQueue.translate(to.getCenteredCoordinate());
