@@ -39,12 +39,16 @@ public class IniDataUnit {
     public String buildIcon;
     public int buildCost;
     public float buildTimeInSeconds;
+
+    // harvester related properties
     public boolean harvester;
+    public int harvestCapacity;
 
     public IniDataUnit() {
     }
 
     public IniDataUnit(Profile.Section struct) {
+        this.harvestCapacity = struct.get(INI_KEYWORD_HARVEST_CAPACITY, Integer.class, 0);
         this.harvester = struct.get(INI_KEYWORD_HARVESTER, Boolean.class, false);
         this.pathToImage = struct.get(INI_KEYWORD_IMAGE, String.class, "no-image-provided");
         this.pathToBarrelImage = struct.get(INI_KEYWORD_BARREL, String.class, null);

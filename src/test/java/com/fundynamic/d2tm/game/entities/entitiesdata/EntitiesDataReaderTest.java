@@ -177,6 +177,7 @@ public class EntitiesDataReaderTest {
         assertThat(harvester.explosionId, is("BOOM"));
         assertThat(harvester.buildCost, is(50));
         assertThat(harvester.isHarvester, is(true));
+        assertThat(harvester.harvestCapacity, is(800));
     }
 
     @Test

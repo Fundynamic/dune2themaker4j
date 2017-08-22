@@ -268,6 +268,7 @@ public class EntitiesData {
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
         entityData.isHarvester = iniDataUnit.harvester;
+        entityData.harvestCapacity = iniDataUnit.harvestCapacity;
 
         // TODO: add moveable property
         if (id.equals(EntitiesData.INFANTRY) || id.equals(EntitiesData.SOLDIER)) {

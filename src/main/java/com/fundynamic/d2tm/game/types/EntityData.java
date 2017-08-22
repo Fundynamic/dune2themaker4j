@@ -106,7 +106,9 @@ public class EntityData {
     public int harvestCapacity = 700;
     public float depositSpeed = harvestCapacity / 15; // deposits its load in 15 seconds
     public float harvestSpeed = harvestCapacity / 30; // should harvest all in 30 seconds
+
     public String unitId = "HARVESTER"; // the unit a REFINERY should spawn
+
     public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
     public boolean isRefinery;      // if true, entity will be something where spice can be delivered
 
