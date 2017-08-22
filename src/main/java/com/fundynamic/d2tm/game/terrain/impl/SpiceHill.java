@@ -22,7 +22,7 @@ public class SpiceHill extends DuneTerrain implements Harvestable {
         return TERRAIN_SPICE_HILL;
     }
 
-    public int harvest(int amount) {
+    public float harvest(float amount) {
         if (spice > amount) {
             spice -= amount;
             return amount;

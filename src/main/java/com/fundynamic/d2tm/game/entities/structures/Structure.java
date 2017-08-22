@@ -82,12 +82,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                 EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
 
                 if (passableResult.isPassable()) {
-                    // TODO-HARVESTER: Get the kind of harvester that this refinery requires, from rules.ini?
-                    // entityData?
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
                     this.entityRepository.placeOnMap(
                             absoluteCoordinate,
-                            entityRepository.getEntityData(EntityType.UNIT, HARVESTER), // this can be made configurable
+                            entityRepository.getEntityData(EntityType.UNIT, entityData.unitId), // this can be made configurable
                             this.player
                     );
                     break;
@@ -286,12 +284,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
 
-        if (Game.DEBUG_INFO) {
-            if (HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
-                Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
-                LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
-                renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
-            }
+        if (Game.DEBUG_INFO && HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+            Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
+            LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
+            renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
         }
 
         if (isSelected()) {

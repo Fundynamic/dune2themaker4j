@@ -16,7 +16,7 @@ public class HarvestableTerrain extends EmptyTerrain implements Harvestable {
     }
 
     @Override
-    public int harvest(int amount) {
+    public float harvest(float amount) {
         return this.amount -= amount;
     }
 }

@@ -29,7 +29,7 @@ public class LineBetweenEntities implements EnrichableAbsoluteRenderable {
 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
-
+        // nothing to enrich
     }
 
 }

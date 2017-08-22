@@ -36,7 +36,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
-    protected final HitPointBasedDestructibility harvested;
+    protected HitPointBasedDestructibility harvested;
 
     private RenderQueueEnrichableWithFacingLogic bodyFacing;
     private RenderQueueEnrichableWithFacingLogic cannonFacing;
@@ -73,12 +73,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.state = new IdleState(this, entityRepository, map);
 
         if (entityData.isHarvester) {
-            int maxHarvestingCapacity = 700; // TODO-HARVESTER: Get from ini file
-            this.harvested = new HarvestedCentered(maxHarvestingCapacity, entityData.getWidth(), entityData.getHeight());
+            this.harvested = new HarvestedCentered(entityData.harvestCapacity, entityData.getWidth(), entityData.getHeight());
             this.harvested.toZero();
             seekSpice();
-        } else {
-            this.harvested = null;
         }
 
         if (entityData.moveSpeed < 0.0001f) {
@@ -631,22 +628,21 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void harvestCell(float deltaInSeconds) {
-//        log("Harvesting");
         startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
         // TODO-HARVESTER: make this time based, like movespeed
         // TODO-HARVESTER: get this from entityData
-        harvest(1);
+        harvest(entityData.getRelativeHarvestSpeed(deltaInSeconds));
         bodyFacing.update(deltaInSeconds);
     }
 
-    public void harvest(int amount) {
+    public void harvest(float amount) {
         Cell unitCell = map.getCellFor(this);
         lastSeenSpiceAt = coordinate;
         harvested.add(unitCell.harvest(amount)); // note, harvest method may return lower number than desired harvest amount
     }
 
     public boolean isDoneHarvesting() {
-        return harvested.isMaxed(); //harvested >= 700; // TODO-HARVESTER: make harvest capacity configurable (entityData)
+        return harvested.isMaxed();
     }
 
     public void findNearestRefineryToReturnSpice() {
@@ -699,7 +695,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void depositSpice(float deltaInSeconds) {
-        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds); // TODO-HARVESTER: deposit speed
+        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds);
         this.harvested.reduce(amountToDeposit);
         this.player.addCredits(amountToDeposit);
     }

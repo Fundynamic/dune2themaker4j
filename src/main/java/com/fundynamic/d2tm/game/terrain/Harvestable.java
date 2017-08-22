@@ -7,6 +7,6 @@ public interface Harvestable {
      * @param amount
      * @return
      */
-    int harvest(int amount);
+    float harvest(float amount);
 
 }

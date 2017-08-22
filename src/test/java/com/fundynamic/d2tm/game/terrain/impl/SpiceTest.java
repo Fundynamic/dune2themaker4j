@@ -17,13 +17,13 @@ public class SpiceTest {
         Spice spice = new Spice(mock(Theme.class), cell, 100);
         cell.changeTerrain(spice);
 
-        Assert.assertEquals(50, spice.harvest(50)); // 100 spice, harvest 50, so expect 50 are harvested
+        Assert.assertEquals(50, spice.harvest(50), 0.0001f); // 100 spice, harvest 50, so expect 50 are harvested
 
-        Assert.assertEquals(40, spice.harvest(40)); // 50 spice remaining, harvest 40, expect 40 harvested
+        Assert.assertEquals(40, spice.harvest(40), 0.0001f); // 50 spice remaining, harvest 40, expect 40 harvested
 
         Assert.assertTrue(cell.isHarvestable());
 
-        Assert.assertEquals(10, spice.harvest(50)); // 10 spice remaining, harvest 50, expect 10 harvested
+        Assert.assertEquals(10, spice.harvest(50),0.0001f); // 10 spice remaining, harvest 50, expect 10 harvested
 
         Assert.assertFalse(cell.isHarvestable());
     }

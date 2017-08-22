@@ -22,7 +22,7 @@ public class NullEntity extends Entity {
 
     @Override
     public void die() {
-
+        destroy();
     }
 
     @Override

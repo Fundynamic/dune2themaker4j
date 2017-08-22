@@ -29,7 +29,7 @@ public class Spice extends DuneTerrain implements Harvestable {
         return super.isSame(terrain);
     }
 
-    public int harvest(int amount) {
+    public float harvest(float amount) {
         if (spice > amount) {
             spice -= amount;
             return amount;

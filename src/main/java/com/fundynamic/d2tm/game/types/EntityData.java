@@ -97,11 +97,18 @@ public class EntityData {
     private float chop = -1f;
     private float halfChop = -1f;
 
-    public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
-    public boolean isRefinery;      // if true, entity will be something where spice can be delivered
     public boolean hasMoveAnimation;      // if true, entity can have walking animation and what not
 
     public SoundData soundData = null; // for playing sound if required
+
+    // resource gathering related
+    // TODO-HARVESTER: read these from ini file
+    public int harvestCapacity = 700;
+    public float depositSpeed = harvestCapacity / 15; // deposits its load in 15 seconds
+    public float harvestSpeed = harvestCapacity / 30; // should harvest all in 30 seconds
+    public String unitId = "HARVESTER"; // the unit a REFINERY should spawn
+    public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
+    public boolean isRefinery;      // if true, entity will be something where spice can be delivered
 
     public EntityData() {
     }
@@ -233,12 +240,7 @@ public class EntityData {
     }
 
     public float getRelativeDepositSpeed(float deltaInSeconds) {
-        // 700 capacity
-        // unloading 700 in 30 secs
-        // 23,333333333 per second
-//        float speed = 23.3333f;
-        float speed = 70;
-        return getRelativeSpeed(speed, deltaInSeconds);
+        return getRelativeSpeed(depositSpeed, deltaInSeconds);
     }
 
     /**
@@ -248,7 +250,11 @@ public class EntityData {
      * @return
      */
     public float getRelativeMoveSpeed(float deltaInSeconds) {
-        return moveSpeed * deltaInSeconds;
+        return getRelativeSpeed(moveSpeed, deltaInSeconds);
+    }
+
+    public float getRelativeHarvestSpeed(float deltaInSeconds) {
+        return getRelativeSpeed(harvestSpeed, deltaInSeconds);
     }
 
     /**
@@ -422,4 +428,5 @@ public class EntityData {
         result = 31 * result + (soundData != null ? soundData.hashCode() : 0);
         return result;
     }
+
 }

@@ -163,11 +163,11 @@ public class Cell {
         return terrain instanceof Harvestable;
     }
 
-    public int harvest(int amount) {
+    public float harvest(float amount) {
         if (isHarvestable()) {
             return ((Harvestable) terrain).harvest(amount);
         }
-        return 0;
+        return 0f;
     }
 
     public float distance(Entity entity) {
