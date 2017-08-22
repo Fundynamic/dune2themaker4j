@@ -15,6 +15,7 @@ import java.io.InputStream;
  */
 public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (allow other formats?)
 
+    public static final String INI_KEYWORD_HARVESTER = "Harvester";
     public static final String INI_KEYWORD_REFINERY = "Refinery";
     public static final String INI_KEYWORD_IMAGE = "Image";
     public static final String INI_KEYWORD_WIDTH = "Width";

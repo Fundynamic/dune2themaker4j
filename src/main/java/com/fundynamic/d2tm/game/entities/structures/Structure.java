@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.HARVESTER;
-
 public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
 
     private EntityBuilder entityBuilder;
@@ -95,6 +93,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     public Image getSprite() {
+        int verticalCount = spritesheet.getVerticalCount();
+        if (animationFrame > verticalCount) {
+            log("I intent to animate frame " + animationFrame + " but the max frames is " + verticalCount + " - so I fall back to sprite 0.");
+            return spritesheet.getSprite(0, 0);
+        }
         return spritesheet.getSprite(0, animationFrame);
     }
 
@@ -134,6 +137,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     }
 
     public void refineryDune2UnitWillEnterRefineryAnimation(float deltaInSeconds) {
+        // TODO: Make animation configurable
         if (containsEntity != null) {
             if (animationFrame < 5) animationFrame = 5;
             if (animationFrame > 6) animationFrame -= 2;

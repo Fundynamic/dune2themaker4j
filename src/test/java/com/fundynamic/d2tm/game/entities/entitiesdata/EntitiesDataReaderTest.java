@@ -52,7 +52,7 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsBuildingStructureFromIniFile() {
+    public void readsConstYardFromIniFile() {
         readFromTestRulesIni();
 
         EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
@@ -101,7 +101,7 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsSimpleStructureFromIniFile() {
+    public void readsWindtrapFromIniFile() {
         readFromTestRulesIni();
 
         EntityData windtrap = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
@@ -157,6 +157,26 @@ public class EntitiesDataReaderTest {
         assertThat(quad.weaponId, is("RIFLE"));
         assertThat(quad.buildTimeInSeconds, is(7.0f));
         assertThat(quad.buildCost, is(200));
+        assertThat(quad.isHarvester, is(false));
+    }
+
+    @Test
+    public void readsHarvesterFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData harvester = entitiesData.getEntityData(EntityType.UNIT, EntitiesData.HARVESTER);
+        assertThat(harvester, is(not(nullValue())));
+        assertThat(harvester.image, is(not(nullValue())));
+        assertThat(harvester.type, is(EntityType.UNIT));
+        assertThat(harvester.hitPoints, is(75));
+        assertThat(harvester.moveSpeed, is(32.0F));
+        assertThat(harvester.turnSpeed, is(10.0F));
+        assertThat(harvester.getWidth(), is(80));
+        assertThat(harvester.getHeight(), is(52));
+        assertThat(harvester.sight, is(4));
+        assertThat(harvester.explosionId, is("BOOM"));
+        assertThat(harvester.buildCost, is(50));
+        assertThat(harvester.isHarvester, is(true));
     }
 
     @Test

@@ -267,11 +267,7 @@ public class EntitiesData {
         entityData.buildIcon = loadImage(iniDataUnit.buildIcon);
         entityData.buildCost = iniDataUnit.buildCost;
         entityData.name = id;
-
-        // TODO-HARVESTER: Add 'harvester' property to unit in INI file (https://github.com/Fundynamic/dune2themaker4j/issues/156)
-        if (id.equals(EntitiesData.HARVESTER)) {
-            entityData.isHarvester = true;
-        }
+        entityData.isHarvester = iniDataUnit.harvester;
 
         // TODO: add moveable property
         if (id.equals(EntitiesData.INFANTRY) || id.equals(EntitiesData.SOLDIER)) {
