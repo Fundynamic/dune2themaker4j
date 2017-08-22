@@ -9,6 +9,7 @@ import org.newdawn.slick.Graphics;
  */
 public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderable {
 
+    public static final int HEIGHT_OF_BAR = 8;
     private int maxHitpoints;
     private int widthInPixels;
 
@@ -42,15 +43,15 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.white);
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x - 1, y - 7, widthInPixels + 2, 7);
+        graphics.fillRect(x - 1, y - HEIGHT_OF_BAR, widthInPixels + 2, HEIGHT_OF_BAR);
 
         graphics.setColor(Color.black);
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x, y - 6, widthInPixels, 5);
+        graphics.fillRect(x, y - (HEIGHT_OF_BAR - 1), widthInPixels, (HEIGHT_OF_BAR - 2));
 
         graphics.setColor(getBarColor());
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x, y - 6, getHealthBarPixelWidth(), 5);
+        graphics.fillRect(x, y - (HEIGHT_OF_BAR - 1), getHealthBarPixelWidth(), (HEIGHT_OF_BAR - 2));
     }
 
     @Override
