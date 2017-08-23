@@ -97,18 +97,16 @@ public class EntityData {
     private float chop = -1f;
     private float halfChop = -1f;
 
-    public boolean hasMoveAnimation;      // if true, entity can have walking animation and what not
+    public boolean hasMoveAnimation;        // if true, entity can have walking animation and what not
 
-    public SoundData soundData = null; // for playing sound if required
+    public SoundData soundData = null;      // for playing sound if required
 
-    // resource gathering related
-    // TODO-HARVESTER: read these from ini file
-    public int harvestCapacity = 700;
-    public float depositSpeed = harvestCapacity / 15; // deposits its load in 15 seconds
-    public float harvestSpeed = harvestCapacity / 30; // should harvest all in 30 seconds
+    public String onPlacementSpawnUnitId = UNKNOWN;   // If given, upon placement of this Entity (structure) it will spawn this Unit ID next to it
 
-    public String unitId = "HARVESTER"; // the unit a REFINERY should spawn
-
+    // Resource gathering related
+    public float depositSpeed;      // seconds it takes to deposit 'harvestCapacity'
+    public float harvestSpeed;      // seconds it takes to 'harvestCapacity' - given the unit would be able to harvest all on one cell
+    public int harvestCapacity;     // total amount of resources==credits this harvester can contain
     public boolean isHarvester;     // if true, entity will execute harvesting logic, seeking spice, harvesting etc
     public boolean isRefinery;      // if true, entity will be something where spice can be delivered
 
@@ -209,10 +207,6 @@ public class EntityData {
         return chop;
     }
 
-//    public float getHalfChop() {
-//        return halfChop;
-//    }
-
     public int getFacings() {
         return facings;
     }
@@ -223,6 +217,10 @@ public class EntityData {
 
     public boolean hasWeaponId() {
         return !UNKNOWN.equals(weaponId);
+    }
+
+    public boolean hasOnPlacementSpawnUnitId() {
+        return !UNKNOWN.equals(onPlacementSpawnUnitId);
     }
 
     public boolean hasSound() {
@@ -242,7 +240,11 @@ public class EntityData {
     }
 
     public float getRelativeDepositSpeed(float deltaInSeconds) {
-        return getRelativeSpeed(depositSpeed, deltaInSeconds);
+        return getRelativeSpeed(getDepositSpeed(), deltaInSeconds);
+    }
+
+    public float getDepositSpeed() {
+        return harvestCapacity / depositSpeed;
     }
 
     /**
@@ -256,7 +258,15 @@ public class EntityData {
     }
 
     public float getRelativeHarvestSpeed(float deltaInSeconds) {
-        return getRelativeSpeed(harvestSpeed, deltaInSeconds);
+        return getRelativeSpeed(getHarvestSpeed(), deltaInSeconds);
+    }
+
+    /**
+     * Capacity / harvestSpeed == amount to harvest in one second. Do not use this, but use {@link #getRelativeHarvestSpeed} instead
+     * @return
+     */
+    public float getHarvestSpeed() {
+        return harvestCapacity / harvestSpeed;
     }
 
     /**
@@ -375,6 +385,10 @@ public class EntityData {
         if (recolor != that.recolor) return false;
         if (Float.compare(that.chop, chop) != 0) return false;
         if (Float.compare(that.halfChop, halfChop) != 0) return false;
+        if (hasMoveAnimation != that.hasMoveAnimation) return false;
+        if (Float.compare(that.depositSpeed, depositSpeed) != 0) return false;
+        if (Float.compare(that.harvestSpeed, harvestSpeed) != 0) return false;
+        if (harvestCapacity != that.harvestCapacity) return false;
         if (isHarvester != that.isHarvester) return false;
         if (isRefinery != that.isRefinery) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -387,7 +401,8 @@ public class EntityData {
         if (weaponId != null ? !weaponId.equals(that.weaponId) : that.weaponId != null) return false;
         if (explosionId != null ? !explosionId.equals(that.explosionId) : that.explosionId != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
-        return soundData != null ? soundData.equals(that.soundData) : that.soundData == null;
+        if (soundData != null ? !soundData.equals(that.soundData) : that.soundData != null) return false;
+        return onPlacementSpawnUnitId != null ? onPlacementSpawnUnitId.equals(that.onPlacementSpawnUnitId) : that.onPlacementSpawnUnitId == null;
     }
 
     @Override
@@ -425,10 +440,14 @@ public class EntityData {
         result = 31 * result + (recolor ? 1 : 0);
         result = 31 * result + (chop != +0.0f ? Float.floatToIntBits(chop) : 0);
         result = 31 * result + (halfChop != +0.0f ? Float.floatToIntBits(halfChop) : 0);
+        result = 31 * result + (hasMoveAnimation ? 1 : 0);
+        result = 31 * result + (soundData != null ? soundData.hashCode() : 0);
+        result = 31 * result + (depositSpeed != +0.0f ? Float.floatToIntBits(depositSpeed) : 0);
+        result = 31 * result + (harvestSpeed != +0.0f ? Float.floatToIntBits(harvestSpeed) : 0);
+        result = 31 * result + harvestCapacity;
         result = 31 * result + (isHarvester ? 1 : 0);
         result = 31 * result + (isRefinery ? 1 : 0);
-        result = 31 * result + (soundData != null ? soundData.hashCode() : 0);
+        result = 31 * result + (onPlacementSpawnUnitId != null ? onPlacementSpawnUnitId.hashCode() : 0);
         return result;
     }
-
 }

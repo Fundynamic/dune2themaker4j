@@ -90,6 +90,7 @@ public class EntitiesDataReaderTest {
         assertThat(refinery.entityBuilderType, is(EntityBuilderType.NONE));
         assertThat(refinery.buildCost, is(1000));
         assertThat(refinery.isRefinery, is(true));
+        assertThat(refinery.onPlacementSpawnUnitId, is("QUAD"));
     }
 
     @Test
@@ -158,6 +159,8 @@ public class EntitiesDataReaderTest {
         assertThat(quad.buildTimeInSeconds, is(7.0f));
         assertThat(quad.buildCost, is(200));
         assertThat(quad.isHarvester, is(false));
+        assertThat(quad.harvestCapacity, is(0));
+        assertThat(quad.depositSpeed, is(0F));
     }
 
     @Test
@@ -178,6 +181,10 @@ public class EntitiesDataReaderTest {
         assertThat(harvester.buildCost, is(50));
         assertThat(harvester.isHarvester, is(true));
         assertThat(harvester.harvestCapacity, is(800));
+        assertThat(harvester.depositSpeed, is(15F)); // deposit total capacity in 15 seconds
+        assertThat(harvester.getDepositSpeed(), is(53.333333333F)); // 800 / 15
+        assertThat(harvester.harvestSpeed, is(30F)); // harvester should harvest to full in 30 seconds (given it would be done on one cell)
+        assertThat(harvester.getHarvestSpeed(), is(26.666666667F)); // 800 / 30
     }
 
     @Test

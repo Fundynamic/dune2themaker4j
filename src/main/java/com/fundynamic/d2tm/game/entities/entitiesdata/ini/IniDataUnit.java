@@ -43,11 +43,15 @@ public class IniDataUnit {
     // harvester related properties
     public boolean harvester;
     public int harvestCapacity;
+    public float depositSpeed;
+    public float harvestSpeed;
 
     public IniDataUnit() {
     }
 
     public IniDataUnit(Profile.Section struct) {
+        this.harvestSpeed = struct.get(INI_KEYWORD_HARVEST_SPEED, Float.class, 0f);
+        this.depositSpeed = struct.get(INI_KEYWORD_DEPOSIT_SPEED, Float.class, 0f);
         this.harvestCapacity = struct.get(INI_KEYWORD_HARVEST_CAPACITY, Integer.class, 0);
         this.harvester = struct.get(INI_KEYWORD_HARVESTER, Boolean.class, false);
         this.pathToImage = struct.get(INI_KEYWORD_IMAGE, String.class, "no-image-provided");

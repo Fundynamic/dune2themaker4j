@@ -613,7 +613,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.stopAndResetAnimating();
     }
 
-    public Vector2D getTarget() {
+    public Coordinate getTarget() {
         return target;
     }
 

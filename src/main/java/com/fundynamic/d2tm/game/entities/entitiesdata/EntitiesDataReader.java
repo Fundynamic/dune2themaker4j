@@ -15,6 +15,9 @@ import java.io.InputStream;
  */
 public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (allow other formats?)
 
+    public static final String INI_KEYWORD_ON_PLACEMENT_SPAWN = "OnPlacementSpawn";
+    public static final String INI_KEYWORD_HARVEST_SPEED = "HarvestSpeed";
+    public static final String INI_KEYWORD_DEPOSIT_SPEED = "DepositSpeed";
     public static final String INI_KEYWORD_HARVEST_CAPACITY = "HarvestCapacity";
     public static final String INI_KEYWORD_HARVESTER = "Harvester";
     public static final String INI_KEYWORD_REFINERY = "Refinery";
@@ -61,8 +64,8 @@ public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (all
             readWeapons(entitiesData, ini);
             readExplosions(entitiesData, ini);
             readSuperPowers(entitiesData, ini);
-            readStructures(entitiesData, ini);
             readUnits(entitiesData, ini);
+            readStructures(entitiesData, ini);
 
             return entitiesData;
         } catch (IOException | SlickException e) {

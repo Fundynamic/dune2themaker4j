@@ -15,6 +15,7 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -255,21 +256,26 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void canHarvestWhenHarvesterAndOnHarvestableCell() {
-        // make an all spice map
+        EntityData harvesterEntityData = getEntitiesData().getEntityData(EntityType.UNIT, EntitiesData.HARVESTER);
+        assertThat(harvesterEntityData.isHarvester, is(true));
+
+        // make an all 'spice' map, with more resources than the harvester capacity
         MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)) {
             @Override
             public int getSpiceAmount() {
-                return 1000;
+                return harvesterEntityData.harvestCapacity + 1;
             }
         });
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
+
 
         Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.HARVESTER);
 
         assertThat(unit.canHarvest(), is(true));
         assertThat(unit.isDoneHarvesting(), is(false));
 
-        unit.harvest(700);
+        // harvest
+        unit.harvest(harvesterEntityData.harvestCapacity);
 
         // still spice remaining, but the harvester is full
         // so: can? yes, isDoneHarvesting? yes

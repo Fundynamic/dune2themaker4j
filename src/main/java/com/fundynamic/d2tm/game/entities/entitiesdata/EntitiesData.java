@@ -199,6 +199,7 @@ public class EntitiesData {
         );
 
         entityData.isRefinery = iniDataStructure.refinery;
+        entityData.onPlacementSpawnUnitId = getAndEnsureUnitId(iniDataStructure.onPlacementSpawn, id);
 
         // The buildRange is (for now) determined by the size of the structure.
         // Because the range is calculated from the center of the structure.
@@ -269,6 +270,8 @@ public class EntitiesData {
         entityData.name = id;
         entityData.isHarvester = iniDataUnit.harvester;
         entityData.harvestCapacity = iniDataUnit.harvestCapacity;
+        entityData.depositSpeed = iniDataUnit.depositSpeed;
+        entityData.harvestSpeed = iniDataUnit.harvestSpeed;
 
         // TODO: add moveable property
         if (id.equals(EntitiesData.INFANTRY) || id.equals(EntitiesData.SOLDIER)) {
@@ -293,6 +296,13 @@ public class EntitiesData {
             throw new IllegalArgumentException("entity " + id + " property [Weapon] refers to non-existing [WEAPONS/" + weaponId + "]");
         }
         return weaponId;
+    }
+
+    public String getAndEnsureUnitId(String unitId, String id) {
+        if (idProvided(unitId) && !tryGetEntityData(EntityType.UNIT, unitId)) {
+            throw new IllegalArgumentException("entity " + id + " has a property that refers to non-existing [UNITS/" + unitId + "]");
+        }
+        return unitId;
     }
 
     public boolean idProvided(String id) {

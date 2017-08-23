@@ -71,9 +71,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
 
-        if (entityData.isRefinery) {
-            // spawn harvester somewhere around it
-
+        if (entityData.hasOnPlacementSpawnUnitId()) {
             // TODO-HARVESTER: This is used in the unit spawnment as well, move somewhere, abstract?!
             Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
             for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
@@ -83,7 +81,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                     Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
                     this.entityRepository.placeOnMap(
                             absoluteCoordinate,
-                            entityRepository.getEntityData(EntityType.UNIT, entityData.unitId), // this can be made configurable
+                            entityRepository.getEntityData(EntityType.UNIT, entityData.onPlacementSpawnUnitId), // this can be made configurable
                             this.player
                     );
                     break;
@@ -96,7 +94,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         int verticalCount = spritesheet.getVerticalCount();
         if (animationFrame > verticalCount) {
             log("I intent to animate frame " + animationFrame + " but the max frames is " + verticalCount + " - so I fall back to sprite 0.");
-            return spritesheet.getSprite(0, 0);
+            return spritesheet.getSprite(0, 1);
         }
         return spritesheet.getSprite(0, animationFrame);
     }

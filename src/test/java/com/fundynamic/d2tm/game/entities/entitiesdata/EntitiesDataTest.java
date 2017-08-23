@@ -126,6 +126,7 @@ public class EntitiesDataTest extends AbstractD2TMTest {
         iniDataStructure.buildTimeInSeconds = 1.0F;
         iniDataStructure.buildList = "WINDTRAP,REFINERY";
         iniDataStructure.buildCost = buildCost;
+        iniDataStructure.onPlacementSpawn = "UNKNOWN";
 
         // add
         entitiesData.addStructure(

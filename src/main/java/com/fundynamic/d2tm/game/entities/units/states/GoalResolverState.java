@@ -18,6 +18,7 @@ public class GoalResolverState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (!unit.shouldMove()) {
+            unit.log("No need to move anywhere (target == coordinate), going to idle mode.");
             unit.idle();
             return;
         }
@@ -43,7 +44,7 @@ public class GoalResolverState extends UnitState {
 
     @Override
     public String toString() {
-        return "GoalResolverState";
+        return "GoalResolverState [TARGET=" + unit.getTarget() + "]";
     }
 
 }

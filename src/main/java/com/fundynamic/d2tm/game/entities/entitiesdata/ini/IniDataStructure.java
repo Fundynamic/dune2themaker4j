@@ -29,11 +29,13 @@ public class IniDataStructure {
     public String buildList;
 
     public boolean refinery;
+    public String onPlacementSpawn;
 
     public IniDataStructure() {
     }
 
     public IniDataStructure(Profile.Section struct) {
+        this.onPlacementSpawn = struct.get(INI_KEYWORD_ON_PLACEMENT_SPAWN, String.class, EntitiesData.UNKNOWN);
         this.refinery = struct.get(INI_KEYWORD_REFINERY, Boolean.class, false);
         this.image = struct.get(INI_KEYWORD_IMAGE, String.class, null);
         this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class);
