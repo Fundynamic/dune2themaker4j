@@ -79,8 +79,10 @@ public class SingleEntityBuilder implements EntityBuilder {
 
     @Override
     public void entityIsDelivered(Entity entity) {
-        buildingEntity.enable();
-        buildingEntity = null;
+        if (buildingEntity != null) {
+            buildingEntity.enable();
+            buildingEntity = null;
+        }
         // enable all buildable entities again
         for (AbstractBuildableEntity be : buildableEntities) {
             be.enable();

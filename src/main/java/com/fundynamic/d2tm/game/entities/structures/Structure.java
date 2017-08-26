@@ -72,21 +72,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
 
         if (entityData.hasOnPlacementSpawnUnitId()) {
-            // TODO-HARVESTER: This is used in the unit spawnment as well, move somewhere, abstract?!
-            Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
-            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
-                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
-
-                if (passableResult.isPassable()) {
-                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
-                    this.entityRepository.placeOnMap(
-                            absoluteCoordinate,
-                            entityRepository.getEntityData(EntityType.UNIT, entityData.onPlacementSpawnUnitId), // this can be made configurable
-                            this.player
-                    );
-                    break;
-                }
-            }
+            spawnEntityAroundStructure(entityRepository.getEntityData(EntityType.UNIT, entityData.onPlacementSpawnUnitId));
         }
     }
 
@@ -152,50 +138,53 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
-            // TODO-HARVESTER: This is used in the constructor as well, move somewhere
-            Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
-            Unit firstEntityThatBlocksExit = null;
-            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
-                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
+            AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
+            spawnEntityAroundStructure(buildingEntity.getEntityData());
+        }
+    }
 
-                if (passableResult.isPassable()) {
-                    AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
-                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+    public void spawnEntityAroundStructure(EntityData entityData) {
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+        Unit firstEntityThatBlocksExit = null;
+        for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
+            EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
 
-                    Entity entity = this.entityRepository.placeOnMap(
-                                absoluteCoordinate,
-                                buildingEntity.getEntityData(),
-                                this.player
-                        );
-                    this.entityIsDelivered(entity);
-                    break;
-                } else {
-                    if (firstEntityThatBlocksExit == null) {
-                        System.out.println("Found entities set that blocks units:");
-                        System.out.println(passableResult.getEntities());
-                        System.out.println("END");
-                        firstEntityThatBlocksExit = (Unit) passableResult.getEntities().getFirst(Predicate.ofType(EntityType.UNIT));
-                    }
+            if (passableResult.isPassable()) {
+                Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+
+                Entity entity = this.entityRepository.placeOnMap(
+                            absoluteCoordinate,
+                            entityData,
+                            this.player
+                    );
+                this.entityIsDelivered(entity);
+                break;
+            } else {
+                if (firstEntityThatBlocksExit == null) {
+                    System.out.println("Found entities set that blocks units:");
+                    System.out.println(passableResult.getEntities());
+                    System.out.println("END");
+                    firstEntityThatBlocksExit = (Unit) passableResult.getEntities().getFirst(Predicate.ofType(EntityType.UNIT));
                 }
             }
+        }
 
-            // we did not succeed in spawning an entity
-            if (isAwaitingSpawning()) {
-                // TODO: fly it in, nudge other units to move away, etc.
-                // For now we just kill the blocking unit or we forget about it
+        // we did not succeed in spawning an entity
+        if (isAwaitingSpawning()) {
+            // TODO: fly it in, nudge other units to move away, etc.
+            // For now we just kill the blocking unit or we forget about it
 
-                // THIS IS JUST FOR FUN
-                if (firstEntityThatBlocksExit != null) {
-                    // kill it, so we can try again next frame
-                    System.out.println("------------------" + System.currentTimeMillis());
-                    System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
-                    System.out.println("------------------");
-                    firstEntityThatBlocksExit.die();
-                } else {
-                    // For now, forget it :/
-                    System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
-                    this.entityIsDelivered(this);
-                }
+            // THIS IS JUST FOR FUN
+            if (firstEntityThatBlocksExit != null) {
+                // kill it, so we can try again next frame
+                System.out.println("------------------" + System.currentTimeMillis());
+                System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
+                System.out.println("------------------");
+                firstEntityThatBlocksExit.die();
+            } else {
+                // For now, forget it :/
+                System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
+                this.entityIsDelivered(this);
             }
         }
     }
