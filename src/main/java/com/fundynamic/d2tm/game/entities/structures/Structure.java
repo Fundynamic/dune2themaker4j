@@ -98,7 +98,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             animationTimer -= animationSpeed;
         }
 
-        // TODO-HARVESTER: Introduce structure states, like units!?
+        // TODO: Introduce structure states, like units!?
         // If refinery expects delivery then animate the delivery animation
         if (entityData.isRefinery &&
             EnterStructureIntent.instance.containsIntentToEnterAt(this)) {

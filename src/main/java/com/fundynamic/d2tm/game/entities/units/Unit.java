@@ -628,7 +628,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void harvestCell(float deltaInSeconds) {
-        startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
+        startAnimating();
         harvest(entityData.getRelativeHarvestSpeed(deltaInSeconds));
         bodyFacing.update(deltaInSeconds);
     }
