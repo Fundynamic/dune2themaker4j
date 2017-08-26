@@ -53,8 +53,8 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
                         graphics.setColor(Colors.DARK_RED_ALPHA_128);
                         graphics.fillRect(drawX, drawY, tileSize, tileSize);
                     }
+//                    SlickUtils.drawShadowedText(graphics, Colors.WHITE, "" + x + "," + y, drawX, drawY);
                 }
-//                SlickUtils.drawShadowedText(graphics, Colors.WHITE, "" + x + "," + y, drawX, drawY);
             }
         }
     }

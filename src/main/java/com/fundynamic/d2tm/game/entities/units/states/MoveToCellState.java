@@ -8,6 +8,7 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.lwjgl.Sys;
 
 public class MoveToCellState extends UnitState {
 
@@ -46,8 +47,14 @@ public class MoveToCellState extends UnitState {
 
         Coordinate coordinate = unit.getCoordinate();
         Vector2D offset = unit.getOffset();
-        Vector2D nextTargetToMoveTo = unit.getNextTargetToMoveTo();
+        Coordinate nextTargetToMoveTo = unit.getNextTargetToMoveTo();
         EntityData entityData = unit.getEntityData();
+
+        if (!map.isWithinPlayableMapBoundaries(nextTargetToMoveTo.toMapCoordinate())) {
+            System.err.println("A next target to move to was set out of map bounds! ERROR. Going back to GoalResolver");
+            unit.setToGoalResolverState();
+            return;
+        }
 
         float offsetX = offset.getX();
         float offsetY = offset.getY();

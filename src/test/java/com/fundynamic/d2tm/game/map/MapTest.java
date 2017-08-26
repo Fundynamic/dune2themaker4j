@@ -33,29 +33,30 @@ public class MapTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void isWithinMapBoundaries() {
+    public void isWithinPlayableMapBoundaries() {
         // smoke test
-        assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(3,3)));
+        assertTrue(map.isWithinPlayableMapBoundaries(MapCoordinate.create(3,3)));
 
         // 0,0 is just over the edge (on top, and on the left)
-        assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(0,0)));
+        assertFalse(map.isWithinPlayableMapBoundaries(MapCoordinate.create(0,0)));
+
         // x is within boundaries, but y is still over the top
-        assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(1,0)));
+        assertFalse(map.isWithinPlayableMapBoundaries(MapCoordinate.create(1,0)));
 
         // 1,1 is the upmost topleft coordinate
-        assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(1,1)));
+        assertTrue(map.isWithinPlayableMapBoundaries(MapCoordinate.create(1,1)));
 
         // going over the edge at the right
-        assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,1)));
+        assertFalse(map.isWithinPlayableMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,1)));
 
         // going over the edge at the bottom
-        assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(1,MAP_HEIGHT + 1)));
+        assertFalse(map.isWithinPlayableMapBoundaries(MapCoordinate.create(1,MAP_HEIGHT + 1)));
 
         // going over the edge at the right and bottom
-        assertFalse(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,MAP_HEIGHT + 1)));
+        assertFalse(map.isWithinPlayableMapBoundaries(MapCoordinate.create(MAP_WIDTH + 1,MAP_HEIGHT + 1)));
 
         // this is the bottom-right corner
-        assertTrue(map.isWithinMapBoundaries(MapCoordinate.create(MAP_WIDTH,MAP_HEIGHT)));
+        assertTrue(map.isWithinPlayableMapBoundaries(MapCoordinate.create(MAP_WIDTH,MAP_HEIGHT)));
     }
 
     @Test

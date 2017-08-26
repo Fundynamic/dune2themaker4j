@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
@@ -81,8 +82,10 @@ public class MapEditor {
         System.out.println("Putting terrain on map");
         fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
 
-        createCircularField(map, Vector2D.create(0, 0), DuneTerrain.TERRAIN_ROCK, 20);
-        createCircularField(map, Vector2D.create(map.getWidth(), map.getHeight()), DuneTerrain.TERRAIN_ROCK, 20);
+        // player start positions should have rock
+        createCircularField(map, MapCoordinate.create(0, 0), DuneTerrain.TERRAIN_ROCK, 20);
+        createCircularField(map, MapCoordinate.create(map.getWidth(), map.getHeight()), DuneTerrain.TERRAIN_ROCK, 20);
+
         int minX = 5;
         int maxX = map.getWidth() - 5;
         int minY = 5;
@@ -97,7 +100,7 @@ public class MapEditor {
         int spiceHillSize = (int)(spiceFieldSize * 0.05); // part of spiceFieldSize
 
         for (int f = 0; f < amountOfSpiceStuff; f++) {
-            Vector2D randomVec = Vector2D.random(minX, maxX, minY, maxY);
+            MapCoordinate randomVec = MapCoordinate.random(minX, maxX, minY, maxY);
             createCircularField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceCircularSize);
             createField(map, randomVec, DuneTerrain.TERRAIN_SPICE, spiceFieldSize);
             createField(map, randomVec, DuneTerrain.TERRAIN_SPICE_HILL, spiceHillSize);
@@ -108,7 +111,7 @@ public class MapEditor {
         int mountainSize = (int)(rockSize * 0.02);
 
         for (int f = 0; f < amountOfStuff; f++) {
-            Vector2D randomVec = Vector2D.random(minX, maxX, minY, maxY);
+            MapCoordinate randomVec = MapCoordinate.random(minX, maxX, minY, maxY);
             createCircularField(map, randomVec, DuneTerrain.TERRAIN_ROCK, rockCircularSize);
             createField(map, randomVec, DuneTerrain.TERRAIN_ROCK, rockSize);
 //            createField(map, randomVec, DuneTerrain.TERRAIN_MOUNTAIN, mountainSize);
@@ -129,13 +132,11 @@ public class MapEditor {
         cell.changeTerrain(terrain);
     }
 
-    public void createCircularField(Map map, Vector2D centerPosition, int terrainType, int size) {
+    public void createCircularField(Map map, MapCoordinate centerPosition, int terrainType, int size) {
         if (size < 1) return;
 
         // convert to absolute pixel coordinates
-        Vector2D asPixelsCentered = map.getCellCoordinatesInAbsolutePixels(
-                centerPosition.getXAsInt(), centerPosition.getYAsInt()).
-                add(Vector2D.create(HALF_TILE, HALF_TILE));
+        Vector2D asPixelsCentered = centerPosition.toCoordinate().add(Vector2D.create(HALF_TILE, HALF_TILE));
 
         double centerX = asPixelsCentered.getX();
         double centerY = asPixelsCentered.getY();

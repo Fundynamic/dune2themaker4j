@@ -19,7 +19,6 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
  *
  * This class represents the game map data.
  *
- *
  */
 public class Map {
 
@@ -39,17 +38,25 @@ public class Map {
         this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                Cell cell = new Cell(this, EmptyTerrain.instance(), x, y);
+                Cell cell = Cell.emptyTerrainCell(this, x, y);
                 // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
                 cells[x][y] = cell;
             }
         }
     }
 
+    /**
+     * The playable width of the map
+     * @return
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * The playable height of the map
+     * @return
+     */
     public int getHeight() {
         return height;
     }
@@ -169,10 +176,6 @@ public class Map {
         return getCellByMapCoordinates(entity.getCoordinate().toMapCoordinate());
     }
 
-    public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
-        return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
-    }
-
     public Entity revealShroudFor(Entity entity) {
         List<MapCoordinate> allCoordinates = entity.getAllCellsAsMapCoordinates();
         for (MapCoordinate coordinate : allCoordinates) {
@@ -277,9 +280,15 @@ public class Map {
         }
     }
 
-    public boolean isWithinMapBoundaries(MapCoordinate intendedMapCoordinatesToMoveTo) {
-        int x = intendedMapCoordinatesToMoveTo.getXAsInt();
-        int y = intendedMapCoordinatesToMoveTo.getYAsInt();
+    /**
+     * Returns true if the given map coordinate is within the playable dimensions. These are 1 based.
+     * Thus, a map of 64x64, starts at 1,1 (minimum) and ends on 64,64.
+     * @param mapCoordinate
+     * @return
+     */
+    public boolean isWithinPlayableMapBoundaries(MapCoordinate mapCoordinate) {
+        int x = mapCoordinate.getXAsInt();
+        int y = mapCoordinate.getYAsInt();
         return x >= 1 && x <= width && y >= 1 && y <= height;
     }
 

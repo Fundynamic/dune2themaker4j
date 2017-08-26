@@ -18,6 +18,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -245,19 +246,20 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      * Possible duplicate!?
      */
     public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
-        Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
-
-        if (!cell.isPassable(this)) return false; // no need to further check if terrain does not allow movement
-
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
-        entities = entities.exclude(this); // do not count ourselves as blocking
+        EntityRepository.PassableResult passableResult = entityRepository.isPassableWithinMapBoundaries(this, intendedMapCoordinatesToMoveTo.toMapCoordinate());
+//        Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
+//
+//        if (!cell.isPassable(this)) return false; // no need to further check if terrain does not allow movement
+//
+//        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
+//        entities = entities.exclude(this); // do not count ourselves as blocking
 
         if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
             return false;
 
         if (isHarvester()) {
-            if (entities.hasOne()) {
-                Entity blockingEntity = entities.getFirst();
+            if (passableResult.hasOne()) {
+                Entity blockingEntity = passableResult.getFirstBlockingEntity();
                 if (blockingEntity.isRefinery() &&
                     HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(blockingEntity, this)) {
                     // the thing that blocks us is the refinery where we wanted to go
@@ -267,12 +269,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             }
         }
 
-        // not boarding an entity, so then we only accept movable when it is empty
-        return entities.isEmpty();
+        return passableResult.isPassable();
     }
 
     public Coordinate getNextIntendedCellToMoveToTarget() {
         Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+
+        // filter out all map coordinates that are valid within map boundaries
+        allSurroundingCellsAsCoordinates =
+                allSurroundingCellsAsCoordinates.
+                        stream().
+                        filter(mapCoordinate -> map.isWithinPlayableMapBoundaries(mapCoordinate)).
+                        collect(Collectors.toSet());
 
         float distanceToTarget = distanceTo(target);
 
@@ -453,7 +461,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return offset;
     }
 
-    public Vector2D getNextTargetToMoveTo() {
+    public Coordinate getNextTargetToMoveTo() {
         return nextTargetToMoveTo;
     }
 

@@ -172,9 +172,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
                 } else {
                     if (firstEntityThatBlocksExit == null) {
                         System.out.println("Found entities set that blocks units:");
-                        System.out.println(passableResult.getEntitiesSet());
+                        System.out.println(passableResult.getEntities());
                         System.out.println("END");
-                        firstEntityThatBlocksExit = (Unit) passableResult.getEntitiesSet().getFirst(Predicate.ofType(EntityType.UNIT));
+                        firstEntityThatBlocksExit = (Unit) passableResult.getEntities().getFirst(Predicate.ofType(EntityType.UNIT));
                     }
                 }
             }

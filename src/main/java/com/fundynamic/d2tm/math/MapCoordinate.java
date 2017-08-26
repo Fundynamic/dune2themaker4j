@@ -57,6 +57,20 @@ public class MapCoordinate extends Vector2D {
         return (int) distance(mapCoordinate);
     }
 
+    /**
+     * Generate a vector with random (int) coordinates. Where X will be between minX and given maxX and Y will be between
+     * minY and maxY.
+     *
+     * @param minX
+     * @param maxX
+     * @param minY
+     * @param maxY
+     * @return new Vector instance
+     */
+    public static MapCoordinate random(int minX, int maxX, int minY, int maxY) {
+        return MapCoordinate.create(Random.getRandomBetween(minX, maxX), Random.getRandomBetween(minY, maxY));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

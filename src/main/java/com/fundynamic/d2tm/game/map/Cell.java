@@ -173,4 +173,8 @@ public class Cell {
     public float distance(Entity entity) {
         return this.mapCoordinate.toCoordinate().distance(entity.getCoordinate());
     }
+
+    public static Cell emptyTerrainCell(Map map, int x, int y) {
+        return new Cell(map, EmptyTerrain.instance(), x, y);
+    }
 }
