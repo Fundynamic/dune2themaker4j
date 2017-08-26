@@ -106,8 +106,17 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @param otherCoordinate
      * @return
      */
-    public float distanceTo(Coordinate otherCoordinate) {
+    public float distanceToFromCentered(Coordinate otherCoordinate) {
         return getCenteredCoordinate().distance(otherCoordinate);
+    }
+
+    /**
+     * Returns distance from this entity to other Coordinate. Does not influence given otherCoordinate param
+     * @param otherCoordinate
+     * @return
+     */
+    public float distanceTo(Coordinate otherCoordinate) {
+        return coordinate.distance(otherCoordinate);
     }
 
     /**

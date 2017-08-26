@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 
 /**
  * Determine what to do to get to the given goal.
@@ -25,12 +26,12 @@ public class GoalResolverState extends UnitState {
 
         if (unit.hasNoNextCellToMoveTo()) {
             unit.stopAndResetAnimating();
-            Coordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
+            MapCoordinate nextIntendedCoordinatesToMoveTo = unit.getNextIntendedCellToMoveToTarget();
             if (unit.isCellPassableForMe(nextIntendedCoordinatesToMoveTo)) {
                 if (!unit.isHarvester()) {
                     unit.startAnimating();
                 }
-                unit.moveToCell(nextIntendedCoordinatesToMoveTo);
+                unit.moveToCell(nextIntendedCoordinatesToMoveTo.toCoordinate());
             } else {
                 unit.log("I have no where to go.");
             }

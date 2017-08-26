@@ -33,10 +33,6 @@ public class UnitMoveIntents {
         intendedVectors.put(target, who);
     }
 
-    public boolean isVectorClaimableBy(Coordinate target, Entity who) {
-        return isVectorClaimableBy(target.toMapCoordinate(), who);
-    }
-
     public boolean isVectorClaimableBy(MapCoordinate target, Entity who) {
         Entity entity = intendedVectors.get(target);
         return entity == null || // no entity on target, so thus claimable

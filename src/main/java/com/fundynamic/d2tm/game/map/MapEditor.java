@@ -121,13 +121,13 @@ public class MapEditor {
     public void fillMapWithTerrain(Map map, int terrainType) {
         for (int x = 1; x <= map.getWidth(); x++) {
             for (int y = 1; y <= map.getHeight(); y++) {
-                putTerrainOnCell(map, x, y, terrainType);
+                putTerrainOnCell(map, MapCoordinate.create(x, y), terrainType);
             }
         }
     }
 
-    public void putTerrainOnCell(Map map, int x, int y, int terrainType) {
-        final Cell cell = map.getCell(x, y);
+    public void putTerrainOnCell(Map map, MapCoordinate mapCoordinate, int terrainType) {
+        final Cell cell = map.getCell(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt());
         final Terrain terrain = terrainFactory.create(terrainType, cell);
         cell.changeTerrain(terrain);
     }
@@ -153,13 +153,13 @@ public class MapEditor {
                 // convert back the pixel coordinates back to a cell
                 Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create((int) Math.ceil(circleX), (int) Math.ceil(circleY)));
 
-                putTerrainOnCell(map, cell.getX(), cell.getY(), terrainType);
+                putTerrainOnCell(map, cell.getMapCoordinate(), terrainType);
             }
         }
     }
 
     public void createField(Map map, Vector2D startVector, int terrainType, int size) {
-        Vector2D position = startVector;
+        MapCoordinate position = new MapCoordinate(startVector);
 
         for (int i = 0; i < size; i++) {
             position = position.add(Vector2D.create(-1 + Random.getInt(3), -1 + Random.getInt(3)));
@@ -169,7 +169,7 @@ public class MapEditor {
                 position = cellProtected.getMapCoordinate();
             }
 
-            putTerrainOnCell(map, position.getXAsInt(), position.getYAsInt(), terrainType);
+            putTerrainOnCell(map, position, terrainType);
         }
 
     }

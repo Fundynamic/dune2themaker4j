@@ -8,7 +8,6 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.lwjgl.Sys;
 
 public class MoveToCellState extends UnitState {
 

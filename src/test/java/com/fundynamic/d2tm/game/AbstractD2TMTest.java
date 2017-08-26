@@ -344,6 +344,7 @@ public abstract class AbstractD2TMTest {
      * @param id
      * @return {@link Unit} constructed
      */
+    @Deprecated
     public Unit makeUnit(Player player, Coordinate coordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");

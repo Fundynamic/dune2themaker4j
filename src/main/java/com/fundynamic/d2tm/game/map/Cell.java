@@ -23,10 +23,6 @@ public class Cell {
 
     private final Map map;
 
-    // TODO: Can be removed in favor of MapCoordinate?
-    private final int x;
-    private final int y;
-
     private Terrain terrain;
 
     private MapCoordinate mapCoordinate;
@@ -38,8 +34,6 @@ public class Cell {
         if (mapX < 0 || mapY < 0) throw new OutOfMapBoundsException("screenX may ot be lower than 0, for given screenX, screenY: " + mapX + "," + mapY);
         this.terrain = terrain;
         this.map = map;
-        this.x = mapX;
-        this.y = mapY;
         this.mapCoordinate = MapCoordinate.create(mapX, mapY);
     }
 
@@ -63,16 +57,8 @@ public class Cell {
         return terrain;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public Cell getNeighbouringCell(int relativeX, int relativeY) {
-        return map.getCellWithinBoundariesOrNullObject(this.x + relativeX, this.y + relativeY);
+        return map.getCellWithinBoundariesOrNullObject(this.mapCoordinate.getXAsInt() + relativeX, this.mapCoordinate.getYAsInt() + relativeY);
     }
 
     public Cell getCellAbove() {
@@ -102,7 +88,7 @@ public class Cell {
 
     public boolean isAtSameLocationAs(Cell other) {
         if (other == null) return false;
-        return this.x == other.getX() && y == other.getY();
+        return this.mapCoordinate.equals(other.getMapCoordinate());
     }
 
     /**
@@ -176,5 +162,13 @@ public class Cell {
 
     public static Cell emptyTerrainCell(Map map, int x, int y) {
         return new Cell(map, EmptyTerrain.instance(), x, y);
+    }
+
+    public int getX() {
+        return mapCoordinate.getXAsInt();
+    }
+
+    public int getY() {
+        return mapCoordinate.getYAsInt();
     }
 }

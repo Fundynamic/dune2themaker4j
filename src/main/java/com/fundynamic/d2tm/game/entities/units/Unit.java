@@ -246,8 +246,8 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      * with that the unit specific logic. Ie, if it should enter a
      * Possible duplicate!?
      */
-    public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
-        EntityRepository.PassableResult passableResult = entityRepository.isPassableWithinMapBoundaries(this, intendedMapCoordinatesToMoveTo.toMapCoordinate());
+    public boolean isCellPassableForMe(MapCoordinate intendedMapCoordinatesToMoveTo) {
+        EntityRepository.PassableResult passableResult = entityRepository.isPassableWithinMapBoundaries(this, intendedMapCoordinatesToMoveTo);
 
         if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
             return false;
@@ -264,7 +264,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return passableResult.isPassable();
     }
 
-    public Coordinate getNextIntendedCellToMoveToTarget() {
+    public MapCoordinate getNextIntendedCellToMoveToTarget() {
         Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
 
         // filter out all map coordinates that are valid within map boundaries
@@ -276,7 +276,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         float distanceToTarget = distanceTo(target);
 
-        Coordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
+        MapCoordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
 
         if (bestCoordinate == null) {
             // almost there
@@ -286,7 +286,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             if (distanceToTarget <= (TILE_SIZE + 2)) {
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
-                bestCoordinate = coordinate;
+                bestCoordinate = coordinate.toMapCoordinate();
             } else {
                 // fall back if we have to take a 'detour'
                 bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + TILE_SIZE);
@@ -297,21 +297,20 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             return bestCoordinate;
         }
         log("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
-        return coordinate;
+        return coordinate.toMapCoordinate();
     }
 
-    public Coordinate findClosestCoordinateTowards(Set<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
-        Coordinate bestCoordinate = null;
+    public MapCoordinate findClosestCoordinateTowards(Set<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
+        MapCoordinate bestCoordinate = null;
         float shortestDistance = maxDistance;
         for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
-            Coordinate coordinate = mapCoordinate.toCoordinate();
-            boolean isCellPassableForMe = isCellPassableForMe(coordinate);
+            boolean isCellPassableForMe = isCellPassableForMe(mapCoordinate);
             if (!isCellPassableForMe) continue;
 
-            float distance = coordinate.distance(target);
-            if (distance < shortestDistance) {
+            float distance = mapCoordinate.toCoordinate().distance(target);
+            if (distance <= shortestDistance) {
                 shortestDistance = distance;
-                bestCoordinate = mapCoordinate.toCoordinate();
+                bestCoordinate = mapCoordinate;
             }
         }
         return bestCoordinate;

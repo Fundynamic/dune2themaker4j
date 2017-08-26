@@ -4,9 +4,11 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.newdawn.slick.SlickException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 public class MovableSelectedMouseTest extends AbstractD2TMTest {
@@ -40,18 +43,19 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
 
     @Test
     public void movesSelectedUnitsToCellThatIsNotOccupiedByOtherCell() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
+        Unit unit = makeUnit(player, MapCoordinate.create(1, 1), EntitiesData.QUAD);
         unit.select();
 
-        // TODO: This is ugly because absolute coordinates are used here versus map coordinates above in test
-        assertEquals(unit.getNextTargetToMoveTo(), Vector2D.create(32, 32));
+        // next target should equal current map coordinate
+        assertEquals(MapCoordinate.create(1, 1), unit.getNextTargetToMoveTo().toMapCoordinate());
 
-        movableSelectedMouse.mouseMovedToCell(map.getCell(2, 2)); // equals 64, 64
+        movableSelectedMouse.mouseMovedToCell(map.getCell(2, 2));
         movableSelectedMouse.leftClicked();
 
         unit.update(1);
 
-        assertEquals(Vector2D.create(64, 64), unit.getNextTargetToMoveTo());
+        assertTrue(unit.getState() instanceof MoveToCellState);
+        assertEquals(MapCoordinate.create(2, 2), unit.getNextTargetToMoveTo().toMapCoordinate());
     }
 
     @Test

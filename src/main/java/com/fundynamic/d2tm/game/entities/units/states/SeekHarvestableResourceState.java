@@ -25,7 +25,7 @@ public class SeekHarvestableResourceState extends UnitState {
                 .filter(mapCoordinate -> map.isWithinPlayableMapBoundaries(mapCoordinate))
                 .map(mapCoordinate -> map.getCell(mapCoordinate))
                 .filter(cell -> cell.isHarvestable() && cell.isPassable(unit))
-                .filter(cell -> unit.isCellPassableForMe(cell.getCoordinate()))
+                .filter(cell -> unit.isCellPassableForMe(cell.getMapCoordinate()))
                 .sorted((c1, c2) ->  Float.compare(c1.distance(unit), c2.distance(unit)))
                 .collect(Collectors.toList());
 

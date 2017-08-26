@@ -1,6 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
-import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class UnitMoveIntentsTest {
 
-    public static final Coordinate VEC_23_23 = Coordinate.create(23, 23);
+    public static final MapCoordinate VEC_23_23 = MapCoordinate.create(23, 23);
     private UnitMoveIntents unitMoveIntents;
     private NullEntity entityOne;
     private NullEntity entityTwo;
@@ -24,7 +24,7 @@ public class UnitMoveIntentsTest {
     public void removeAllIntentsByEntity() {
         unitMoveIntents.addIntent(VEC_23_23, entityOne);
         unitMoveIntents.removeAllIntentsBy(entityOne);
-        Assert.assertFalse(unitMoveIntents.hasIntent(VEC_23_23.toMapCoordinate()));
+        Assert.assertFalse(unitMoveIntents.hasIntent(VEC_23_23));
     }
 
     @Test

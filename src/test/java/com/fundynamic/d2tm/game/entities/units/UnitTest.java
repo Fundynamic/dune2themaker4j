@@ -32,8 +32,7 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -63,7 +62,7 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
         Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(cpuUnit.shouldMove());
+        assertFalse(cpuUnit.shouldMove());
 
         cpuUnit.takeDamage(1, null); // null means unknown entity
 
@@ -75,7 +74,7 @@ public class UnitTest extends AbstractD2TMTest {
         Unit humanUnit = makeUnit(player);
 
         Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(unit.shouldAttack());
+        assertFalse(unit.shouldAttack());
 
         unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
 
@@ -342,6 +341,27 @@ public class UnitTest extends AbstractD2TMTest {
 
         Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
         Assert.assertSame(who, harvester2);
+    }
+
+    @Test
+    public void isCellPassableForMeIsTrueWhenNoOtherUnitIsPresent() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        assertTrue(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
+    }
+
+    @Test
+    public void isCellPassableForMeIsFalseWhenOtherEntityOccupiesCell() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
+        assertFalse(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
+    }
+
+    @Test
+    public void isCellPassableForMeIsTrueWhenEntityThatOccupiesCellIsTheEntityToReturnTo() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
+        harvester1.returnToRefinery(refinery);
+        assertTrue(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
     }
 
     public static void updateUnitTimesHundredMilis(Unit unit, int times) {
