@@ -13,7 +13,7 @@ import com.fundynamic.d2tm.game.map.Map;
  * </p>
  * <p>
  *     When the current cell is no longer harvestable (no more spice), as long as the unit is not done yet, it will enter the
- *     {@link SeekSpiceState} to look for other spice cells.
+ *     {@link SeekHarvestableResourceState} to look for other spice cells.
  * </p>
  */
 public class HarvestingState extends UnitState {

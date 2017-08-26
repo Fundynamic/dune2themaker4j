@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class SeekSpiceState extends UnitState {
+public class SeekHarvestableResourceState extends UnitState {
 
-    public SeekSpiceState(Unit unit, EntityRepository entityRepository, Map map) {
+    public SeekHarvestableResourceState(Unit unit, EntityRepository entityRepository, Map map) {
         super(unit, entityRepository, map);
     }
 
@@ -22,14 +22,14 @@ public class SeekSpiceState extends UnitState {
         Set<MapCoordinate> areaInCoordinates = unit.getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(5);
         List<Cell> harvestableCells = areaInCoordinates
                 .stream()
-                .map(mapCoordinate -> map.getCellProtected(mapCoordinate))
+                .filter(mapCoordinate -> map.isWithinPlayableMapBoundaries(mapCoordinate))
+                .map(mapCoordinate -> map.getCell(mapCoordinate))
                 .filter(cell -> cell.isHarvestable() && cell.isPassable(unit))
                 .filter(cell -> unit.isCellPassableForMe(cell.getCoordinate()))
                 .sorted((c1, c2) ->  Float.compare(c1.distance(unit), c2.distance(unit)))
                 .collect(Collectors.toList());
 
         if (harvestableCells.isEmpty()) {
-//            unit.log("Unable to find any spice");
             return;
         }
 
@@ -38,7 +38,7 @@ public class SeekSpiceState extends UnitState {
 
     @Override
     public String toString() {
-        return "SeekSpiceState";
+        return "SeekHarvestableResourceState";
     }
 
 }

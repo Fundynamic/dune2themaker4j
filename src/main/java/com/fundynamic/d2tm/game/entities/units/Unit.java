@@ -283,7 +283,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
             // occupied then stop? (5 because that is 'half surrounded')
             // TODO: even better than previous todo, implement path finding...
-            if (distanceToTarget < TILE_SIZE) {
+            if (distanceToTarget <= (TILE_SIZE + 2)) {
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
                 bestCoordinate = coordinate;
@@ -545,7 +545,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (isAnimating()) {
             stopAndResetAnimating();
         }
-        setState(new SeekSpiceState(this, entityRepository, map));
+        setState(new SeekHarvestableResourceState(this, entityRepository, map));
     }
 
     public void harvesting() {
