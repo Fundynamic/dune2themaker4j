@@ -398,7 +398,7 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     public void destroy() {
         emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
         UnitMoveIntents.instance.removeAllIntentsBy(this);
-        HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
+        EnterStructureIntent.instance.removeAllIntentsBy(this);
         eventTypeListMap.clear(); // now clear all our subscriptions explicitly
     }
 

@@ -3,7 +3,7 @@ package com.fundynamic.d2tm.game.entities.units.states;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.HarvesterDeliveryIntents;
+import com.fundynamic.d2tm.game.entities.EnterStructureIntent;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 
@@ -29,7 +29,7 @@ public class EmptyHarvesterState extends UnitState {
             unit.log("Done depositing spice, moving back to " + unit.lastSeenSpiceAt());
             // remove harvest delivery intent after depositing because only then a new harvester can
             // occupy the refinery
-            HarvesterDeliveryIntents.instance.removeDeliveryIntent(refinery);
+            EnterStructureIntent.instance.removeEnterIntent(refinery);
             unit.leaveOtherEntity();
             unit.harvestAt(unit.lastSeenSpiceAt());
         }

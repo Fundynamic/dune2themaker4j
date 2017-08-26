@@ -115,7 +115,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         // TODO-HARVESTER: Introduce structure states, like units!?
         // If refinery expects delivery then animate the delivery animation
         if (entityData.isRefinery &&
-            HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
+            EnterStructureIntent.instance.containsIntentToEnterAt(this)) {
             refineryDune2UnitWillEnterRefineryAnimation(deltaInSeconds);
         } else {
             flagAnimation();
@@ -286,8 +286,8 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
 
-        if (Game.DEBUG_INFO && HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(this)) {
-            Entity unitThatWantsToEnterThisStructure = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(this);
+        if (Game.DEBUG_INFO && EnterStructureIntent.instance.containsIntentToEnterAt(this)) {
+            Entity unitThatWantsToEnterThisStructure = EnterStructureIntent.instance.getEnterIntentFrom(this);
             LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
             renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
         }

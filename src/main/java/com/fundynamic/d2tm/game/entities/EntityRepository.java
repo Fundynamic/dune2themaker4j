@@ -105,7 +105,13 @@ public class EntityRepository {
         return entity.setOrigin(origin);
     }
 
-    // TODO-HARVESTER: How is this different compared to unit movement!?
+    /**
+     * Return a passableResult object for a given entity and a mapCoordinate it intents to do move to.
+     * This is not taking special unit logic into consideration.
+     * @param entity
+     * @param intendedMapCoordinatesToMoveTo
+     * @return
+     */
     public PassableResult isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
         Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
         EntitiesSet entities = findAliveEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);

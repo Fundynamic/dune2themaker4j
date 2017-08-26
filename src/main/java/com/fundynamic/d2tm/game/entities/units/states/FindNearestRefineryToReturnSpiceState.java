@@ -4,7 +4,7 @@ package com.fundynamic.d2tm.game.entities.units.states;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.HarvesterDeliveryIntents;
+import com.fundynamic.d2tm.game.entities.EnterStructureIntent;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 
@@ -43,7 +43,7 @@ public class FindNearestRefineryToReturnSpiceState extends UnitState {
         }
 
         Entity nearestUnoccupiedRefinery = entities.stream().filter(e -> {
-            return HarvesterDeliveryIntents.instance.canDeliverAt(e, unit); // only filter refineries that are not 'claimed' yet
+            return EnterStructureIntent.instance.canEnterAt(e, unit); // only filter refineries that are not 'claimed' yet
         }).sorted((e1, e2) -> { // closest first
                 return Float.compare(e1.distance(unit), e2.distance(unit));
         }).findFirst().orElse(null);

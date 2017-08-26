@@ -24,9 +24,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
@@ -325,7 +323,7 @@ public class UnitTest extends AbstractD2TMTest {
         // Act
         unit.returnToRefinery(refinery);
 
-        Entity who = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(refinery);
+        Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
         Assert.assertSame(who, unit);
 
         Assert.assertTrue(unit.getState() instanceof GoalResolverState);
@@ -342,7 +340,7 @@ public class UnitTest extends AbstractD2TMTest {
         harvester2.returnToRefinery(refinery);
         harvester1.returnToRefinery(refinery);
 
-        Entity who = HarvesterDeliveryIntents.instance.getDeliveryIntentFrom(refinery);
+        Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
         Assert.assertSame(who, harvester2);
     }
 

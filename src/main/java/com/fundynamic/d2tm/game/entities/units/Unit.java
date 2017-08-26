@@ -242,30 +242,22 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     /**
-     * TODO-HARVESTER: check with EntityRepository {@link EntityRepository.PassableResult} {@link EntityRepository#isPassable(Entity, MapCoordinate)}
+     * Uses {@link EntityRepository.PassableResult} {@link EntityRepository#isPassable(Entity, MapCoordinate)} and along
+     * with that the unit specific logic. Ie, if it should enter a
      * Possible duplicate!?
      */
     public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
         EntityRepository.PassableResult passableResult = entityRepository.isPassableWithinMapBoundaries(this, intendedMapCoordinatesToMoveTo.toMapCoordinate());
-//        Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
-//
-//        if (!cell.isPassable(this)) return false; // no need to further check if terrain does not allow movement
-//
-//        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
-//        entities = entities.exclude(this); // do not count ourselves as blocking
 
         if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
             return false;
 
-        if (isHarvester()) {
-            if (passableResult.hasOne()) {
-                Entity blockingEntity = passableResult.getFirstBlockingEntity();
-                if (blockingEntity.isRefinery() &&
-                    HarvesterDeliveryIntents.instance.hasDeliveryIntentAt(blockingEntity, this)) {
-                    // the thing that blocks us is the refinery where we wanted to go
-                    // then allow it.
-                    return true;
-                }
+        if (passableResult.hasOne()) {
+            Entity blockingEntity = passableResult.getFirstBlockingEntity();
+            if (EnterStructureIntent.instance.hasIntentToEnterAt(blockingEntity, this)) {
+                // the thing that blocks us is the refinery where we wanted to go
+                // then allow it.
+                return true;
             }
         }
 
@@ -291,7 +283,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
             // occupied then stop? (5 because that is 'half surrounded')
             // TODO: even better than previous todo, implement path finding...
-            if (distanceToTarget <= TILE_SIZE) {
+            if (distanceToTarget < TILE_SIZE) {
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
                 bestCoordinate = coordinate;
@@ -394,7 +386,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
         // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
-        HarvesterDeliveryIntents.instance.removeAllIntentsBy(this);
+        EnterStructureIntent.instance.removeAllIntentsBy(this);
 
         cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
 
@@ -637,8 +629,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     public void harvestCell(float deltaInSeconds) {
         startAnimating(); // TODO-HARVESTER: make this 'harvesting animation'
-        // TODO-HARVESTER: make this time based, like movespeed
-        // TODO-HARVESTER: get this from entityData
         harvest(entityData.getRelativeHarvestSpeed(deltaInSeconds));
         bodyFacing.update(deltaInSeconds);
     }
@@ -675,12 +665,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (!this.isHarvester()) throw new IllegalStateException("Only harvesters can return to a refinery");
         if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
 
-        if (HarvesterDeliveryIntents.instance.canDeliverAt(refinery, this)) {
+        if (EnterStructureIntent.instance.canEnterAt(refinery, this)) {
             log("returnToRefinery) Will deliver at refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
             moveTo(closestCoordinateTo);
             // important to add intention after moveTo, because moveTo removes all intentions
-            HarvesterDeliveryIntents.instance.addDeliveryIntentTo(refinery, this);
+            EnterStructureIntent.instance.addDeliveryIntentTo(refinery, this);
         } else {
             log("returnToRefinery) Move close to refinery " + refinery);
             Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());
