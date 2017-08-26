@@ -61,7 +61,7 @@ public class UnitTest extends AbstractD2TMTest {
     // FLAKY TEST: Sometimes fails probably because 'random cell to move to' is the same as it was now...
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
-        Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Unit cpuUnit = makeUnit(cpu, MapCoordinate.create(2, 2), EntitiesData.QUAD);
         assertFalse(cpuUnit.shouldMove());
 
         cpuUnit.takeDamage(1, null); // null means unknown entity
@@ -73,7 +73,7 @@ public class UnitTest extends AbstractD2TMTest {
     public void cpuUnitAttacksBackTheEntityItTookDamageFrom() {
         Unit humanUnit = makeUnit(player);
 
-        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Unit unit = makeUnit(cpu, MapCoordinate.create(2, 2), EntitiesData.QUAD);
         assertFalse(unit.shouldAttack());
 
         unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
@@ -207,10 +207,10 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void firesProjectileWhenAttackingUnitInRange() {
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
-        Unit playerQuad = makeUnit(player, new Coordinate(32, 32), "QUAD");
+        Unit playerQuad = makeUnit(player, MapCoordinate.create(1, 1), "QUAD");
         playerQuad.setFacing(UnitFacings.RIGHT_DOWN.getValue()); // looking at the unit below...
 
-        Unit cpuQuad = makeUnit(cpu, new Coordinate(64, 64), "QUAD");
+        Unit cpuQuad = makeUnit(cpu, MapCoordinate.create(2, 2), "QUAD");
 
         // order to attack, it is in range, and already facing it.
         playerQuad.attack(cpuQuad);
@@ -230,7 +230,9 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void selectedUnitPutsFadingSelectionAndHealthBarOnRenderQueue() {
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.QUAD);
+        MapCoordinate mapCoordinate = MapCoordinate.create(2, 2);
+        Coordinate unitCoordinate = mapCoordinate.toCoordinate();
+        Unit unit = makeUnit(player, mapCoordinate, EntitiesData.QUAD);
         unit.select();
 
         Vector2D viewportVec = Vector2D.create(32, 32);
@@ -242,13 +244,13 @@ public class UnitTest extends AbstractD2TMTest {
 
         RenderQueue.ThingToRender first = thingsToRender.get(0);
         assertThat(first.renderQueueEnrichable, is(instanceOf(HitPointBasedDestructibility.class)));
-        assertThat(first.screenX, is(16)); // unitX - viewportVecX
-        assertThat(first.screenY, is(16)); // unitY - viewportVecY
+        assertThat(first.screenX, is(unitCoordinate.getXAsInt() - viewportVec.getXAsInt())); // unitX - viewportVecX
+        assertThat(first.screenY, is(unitCoordinate.getYAsInt() - viewportVec.getYAsInt())); // unitY - viewportVecY
 
         RenderQueue.ThingToRender second = thingsToRender.get(1);
         assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
-        assertThat(second.screenX, is(16)); // unitX - viewportVecX
-        assertThat(second.screenY, is(16)); // unitY - viewportVecY
+        assertThat(second.screenX, is(unitCoordinate.getXAsInt() - viewportVec.getXAsInt())); // unitX - viewportVecX
+        assertThat(second.screenY, is(unitCoordinate.getYAsInt() - viewportVec.getYAsInt())); // unitY - viewportVecY
     }
 
     @Test
@@ -266,7 +268,7 @@ public class UnitTest extends AbstractD2TMTest {
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
 
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.HARVESTER);
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
 
         assertThat(unit.canHarvest(), is(true));
         assertThat(unit.isDoneHarvesting(), is(false));
@@ -286,7 +288,7 @@ public class UnitTest extends AbstractD2TMTest {
         MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), EntitiesData.QUAD);
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.QUAD);
         assertThat(unit.canHarvest(), is(false));
     }
     

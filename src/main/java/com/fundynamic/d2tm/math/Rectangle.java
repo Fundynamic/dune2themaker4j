@@ -8,6 +8,10 @@ public class Rectangle {
     private Vector2D topLeft;
     private Vector2D bottomRight;
 
+    public static Rectangle create(Coordinate absTopLeftInPixels, Coordinate absBottomRightInPixels) {
+        return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
+    }
+
     public static Rectangle create(Vector2D absTopLeftInPixels, Vector2D absBottomRightInPixels) {
         return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
     }

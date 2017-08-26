@@ -9,6 +9,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Predicate;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
+import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
@@ -79,8 +80,8 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
     }
 
     private Set<Entity> getEntitiesWithinDraggedRectangle(EntityRepository entityRepository) {
-        Vector2D absDragVec = battleField.translateViewportCoordinateToAbsoluteMapCoordinate(dragCoordinates);
-        Vector2D absStartingVec = battleField.translateViewportCoordinateToAbsoluteMapCoordinate(startingCoordinates);
+        Coordinate absDragVec = battleField.translateViewportCoordinateToAbsoluteMapCoordinate(dragCoordinates);
+        Coordinate absStartingVec = battleField.translateViewportCoordinateToAbsoluteMapCoordinate(startingCoordinates);
         final Rectangle rectangle = Rectangle.create(absDragVec, absStartingVec);
 
         return entityRepository.findMovableWithinRectangleForPlayer(mouse.getControllingPlayer(), rectangle);

@@ -8,7 +8,9 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
+import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Graphics;
@@ -29,7 +31,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
     private int playerOneBareEntitiesCount;
     private int destroyers;
     private int moveableUnitsOfPlayerOne;
-    private Coordinate topLeftFirstQuad;
+    private MapCoordinate topLeftFirstQuad;
     private Unit quad;
 
     @Before
@@ -42,12 +44,12 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         player = new Player("Player one", Recolorer.FactionColor.GREEN);
 
         // player one has 4 units and 2 structures
-        topLeftFirstQuad = Coordinate.create(320, 320);
+        topLeftFirstQuad = MapCoordinate.create(10, 10);
         quad = makeUnit(player, topLeftFirstQuad, "QUAD");
         entitiesSet.add(quad);
-        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(64, 0)), "QUAD"));
-        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(0, 64)), "QUAD"));
-        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(Coordinate.create(640, 640)), "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(MapCoordinate.create(2, 0)), "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(MapCoordinate.create(0, 2)), "QUAD"));
+        entitiesSet.add(makeUnit(player, topLeftFirstQuad.add(MapCoordinate.create(20, 20)), "QUAD"));
 
         playerOneUnitCount = 4;
         moveableUnitsOfPlayerOne = 4;
@@ -124,9 +126,10 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         Set<Entity> result = entitiesSet.filter(
                 Predicate.builder().withinArea(
                         Rectangle.create(
-                                topLeftFirstQuad.min(Coordinate.create(1,1)),
+                                topLeftFirstQuad.min(MapCoordinate.create(1, 1)).toCoordinate(),
                                 topLeftFirstQuad
-                                        .add(Coordinate.create(64, 64)) // topleft of quads area
+                                        .add(MapCoordinate.create(2, 2)) // topleft of quads area
+                                        .toCoordinate() // to absolute coordinates
                                         .addHalfTile() // make sure we are at least over the center of the unit
                                         .add(Coordinate.create(1,1))) // and over it
                         )

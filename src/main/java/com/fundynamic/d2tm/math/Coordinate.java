@@ -56,4 +56,9 @@ public class Coordinate extends Vector2D {
     public static Coordinate create(Vector2D vector2D) {
         return new Coordinate(vector2D.getX(), vector2D.getY());
     }
+
+    @Override
+    public String toString() {
+        return "Coordinate{x=" +getX() + ",y=" +getY() + ",mapCoordinate=" + mapCoordinate + '}';
+    }
 }

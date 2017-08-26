@@ -275,25 +275,32 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                         collect(Collectors.toSet());
 
         float distanceToTarget = distanceTo(target);
+        log("Distance to target is " + distanceToTarget);
 
         MapCoordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
 
         if (bestCoordinate == null) {
+            log("Unable to determine best next coordinate to move to.");
             // almost there
             // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
             // occupied then stop? (5 because that is 'half surrounded')
             // TODO: even better than previous todo, implement path finding...
-            if (distanceToTarget <= (TILE_SIZE + 2)) {
+            int someArbitraryDistance = TILE_SIZE + 2;
+            if (distanceToTarget <= someArbitraryDistance) {
+                log("Distance to target is < " + someArbitraryDistance + " so we keep at our position.");
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
                 bestCoordinate = coordinate.toMapCoordinate();
             } else {
+                float distance = distanceToTarget + TILE_SIZE;
+                log("Distance to target is > " + someArbitraryDistance + " so are going to search for a next best cell within distance < " + distance);
                 // fall back if we have to take a 'detour'
-                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + TILE_SIZE);
+                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distance);
             }
         }
 
         if (bestCoordinate != null) {
+            log("Found next MapCoordinate: " + bestCoordinate);
             return bestCoordinate;
         }
         log("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
@@ -317,7 +324,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public boolean hasNoNextCellToMoveTo() {
-        return nextTargetToMoveTo == coordinate;
+        return nextTargetToMoveTo.equals(coordinate);
     }
 
     @Override

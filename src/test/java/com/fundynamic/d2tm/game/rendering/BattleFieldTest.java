@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class BattleFieldTest extends AbstractD2TMTest {
 
     @Test
     public void renderSmokeTest() throws SlickException {
-        makeUnit(player, Coordinate.create(2, 2), "QUAD");
+        makeUnit(player, MapCoordinate.create(2, 2), "QUAD");
         map.revealAllShroudFor(player);
 
         battleField.render(graphics);

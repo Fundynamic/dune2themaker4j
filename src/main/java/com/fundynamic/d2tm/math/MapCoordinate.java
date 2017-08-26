@@ -34,6 +34,10 @@ public class MapCoordinate extends Vector2D {
         return new MapCoordinate(super.add(other));
     }
 
+    public MapCoordinate min(Vector2D other) {
+        return new MapCoordinate(super.min(other));
+    }
+
     public MapCoordinate add(float correctX, float correctY) {
         return add(correctX, correctY);
     }
@@ -80,5 +84,10 @@ public class MapCoordinate extends Vector2D {
             return mapCoordinate.getXAsInt() == getXAsInt() && mapCoordinate.getYAsInt() == getYAsInt();
         }
         return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        return "MapCoordinate{" + this.getXAsInt() + "," + getYAsInt() + "}";
     }
 }

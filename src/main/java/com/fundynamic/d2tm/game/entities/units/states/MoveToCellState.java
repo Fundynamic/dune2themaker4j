@@ -85,7 +85,7 @@ public class MoveToCellState extends UnitState {
 
         // Arrived at intended next target cell
         if (!vecToAdd.isZero()) {
-            unit.log(" arrived at cell");
+            unit.log("Arrived at cell");
             unit.arrivedAtCell(coordinate.add(vecToAdd));
         } else {
 //            unit.log("My offset is " + vecToAdd);

@@ -39,7 +39,8 @@ public class GoalResolverState extends UnitState {
             // still have a target, keep moving
             // we can get here when a unit is mid-way moving and is ordered to move somewhere else,
             // which will set the unit state to the GoalResolverState again.
-            unit.moveToCell(Coordinate.create(unit.getNextTargetToMoveTo()));
+            unit.log("Has next cell to move to " + unit.getNextTargetToMoveTo());
+            unit.moveToCell(unit.getNextTargetToMoveTo());
         }
     }
 

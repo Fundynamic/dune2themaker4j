@@ -32,7 +32,7 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
 
     @Test
     public void leftClickedSelectsUnitOnHoverCell() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
+        Unit unit = makeUnit(player, MapCoordinate.create(1, 1), EntitiesData.QUAD);
         assertThat(unit.isSelected(), is(false));
 
         movableSelectedMouse.mouseMovedToCell(map.getCell(1, 1)); // equals 32, 32
@@ -61,11 +61,11 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
     @Test
     public void attacksUnitOfOtherPlayer() {
         // create player for unit and select it
-        Unit unit = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
+        Unit unit = makeUnit(player, MapCoordinate.create(1, 1), EntitiesData.QUAD);
         unit.select();
 
         Player enemy = new Player("Enemy", Recolorer.FactionColor.RED);
-        Unit enemyUnit = makeUnit(enemy, Coordinate.create(64, 64), EntitiesData.QUAD);
+        Unit enemyUnit = makeUnit(enemy, MapCoordinate.create(2, 2), EntitiesData.QUAD);
         map.revealShroudFor(enemyUnit);
 
         Cell cell = map.getCellByAbsoluteMapCoordinates(Coordinate.create(64, 64));

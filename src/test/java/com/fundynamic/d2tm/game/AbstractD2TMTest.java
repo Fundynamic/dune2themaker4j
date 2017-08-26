@@ -314,7 +314,7 @@ public abstract class AbstractD2TMTest {
      * @return {@link Unit} constructed
      */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
-        Unit unit = makeUnit(player, coordinate, EntitiesData.QUAD);
+        Unit unit = makeUnit(player, coordinate.toMapCoordinate(), EntitiesData.QUAD);
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
@@ -331,24 +331,7 @@ public abstract class AbstractD2TMTest {
      * @return {@link Unit} constructed
      */
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Coordinate.create(0, 0), EntitiesData.QUAD);
-    }
-
-    /**
-     * <p>
-     *     Creates a unit for player at coordinate and given ID. Where ID is the string representation
-     *     of an {@link EntityData}.
-     * </p>
-     * @param player
-     * @param coordinate
-     * @param id
-     * @return {@link Unit} constructed
-     */
-    @Deprecated
-    public Unit makeUnit(Player player, Coordinate coordinate, String id) {
-        if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
-        if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
-        return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, id, player);
+        return makeUnit(player, MapCoordinate.create(0, 0), EntitiesData.QUAD);
     }
 
     /**
@@ -362,7 +345,9 @@ public abstract class AbstractD2TMTest {
      * @return {@link Unit} constructed
      */
     public Unit makeUnit(Player player, MapCoordinate mapCoordinate, String id) {
-        return makeUnit(player, mapCoordinate.toCoordinate(), id);
+        if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
+        if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
+        return (Unit) entityRepository.placeOnMap(mapCoordinate.toCoordinate(), EntityType.UNIT, id, player);
     }
 
     // PROJECTILE
