@@ -78,17 +78,8 @@ public class MiniMap extends GuiElement {
         for(Entity entity : entityRepository.findAliveEntitiesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
                 int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
-                switch (entity.getPlayer().getFaction()) {
-                    case RED:
-                        buffer.setRGBA(x, y, 255, 0, 0, 255);
-                        break;
-                    case GREEN:
-                        buffer.setRGBA(x, y, 0, 255, 0, 255);
-                        break;
-                    case BLUE:
-                        buffer.setRGBA(x, y, 0, 0, 255, 255);
-                        break;
-                }
+                Color factionColor = entity.getPlayer().getFactionColor();
+                buffer.setRGBA(x, y, factionColor.getRed(), factionColor.getGreen(), factionColor.getBlue(), 255);
             }
         }
 

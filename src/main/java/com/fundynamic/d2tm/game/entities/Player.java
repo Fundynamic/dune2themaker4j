@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,19 @@ public class Player implements Updateable {
 
     public Faction getFaction() {
         return faction;
+    }
+
+    public Color getFactionColor() {
+        switch (faction) {
+            case RED:
+                return Color.red;
+            case BLUE:
+                return Color.blue;
+            case GREEN:
+                return Color.green;
+            default:
+                throw new IllegalStateException("Unknown faction: " + faction);
+        }
     }
 
     public boolean isShrouded(Vector2D position) {
