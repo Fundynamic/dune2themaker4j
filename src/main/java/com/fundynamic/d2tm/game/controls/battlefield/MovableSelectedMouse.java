@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.behaviors.Destroyer;
 import com.fundynamic.d2tm.game.behaviors.Harvester;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.NullEntity;

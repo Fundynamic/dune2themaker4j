@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.utils.StringUtils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.ini4j.Profile;
 
 import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader.*;
