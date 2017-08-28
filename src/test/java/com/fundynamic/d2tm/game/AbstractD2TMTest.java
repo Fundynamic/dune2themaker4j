@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
 public abstract class AbstractD2TMTest {
 
     @Test
-    public void CheckDebugFlagIsNotTrue() {
+    public void checkDebugFlagIsNotTrue() {
         Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
     }
 
