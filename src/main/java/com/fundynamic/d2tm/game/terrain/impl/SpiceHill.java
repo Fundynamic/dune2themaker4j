@@ -3,8 +3,11 @@ package com.fundynamic.d2tm.game.terrain.impl;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Harvestable;
 import com.fundynamic.d2tm.graphics.Theme;
+import org.newdawn.slick.Color;
 
 public class SpiceHill extends DuneTerrain implements Harvestable {
+
+    private static final Color terrainColor = new Color(170, 75, 25);
 
     private final Theme theme;
     private Cell cell;
@@ -22,6 +25,11 @@ public class SpiceHill extends DuneTerrain implements Harvestable {
         return TERRAIN_SPICE_HILL;
     }
 
+    @Override
+    public Color getTerrainColor() {
+        return terrainColor;
+    }
+
     public float harvest(float amount) {
         if (spice > amount) {
             spice -= amount;
@@ -33,5 +41,4 @@ public class SpiceHill extends DuneTerrain implements Harvestable {
         cell.smoothSurroundingCells();
         return remaining;
     }
-
 }

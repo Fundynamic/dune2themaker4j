@@ -17,6 +17,7 @@ import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.MiniMap;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -119,11 +120,12 @@ public class PlayingState extends BasicGameState {
 
         // minimap
         guiComposite.addGuiElement(
-                new DummyGuiElement(
+                new MiniMap(
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR
+                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR,
+                        map
                 )
         );
 
