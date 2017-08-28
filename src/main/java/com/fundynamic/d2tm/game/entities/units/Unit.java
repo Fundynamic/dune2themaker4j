@@ -697,8 +697,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return !harvested.isZero();
     }
 
-    public void depositSpice(float deltaInSeconds) {
-        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds);
+    public void depositResource(float deltaInSeconds) {
+        float depositSpeed = deltaInSeconds;
+        if (player.isLowPower()) {
+            depositSpeed /= 2;
+        }
+        float amountToDeposit = entityData.getRelativeDepositSpeed(depositSpeed);
         this.harvested.reduce(amountToDeposit);
         this.player.addCredits(amountToDeposit);
     }
