@@ -14,22 +14,22 @@ import static org.mockito.Mockito.mock;
 public class IsWithinAnotherEntityTest extends AbstractD2TMTest{
 
     @Test
-    public void WithinOther() {
+    public void withinOther() {
         EntityData structure = new EntityData();
         structure.type = EntityType.STRUCTURE;
         structure.setWidth(64);
         structure.setHeight(64);
 
         EntityData unit = new EntityData();
-        structure.type = EntityType.UNIT;
-        structure.setWidth(32);
-        structure.setHeight(32);
+        unit.type = EntityType.UNIT;
+        unit.setWidth(32);
+        unit.setHeight(32);
 
         Coordinate coordinate = Coordinate.create(32, 32);
         TestableEntity refinery = new TestableEntity(coordinate, mock(SpriteSheet.class), structure, player, entityRepository).
                 setName("Refinery");
 
-        TestableEntity harvester = new TestableEntity(coordinate, mock(SpriteSheet.class), structure, player, entityRepository).
+        TestableEntity harvester = new TestableEntity(coordinate, mock(SpriteSheet.class), unit, player, entityRepository).
                 setName("Harvester");
 
         harvester.enterOtherEntity(refinery);

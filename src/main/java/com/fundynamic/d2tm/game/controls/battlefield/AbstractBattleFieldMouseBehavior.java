@@ -24,8 +24,6 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
     protected Vector2D mouseCoordinates;
 
-    private Entity lastSelectedEntity;
-
     private Cell hoverCell;
 
     public AbstractBattleFieldMouseBehavior(BattleField battleField) {

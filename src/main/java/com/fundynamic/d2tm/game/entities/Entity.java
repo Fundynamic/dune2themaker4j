@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * </p>
  * <h2>State</h2>
  * <p>
- *     An entity has state, usually a lifespan or somesort, therefor it is {@link Updateable}. The {@link #update(float)} method
+ *     An entity has state, usually a lifespan or some sort, therefor it is {@link Updateable}. The {@link #update(float)} method
  *     is called by the {@link com.fundynamic.d2tm.game.state.PlayingState#update(GameContainer, StateBasedGame, int)} method.
  * </p>
  * <h2>Rendering:</h2>

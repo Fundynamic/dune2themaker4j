@@ -20,8 +20,6 @@ public class Player implements Updateable {
     private float credits;
     private int animatedCredits;
 
-    private float creditsTimer = 0F;
-
     public Player(String name, Recolorer.FactionColor factionColor) {
         this(name, factionColor, 2000);
     }
@@ -117,18 +115,6 @@ public class Player implements Updateable {
 
     @Override
     public void update(float deltaInSeconds) {
-//        float desiredCredits = Math.round(this.credits);
         animatedCredits = (int) credits;
-//        if (animatedCredits != desiredCredits) {
-//            creditsTimer += deltaInSeconds;
-//            while (creditsTimer > 0.0F && animatedCredits != desiredCredits) {
-//                creditsTimer -= 0.01;
-//                if (animatedCredits < desiredCredits) {
-//                    animatedCredits += 1;
-//                } else {
-//                    animatedCredits -= 1;
-//                }
-//            }
-//        }
     }
 }

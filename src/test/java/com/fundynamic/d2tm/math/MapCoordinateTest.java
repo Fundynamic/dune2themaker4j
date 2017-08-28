@@ -62,8 +62,8 @@ public class MapCoordinateTest {
 
     @Test
     public void equalsTo() {
-        MapCoordinate mapCoordinate = MapCoordinate.create(10, 10);
-        Assert.assertEquals(MapCoordinate.create(10, 10), mapCoordinate);
+        MapCoordinate mapCoordinate = create(10, 10);
+        Assert.assertEquals(create(10, 10), mapCoordinate);
         Assert.assertEquals(Coordinate.create(10*TILE_SIZE, 10*TILE_SIZE).toMapCoordinate(), mapCoordinate);
     }
 

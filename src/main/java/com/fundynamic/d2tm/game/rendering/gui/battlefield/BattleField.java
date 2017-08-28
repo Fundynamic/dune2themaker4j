@@ -125,10 +125,6 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         }
     }
 
-    public void drawLine(Entity from, Entity to) {
-
-    }
-
     public void update(float delta) {
         Vector2D translation = velocity.scale(delta);
         viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector.add(translation));

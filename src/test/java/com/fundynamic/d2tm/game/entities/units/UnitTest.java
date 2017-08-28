@@ -20,10 +20,8 @@ import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.newdawn.slick.SlickException;
 
 import java.util.List;
@@ -55,7 +53,7 @@ public class UnitTest extends AbstractD2TMTest {
         int damageInHitpoints = 5;
         unit.takeDamage(damageInHitpoints, null);
 
-        Assert.assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
+        assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
     }
 
     // FLAKY TEST: Sometimes fails probably because 'random cell to move to' is the same as it was now...
@@ -66,7 +64,7 @@ public class UnitTest extends AbstractD2TMTest {
 
         cpuUnit.takeDamage(1, null); // null means unknown entity
 
-        Assert.assertTrue(cpuUnit.shouldMove());
+        assertTrue(cpuUnit.shouldMove());
     }
 
     @Test
@@ -78,8 +76,8 @@ public class UnitTest extends AbstractD2TMTest {
 
         unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
 
-        Assert.assertTrue(unit.shouldAttack());
-        Assert.assertEquals(humanUnit, unit.getEntityToAttack());
+        assertTrue(unit.shouldAttack());
+        assertEquals(humanUnit, unit.getEntityToAttack());
     }
 
     @Test
@@ -259,7 +257,7 @@ public class UnitTest extends AbstractD2TMTest {
         assertThat(harvesterEntityData.isHarvester, is(true));
 
         // make an all 'spice' map, with more resources than the harvester capacity
-        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)) {
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(mock(Theme.class)) {
             @Override
             public int getSpiceAmount() {
                 return harvesterEntityData.harvestCapacity + 1;
@@ -285,7 +283,7 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void canHarvestIsFalseWhenNotHarvester() {
         // make an all spice map
-        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(Mockito.mock(Theme.class)));
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(mock(Theme.class)));
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
 
         Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.QUAD);
@@ -300,7 +298,7 @@ public class UnitTest extends AbstractD2TMTest {
             unit.returnToRefinery(constYard);
             fail("Expected illegal argument exception");
         } catch (IllegalArgumentException iae) {
-            Assert.assertEquals("Can only return to refinery type of entity", iae.getMessage());
+            assertEquals("Can only return to refinery type of entity", iae.getMessage());
         }
     }
 
@@ -312,7 +310,7 @@ public class UnitTest extends AbstractD2TMTest {
             unit.returnToRefinery(refinery);
             fail("Expected illegal state exception");
         } catch (IllegalStateException ise) {
-            Assert.assertEquals("Only harvesters can return to a refinery", ise.getMessage());
+            assertEquals("Only harvesters can return to a refinery", ise.getMessage());
         }
     }
 
@@ -325,10 +323,10 @@ public class UnitTest extends AbstractD2TMTest {
         unit.returnToRefinery(refinery);
 
         Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
-        Assert.assertSame(who, unit);
+        assertSame(who, unit);
 
-        Assert.assertTrue(unit.getState() instanceof GoalResolverState);
-        Assert.assertEquals(unit.getTarget(), refinery.getCoordinate());
+        assertTrue(unit.getState() instanceof GoalResolverState);
+        assertEquals(unit.getTarget(), refinery.getCoordinate());
     }
 
     @Test
@@ -342,28 +340,28 @@ public class UnitTest extends AbstractD2TMTest {
         harvester1.returnToRefinery(refinery);
 
         Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
-        Assert.assertSame(who, harvester2);
+        assertSame(who, harvester2);
     }
 
     @Test
     public void isCellPassableForMeIsTrueWhenNoOtherUnitIsPresent() {
-        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
-        assertTrue(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
+        Unit harvester = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        assertTrue(harvester.isCellPassableForMe(MapCoordinate.create(3, 3)));
     }
 
     @Test
     public void isCellPassableForMeIsFalseWhenOtherEntityOccupiesCell() {
         Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
-        Structure refinery = makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
+        makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
         assertFalse(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
     }
 
     @Test
     public void isCellPassableForMeIsTrueWhenEntityThatOccupiesCellIsTheEntityToReturnTo() {
-        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Unit harvester = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
         Structure refinery = makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
-        harvester1.returnToRefinery(refinery);
-        assertTrue(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
+        harvester.returnToRefinery(refinery);
+        assertTrue(harvester.isCellPassableForMe(MapCoordinate.create(3, 3)));
     }
 
     public static void updateUnitTimesHundredMilis(Unit unit, int times) {
