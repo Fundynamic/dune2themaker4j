@@ -72,6 +72,9 @@ public class EntitiesDataReaderTest {
         // therefor we do times 3!
         float value = ((TILE_SIZE) * 3) + HALF_TILE; // we can do half-tile because it is a 64x64 structure
         assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
+
+        // constyard not the default - choose to change this because Windtrap tests elsewhere depend on 25%
+        assertThat(constyard.minimumPowerProductionPercentage, is(0.15f));
     }
 
     @Test
@@ -122,6 +125,7 @@ public class EntitiesDataReaderTest {
         assertThat(windtrap.buildCost, is(250));
         assertThat(windtrap.powerProduction, is(200));
         assertThat(windtrap.powerConsumption, is(0));
+        assertThat(windtrap.minimumPowerProductionPercentage, is(0.25f));
     }
 
     @Test

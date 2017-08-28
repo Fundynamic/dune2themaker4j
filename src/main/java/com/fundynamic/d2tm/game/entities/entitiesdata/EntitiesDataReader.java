@@ -15,6 +15,7 @@ import java.io.InputStream;
  */
 public class EntitiesDataReader { // TODO: Rename to INIEntitiesDataReader? (allow other formats?)
 
+    public static final String INI_KEYWORD_ON_MINIMUM_POWER_PRODUCTION = "MinimumPowerProduction";
     public static final String INI_KEYWORD_POWER_CONSUMPTION = "PowerConsumption";
     public static final String INI_KEYWORD_POWER_PRODUCTION = "PowerProduction";
     public static final String INI_KEYWORD_ON_PLACEMENT_SPAWN = "OnPlacementSpawn";

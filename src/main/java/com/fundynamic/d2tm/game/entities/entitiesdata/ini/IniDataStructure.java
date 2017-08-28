@@ -32,10 +32,13 @@ public class IniDataStructure {
     public int powerConsumption;
     public int powerProduction;
 
+    public float minimumPowerProduction;
+
     public IniDataStructure() {
     }
 
     public IniDataStructure(Profile.Section struct) {
+        this.minimumPowerProduction = struct.get(INI_KEYWORD_ON_MINIMUM_POWER_PRODUCTION, Float.class, 0.25f);
         this.onPlacementSpawn = struct.get(INI_KEYWORD_ON_PLACEMENT_SPAWN, String.class, EntitiesData.UNKNOWN);
         this.refinery = struct.get(INI_KEYWORD_REFINERY, Boolean.class, false);
         this.image = struct.get(INI_KEYWORD_IMAGE, String.class, null);

@@ -202,6 +202,7 @@ public class EntitiesData {
         entityData.onPlacementSpawnUnitId = getAndEnsureUnitId(iniDataStructure.onPlacementSpawn, id);
         entityData.powerConsumption = iniDataStructure.powerConsumption;
         entityData.powerProduction = iniDataStructure.powerProduction;
+        entityData.minimumPowerProductionPercentage = iniDataStructure.minimumPowerProduction;
 
         // The buildRange is (for now) determined by the size of the structure.
         // Because the range is calculated from the center of the structure.
