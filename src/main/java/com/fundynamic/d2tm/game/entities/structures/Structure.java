@@ -109,7 +109,6 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection.update(deltaInSeconds);
 
-        //
         float buildSpeed = deltaInSeconds;
         if (player.isLowPower()) {
             buildSpeed /= 2;

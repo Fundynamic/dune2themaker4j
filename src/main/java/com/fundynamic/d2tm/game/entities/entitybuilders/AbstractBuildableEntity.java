@@ -133,7 +133,7 @@ public abstract class AbstractBuildableEntity implements Updateable {
     }
 
 
-    public int getPowerResult() {
+    public int getPowerBalance() {
         return entityData.powerProduction - entityData.powerConsumption;
     }
 }
