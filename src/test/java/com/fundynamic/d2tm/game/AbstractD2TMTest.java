@@ -127,7 +127,7 @@ public abstract class AbstractD2TMTest {
         Graphics bufferGraphics = mock(Graphics.class);
         when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
 
-        Vector2D guiAreas = Vector2D.create(PlayingState.WIDTH_OF_SIDEBAR, (PlayingState.HEIGHT_OF_TOP_BAR + PlayingState.HEIGHT_OF_BOTTOM_BAR));
+        Vector2D guiAreas = Vector2D.create(PlayingState.WIDTH_OF_SIDEBAR, PlayingState.HEIGHT_OF_TOP_BAR);
         battlefieldSize = getResolution().min(guiAreas);
 
         battleField = new BattleField(
@@ -148,7 +148,7 @@ public abstract class AbstractD2TMTest {
                 screenResolution.getXAsInt() - PlayingState.WIDTH_OF_SIDEBAR,
                 PlayingState.HEIGHT_OF_TOP_BAR,
                 PlayingState.WIDTH_OF_SIDEBAR,
-                screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_BOTTOM_BAR + PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
+                screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
         );
 
         guiComposite.addGuiElement(sidebar);

@@ -54,7 +54,6 @@ public class PlayingState extends BasicGameState {
     private Predicate destroyedEntitiesPredicate;// pixels
 
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
-    public static final int HEIGHT_OF_BOTTOM_BAR = 32;
     public static final int HEIGHT_OF_MINIMAP = 160;
     public static final int WIDTH_OF_SIDEBAR = 160;
 
@@ -114,7 +113,7 @@ public class PlayingState extends BasicGameState {
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_TOP_BAR,
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
+                        SCREEN_HEIGHT - (HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
                 )
         );
 
@@ -122,15 +121,12 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(
                 new MiniMap(
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
+                        SCREEN_HEIGHT - HEIGHT_OF_MINIMAP,
                         WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_MINIMAP,
                         map
                 )
         );
-
-        // bottombar
-        guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));
         input.addKeyListener(new DebugKeysListener(battlefield, human, entityRepository));
@@ -147,7 +143,7 @@ public class PlayingState extends BasicGameState {
             float moveSpeed = 30 * TILE_SIZE;
             Vector2D viewingVector = Vector2D.create(32, 32);
 
-            Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, (HEIGHT_OF_TOP_BAR + HEIGHT_OF_BOTTOM_BAR));
+            Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR);
             Vector2D viewportResolution = getResolution().min(guiAreas);
 
             // start drawing below the top gui bar
