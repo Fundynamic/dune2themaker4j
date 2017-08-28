@@ -1,8 +1,8 @@
 package com.fundynamic.d2tm.game.map;
 
 
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.graphics.Shroud;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public class RevealShroudOnMapTest {
 
     @Before
     public void setUp() throws SlickException {
-        player = new Player("John Doe", Recolorer.FactionColor.RED);
+        player = new Player("John Doe", Faction.RED);
         map = new Map(new Shroud(mock(Image.class), TILE_SIZE), MAP_WIDTH, MAP_HEIGHT);
     }
 

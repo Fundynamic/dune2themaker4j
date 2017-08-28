@@ -2,10 +2,7 @@ package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
@@ -13,7 +10,6 @@ import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
@@ -76,8 +72,8 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        Player human = new Player("Human", Recolorer.FactionColor.GREEN);
-        Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
+        Player human = new Player("Human", Faction.GREEN);
+        Player cpu = new Player("CPU", Faction.RED);
 
         if (Game.RECORDING_VIDEO) {
             human.setCredits(2200);

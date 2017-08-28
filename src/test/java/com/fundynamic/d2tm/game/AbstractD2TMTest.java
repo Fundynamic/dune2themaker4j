@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
@@ -90,8 +91,8 @@ public abstract class AbstractD2TMTest {
 
     protected GuiComposite guiComposite;
 
-    protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-    protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
+    protected Player player = new Player("Stefan", Faction.BLUE);
+    protected Player cpu = new Player("CPU", Faction.BLUE);
 
     protected Map map;
     protected BattleField battleField;
@@ -375,7 +376,7 @@ public abstract class AbstractD2TMTest {
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
         Image image = mock(Image.class);
         Recolorer recolorer = mock(Recolorer.class);
-        when(recolorer.createCopyRecoloredToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        when(recolorer.createCopyRecoloredToFaction(any(Image.class), any(Faction.class))).thenReturn(image);
         return new EntityRepository(map, recolorer, entitiesData) {
             // used by Projectile and Particle
             @Override

@@ -5,7 +5,6 @@ import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
 import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.units.Unit;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -40,7 +39,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
         entitiesSet = new EntitiesSet();
 
-        player = new Player("Player one", Recolorer.FactionColor.GREEN);
+        player = new Player("Player one", Faction.GREEN);
 
         // player one has 4 units and 2 structures
         topLeftFirstQuad = MapCoordinate.create(10, 10);
@@ -58,7 +57,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
         entitiesSet.add(makeStructure(player, 200));
         playerOneStructureCount = 2;
 
-        Player playerTwo = new Player("Player two", Recolorer.FactionColor.RED);
+        Player playerTwo = new Player("Player two", Faction.RED);
 
         // player two has 3 units and 3 structures
         entitiesSet.add(makeUnit(playerTwo));

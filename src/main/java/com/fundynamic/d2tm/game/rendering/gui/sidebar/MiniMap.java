@@ -78,7 +78,7 @@ public class MiniMap extends GuiElement {
         for(Entity entity : entityRepository.findAliveEntitiesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
                 int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
-                switch (entity.getPlayer().getFactionColor()) {
+                switch (entity.getPlayer().getFaction()) {
                     case RED:
                         buffer.setRGBA(x, y, 255, 0, 0, 255);
                         break;

@@ -126,7 +126,7 @@ public class EntityRepository {
         Image originalImage = entityData.image;
 
         if (entityData.isTypeStructure()) {
-            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             createdEntity = new Structure(
                     startCoordinate,
                     makeSpriteSheet(entityData, recoloredImage),
@@ -136,7 +136,7 @@ public class EntityRepository {
             );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
-            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             createdEntity = new Unit(
                     map,
                     startCoordinate,
@@ -156,7 +156,7 @@ public class EntityRepository {
         } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
             if (entityData.recolor) {
-                recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+                recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             }
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
             createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);
