@@ -55,7 +55,7 @@ public class PlayingState extends BasicGameState {
 
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
     public static final int HEIGHT_OF_BOTTOM_BAR = 32;
-    public static final int HEIGHT_OF_MINIMAP = 128;
+    public static final int HEIGHT_OF_MINIMAP = 160;
     public static final int WIDTH_OF_SIDEBAR = 160;
 
     private MapEditor mapEditor;
@@ -124,7 +124,7 @@ public class PlayingState extends BasicGameState {
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR,
+                        HEIGHT_OF_MINIMAP,
                         map
                 )
         );

@@ -1,23 +1,35 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ImageBuffer;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
+
 public class MiniMap extends GuiElement {
 
     private final Map map;
     private Image unscaledMiniMapImage;
+    private Rectangle renderPosition;
 
     public MiniMap(int x, int y, int width, int height, Map map) {
         super(x, y, width, height);
+
         this.map = map;
+        this.renderPosition = getRenderPosition(map);
         this.unscaledMiniMapImage = renderTerrainMiniMap(map);
+    }
+
+    private Rectangle getRenderPosition(Map map) {
+        Vector2D mapDimensions = new Vector2D(map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE);
+        return this.scaleContainCenter(mapDimensions);
     }
 
     @Override
@@ -38,13 +50,26 @@ public class MiniMap extends GuiElement {
             }
         }
 
-        return buffer.getImage();
+        Image image = buffer.getImage();
+        image.setFilter(Image.FILTER_NEAREST);
+        return image;
     }
 
     @Override
     public void render(Graphics graphics) {
-        Vector2D topLeft = getTopLeft();
-        graphics.drawImage(unscaledMiniMapImage, topLeft.getX(), topLeft.getY());
+        // clear background
+        graphics.setColor(Color.black);
+        graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
+
+        // render terrain
+        unscaledMiniMapImage.draw(
+            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
+                renderPosition.getWidth(), renderPosition.getHeight());
+
+        if (Game.DEBUG_INFO) {
+            graphics.drawString("X: " + renderPosition.getTopLeftX() + ", Y:" + renderPosition.getTopLeftY(), getTopLeftX(), getTopLeftY());
+            graphics.drawString("W: " + renderPosition.getWidth() + ", H:" + renderPosition.getHeight(), getTopLeftX(), getTopLeftY() + 15);
+        }
     }
 
     @Override

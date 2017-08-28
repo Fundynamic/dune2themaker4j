@@ -42,4 +42,52 @@ public class RectangleTest {
         Assert.assertTrue(rec.isVectorWithin(Vector2D.create(0, 0)));
     }
 
+    @Test
+    public void scaleContainCenterSameAspectRatioAndSameDimensionsAndOnOrigin() {
+        Rectangle rec = new Rectangle(0, 0, 100, 100);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(100, 100));
+        Assert.assertEquals(new Rectangle(0, 0, 100, 100), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameAspectRatioAndSameDimensionsAndNotOnOrigin() {
+        Rectangle rec = new Rectangle(50, 50, 150, 150);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(100, 100));
+        Assert.assertEquals(new Rectangle(50, 50, 150, 150), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameAspectRatioAndDifferentDimensions() {
+        Rectangle rec = new Rectangle(0, 0, 50, 50);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(100, 100));
+        Assert.assertEquals(new Rectangle(0, 0, 50, 50), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameHeightAndOnOrigin() {
+        Rectangle rec = new Rectangle(0, 0, 100, 100);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(50, 100));
+        Assert.assertEquals(new Rectangle(25, 0, 75, 100), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameHeightAndNotOnOrigin() {
+        Rectangle rec = new Rectangle(50, 50, 150, 150);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(50, 100));
+        Assert.assertEquals(new Rectangle(75, 50, 125, 150), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameWidthAndOnOrigin() {
+        Rectangle rec = new Rectangle(0, 0, 100, 100);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(100, 50));
+        Assert.assertEquals(new Rectangle(0, 25, 100, 75), result);
+    }
+
+    @Test
+    public void scaleContainCenterSameWidthAndNotOnOrigin() {
+        Rectangle rec = new Rectangle(50, 50, 150, 150);
+        Rectangle result = rec.scaleContainCenter(new Vector2D(100, 50));
+        Assert.assertEquals(new Rectangle(50, 75, 150, 125), result);
+    }
 }
