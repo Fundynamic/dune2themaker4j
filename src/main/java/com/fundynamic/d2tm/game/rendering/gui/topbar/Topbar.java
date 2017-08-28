@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.math.Vector2D;
 import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 /**
  * Topbar
@@ -14,10 +15,12 @@ import org.newdawn.slick.Graphics;
 public class Topbar extends GuiElement {
 
     private final Player player;
+    private final Image lightningImage;
 
-    public Topbar(int x, int y, int width, int height, Player player) {
+    public Topbar(int x, int y, int width, int height, Player player, Image lightningImage) {
         super(x, y, width, height);
         this.player = player;
+        this.lightningImage = lightningImage;
     }
 
     @Override
@@ -30,10 +33,21 @@ public class Topbar extends GuiElement {
         }
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
 
-        SlickUtils.drawText(graphics, Color.white, "Moneybar", topLeft.getXAsInt(), topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
+        SlickUtils.drawText(graphics, Color.white, "Resources", topLeft.getXAsInt(), topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
 
         String creditsString = String.format("$ %d", player.getAnimatedCredits());
         SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidthAsInt()) - 100, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
+
+        int producing = 350;
+        int consumption = 200;
+        String powerString = String.format("%d > %d", producing, consumption);
+        Color statusColor = Color.white;
+        if (producing < consumption) statusColor = Color.red;
+        if ((producing - 25) < consumption) statusColor = Color.yellow;
+
+        int startX = (topLeft.getXAsInt() + getWidthAsInt()) - 250;
+        lightningImage.draw(startX - 40, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 14);
+        SlickUtils.drawShadowedText(graphics, statusColor, powerString, startX, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
     }
 
     @Override
