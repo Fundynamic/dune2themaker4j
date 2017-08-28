@@ -10,15 +10,15 @@ public class RectangleTest {
     @Test
     public void createsRectangleFromTopLeftToBottomRight() {
         Rectangle rec = Rectangle.create(Vector2D.create(0, 0), Vector2D.create(10, 15));
-        Assert.assertEquals(10, rec.getWidthAsInt());
-        Assert.assertEquals(15, rec.getHeightAsInt());
+        Assert.assertEquals(10, rec.getWidth());
+        Assert.assertEquals(15, rec.getHeight());
     }
 
     @Test
     public void createsRectangleFromBottomRightToTopLeft() {
         Rectangle rec = Rectangle.create(Vector2D.create(10, 15), Vector2D.create(0, 0));
-        Assert.assertEquals(10, rec.getWidthAsInt());
-        Assert.assertEquals(15, rec.getHeightAsInt());
+        Assert.assertEquals(10, rec.getWidth());
+        Assert.assertEquals(15, rec.getHeight());
     }
 
     @Test

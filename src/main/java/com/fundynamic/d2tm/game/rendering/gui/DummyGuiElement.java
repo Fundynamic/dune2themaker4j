@@ -23,7 +23,7 @@ public class DummyGuiElement extends GuiElement {
         } else {
             graphics.setColor(Color.gray);
         }
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
+        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
         SlickUtils.drawText(graphics, Color.white, "DUMMY", topLeft.getXAsInt(), topLeft.getYAsInt());
     }
 

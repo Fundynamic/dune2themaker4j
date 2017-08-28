@@ -83,7 +83,7 @@ public class EntityRepository {
 
     public void placeExplosionWithCenterAt(Coordinate centerCoordinate, Player player, String explosionId) {
         EntityData particle = entitiesData.getParticle(explosionId);
-        Coordinate topLeft = centerCoordinate.min(particle.getHalfSize());
+        Coordinate topLeft = centerCoordinate.min(particle.halfDimensions());
         placeExplosion(topLeft, particle, player);
     }
 

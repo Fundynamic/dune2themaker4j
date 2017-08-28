@@ -2,43 +2,45 @@ package com.fundynamic.d2tm.math;
 
 public class Rectangle {
 
-    private float width;
-    private float height;
+    private int width;
+    private int height;
 
     private Vector2D topLeft;
     private Vector2D bottomRight;
 
     public static Rectangle create(Coordinate absTopLeftInPixels, Coordinate absBottomRightInPixels) {
-        return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
+        return new Rectangle(absTopLeftInPixels.getXAsInt(), absTopLeftInPixels.getYAsInt(),
+                absBottomRightInPixels.getXAsInt(), absBottomRightInPixels.getYAsInt());
     }
 
     public static Rectangle create(Vector2D absTopLeftInPixels, Vector2D absBottomRightInPixels) {
-        return new Rectangle(absTopLeftInPixels.getX(), absTopLeftInPixels.getY(), absBottomRightInPixels.getX(), absBottomRightInPixels.getY());
+        return new Rectangle(absTopLeftInPixels.getXAsInt(), absTopLeftInPixels.getYAsInt(),
+                absBottomRightInPixels.getXAsInt(), absBottomRightInPixels.getYAsInt());
     }
 
     public static Rectangle createWithDimensions(Vector2D absTopLeftInPixels, Vector2D dimensions) {
         return create(absTopLeftInPixels, absTopLeftInPixels.add(dimensions));
     }
 
-    public Rectangle(int x, int y, int width, int height) {
+    public Rectangle(int x, int y, Vector2D dimensions) {
         // cast one to float so the compiler knows we call the constructor below
         // and prevent a circular constructor calling
-        this((float) x, y, x + width, y + height);
+        this(x, y, x + dimensions.getXAsInt(), y + dimensions.getYAsInt());
     }
 
-    public Rectangle(float srcX, float srcY, float destX, float destY) {
+    public Rectangle(int srcX, int srcY, int destX, int destY) {
         this.topLeft = Vector2D.create(Math.min(srcX, destX), Math.min(srcY, destY));
         this.bottomRight = Vector2D.create(Math.max(srcX, destX), Math.max(srcY, destY));
         this.width = Math.abs(srcX - destX);
         this.height = Math.abs(srcY - destY);
     }
 
-    public int getWidthAsInt() {
-        return (int)width;
+    public int getWidth() {
+        return width;
     }
 
-    public int getHeightAsInt() {
-        return (int)height;
+    public int getHeight() {
+        return height;
     }
 
     public boolean isVectorWithin(Vector2D vec) {
@@ -47,11 +49,11 @@ public class Rectangle {
         return result;
     }
 
-    public int getTopLeftXAsInt() {
+    public int getTopLeftX() {
         return topLeft.getXAsInt();
     }
 
-    public int getTopLeftYAsInt() {
+    public int getTopLeftY() {
         return topLeft.getYAsInt();
     }
 
@@ -59,7 +61,7 @@ public class Rectangle {
         return topLeft;
     }
 
-    public Vector2D getSize() {
+    public Vector2D getDimensions() {
         return Vector2D.create(width, height);
     }
 

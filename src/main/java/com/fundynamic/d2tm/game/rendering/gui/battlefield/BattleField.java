@@ -113,7 +113,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                 // at the 'topleft' coordinate
                 float lineWidth = bufferGraphics.getLineWidth();
                 bufferGraphics.setLineWidth(2.0f);
-                bufferGraphics.drawRect(1, 1, getWidthAsInt()-2, getHeightAsInt()-2);
+                bufferGraphics.drawRect(1, 1, getWidth()-2, getHeight()-2);
                 bufferGraphics.setLineWidth(lineWidth);
             }
 
@@ -137,7 +137,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                         viewingVector.min(
                                 Vector2D.create(DOUBLE_TILE_SIZE, DOUBLE_TILE_SIZE)
                         ),
-                        Vector2D.create(getWidthAsInt() + DOUBLE_TILE_SIZE, getHeightAsInt() + DOUBLE_TILE_SIZE)
+                        Vector2D.create(getWidth() + DOUBLE_TILE_SIZE, getHeight() + DOUBLE_TILE_SIZE)
                 );
         List<Entity> entitiesWithinViewport = entityRepository.findEntitiesWithinRectangle(rectangle).toList();
 
@@ -177,8 +177,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         Coordinate viewportCoordinate = translateScreenToViewportCoordinate(mouseCoordinates);
 
         // now substract half of the structure to place, so we make the structure to place center beneath the mouse
-        Vector2D halfSize = entityDataToPlace.getHalfSize();
-        Coordinate topLeftOfEntity = viewportCoordinate.min(halfSize);
+        Vector2D halfDimensions = entityDataToPlace.halfDimensions();
+        Coordinate topLeftOfEntity = viewportCoordinate.min(halfDimensions);
 
         Cell topLeftCellOfEntity = getCellByAbsoluteViewportCoordinate(topLeftOfEntity);
         return topLeftCellOfEntity.getCoordinate();
@@ -257,7 +257,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         if (viewportCoordinates == null) {
             Vector2D drawingVector = getTopLeft();
-            Vector2D viewportDimensions = getSize();
+            Vector2D viewportDimensions = getDimensions();
 
             int snappedX = Math.min(
                     Math.max(newX, drawingVector.getXAsInt()),

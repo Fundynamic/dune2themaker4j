@@ -349,12 +349,8 @@ public class EntityData {
         return centered;
     }
 
-    public Vector2D getHalfSize() {
+    public Vector2D halfDimensions() {
         return Vector2D.create(width / 2, height / 2);
-    }
-
-    public Vector2D getSize() {
-        return Vector2D.create(width, height);
     }
 
     public List<String> getEntityDataKeysToBuild() {

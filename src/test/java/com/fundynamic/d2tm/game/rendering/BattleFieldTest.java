@@ -159,7 +159,7 @@ public class BattleFieldTest extends AbstractD2TMTest {
 
     @Test
     public void stopsMovingDownWhenAtTheBottomEdge() throws SlickException {
-        Vector2D battleFieldSize = battleField.getSize();
+        Vector2D battleFieldSize = battleField.getDimensions();
         float maxYViewportPosition = ((MAP_HEIGHT * TILE_SIZE) - TILE_SIZE) - battleFieldSize.getY();
 
         battleField.setViewingVector(Vector2D.create(64, maxYViewportPosition - 1));
@@ -179,7 +179,7 @@ public class BattleFieldTest extends AbstractD2TMTest {
 
     @Test
     public void stopsMovingRightWhenAtTheRightEdge() throws SlickException {
-        Vector2D battleFieldSize = battleField.getSize();
+        Vector2D battleFieldSize = battleField.getDimensions();
 
         float maxXViewportPosition = ((MAP_WIDTH * TILE_SIZE) - TILE_SIZE) - battleFieldSize.getX();
 
