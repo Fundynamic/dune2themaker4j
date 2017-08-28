@@ -34,7 +34,7 @@ public class TestableEntity extends Entity {
 
     @Override
     public void die() {
-
+        // empty
     }
 
     @Override

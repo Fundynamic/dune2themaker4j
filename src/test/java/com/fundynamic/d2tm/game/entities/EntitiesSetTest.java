@@ -206,6 +206,7 @@ public class EntitiesSetTest extends AbstractD2TMTest {
 
         @Override
         public void die() {
+            // empty
         }
 
         @Override
