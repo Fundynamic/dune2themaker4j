@@ -1,9 +1,13 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.Game;
+import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
@@ -16,15 +20,19 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 public class MiniMap extends GuiElement {
 
     private final Map map;
-    private Image unscaledMiniMapImage;
+    private final EntityRepository entityRepository;
     private Rectangle renderPosition;
+    private Image unscaledTerrainImage;
+    private Image unscaledEntityImage;
 
-    public MiniMap(int x, int y, int width, int height, Map map) {
+    public MiniMap(int x, int y, int width, int height, Map map, EntityRepository entityRepository) {
         super(x, y, width, height);
 
         this.map = map;
+        this.entityRepository = entityRepository;
         this.renderPosition = getRenderPosition(map);
-        this.unscaledMiniMapImage = renderTerrainMiniMap(map);
+        this.unscaledTerrainImage = renderTerrainMiniMap();
+        this.unscaledEntityImage = renderEntityMiniMap();
     }
 
     private Rectangle getRenderPosition(Map map) {
@@ -34,10 +42,11 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void update(float deltaInSeconds) {
-        unscaledMiniMapImage = renderTerrainMiniMap(map);
+        unscaledTerrainImage = renderTerrainMiniMap();
+        unscaledEntityImage = renderEntityMiniMap();
     }
 
-    private Image renderTerrainMiniMap(Map map) {
+    private Image renderTerrainMiniMap() {
         final int width = map.getWidth();
         final int height = map.getHeight();
 
@@ -55,6 +64,33 @@ public class MiniMap extends GuiElement {
         return image;
     }
 
+    private Image renderEntityMiniMap() {
+        final int width = map.getWidth();
+        final int height = map.getHeight();
+
+        ImageBuffer buffer = new ImageBuffer(width, height);
+        for(Entity entity : entityRepository.findAliveEntitiesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
+            for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
+                int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
+                switch (entity.getPlayer().getFactionColor()) {
+                    case RED:
+                        buffer.setRGBA(x, y, 255, 0, 0, 255);
+                        break;
+                    case GREEN:
+                        buffer.setRGBA(x, y, 0, 255, 0, 255);
+                        break;
+                    case BLUE:
+                        buffer.setRGBA(x, y, 0, 0, 255, 255);
+                        break;
+                }
+            }
+        }
+
+        Image image = buffer.getImage();
+        image.setFilter(Image.FILTER_NEAREST);
+        return image;
+    }
+
     @Override
     public void render(Graphics graphics) {
         // clear background
@@ -62,8 +98,11 @@ public class MiniMap extends GuiElement {
         graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
 
         // render terrain
-        unscaledMiniMapImage.draw(
+        unscaledTerrainImage.draw(
             renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
+            renderPosition.getWidth(), renderPosition.getHeight());
+        unscaledEntityImage.draw(
+                renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
                 renderPosition.getWidth(), renderPosition.getHeight());
 
         if (Game.DEBUG_INFO) {
