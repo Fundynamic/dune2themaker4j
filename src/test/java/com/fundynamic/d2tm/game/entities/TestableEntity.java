@@ -33,6 +33,11 @@ public class TestableEntity extends Entity {
     }
 
     @Override
+    public boolean isDestroyed() {
+        return false;
+    }
+
+    @Override
     public void die() {
         // empty
     }

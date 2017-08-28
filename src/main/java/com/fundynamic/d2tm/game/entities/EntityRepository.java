@@ -173,6 +173,10 @@ public class EntityRepository {
     }
 
     public Entity addEntityToList(Entity entity) {
+        if (entity.getPlayer() != null) {
+            // create cyclic reference here!
+            entity.getPlayer().addEntity(entity);
+        }
         lastCreatedEntity = entity;
         entitiesSet.add(entity);
         return entity;

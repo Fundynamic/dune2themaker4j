@@ -65,10 +65,6 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         this.entityData = entityData;
         this.player = player;
         this.entityRepository = entityRepository;
-        if (player != null) {
-            // temporarily, because 'particle' does not belong to a player
-            player.addEntity(this);
-        }
     }
 
     /**
@@ -476,6 +472,19 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
             System.out.println(toStringShort() + " - " + message);
         }
     }
+
+    /**
+     * Returns true when:
+     * 1) the entity no longer lives
+     * 2) the entity no longer serves any purpose
+     *
+     * If true, then the entity will be removed from the EntityRepository list of entities. (state)
+     * This is done in the update() method in the PlayingState class. And will only be done after all entities have
+     * had their 'update' cycle.
+     *
+     * @return boolean
+     */
+    public abstract boolean isDestroyed();
 
     /**
      * Initiate dying of entity.

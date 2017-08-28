@@ -16,7 +16,6 @@ import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -201,7 +200,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
             cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
 
-            if (((Destructible) entityToAttack).isDestroyed()) {
+            if (entityToAttack.isDestroyed()) {
                 // target is destroyed, so stop attacking...
                 entityToAttack = null;
             } else {
@@ -234,7 +233,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         } else {
-            if (((Destructible) entityToAttack).isDestroyed()) {
+            if (entityToAttack.isDestroyed()) {
                 entityToAttack = null;
             } else {
                 moveTo(entityToAttack.getCoordinate());
@@ -431,7 +430,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return coordinate.add(Vector2D.create(correctX, correctY));
     }
 
-    @Override
     public boolean isDestroyed() {
         return state instanceof DeadState;
     }

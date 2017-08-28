@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -22,6 +23,8 @@ public class Player implements Updateable {
 
     private float credits;
     private int animatedCredits;
+    private int totalPowerProduced = 0;
+    private int totalPowerConsumption = 0;
 
     public Player(String name, Recolorer.FactionColor factionColor) {
         this(name, factionColor, 2000);
@@ -58,17 +61,19 @@ public class Player implements Updateable {
 
     public void addEntity(Entity entity) {
         entitiesSet.add(entity);
-        if (entity.getEntityData().powerProduction > 0) {
+        if (entity.getEntityData().producesPower()) {
             powerProducingEntities.add(entity);
         }
-        if (entity.getEntityData().powerConsumption > 0) {
+        if (entity.getEntityData().consumesPower()) {
             powerConsumingEntities.add(entity);
         }
+        calculatePowerProducedAndConsumed();
     }
 
     public boolean removeEntity(Entity entity) {
         if (powerProducingEntities.contains(entity)) powerProducingEntities.remove(entity);
         if (powerConsumingEntities.contains(entity)) powerConsumingEntities.remove(entity);
+        calculatePowerProducedAndConsumed();
         return entitiesSet.remove(entity);
     }
 
@@ -132,10 +137,29 @@ public class Player implements Updateable {
     }
 
     public int getTotalPowerProduced() {
-        return powerProducingEntities.stream().mapToInt(entity -> entity.getPowerProduction()).sum();
+        return totalPowerProduced;
     }
 
     public int getTotalPowerConsumption() {
-        return powerConsumingEntities.stream().mapToInt(entity -> entity.getPowerConsumption()).sum();
+        return totalPowerConsumption;
+    }
+
+    public boolean isLowPower() {
+        return getPowerBalance() < 0;
+    }
+
+    private void calculatePowerProducedAndConsumed() {
+        totalPowerProduced = powerProducingEntities.stream().filter(e->!e.isDestroyed()).mapToInt(e -> e.getPowerProduction()).sum();
+        totalPowerConsumption = powerConsumingEntities.stream().filter(e->!e.isDestroyed()).mapToInt(e -> e.getPowerConsumption()).sum();
+    }
+
+    public void entityTookDamage(Entity entity) {
+        if (entity.getEntityData().producesPower() || entity.getEntityData().consumesPower()) {
+            calculatePowerProducedAndConsumed();
+        }
+    }
+
+    public int getPowerBalance() {
+        return totalPowerProduced - totalPowerConsumption;
     }
 }

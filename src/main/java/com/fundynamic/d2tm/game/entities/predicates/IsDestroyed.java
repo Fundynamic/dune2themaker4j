@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.entities.predicates;
 
-import com.fundynamic.d2tm.game.behaviors.Destructible;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Predicate;
 
@@ -10,7 +9,7 @@ public class IsDestroyed extends Predicate<Entity> {
 
     @Override
     public boolean test(Entity entity) {
-        return entity.isDestructible() && ((Destructible) entity).isDestroyed();
+        return entity.isDestroyed();
     }
 
     @Override

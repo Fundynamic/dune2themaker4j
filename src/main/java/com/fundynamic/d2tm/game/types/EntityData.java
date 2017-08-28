@@ -114,6 +114,8 @@ public class EntityData {
     public int powerConsumption;       // the amount of power this entity consumes when at 100%
     public int powerProduction;       // the amount of power this entity produces when at 100%
 
+    private float minimumPowerProductionPercentage = 0.25f;
+
     public EntityData() {
     }
 
@@ -453,5 +455,37 @@ public class EntityData {
         result = 31 * result + (isRefinery ? 1 : 0);
         result = 31 * result + (onPlacementSpawnUnitId != null ? onPlacementSpawnUnitId.hashCode() : 0);
         return result;
+    }
+
+    public int getPowerProductionBasedOnHitpoints(float actualHitpoints) {
+        return getProductionBasedOnHitPoints(actualHitpoints, this.powerProduction, this.minimumPowerProductionPercentage);
+    }
+
+    /**
+     * Can be used for calculating the amount of 'repair speed', deposit speed, power generation and more.
+     * This function basically calculates how much (percentage) the entity is damaged, and based on that calculates
+     * the production of the given "anything" (power, deposit, etc). It takes into consideration the minimum % that
+     * always should be outputted.
+     *
+     * Ie, if you want deposit speed based on HP, but never < 50% of its original speed. Provide 0.5F as minimumProductionPercentage
+     *
+     * @param actualHitpoints
+     * @param productionOfAnything
+     * @param minimumProductionPercentage
+     * @return
+     */
+    public int getProductionBasedOnHitPoints(float actualHitpoints, int productionOfAnything, float minimumProductionPercentage) {
+        float remaining = 1.0f - minimumProductionPercentage;
+        float damageFactor = (actualHitpoints / (float) hitPoints);
+        float powerProductionFactor = minimumProductionPercentage + (damageFactor * remaining);
+        return (int) Math.ceil(powerProductionFactor * productionOfAnything);
+    }
+
+    public boolean producesPower() {
+        return powerProduction > 0;
+    }
+
+    public boolean consumesPower() {
+        return powerConsumption > 0;
     }
 }
