@@ -109,7 +109,7 @@ public class EntitiesDataReaderTest {
 
         EntityData windtrap = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
         assertThat(windtrap, is(not(nullValue())));
-        assertThat(windtrap.hitPoints, is(283));
+        assertThat(windtrap.hitPoints, is(300));
         assertThat(windtrap.image, is(not(nullValue())));
         assertThat(windtrap.type, is(EntityType.STRUCTURE));
         assertThat(windtrap.getWidth(), is(64));

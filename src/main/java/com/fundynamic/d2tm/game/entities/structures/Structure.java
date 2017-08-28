@@ -339,4 +339,14 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     public boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity) {
         return this.entityBuilder.isBuildingAnEntity(placementBuildableEntity);
     }
+
+    @Override
+    public int getPowerProduction() {
+        // //0.25+((225/300)*0.75) = 0,8125
+        float minimumProduction = 0.25f;
+        float remaining = 1.0f - minimumProduction;
+        float damageFactor = ((float)getHitPoints() / (float) entityData.hitPoints);
+        float powerProductionFactor = minimumProduction + (damageFactor * remaining);
+        return (int) Math.ceil(powerProductionFactor * super.getPowerProduction());
+    }
 }
