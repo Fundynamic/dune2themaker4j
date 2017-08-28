@@ -25,6 +25,8 @@ public class MiniMap extends GuiElement {
     private Image unscaledTerrainImage;
     private Image unscaledEntityImage;
 
+    private float elapsedTime = 0f;
+
     public MiniMap(int x, int y, int width, int height, Map map, EntityRepository entityRepository) {
         super(x, y, width, height);
 
@@ -42,8 +44,12 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void update(float deltaInSeconds) {
-        unscaledTerrainImage = renderTerrainMiniMap();
-        unscaledEntityImage = renderEntityMiniMap();
+        elapsedTime += deltaInSeconds;
+        if (elapsedTime >= 0.5f) {
+            unscaledTerrainImage = renderTerrainMiniMap();
+            unscaledEntityImage = renderEntityMiniMap();
+            elapsedTime = 0;
+        }
     }
 
     private Image renderTerrainMiniMap() {
