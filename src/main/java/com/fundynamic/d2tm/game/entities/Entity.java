@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
 /**
  * <p>
  *     An entity is a 'thing' that 'lives' on the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
@@ -485,6 +484,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
 
     public boolean hasMoveAnimation() {
         return entityData.hasMoveAnimation;
+    }
+
+    public int getPowerProduction() {
+        return entityData.powerProduction;
+    }
+
+    public int getPowerConsumption() {
+        return entityData.powerConsumption;
     }
 
     class EventSubscription<T extends Entity> {

@@ -39,8 +39,8 @@ public class Topbar extends GuiElement {
         String creditsString = String.format("$ %d", player.getAnimatedCredits());
         SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidthAsInt()) - 100, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
 
-        int producing = 350;
-        int consumption = 351;
+        int producing = player.getTotalPowerProduced();
+        int consumption = player.getTotalPowerConsumption();
         String powerString = String.format("%d > %d", consumption, producing);
         Color statusColor = Color.white;
         if (consumption > (producing - 25)) statusColor = Color.yellow;

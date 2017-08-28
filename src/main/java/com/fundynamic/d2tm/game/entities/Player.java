@@ -17,6 +17,9 @@ public class Player implements Updateable {
     private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
+    private EntitiesSet powerProducingEntities; // an easy way to query all power producing entities
+    private EntitiesSet powerConsumingEntities; // an easy way to query all power consuming entities
+
     private float credits;
     private int animatedCredits;
 
@@ -29,6 +32,8 @@ public class Player implements Updateable {
         this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
+        this.powerProducingEntities = entitiesSet;
+        this.powerConsumingEntities = entitiesSet;
         this.credits = startingCredits;
         this.animatedCredits = startingCredits;
     }
@@ -53,9 +58,17 @@ public class Player implements Updateable {
 
     public void addEntity(Entity entity) {
         entitiesSet.add(entity);
+        if (entity.getEntityData().powerProduction > 0) {
+            powerProducingEntities.add(entity);
+        }
+        if (entity.getEntityData().powerConsumption > 0) {
+            powerConsumingEntities.add(entity);
+        }
     }
 
     public boolean removeEntity(Entity entity) {
+        if (powerProducingEntities.contains(entity)) powerProducingEntities.remove(entity);
+        if (powerConsumingEntities.contains(entity)) powerConsumingEntities.remove(entity);
         return entitiesSet.remove(entity);
     }
 
@@ -116,5 +129,13 @@ public class Player implements Updateable {
     @Override
     public void update(float deltaInSeconds) {
         animatedCredits = (int) credits;
+    }
+
+    public int getTotalPowerProduced() {
+        return powerProducingEntities.stream().mapToInt(entity -> entity.getPowerProduction()).sum();
+    }
+
+    public int getTotalPowerConsumption() {
+        return powerConsumingEntities.stream().mapToInt(entity -> entity.getPowerConsumption()).sum();
     }
 }

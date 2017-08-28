@@ -111,8 +111,8 @@ public class EntityData {
     public boolean isRefinery;      // if true, entity will be something where spice can be delivered
 
     // power resource related
-    public int consumesPower;       // the amount of power this entity consumes when at 100%
-    public int deliversPower;       // the amount of power this entity produces when at 100%
+    public int powerConsumption;       // the amount of power this entity consumes when at 100%
+    public int powerProduction;       // the amount of power this entity produces when at 100%
 
     public EntityData() {
     }
