@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.game.rendering.gui.topbar;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
 import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -39,11 +40,11 @@ public class Topbar extends GuiElement {
         SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidthAsInt()) - 100, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
 
         int producing = 350;
-        int consumption = 200;
-        String powerString = String.format("%d > %d", producing, consumption);
+        int consumption = 351;
+        String powerString = String.format("%d > %d", consumption, producing);
         Color statusColor = Color.white;
-        if (producing < consumption) statusColor = Color.red;
-        if ((producing - 25) < consumption) statusColor = Color.yellow;
+        if (consumption > (producing - 25)) statusColor = Color.yellow;
+        if (consumption > producing) statusColor = Colors.RED_BRIGHT;
 
         int startX = (topLeft.getXAsInt() + getWidthAsInt()) - 250;
         lightningImage.draw(startX - 40, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 14);
