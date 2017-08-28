@@ -26,7 +26,7 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     private int maxFrames = 0;
     private int maxFramesWithoutFirst = 0;
 
-    private float facing;
+    private float currentFacing;
     private int desiredFacing;
 
     private float turnSpeed;
@@ -55,14 +55,14 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         this.animating = false;
 
         this.frame = 0; // Random.getRandomBetween(0, maxFrames)
-        this.facing = Random.getRandomBetween(0, possibleFacings);
+        this.currentFacing = Random.getRandomBetween(0, possibleFacings);
 
-        this.desiredFacing = (int) facing;
+        this.desiredFacing = (int) currentFacing;
     }
 
     @Override
     public void render(Graphics graphics, int x, int y) {
-        Image sprite = getBodyFacing(facing);
+        Image sprite = getBodyFacing(currentFacing);
         graphics.drawImage(sprite, x + drawCorrectionVec.getXAsInt(), y + drawCorrectionVec.getYAsInt());
     }
 
@@ -89,13 +89,14 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     }
 
     public boolean isFacingDesiredFacing() {
-        return desiredFacing == (int) facing;
+        return desiredFacing == (int) currentFacing;
     }
 
     @Override
     public void update(float deltaInSeconds) {
         if (!isFacingDesiredFacing()) {
-            facing = UnitFacings.turnTo(facing, desiredFacing, EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds));
+            float relativeSpeed = EntityData.getRelativeSpeed(turnSpeed, deltaInSeconds);
+            currentFacing = UnitFacings.turnTo(currentFacing, desiredFacing, relativeSpeed);
         }
         if (animating) {
             updateAnimation(deltaInSeconds);
@@ -110,7 +111,7 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
     // set facing, desired == facing == given value
     public void faceTowards(int desiredFacing) {
         this.desiredFacing = desiredFacing;
-        this.facing = desiredFacing;
+        this.currentFacing = desiredFacing;
     }
 
     // usually, when we have a cannon, it is required to face the enemy before we can shoot
@@ -123,5 +124,20 @@ public class RenderQueueEnrichableWithFacingLogic extends SpriteSheet implements
         if (frame >= maxFrames) {
             frame -= maxFramesWithoutFirst;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "RenderQueueEnrichableWithFacingLogic{" +
+                "maxFrames=" + maxFrames +
+                ", maxFramesWithoutFirst=" + maxFramesWithoutFirst +
+                ", currentFacing=" + currentFacing +
+                ", desiredFacing=" + desiredFacing +
+                ", turnSpeed=" + turnSpeed +
+                ", animationSpeed=" + animationSpeed +
+                ", frame=" + frame +
+                ", animating=" + animating +
+                ", drawCorrectionVec=" + drawCorrectionVec +
+                '}';
     }
 }

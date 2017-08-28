@@ -60,6 +60,13 @@ public class MapCoordinateTest {
         Assert.assertEquals(start.distanceInMapCoords(create(12, 11)), 2);
     }
 
+    @Test
+    public void equalsTo() {
+        MapCoordinate mapCoordinate = create(10, 10);
+        Assert.assertEquals(create(10, 10), mapCoordinate);
+        Assert.assertEquals(Coordinate.create(10*TILE_SIZE, 10*TILE_SIZE).toMapCoordinate(), mapCoordinate);
+    }
+
     public void assertAbsoluteToMapConversion(int absoluteX, int absoluteY, float mapCoordinateX, float mapCoordinateY) {
         Coordinate coordinate = Coordinate.create(absoluteX, absoluteY);
         MapCoordinate mapCoordinate = coordinate.toMapCoordinate();

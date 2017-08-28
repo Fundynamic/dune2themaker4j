@@ -83,10 +83,20 @@ public class PredicateBuilder {
                 isMovable();
     }
 
+    public PredicateBuilder isNotWithinAnotherEntity() {
+        predicates.add(new NotPredicate(IsWithinAnotherEntity.instance));
+        return this;
+    }
+
     public PredicateBuilder selectedMovableForPlayer(Player player) {
         return isSelected().
                forPlayer(player).
                isMovable();
+    }
+
+    public PredicateBuilder selectedForPlayer(Player player) {
+        return isSelected().
+               forPlayer(player);
     }
 
     public PredicateBuilder selectedDestroyersForPlayer(Player player) {
@@ -152,13 +162,18 @@ public class PredicateBuilder {
         return this;
     }
 
+    public PredicateBuilder isRefinery() {
+        predicates.add(Predicate.isRefinery());
+        return this;
+    }
+
     public PredicateBuilder ofTypes(EntityType[] types) {
         predicates.add(Predicate.ofTypes(types));
         return this;
     }
 
     public PredicateBuilder withinRange(Coordinate coordinate, float range) {
-        predicates.add(new DistanceToEntity(coordinate, range));
+        predicates.add(new DistanceFromCoordinateToEntity(coordinate, range));
         return this;
     }
 }

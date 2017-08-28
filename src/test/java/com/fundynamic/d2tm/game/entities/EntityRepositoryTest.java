@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
@@ -21,31 +22,35 @@ public class EntityRepositoryTest extends AbstractD2TMTest {
 
     @Test
     public void findsUnitAtVector() throws SlickException {
-        Unit unit = makeUnit(player, Coordinate.create(100, 100), EntitiesData.QUAD);
+        MapCoordinate unitMapCoordinate = MapCoordinate.create(3, 3);
+        Unit unit = makeUnit(player, unitMapCoordinate, EntitiesData.QUAD);
 
         // find at same position
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(100, 100), EntityType.UNIT);
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(unitMapCoordinate.toCoordinate(), EntityType.UNIT);
         assertThat(entities.hasAny(), is(true));
         assertThat((Unit) entities.getFirst(), is(unit));
 
         // do not find anything at a bit more upwards
-        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(99, 99), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(unitMapCoordinate.toCoordinate().min(Coordinate.create(1, 1)), EntityType.UNIT);
         assertThat(entities, is(empty()));
 
         // find entity at its right-bottom dimension
-        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(131, 131), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(
+                unitMapCoordinate.toCoordinate().add(Coordinate.create(31, 31)), EntityType.UNIT);
+
         assertThat(entities.hasAny(), is(true));
         assertThat((Unit) entities.getFirst(), is(unit));
 
         // do not find anything at a bit more upwards
-        entities = entityRepository.findAliveEntitiesOfTypeAtVector(Coordinate.create(132, 132), EntityType.UNIT);
+        entities = entityRepository.findAliveEntitiesOfTypeAtVector(
+                unitMapCoordinate.toCoordinate().add(Coordinate.create(32, 32)), EntityType.UNIT);
         assertThat(entities, is(empty()));
     }
 
     @Test
     public void findAliveEntitiesAtMultipleCoordinates() throws SlickException {
-        Unit unit1 = makeUnit(player, Coordinate.create(32, 32), EntitiesData.QUAD);
-        Unit unit2 = makeUnit(player, Coordinate.create(64, 32), EntitiesData.QUAD);
+        Unit unit1 = makeUnit(player, MapCoordinate.create(1, 1), EntitiesData.QUAD);
+        Unit unit2 = makeUnit(player, MapCoordinate.create(2, 1), EntitiesData.QUAD);
 
 
         // Single coordinate passed, expected unit1

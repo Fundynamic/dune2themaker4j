@@ -17,21 +17,43 @@ public class MoveToCellState extends UnitState {
 
     @Override
     public void update(float deltaInSeconds) {
-        if (unit.getBodyFacing().isFacingDesiredFacing()) {
-            moveToNextCellPixelByPixel(deltaInSeconds);
+        if (unit.shouldTurnBody()) {
+            unit.setTurnBodyState();
+            return;
         }
+
+        if (unit.hasNoNextCellToMoveTo()) {
+            unit.setToGoalResolverState();
+            return;
+        }
+
+        moveToNextCellPixelByPixel(deltaInSeconds);
     }
 
     @Override
     public String toString() {
-        return "MoveToCellState";
+        return "MoveToCellState, [nextTargetToMoveTo = " + unit.getNextTargetToMoveTo() + ", offset=" + unit.getOffset() + "]";
     }
 
     private void moveToNextCellPixelByPixel(float deltaInSeconds) {
+        // TODO: Make this depended on some 'walk/move animation flag'
+        if (unit.hasMoveAnimation()) {
+            unit.startAnimating();
+            unit.updateBodyFacing(deltaInSeconds);
+        } else {
+            unit.stopAndResetAnimating();
+        }
+
         Coordinate coordinate = unit.getCoordinate();
         Vector2D offset = unit.getOffset();
-        Vector2D nextTargetToMoveTo = unit.getNextTargetToMoveTo();
+        Coordinate nextTargetToMoveTo = unit.getNextTargetToMoveTo();
         EntityData entityData = unit.getEntityData();
+
+        if (!map.isWithinPlayableMapBoundaries(nextTargetToMoveTo.toMapCoordinate())) {
+            System.err.println("A next target to move to was set out of map bounds! ERROR. Going back to GoalResolver");
+            unit.setToGoalResolverState();
+            return;
+        }
 
         float offsetX = offset.getX();
         float offsetY = offset.getY();
@@ -43,6 +65,7 @@ public class MoveToCellState extends UnitState {
         if (nextTargetToMoveTo.getYAsInt() > coordinate.getYAsInt()) offsetY += entityData.getRelativeMoveSpeed(deltaInSeconds);
 
         Vector2D vecToAdd = Vector2D.zero();
+
         if (offsetX > Cell.TILE_SIZE_ZERO_BASED) {
             offsetX = 0;
             vecToAdd = vecToAdd.add(Vector2D.create(Cell.TILE_SIZE, 0));
@@ -61,7 +84,8 @@ public class MoveToCellState extends UnitState {
         }
 
         // Arrived at intended next target cell
-        if (!vecToAdd.equals(Vector2D.zero())) {
+        if (!vecToAdd.isZero()) {
+            unit.log("Arrived at cell");
             unit.arrivedAtCell(coordinate.add(vecToAdd));
         }
 

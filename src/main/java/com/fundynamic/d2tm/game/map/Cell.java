@@ -19,12 +19,9 @@ public class Cell {
     public static final int TILE_SIZE = 32;
     public static final int TILE_SIZE_ZERO_BASED = TILE_SIZE - 1;
     public static final int HALF_TILE = TILE_SIZE / 2;
+    public static final int DOUBLE_TILE_SIZE = TILE_SIZE * 2;
 
     private final Map map;
-
-    // TODO: Can be removed in favor of MapCoordinate?
-    private final int x;
-    private final int y;
 
     private Terrain terrain;
 
@@ -37,8 +34,6 @@ public class Cell {
         if (mapX < 0 || mapY < 0) throw new OutOfMapBoundsException("screenX may ot be lower than 0, for given screenX, screenY: " + mapX + "," + mapY);
         this.terrain = terrain;
         this.map = map;
-        this.x = mapX;
-        this.y = mapY;
         this.mapCoordinate = MapCoordinate.create(mapX, mapY);
     }
 
@@ -62,16 +57,8 @@ public class Cell {
         return terrain;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public Cell getNeighbouringCell(int relativeX, int relativeY) {
-        return map.getCellWithinBoundariesOrNullObject(this.x + relativeX, this.y + relativeY);
+        return map.getCellWithinBoundariesOrNullObject(this.mapCoordinate.getXAsInt() + relativeX, this.mapCoordinate.getYAsInt() + relativeY);
     }
 
     public Cell getCellAbove() {
@@ -95,13 +82,13 @@ public class Cell {
      * {@link MapCoordinate} using {@link MapCoordinate#toCoordinate()}
      * @return
      */
-    public Coordinate getCoordinates() {
+    public Coordinate getCoordinate() {
         return mapCoordinate.toCoordinate();
     }
 
     public boolean isAtSameLocationAs(Cell other) {
         if (other == null) return false;
-        return this.x == other.getX() && y == other.getY();
+        return this.mapCoordinate.equals(other.getMapCoordinate());
     }
 
     /**
@@ -162,10 +149,26 @@ public class Cell {
         return terrain instanceof Harvestable;
     }
 
-    public int harvest(int amount) {
+    public float harvest(float amount) {
         if (isHarvestable()) {
             return ((Harvestable) terrain).harvest(amount);
         }
-        return 0;
+        return 0f;
+    }
+
+    public float distance(Entity entity) {
+        return this.mapCoordinate.toCoordinate().distance(entity.getCoordinate());
+    }
+
+    public static Cell emptyTerrainCell(Map map, int x, int y) {
+        return new Cell(map, EmptyTerrain.instance(), x, y);
+    }
+
+    public int getX() {
+        return mapCoordinate.getXAsInt();
+    }
+
+    public int getY() {
+        return mapCoordinate.getYAsInt();
     }
 }

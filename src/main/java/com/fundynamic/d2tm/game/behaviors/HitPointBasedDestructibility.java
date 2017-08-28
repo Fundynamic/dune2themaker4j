@@ -5,52 +5,53 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 /**
- * <h1>Concept of getting destroyed by using hitPoints</h1>
+ * <h1>Concept of getting destroyed by using current</h1>
  */
 public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderable {
 
+    public static final int HEIGHT_OF_BAR = 8;
     private int maxHitpoints;
     private int widthInPixels;
 
-    private int hitPoints;
+    private float current;
 
-    public HitPointBasedDestructibility(int maxHitpoints, int widthInPixels) {
-        this.hitPoints = maxHitpoints;
-        this.maxHitpoints = maxHitpoints;
+    public HitPointBasedDestructibility(int max, int widthInPixels) {
+        this.current = max;
+        this.maxHitpoints = max;
         this.widthInPixels = widthInPixels;
     }
 
-    public void takeDamage(int hitPoints) {
-        this.hitPoints = Math.max(this.hitPoints - hitPoints, 0);
+    public void reduce(float amount) {
+        this.current = Math.max(this.current - amount, 0f);
     }
 
-    public boolean hasDied() {
-        return hitPoints <= 0;
+    public void add(float amount) {
+        this.current = Math.min(this.current + amount, this.maxHitpoints);
     }
 
     @Override
     public String toString() {
         return "HitPointBasedDestructibility{" +
-                "hitPoints=" + hitPoints +
+                "current=" + current +
                 '}';
     }
 
-    public int getHitPoints() {
-        return hitPoints;
+    public int getCurrent() {
+        return (int) current;
     }
 
     public void render(Graphics graphics, int x, int y) {
         graphics.setColor(Color.white);
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x - 1, y - 7, widthInPixels + 2, 7);
+        graphics.fillRect(x - 1, y - HEIGHT_OF_BAR, widthInPixels + 2, HEIGHT_OF_BAR);
 
         graphics.setColor(Color.black);
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x, y - 6, widthInPixels, 5);
+        graphics.fillRect(x, y - (HEIGHT_OF_BAR - 1), widthInPixels, (HEIGHT_OF_BAR - 2));
 
-        graphics.setColor(getHealthBarColor());
+        graphics.setColor(getBarColor());
         graphics.setLineWidth(1.1f);
-        graphics.fillRect(x, y - 6, getHealthBarPixelWidth(), 5);
+        graphics.fillRect(x, y - (HEIGHT_OF_BAR - 1), getHealthBarPixelWidth(), (HEIGHT_OF_BAR - 2));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
         // do nothing
     }
 
-    public Color getHealthBarColor() {
+    public Color getBarColor() {
         if (getPercentage() > 0.5F) {
             return Color.green;
         } else if (getPercentage() > 0.15F) {
@@ -73,7 +74,18 @@ public class HitPointBasedDestructibility implements EnrichableAbsoluteRenderabl
     }
 
     public float getPercentage() {
-        return (float)hitPoints / maxHitpoints;
+        return (float) current / maxHitpoints;
     }
 
+    public void toZero() {
+        current = 0;
+    }
+
+    public boolean isMaxed() {
+        return current >= maxHitpoints;
+    }
+
+    public boolean isZero() {
+        return current <= 0.0000001f;
+    }
 }

@@ -32,6 +32,11 @@ public class Projectile extends Entity implements Moveable, Destructible {
     }
 
     @Override
+    public void die() {
+        detonate();
+    }
+
+    @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
@@ -86,23 +91,27 @@ public class Projectile extends Entity implements Moveable, Destructible {
         }
 
         if (getCurrentDistanceToTarget() < 0.1F) {
-            if (entityData.hasExplosionId()) {
-                entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
-            }
-
-            // do damage on cell / range of cells
-            EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
-            entities.each(new EntityHandler() {
-                @Override
-                public void handle(Entity entity) {
-                    if (entity.isDestructible()) {
-                        Destructible destructibleEntity = (Destructible) entity;
-                        destructibleEntity.takeDamage(entityData.damage, origin);
-                    }
-                }
-            });
-            destroyed = true;
+            detonate();
         }
+    }
+
+    public void detonate() {
+        if (entityData.hasExplosionId()) {
+            entityRepository.explodeAt(getCenteredCoordinate(), entityData, player);
+        }
+
+        // do damage on cell / range of cells
+        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(coordinate, EntityType.UNIT, EntityType.STRUCTURE);
+        entities.each(new EntityHandler() {
+            @Override
+            public void handle(Entity entity) {
+                if (entity.isDestructible()) {
+                    Destructible destructibleEntity = (Destructible) entity;
+                    destructibleEntity.takeDamage(entityData.damage, origin);
+                }
+            }
+        });
+        destroyed = true;
     }
 
     public void descend() {
@@ -148,6 +157,9 @@ public class Projectile extends Entity implements Moveable, Destructible {
     public void moveTo(Coordinate moveToTarget) {
         Coordinate newTarget = new Coordinate(moveToTarget);
         distanceCalculatedALaunch = target.distance(newTarget);
+        if (isHarvester()) {
+            EnterStructureIntent.instance.removeAllIntentsBy(this);
+        }
         this.target = newTarget;
     }
 

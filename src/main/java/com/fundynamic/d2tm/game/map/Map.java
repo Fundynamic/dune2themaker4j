@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.map;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
-import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -18,7 +17,6 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 /**
  *
  * This class represents the game map data.
- *
  *
  */
 public class Map {
@@ -39,39 +37,56 @@ public class Map {
         this.cells = new Cell[widthWithInvisibleBorder][heightWithInvisibleBorder];
         for (int x = 0; x < widthWithInvisibleBorder; x++) {
             for (int y = 0; y < heightWithInvisibleBorder; y++) {
-                Cell cell = new Cell(this, EmptyTerrain.instance(), x, y);
+                Cell cell = Cell.emptyTerrainCell(this, x, y);
                 // This is quirky, but I think Cell will become part of a list and Map will no longer be an array then.
                 cells[x][y] = cell;
             }
         }
     }
 
+    /**
+     * The playable width of the map
+     * @return
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * The playable height of the map
+     * @return
+     */
     public int getHeight() {
         return height;
     }
 
     /**
-     * Get the exact cell on screenX,screenY directly from the internals. Only should be used for drawing (not for game logic).
+     * Get the exact cell on x,y directly from the internals. Only should be used for drawing (not for game logic).
      * The map class has an 'invisible border'. So a map of 64x64 is actually 66x66.
      *
-     * @param x
-     * @param y
+     * @param mapX
+     * @param mapY
      * @return
      */
-    public Cell getCell(int x, int y) {
+    public Cell getCell(int mapX, int mapY) {
         try {
-            return cells[x][y];
+            return cells[mapX][mapY];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException("You're going out of bounds!\n" +
-                    "Parameters given: screenX = " + x + ", screenY = " + y + ".\n" +
+                    "Parameters given: screenX = " + mapX + ", screenY = " + mapY + ".\n" +
                     "You must keep within the dimensions:\n" +
                     "Width: 0 to (not on or over!) " + widthWithInvisibleBorder + "\n" +
                     "Height: 0 to (not on or over!) " + heightWithInvisibleBorder);
         }
+    }
+
+    /**
+     * Get cell, like {@link #getCell(int, int)}
+     * @param mapCoordinate
+     * @return
+     */
+    public Cell getCell(MapCoordinate mapCoordinate) {
+        return getCell(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt());
     }
 
     public MapEditor.TerrainFacing getTerrainFacing(int x, int y) {
@@ -95,6 +110,15 @@ public class Map {
         if (correctedY >= heightWithInvisibleBorder) correctedY = heightWithInvisibleBorder - 1;
 
         return getCell(correctedX, correctedY);
+    }
+
+    /**
+     * Same as {@link #getCellProtected(int, int)}
+     * @param mapCoordinate
+     * @return
+     */
+    public Cell getCellProtected(MapCoordinate mapCoordinate) {
+        return getCellProtected(mapCoordinate.getXAsInt(), mapCoordinate.getYAsInt());
     }
 
     public Cell getCellWithinBoundariesOrNullObject(int x, int y) {
@@ -149,10 +173,6 @@ public class Map {
 
     public Cell getCellFor(Entity entity) {
         return getCellByMapCoordinates(entity.getCoordinate().toMapCoordinate());
-    }
-
-    public Vector2D getCellCoordinatesInAbsolutePixels(int cellX, int cellY) {
-        return Vector2D.create(cellX * TILE_SIZE, cellY * TILE_SIZE);
     }
 
     public Entity revealShroudFor(Entity entity) {
@@ -259,13 +279,23 @@ public class Map {
         }
     }
 
-    public boolean isWithinMapBoundaries(MapCoordinate intendedMapCoordinatesToMoveTo) {
-        int x = intendedMapCoordinatesToMoveTo.getXAsInt();
-        int y = intendedMapCoordinatesToMoveTo.getYAsInt();
+    /**
+     * Returns true if the given map coordinate is within the playable dimensions. These are 1 based.
+     * Thus, a map of 64x64, starts at 1,1 (minimum) and ends on 64,64.
+     * @param mapCoordinate
+     * @return
+     */
+    public boolean isWithinPlayableMapBoundaries(MapCoordinate mapCoordinate) {
+        int x = mapCoordinate.getXAsInt();
+        int y = mapCoordinate.getYAsInt();
         return x >= 1 && x <= width && y >= 1 && y <= height;
     }
 
     public int getSurfaceAreaInTiles() {
         return width * height;
+    }
+
+    public float getDistanceThatCoversWholeMap() {
+        return getSurfaceAreaInTiles() * TILE_SIZE;
     }
 }

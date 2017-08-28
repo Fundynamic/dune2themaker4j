@@ -1,7 +1,6 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 
-import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
@@ -42,7 +41,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
         this.superPowerEntityData = placementBuildableEntity.getEntityData();
         this.entityWhoConstructsIt = placementBuildableEntity.getEntityWhoConstructsThis();
 
-        mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+        mouse.setMouseImageAttack();
     }
 
     @Override

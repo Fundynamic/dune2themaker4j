@@ -3,7 +3,9 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,10 +33,6 @@ public class UnitMoveIntents {
         intendedVectors.put(target, who);
     }
 
-    public boolean isVectorClaimableBy(Coordinate target, Entity who) {
-        return isVectorClaimableBy(target.toMapCoordinate(), who);
-    }
-
     public boolean isVectorClaimableBy(MapCoordinate target, Entity who) {
         Entity entity = intendedVectors.get(target);
         return entity == null || // no entity on target, so thus claimable
@@ -52,4 +50,22 @@ public class UnitMoveIntents {
         intendedVectors.remove(target);
     }
 
+    public void removeAllIntentsBy(Entity entityWhoPossiblyClaimed) {
+        List<MapCoordinate> mapCoordinatesToRemove = new ArrayList<>();
+
+        // find all entities that where claimed by this entity
+        for (MapCoordinate mapCoordinate : intendedVectors.keySet()) {
+            Entity who = intendedVectors.get(mapCoordinate);
+            if (who.equals(entityWhoPossiblyClaimed)) {
+                mapCoordinatesToRemove.add(mapCoordinate);
+            }
+        }
+
+        // remove all from intentions
+        mapCoordinatesToRemove.forEach(mapCoordinate -> intendedVectors.remove(mapCoordinate));
+    }
+
+    public boolean hasIntent(MapCoordinate mapCoordinate) {
+        return intendedVectors.containsKey(mapCoordinate);
+    }
 }

@@ -12,7 +12,7 @@ public class CellTerrainRenderer implements Renderer<Cell> {
             graphics.drawImage(mapCell.getTileImage(), drawX, drawY);
         } catch (SlickException e) {
             // draw nothing!?
-            System.err.println("Unable to get cell tile image on " + mapCell.getX() + "," + mapCell.getY() + ". Exception: " + e);
+            System.err.println("Unable to get cell tile image on " + mapCell.getMapCoordinate() + ". Exception: " + e);
         }
     }
 

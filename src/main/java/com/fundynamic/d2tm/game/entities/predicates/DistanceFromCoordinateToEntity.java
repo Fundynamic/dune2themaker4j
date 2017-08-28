@@ -7,12 +7,12 @@ import com.fundynamic.d2tm.math.Coordinate;
 /**
  * Returns true when a given entity is within 'range' compared to 'coordinate'
  */
-public class DistanceToEntity extends Predicate<Entity> {
+public class DistanceFromCoordinateToEntity extends Predicate<Entity> {
 
     private Coordinate coordinate;
     private float range;
 
-    public DistanceToEntity(Coordinate coordinate, float range) {
+    public DistanceFromCoordinateToEntity(Coordinate coordinate, float range) {
         this.coordinate = coordinate;
         this.range = range;
     }

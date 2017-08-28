@@ -17,14 +17,15 @@ import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
  * Should become observable with RxJava!
  */
-public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable {
+public class Unit extends Entity implements Selectable, Moveable, Destructible, Destroyer, Focusable, Harvester {
 
     public static final int GUARD_TIMER_INTERVAL = 5;
 
@@ -36,12 +37,14 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     // use contexts!?
     protected final HitPointBasedDestructibility hitPointBasedDestructibility;
+    protected HitPointBasedDestructibility harvested;
 
     private RenderQueueEnrichableWithFacingLogic bodyFacing;
     private RenderQueueEnrichableWithFacingLogic cannonFacing;
 
     private Coordinate target;                // the (end) goal to attack/move
     private Coordinate nextTargetToMoveTo;    // the next step/target to move to (ie, this is a step towards the 'real' target)
+    private Coordinate lastSeenSpiceAt;       // the coordinate we have seen spice for the last time when harvesting
 
     // Dependencies
     private final Map map;
@@ -64,10 +67,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.fadingSelection = fadingSelection;
         this.hitPointBasedDestructibility = hitPointBasedDestructibility;
         this.target = coordinate;
+        this.lastSeenSpiceAt = coordinate;
         this.nextTargetToMoveTo = coordinate;
         this.offset = Vector2D.zero();
         this.guardTimer = Random.getRandomBetween(0, GUARD_TIMER_INTERVAL);
         this.state = new IdleState(this, entityRepository, map);
+
+        if (entityData.isHarvester) {
+            this.harvested = new HarvestedCentered(entityData.harvestCapacity, entityData.getWidth(), entityData.getHeight());
+            this.harvested.toZero();
+            seekSpice();
+        }
+
         if (entityData.moveSpeed < 0.0001f) {
             throw new IllegalArgumentException("The speed of this unit is so slow, you must be joking right? - given moveSpeed is " + entityData.moveSpeed);
         }
@@ -76,6 +87,11 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
+        // has entered other entity, thus do not render anything so it appears 'within' another entity
+        // the 'other' entity is responsible for drawing as if the unit has entered.
+        if (hasEntered != null) {
+            return;
+        }
 
         // Todo: get rid of offset, because those are used for cell-by-cell movements. This could
         // perhaps be optimized? (without any offsets?)
@@ -88,20 +104,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void update(float deltaInSeconds) {
-        if (hitPointBasedDestructibility.hasDied()) {
-            die();
-        }
-
-        Cell unitCell = map.getCellFor(this);
-
-        // we can harvest
-        if (isHarvester() && unitCell.isHarvestable()) {
-            harvesting();
-        }
-
         state.update(deltaInSeconds);
 
-        if (this.isDestroyed()) {
+        if (this.isDestroyed() || isDying()) {
             return;
         }
 
@@ -109,8 +114,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             chaseOrAttack(deltaInSeconds);
         }
 
-        cannonFacing.update(deltaInSeconds);
-        bodyFacing.update(deltaInSeconds);
+        if (!cannonFacing.isFacingDesiredFacing()) {
+            cannonFacing.update(deltaInSeconds);
+        }
 
         if (!shouldMove() && !shouldAttack()) {
             guardTimer += deltaInSeconds;
@@ -118,7 +124,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 guardTimer = 0F;
 
                 // scan environment within range for enemies
-                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * 32, EntityType.UNIT, EntityType.STRUCTURE);
+                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * TILE_SIZE, EntityType.UNIT, EntityType.STRUCTURE);
 
                 EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
 
@@ -215,7 +221,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
                         // fire projectiles! - we use this while loop so that in case if insane high number of attack
                         // rates we can keep up with slow FPS
-                        while(attackTimer > 1.0F) {
+                        while (attackTimer > 1.0F) {
                             Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
                             projectile.moveTo(entityToAttack.getRandomPositionWithin());
                             attackTimer -= 1.0F;
@@ -230,69 +236,95 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             if (((Destructible) entityToAttack).isDestroyed()) {
                 entityToAttack = null;
             } else {
-//                target = decideWhatCellToMoveToNextOrStopMovingWhenNotPossible(entityToAttack.getCoordinate());
                 moveTo(entityToAttack.getCoordinate());
             }
         }
     }
 
-    public boolean isCellPassableForMe(Coordinate intendedMapCoordinatesToMoveTo) {
-        EntitiesSet entities = entityRepository.findAliveEntitiesOfTypeAtVector(intendedMapCoordinatesToMoveTo.addHalfTile(), EntityType.UNIT, EntityType.STRUCTURE);
-        entities = entities.exclude(this); // do not count ourselves as blocking
-        Cell cell = map.getCellByAbsoluteMapCoordinates(intendedMapCoordinatesToMoveTo);
+    /**
+     * Uses {@link EntityRepository.PassableResult} {@link EntityRepository#isPassable(Entity, MapCoordinate)} and along
+     * with that the unit specific logic. Ie, if it should enter a
+     * Possible duplicate!?
+     */
+    public boolean isCellPassableForMe(MapCoordinate intendedMapCoordinatesToMoveTo) {
+        EntityRepository.PassableResult passableResult = entityRepository.isPassableWithinMapBoundaries(this, intendedMapCoordinatesToMoveTo);
 
-        return entities.isEmpty() &&
-                cell.isPassable(this) &&
-                UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this);
+        if (!UnitMoveIntents.instance.isVectorClaimableBy(intendedMapCoordinatesToMoveTo, this))
+            return false;
+
+        if (passableResult.hasOne()) {
+            Entity blockingEntity = passableResult.getFirstBlockingEntity();
+            if (EnterStructureIntent.instance.hasIntentToEnterAt(blockingEntity, this)) {
+                // the thing that blocks us is the refinery where we wanted to go
+                // then allow it.
+                return true;
+            }
+        }
+
+        return passableResult.isPassable();
     }
 
-    public Coordinate getNextIntendedCellToMoveToTarget() {
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+    public MapCoordinate getNextIntendedCellToMoveToTarget() {
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+
+        // filter out all map coordinates that are valid within map boundaries
+        allSurroundingCellsAsCoordinates =
+                allSurroundingCellsAsCoordinates.
+                        stream().
+                        filter(mapCoordinate -> map.isWithinPlayableMapBoundaries(mapCoordinate)).
+                        collect(Collectors.toSet());
 
         float distanceToTarget = distanceTo(target);
+        log("Distance to target is " + distanceToTarget);
 
-        Coordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
+        MapCoordinate bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget);
 
         if (bestCoordinate == null) {
+            log("Unable to determine best next coordinate to move to.");
             // almost there
             // TODO: even better fix would be to get a list of top 5 closest, if all 5 closest are
             // occupied then stop? (5 because that is 'half surrounded')
             // TODO: even better than previous todo, implement path finding...
-            if (distanceToTarget <= TILE_SIZE) {
+            int someArbitraryDistance = TILE_SIZE + 2;
+            if (distanceToTarget <= someArbitraryDistance) {
+                log("Distance to target is < " + someArbitraryDistance + " so we keep at our position.");
                 target = coordinate;
                 nextTargetToMoveTo = coordinate;
-                bestCoordinate = coordinate;
+                bestCoordinate = coordinate.toMapCoordinate();
             } else {
+                float distance = distanceToTarget + TILE_SIZE;
+                log("Distance to target is > " + someArbitraryDistance + " so are going to search for a next best cell within distance < " + distance);
                 // fall back if we have to take a 'detour'
-                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distanceToTarget + TILE_SIZE);
+                bestCoordinate = findClosestCoordinateTowards(allSurroundingCellsAsCoordinates, target, distance);
             }
         }
 
         if (bestCoordinate != null) {
+            log("Found next MapCoordinate: " + bestCoordinate);
             return bestCoordinate;
         }
-        return coordinate;
+        log("getNextIntendedCellToMoveToTarget, fallback to own coordinate");
+        return coordinate.toMapCoordinate();
     }
 
-    public Coordinate findClosestCoordinateTowards(List<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
-        Coordinate bestCoordinate = null;
+    public MapCoordinate findClosestCoordinateTowards(Set<MapCoordinate> allSurroundingCellsAsCoordinates, Coordinate target, float maxDistance) {
+        MapCoordinate bestCoordinate = null;
         float shortestDistance = maxDistance;
         for (MapCoordinate mapCoordinate : allSurroundingCellsAsCoordinates) {
-            Coordinate coordinate = mapCoordinate.toCoordinate();
-            boolean isCellPassableForMe = isCellPassableForMe(coordinate);
+            boolean isCellPassableForMe = isCellPassableForMe(mapCoordinate);
             if (!isCellPassableForMe) continue;
 
-            float distance = coordinate.distance(target);
-            if (distance < shortestDistance) {
+            float distance = mapCoordinate.toCoordinate().distance(target);
+            if (distance <= shortestDistance) {
                 shortestDistance = distance;
-                bestCoordinate = mapCoordinate.toCoordinate();
+                bestCoordinate = mapCoordinate;
             }
         }
         return bestCoordinate;
     }
 
     public boolean hasNoNextCellToMoveTo() {
-        return nextTargetToMoveTo == coordinate;
+        return nextTargetToMoveTo.equals(coordinate);
     }
 
     @Override
@@ -311,7 +343,18 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
      */
     @Override
     public void select() {
+        System.out.println("SELECTING UNIT START " + this.toStringShort() + " ========================= ");
+        System.out.println("Current state " + this.state);
+        System.out.println("Full to string: " + this);
+        System.out.println("SELECTING UNIT END " + this.toStringShort() + " ========================= ");
+
         fadingSelection.select();
+    }
+
+    @Override
+    public void enterOtherEntity(Entity whichEntityWillBeEntered) {
+        super.enterOtherEntity(whichEntityWillBeEntered);
+        deselect();
     }
 
     @Override
@@ -335,7 +378,13 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public void idle() {
-        this.setState(new IdleState(this, entityRepository, map));
+        stopAndResetAnimating();
+
+        if (isHarvester()) {
+            this.setState(new IdleHarvesterState(this, entityRepository, map));
+        } else {
+            this.setState(new IdleState(this, entityRepository, map));
+        }
     }
 
     @Override
@@ -343,7 +392,10 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         this.target = absoluteMapCoordinates;
         // TODO: Is this correct?
 //        this.entityToAttack = null; // forget about attacking
-        this.cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+        EnterStructureIntent.instance.removeAllIntentsBy(this);
+
+        cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
+
         setToGoalResolverState();
     }
 
@@ -363,8 +415,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         }
+
         // TODO: set state to dying when applicable!?
-        hitPointBasedDestructibility.takeDamage(hitPoints);
+        hitPointBasedDestructibility.reduce(hitPoints);
+        if (hitPointBasedDestructibility.isZero()) {
+            die();
+        }
     }
 
     public Coordinate getRandomVectorToMoveTo() {
@@ -381,7 +437,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public int getHitPoints() {
-        return hitPointBasedDestructibility.getHitPoints();
+        return hitPointBasedDestructibility.getCurrent();
     }
 
     @Override
@@ -403,7 +459,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return offset;
     }
 
-    public Vector2D getNextTargetToMoveTo() {
+    public Coordinate getNextTargetToMoveTo() {
         return nextTargetToMoveTo;
     }
 
@@ -424,9 +480,15 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void enrichRenderQueue(RenderQueue renderQueue) {
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
+            if (this.harvested != null) {
+                renderQueue.putEntityGui(this.harvested, getCoordinateWithOffset().min(Vector2D.create(0, 6)));
+            }
             renderQueue.putEntityGui(this.fadingSelection, getCoordinateWithOffset());
         } else {
             if (fadingSelection.hasFocus()) {
+                if (this.harvested != null) {
+                    renderQueue.putEntityGui(this.harvested, getCoordinateWithOffset().min(Vector2D.create(0, 6)));
+                }
                 renderQueue.putEntityGui(this.hitPointBasedDestructibility, getCoordinateWithOffset());
             }
         }
@@ -454,7 +516,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return Vector2D.create(TILE_SIZE, TILE_SIZE);
     }
 
-    public void harvest(Coordinate target) {
+    /**
+     * Same as {@link #moveTo(Coordinate)}
+     *
+     * @param target
+     */
+    public void harvestAt(Coordinate target) {
         moveTo(target);
     }
 
@@ -462,12 +529,17 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (this.state.getClass().equals(state.getClass())) {
             // do not set, same type
         } else {
-            System.out.println("Unit [" + entityData.name + "] sets state from [" + this.state + "] to [" + state + "]");
+            log("set state from [" + this.state + "] to [" + state + "]");
             this.state = state;
         }
     }
 
     public void die() {
+        // a unit can die when a structure dies. A unit does not die without the structure.
+        // but in case it happens, we do need to clean up references
+        if (hasEntered != null) {
+            hasEntered.leaveOtherEntity();
+        }
         setState(new DyingState(this, entityRepository, map));
     }
 
@@ -479,7 +551,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         if (isAnimating()) {
             stopAndResetAnimating();
         }
-        setState(new SeekSpiceState(this, entityRepository, map));
+        setState(new SeekHarvestableResourceState(this, entityRepository, map));
     }
 
     public void harvesting() {
@@ -489,27 +561,40 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     /**
      * Order unit to move to a cell. Puts it into the MoveToCellState and remembers the intent
      * to move to this cell so that other units will not attempt the same movement.
+     *
      * @param nextIntendedCoordinatesToMoveTo
      */
     public void moveToCell(Coordinate nextIntendedCoordinatesToMoveTo) {
+        // TODO: Make this depended on some 'walk/move animation flag'
+        if (entityData.hasMoveAnimation) {
+            startAnimating();
+        } else {
+            stopAndResetAnimating();
+        }
+
         nextTargetToMoveTo = nextIntendedCoordinatesToMoveTo;
         bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, nextTargetToMoveTo));
 
         UnitMoveIntents.instance.addIntent(nextTargetToMoveTo, this);
 
+        setMoveToCellState();
+    }
+
+    public void setMoveToCellState() {
         setState(new MoveToCellState(this, entityRepository, map));
     }
 
     /**
      * Unit arrived at cell. Will put unit in GoalResolverState and removes the intent it
      * previously had given.
+     *
      * @param coordinateToMoveTo
      */
     public void arrivedAtCell(Coordinate coordinateToMoveTo) {
         this.coordinate = coordinateToMoveTo;
         this.nextTargetToMoveTo = coordinateToMoveTo;
 
-        UnitMoveIntents.instance.removeIntent(coordinateToMoveTo);
+        UnitMoveIntents.instance.removeAllIntentsBy(this);
 
         // TODO: replace with some event "unit moved to coordinate" which is picked up
         // elsewhere (Listener?)
@@ -534,11 +619,117 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.stopAndResetAnimating();
     }
 
-    public Vector2D getTarget() {
+    public Coordinate getTarget() {
         return target;
     }
 
     public RenderQueueEnrichableWithFacingLogic getBodyFacing() {
         return bodyFacing;
+    }
+
+    public boolean canHarvest() {
+        if (!isHarvester()) return false;
+        Cell unitCell = map.getCellFor(this);
+        return unitCell.isHarvestable();
+    }
+
+    public void harvestCell(float deltaInSeconds) {
+        startAnimating();
+        harvest(entityData.getRelativeHarvestSpeed(deltaInSeconds));
+        bodyFacing.update(deltaInSeconds);
+    }
+
+    public void harvest(float amount) {
+        Cell unitCell = map.getCellFor(this);
+        lastSeenSpiceAt = coordinate;
+        harvested.add(unitCell.harvest(amount)); // note, harvest method may return lower number than desired harvest amount
+    }
+
+    public boolean isDoneHarvesting() {
+        return harvested.isMaxed();
+    }
+
+    public void findNearestRefineryToReturnSpice() {
+        setState(new FindNearestRefineryToReturnSpiceState(this, entityRepository, map));
+    }
+
+    /**
+     * <p>
+     *      Will make this unit move to the refinery.
+     * </p>
+     * <p>
+     *     If there are no delivery claims made for this refinery, then we claim it now and deliver at refinery.
+     * </p>
+     * <p>
+     *     If there is a delivery claim made for this refinery, then we will not make a claim, but move close to the
+     *     refinery instead.
+     * </p>
+     *
+     * @param refinery
+     */
+    public void returnToRefinery(Entity refinery) {
+        if (!this.isHarvester()) throw new IllegalStateException("Only harvesters can return to a refinery");
+        if (!refinery.isRefinery()) throw new IllegalArgumentException("Can only return to refinery type of entity");
+
+        if (EnterStructureIntent.instance.canEnterAt(refinery, this)) {
+            log("returnToRefinery) Will deliver at refinery " + refinery);
+            Coordinate closestCoordinateTo = refinery.getClosestCoordinateTo(getCenteredCoordinate());
+            moveTo(closestCoordinateTo);
+            // important to add intention after moveTo, because moveTo removes all intentions
+            EnterStructureIntent.instance.addDeliveryIntentTo(refinery, this);
+        } else {
+            log("returnToRefinery) Move close to refinery " + refinery);
+            Coordinate closestCoordinateTo = refinery.getClosestCoordinateAround(getCenteredCoordinate());
+            moveTo(closestCoordinateTo);
+        }
+    }
+
+    /**
+     * Called when unit is IN a refinery and should start dump resources for money
+     * @param refinery
+     */
+    public void emptyHarvestedSpiceAt(Entity refinery) {
+        if (!refinery.isRefinery()) throw new IllegalArgumentException("Cannot empty harvester at non-refinery entity " + refinery);
+        // do not remove intent yet, do that once we are finished
+        setState(new EmptyHarvesterState(this, entityRepository, map, refinery));
+    }
+
+    public boolean hasSpiceToUnload() {
+        return !harvested.isZero();
+    }
+
+    public void depositSpice(float deltaInSeconds) {
+        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds);
+        this.harvested.reduce(amountToDeposit);
+        this.player.addCredits(amountToDeposit);
+    }
+
+    public Coordinate lastSeenSpiceAt() {
+        return lastSeenSpiceAt;
+    }
+
+    public RenderQueueEnrichableWithFacingLogic getCannonFacing() {
+        return cannonFacing;
+    }
+
+    public void setTurnBodyState() {
+        setState(new TurnBodyTowardsState(this, entityRepository, map));
+    }
+
+    public boolean shouldTurnBody() {
+        return !bodyFacing.isFacingDesiredFacing();
+    }
+
+    public boolean isDying() {
+        return DyingState.DYING_STATE.equals(this.state.toString());
+    }
+
+    public void updateBodyFacing(float deltaInSeconds) {
+        if (bodyFacing == null) return;
+        bodyFacing.update(deltaInSeconds);
+    }
+
+    public UnitState getState() {
+        return this.state;
     }
 }

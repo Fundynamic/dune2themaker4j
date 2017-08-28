@@ -24,8 +24,6 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
     protected Vector2D mouseCoordinates;
 
-    private Entity lastSelectedEntity;
-
     private Cell hoverCell;
 
     public AbstractBattleFieldMouseBehavior(BattleField battleField) {
@@ -65,14 +63,6 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
         mouseCoordinates = coordinates;
     }
 
-    public Entity getLastSelectedEntity() {
-        return lastSelectedEntity;
-    }
-
-    public void setLastSelectedEntity(Entity lastSelectedEntity) {
-        this.lastSelectedEntity = lastSelectedEntity;
-    }
-
     /**
      * Returns the cell that the mouse is 'hovering over'. This method may return NULL!
      * @return
@@ -101,8 +91,9 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
         EntitiesSet entities = entityRepository.filter(
                 Predicate.builder().
-                        vectorWithin(hoverCell.getCoordinates()).
-                isSelectable()
+                    vectorWithin(hoverCell.getCoordinate()).
+                    isNotWithinAnotherEntity().
+                    isSelectable()
         );
 
         Entity entity = entities.getFirst();

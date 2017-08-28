@@ -29,13 +29,16 @@ public class Spice extends DuneTerrain implements Harvestable {
         return super.isSame(terrain);
     }
 
-    public int harvest(int spice) {
-        this.spice -= spice;
-        if (this.spice <= 0) {
-            cell.changeTerrain(new Sand(theme)); // <-- this is odd!?
-            cell.smoothSurroundingCells();
+    public float harvest(float amount) {
+        if (spice > amount) {
+            spice -= amount;
+            return amount;
         }
-        return spice;
+        int remaining = spice;
+        spice = 0;
+        cell.changeTerrain(new Sand(theme)); // <-- this is odd!?
+        cell.smoothSurroundingCells();
+        return remaining;
     }
 
 }

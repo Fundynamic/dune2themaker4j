@@ -33,6 +33,11 @@ public class TestableEntity extends Entity {
     }
 
     @Override
+    public void die() {
+        // empty
+    }
+
+    @Override
     public void render(Graphics graphics, int x, int y) {
         // no rendering, boring entity
     }

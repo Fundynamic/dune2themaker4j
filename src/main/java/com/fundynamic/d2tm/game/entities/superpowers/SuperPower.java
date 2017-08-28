@@ -191,6 +191,11 @@ public class SuperPower extends Entity implements Destructible {
     }
 
     @Override
+    public void die() {
+        this.destroyed = true;
+    }
+
+    @Override
     public void takeDamage(int hitPoints, Entity origin) {
         // NA
     }

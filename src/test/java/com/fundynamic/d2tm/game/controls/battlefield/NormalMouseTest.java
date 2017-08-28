@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
@@ -32,7 +33,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
         normalMouse.setHoverCell(cell);
 
-        Coordinate coordinate = cell.getCoordinates();
+        MapCoordinate coordinate = cell.getMapCoordinate();
         Unit unit = makeUnit(player, coordinate, "QUAD");
         assertThat(unit.isSelected(), is(false));
 
@@ -54,7 +55,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
     public void mouseMovedToCellWithUnitGivesFocusToUnit() {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
 
-        Coordinate coordinate = cell.getCoordinates();
+        MapCoordinate coordinate = cell.getMapCoordinate();
         Unit unit = makeUnit(player, coordinate, "QUAD");
         assertThat(unit.hasFocus(), is(false));
 
@@ -77,7 +78,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
     public void mouseMovedToCellWithUnitGivesFocusToVisibleStructure() {
         Cell cell = new Cell(map, mock(Terrain.class), 1, 1);
 
-        Coordinate coordinate = cell.getCoordinates();
+        Coordinate coordinate = cell.getCoordinate();
         Structure structure = makeStructure(player, 1000, coordinate);
         assertThat(structure.hasFocus(), is(false));
 

@@ -113,7 +113,7 @@ public abstract class AbstractD2TMTest {
 
         imageRepository = makeImageRepository();
         entitiesDataReader = makeEntitiesDataReader();
-        entitiesData = entitiesDataReader.fromRulesIni();
+        entitiesData = getEntitiesData();
         entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         // Nice little circular dependency here...
@@ -157,6 +157,10 @@ public abstract class AbstractD2TMTest {
         when(gameContainer.getInput()).thenReturn(input);
     }
 
+    public EntitiesData getEntitiesData() {
+        return entitiesDataReader.fromResource(getClass().getResourceAsStream("/test-rules.ini"));
+    }
+
     public static EntitiesDataReader makeEntitiesDataReader() {
         return new EntitiesDataReader() {
             @Override
@@ -191,6 +195,11 @@ public abstract class AbstractD2TMTest {
             public Image createImage(Vector2D dimensions) throws SlickException {
                 return mock(Image.class);
             }
+
+            @Override
+            public Image loadSpriteSheet(String path, int spriteWidth, int spriteHeight) {
+                return mock(SpriteSheet.class);
+            }
         };
     }
 
@@ -217,8 +226,8 @@ public abstract class AbstractD2TMTest {
         when(mockedImage.getGraphics()).thenReturn(mockedImageGraphics);
         return new Map(shroud, width, height) {
             @Override
-            public Cell getCell(int x, int y) {
-                Cell cell = super.getCell(x, y);
+            public Cell getCell(int mapX, int mapY) {
+                Cell cell = super.getCell(mapX, mapY);
                 // Some deep stubbing done here, ideally we run within a graphics context, but Travis is unable to
                 cell.setTileImage(mockedImage);
                 return cell;
@@ -242,6 +251,12 @@ public abstract class AbstractD2TMTest {
         return makeStructure(player, hitPoints, 2, 3, 5, Coordinate.create(32, 32));
     }
 
+    public Structure makeStructure(Player player, MapCoordinate mapCoordinate, String id) {
+        if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
+        if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
+        return (Structure) entityRepository.placeOnMap(mapCoordinate.toCoordinate(), EntityType.STRUCTURE, id, player);
+    }
+
     public Structure makeStructure(Player player, int hitPoints, Coordinate coordinate) {
         return makeStructure(player, hitPoints, 2, 3, 5, coordinate);
     }
@@ -261,7 +276,7 @@ public abstract class AbstractD2TMTest {
             public boolean isDestroyed() {
                 // we do this so that we do not have to deal with spawning explosions (which is done in the
                 // update method)
-                return super.hitPointBasedDestructibility.hasDied();
+                return super.hitPointBasedDestructibility.isZero();
             }
 
             @Override
@@ -299,7 +314,7 @@ public abstract class AbstractD2TMTest {
      * @return {@link Unit} constructed
      */
     public Unit makeUnit(UnitFacings facing, Coordinate coordinate, Vector2D offset) {
-        Unit unit = makeUnit(player, coordinate, EntitiesData.QUAD);
+        Unit unit = makeUnit(player, coordinate.toMapCoordinate(), EntitiesData.QUAD);
         unit.setFacing(facing.getValue());
         unit.setOffset(offset);
         return unit;
@@ -316,23 +331,23 @@ public abstract class AbstractD2TMTest {
      * @return {@link Unit} constructed
      */
     public Unit makeUnit(Player player) {
-        return makeUnit(player, Coordinate.create(0, 0), EntitiesData.QUAD);
+        return makeUnit(player, MapCoordinate.create(0, 0), EntitiesData.QUAD);
     }
 
     /**
      * <p>
-     *     Creates a unit for player at coordinate and given ID. Where ID is the string representation
+     *     Creates a unit for player at Map coordinate and given ID. Where ID is the string representation
      *     of an {@link EntityData}.
      * </p>
      * @param player
-     * @param coordinate
+     * @param mapCoordinate
      * @param id
      * @return {@link Unit} constructed
      */
-    public Unit makeUnit(Player player, Coordinate coordinate, String id) {
+    public Unit makeUnit(Player player, MapCoordinate mapCoordinate, String id) {
         if (entityRepository == null) throw new IllegalStateException("You forgot to set up the entityRepository, probably you need to do super.setUp()");
         if (map == null) throw new IllegalStateException("You forgot to set up the map, probably you need to do super.setUp()");
-        return (Unit) entityRepository.placeOnMap(coordinate, EntityType.UNIT, id, player);
+        return (Unit) entityRepository.placeOnMap(mapCoordinate.toCoordinate(), EntityType.UNIT, id, player);
     }
 
     // PROJECTILE

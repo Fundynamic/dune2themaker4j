@@ -40,10 +40,18 @@ public class IniDataUnit {
     public int buildCost;
     public float buildTimeInSeconds;
 
+    // harvester related properties
+    public boolean harvester;
+    public int harvestCapacity;
+    public float depositSpeed;
+    public float harvestSpeed;
+
     public IniDataUnit() {
     }
 
     public IniDataUnit(Profile.Section struct) {
+        this.harvestCapacity = struct.get(INI_KEYWORD_HARVEST_CAPACITY, Integer.class, 0);
+        this.harvester = struct.get(INI_KEYWORD_HARVESTER, Boolean.class, false);
         this.pathToImage = struct.get(INI_KEYWORD_IMAGE, String.class, "no-image-provided");
         this.pathToBarrelImage = struct.get(INI_KEYWORD_BARREL, String.class, null);
         this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class, 1);
@@ -61,12 +69,16 @@ public class IniDataUnit {
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         this.buildTimeInSeconds = struct.get(INI_KEYWORD_BUILD_TIME, Float.class, 0F);
         this.buildCost = struct.get(INI_KEYWORD_BUILD_COST, Integer.class, 0);
+        this.harvestSpeed = struct.get(INI_KEYWORD_HARVEST_SPEED, Float.class, 0f);
+        this.depositSpeed = struct.get(INI_KEYWORD_DEPOSIT_SPEED, Float.class, 0f);
 
         if (Game.RECORDING_VIDEO) {
             this.buildTimeInSeconds *= 0.1f;
             this.moveSpeed *= 2;
             this.turnSpeed *= 2;
             this.turnSpeedCannon *= 2;
+            this.harvestSpeed /= 2;
+            this.depositSpeed /= 2;
         }
     }
 

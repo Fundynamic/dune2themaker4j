@@ -10,13 +10,10 @@ public class IdleState extends UnitState {
         super(unit, entityRepository, map);
     }
 
-    // TODO boredom (after x time turn around randomly)
 
     @Override
     public void update(float deltaInSeconds) {
-        if (unit.isHarvester()) {
-            unit.seekSpice();
-        }
+        // TODO boredom (after x time turn around randomly)
     }
 
     @Override

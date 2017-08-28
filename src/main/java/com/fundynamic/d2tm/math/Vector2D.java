@@ -147,4 +147,7 @@ public class Vector2D {
         return direction.getAngle();
     }
 
+    public boolean isZero() {
+        return getXAsInt() == 0 && getYAsInt() == 0;
+    }
 }

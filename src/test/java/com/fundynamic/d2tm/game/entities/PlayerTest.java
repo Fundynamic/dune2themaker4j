@@ -27,7 +27,7 @@ public class PlayerTest extends AbstractD2TMTest {
         player.update(0.01f);
 
         assertEquals(startingCredits + 50, player.getCredits());
-        assertEquals(startingCredits + 1, player.getAnimatedCredits());
+        assertEquals(startingCredits + 50, player.getAnimatedCredits());
     }
 
 

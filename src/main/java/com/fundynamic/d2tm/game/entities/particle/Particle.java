@@ -29,6 +29,11 @@ public class Particle extends Entity implements Destructible {
     }
 
     @Override
+    public void die() {
+        destroyed = true;
+    }
+
+    @Override
     public void render(Graphics graphics, int x, int y) {
         if (graphics == null) throw new IllegalArgumentException("Graphics must be not-null");
         Image sprite = getSprite();
@@ -52,7 +57,7 @@ public class Particle extends Entity implements Destructible {
         }
 
         if (sprite >= spritesheet.getHorizontalCount()) {
-            destroyed = true;
+            die();
         }
     }
 

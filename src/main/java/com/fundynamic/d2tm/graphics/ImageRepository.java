@@ -4,6 +4,7 @@ package com.fundynamic.d2tm.graphics;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +26,25 @@ public class ImageRepository {
         return imagesPerPath.get(path);
     }
 
+    public SpriteSheet loadAndCacheSpriteSheet(String path, int spriteWidth, int spriteHeight) {
+        String cacheKey = path + "sw:" + spriteWidth + "sh:" + spriteHeight;
+        if (!imagesPerPath.containsKey(cacheKey)) {
+            imagesPerPath.put(cacheKey, loadSpriteSheet(path, spriteWidth, spriteHeight));
+        }
+        return (SpriteSheet) imagesPerPath.get(cacheKey);
+    }
+
     public Image load(String path) {
         try {
             return new Image(path);
+        } catch (SlickException e) {
+            throw new CannotLoadImageException(e);
+        }
+    }
+
+    public Image loadSpriteSheet(String path, int spriteWidth, int spriteHeight) {
+        try {
+            return new SpriteSheet(new Image(path), spriteWidth, spriteHeight);
         } catch (SlickException e) {
             throw new CannotLoadImageException(e);
         }

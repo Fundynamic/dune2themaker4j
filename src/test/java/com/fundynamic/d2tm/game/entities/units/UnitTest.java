@@ -3,30 +3,34 @@ package com.fundynamic.d2tm.game.entities.units;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
 import com.fundynamic.d2tm.game.behaviors.HitPointBasedDestructibility;
-import com.fundynamic.d2tm.game.entities.EntitiesSet;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityType;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
+import com.fundynamic.d2tm.game.entities.structures.Structure;
+import com.fundynamic.d2tm.game.entities.units.states.GoalResolverState;
+import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
+import com.fundynamic.d2tm.game.entities.units.states.TurnBodyTowardsState;
+import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
+import com.fundynamic.d2tm.game.types.EntityData;
+import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -49,31 +53,31 @@ public class UnitTest extends AbstractD2TMTest {
         int damageInHitpoints = 5;
         unit.takeDamage(damageInHitpoints, null);
 
-        Assert.assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
+        assertEquals(hitPoints - damageInHitpoints, unit.getHitPoints());
     }
 
     // FLAKY TEST: Sometimes fails probably because 'random cell to move to' is the same as it was now...
     @Test
     public void cpuUnitMovesRandomlyAroundWhenTakingDamageFromUnknownEntity() {
-        Unit cpuUnit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(cpuUnit.shouldMove());
+        Unit cpuUnit = makeUnit(cpu, MapCoordinate.create(2, 2), EntitiesData.QUAD);
+        assertFalse(cpuUnit.shouldMove());
 
         cpuUnit.takeDamage(1, null); // null means unknown entity
 
-        Assert.assertTrue(cpuUnit.shouldMove());
+        assertTrue(cpuUnit.shouldMove());
     }
 
     @Test
     public void cpuUnitAttacksBackTheEntityItTookDamageFrom() {
         Unit humanUnit = makeUnit(player);
 
-        Unit unit = makeUnit(cpu, Coordinate.create(64, 64), EntitiesData.QUAD);
-        Assert.assertFalse(unit.shouldAttack());
+        Unit unit = makeUnit(cpu, MapCoordinate.create(2, 2), EntitiesData.QUAD);
+        assertFalse(unit.shouldAttack());
 
         unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
 
-        Assert.assertTrue(unit.shouldAttack());
-        Assert.assertEquals(humanUnit, unit.getEntityToAttack());
+        assertTrue(unit.shouldAttack());
+        assertEquals(humanUnit, unit.getEntityToAttack());
     }
 
     @Test
@@ -130,19 +134,70 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void verifyUnitMovesToDesiredCellItWantsToMoveToDownRightCell() {
-        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates); // 320, 320
+        // start at 320, 320
+        Unit unit = makeUnit(UnitFacings.DOWN, unitAbsoluteMapCoordinates);
 
-        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(32, 32)); // move to right-down (352, 352)
+        // move to right-down (352, 352)
+        // this requires 1 'turn' and 1 cell 'move'
+        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.add(Vector2D.create(TILE_SIZE, TILE_SIZE));
         unit.moveTo(mapCoordinateToMoveTo); // translate to absolute coordinates
 
         assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
 
-        unit.update(0.5F); // decide next cell
-        unit.update(0.5F); // start turning
+        // expect unit to be in goal resolver state
+        assertThat(unit.getState(), instanceOf(GoalResolverState.class));
+        updateUnitTimesHundredMilis(unit, 1);
 
-        // a QUAD moves 2 squares for 1 second (see rules.ini)
-        unit.update(0.5F);
+        // goal resolver will move into
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+        updateUnitTimesHundredMilis(unit, 1);
 
+        // the unit will be turning around
+        assertThat(unit.getState(), instanceOf(TurnBodyTowardsState.class));
+        updateUnitTimesHundredMilis(unit, 2);
+
+        // done turning around
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+
+        // update 1 second, thus 10X100ms
+        updateUnitTimesHundredMilis(unit, 10);
+
+        // at destination
+        assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
+        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
+    }
+
+    @Test
+    public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
+        // start at 320, 320
+        Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
+
+        // move to left-up
+        // 288, 288
+        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(TILE_SIZE, TILE_SIZE));
+        unit.moveTo(mapCoordinateToMoveTo);
+
+        assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
+
+        // expect unit to be in goal resolver state
+        assertThat(unit.getState(), instanceOf(GoalResolverState.class));
+        updateUnitTimesHundredMilis(unit, 1);
+
+        // goal resolver will move into
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+        updateUnitTimesHundredMilis(unit, 1);
+
+        // the unit will be turning around
+        assertThat(unit.getState(), instanceOf(TurnBodyTowardsState.class));
+        updateUnitTimesHundredMilis(unit, 2);
+
+        // done turning around
+        assertThat(unit.getState(), instanceOf(MoveToCellState.class));
+
+        // update 1 second, thus 10X100ms
+        updateUnitTimesHundredMilis(unit, 10);
+
+        // at destination
         assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
         assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
     }
@@ -150,10 +205,10 @@ public class UnitTest extends AbstractD2TMTest {
     @Test
     public void firesProjectileWhenAttackingUnitInRange() {
         Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
-        Unit playerQuad = makeUnit(player, new Coordinate(32, 32), "QUAD");
+        Unit playerQuad = makeUnit(player, MapCoordinate.create(1, 1), "QUAD");
         playerQuad.setFacing(UnitFacings.RIGHT_DOWN.getValue()); // looking at the unit below...
 
-        Unit cpuQuad = makeUnit(cpu, new Coordinate(64, 64), "QUAD");
+        Unit cpuQuad = makeUnit(cpu, MapCoordinate.create(2, 2), "QUAD");
 
         // order to attack, it is in range, and already facing it.
         playerQuad.attack(cpuQuad);
@@ -172,30 +227,10 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void verifyUnitMovesToDesiredCellItWantsToMoveToUpperLeftCell() {
-        Unit unit = makeUnit(UnitFacings.UP, unitAbsoluteMapCoordinates);
-
-        Coordinate mapCoordinateToMoveTo = unitAbsoluteMapCoordinates.min(Vector2D.create(32, 32)); // move to left-up
-        unit.moveTo(mapCoordinateToMoveTo); // move to left-up
-
-        assertThat(unit.getCoordinate(), is(unitAbsoluteMapCoordinates));
-
-        // for facing, coming from UP to LEFT_UP requires a 1 step
-        unit.update(1); // first decide which movecell, etc
-
-        // we take 0.5F because turnSpeed is 2 'turns' per second. So half a second is 1 facing per update
-        unit.update(0.5F); // turn towards
-
-        // a QUAD moves 2 squares for 1 second (see rules.ini)
-        unit.update(0.5F);
-
-        assertThat(unit.getCoordinate(), is(mapCoordinateToMoveTo));
-        assertThat(unit.getOffset(), is(Vector2D.create(0, 0)));
-    }
-
-    @Test
     public void selectedUnitPutsFadingSelectionAndHealthBarOnRenderQueue() {
-        Unit unit = makeUnit(player, Coordinate.create(48, 48), "QUAD");
+        MapCoordinate mapCoordinate = MapCoordinate.create(2, 2);
+        Coordinate unitCoordinate = mapCoordinate.toCoordinate();
+        Unit unit = makeUnit(player, mapCoordinate, EntitiesData.QUAD);
         unit.select();
 
         Vector2D viewportVec = Vector2D.create(32, 32);
@@ -207,21 +242,132 @@ public class UnitTest extends AbstractD2TMTest {
 
         RenderQueue.ThingToRender first = thingsToRender.get(0);
         assertThat(first.renderQueueEnrichable, is(instanceOf(HitPointBasedDestructibility.class)));
-        assertThat(first.screenX, is(16)); // unitX - viewportVecX
-        assertThat(first.screenY, is(16)); // unitY - viewportVecY
+        assertThat(first.screenX, is(unitCoordinate.getXAsInt() - viewportVec.getXAsInt())); // unitX - viewportVecX
+        assertThat(first.screenY, is(unitCoordinate.getYAsInt() - viewportVec.getYAsInt())); // unitY - viewportVecY
 
         RenderQueue.ThingToRender second = thingsToRender.get(1);
         assertThat(second.renderQueueEnrichable, is(instanceOf(FadingSelection.class)));
-        assertThat(second.screenX, is(16)); // unitX - viewportVecX
-        assertThat(second.screenY, is(16)); // unitY - viewportVecY
+        assertThat(second.screenX, is(unitCoordinate.getXAsInt() - viewportVec.getXAsInt())); // unitX - viewportVecX
+        assertThat(second.screenY, is(unitCoordinate.getYAsInt() - viewportVec.getYAsInt())); // unitY - viewportVecY
     }
 
-    public static SpriteSheet makeSpriteSheet() {
-        SpriteSheet spriteSheet = mock(SpriteSheet.class);
-        Image image = mock(Image.class);
+    @Test
+    public void canHarvestWhenHarvesterAndOnHarvestableCell() {
+        EntityData harvesterEntityData = getEntitiesData().getEntityData(EntityType.UNIT, EntitiesData.HARVESTER);
+        assertThat(harvesterEntityData.isHarvester, is(true));
 
-        when(spriteSheet.getSprite(anyInt(), anyInt())).thenReturn(image);
-        return spriteSheet;
+        // make an all 'spice' map, with more resources than the harvester capacity
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(mock(Theme.class)) {
+            @Override
+            public int getSpiceAmount() {
+                return harvesterEntityData.harvestCapacity + 1;
+            }
+        });
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
+
+
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+
+        assertThat(unit.canHarvest(), is(true));
+        assertThat(unit.isDoneHarvesting(), is(false));
+
+        // harvest
+        unit.harvest(harvesterEntityData.harvestCapacity);
+
+        // still spice remaining, but the harvester is full
+        // so: can? yes, isDoneHarvesting? yes
+        assertThat(unit.canHarvest(), is(true));
+        assertThat(unit.isDoneHarvesting(), is(true));
+    }
+
+    @Test
+    public void canHarvestIsFalseWhenNotHarvester() {
+        // make an all spice map
+        MapEditor mapEditor = new MapEditor(new DuneTerrainFactory(mock(Theme.class)));
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SPICE);
+
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.QUAD);
+        assertThat(unit.canHarvest(), is(false));
+    }
+    
+    @Test
+    public void returnToRefineryThrowsIllegalArgumentExceptionWhenArgumentIsNotARefinery() {
+        try {
+            Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+            Structure constYard = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.CONSTRUCTION_YARD);
+            unit.returnToRefinery(constYard);
+            fail("Expected illegal argument exception");
+        } catch (IllegalArgumentException iae) {
+            assertEquals("Can only return to refinery type of entity", iae.getMessage());
+        }
+    }
+
+    @Test
+    public void returnToRefineryThrowsIllegalArgumentExceptionWhenUnitIsNotAHarvesterType() {
+        try {
+            Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.QUAD);
+            Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+            unit.returnToRefinery(refinery);
+            fail("Expected illegal state exception");
+        } catch (IllegalStateException ise) {
+            assertEquals("Only harvesters can return to a refinery", ise.getMessage());
+        }
+    }
+
+    @Test
+    public void firstHarvesterReturnsToRefinery() {
+        Unit unit = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+
+        // Act
+        unit.returnToRefinery(refinery);
+
+        Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
+        assertSame(who, unit);
+
+        assertTrue(unit.getState() instanceof GoalResolverState);
+        assertEquals(unit.getTarget(), refinery.getCoordinate());
+    }
+
+    @Test
+    public void secondHarvesterMovesToRefinery() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Unit harvester2 = makeUnit(player, MapCoordinate.create(3, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(10, 10), EntitiesData.REFINERY);
+
+        // Act
+        harvester2.returnToRefinery(refinery);
+        harvester1.returnToRefinery(refinery);
+
+        Entity who = EnterStructureIntent.instance.getEnterIntentFrom(refinery);
+        assertSame(who, harvester2);
+    }
+
+    @Test
+    public void isCellPassableForMeIsTrueWhenNoOtherUnitIsPresent() {
+        Unit harvester = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        assertTrue(harvester.isCellPassableForMe(MapCoordinate.create(3, 3)));
+    }
+
+    @Test
+    public void isCellPassableForMeIsFalseWhenOtherEntityOccupiesCell() {
+        Unit harvester1 = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
+        assertFalse(harvester1.isCellPassableForMe(MapCoordinate.create(3, 3)));
+    }
+
+    @Test
+    public void isCellPassableForMeIsTrueWhenEntityThatOccupiesCellIsTheEntityToReturnTo() {
+        Unit harvester = makeUnit(player, MapCoordinate.create(2, 2), EntitiesData.HARVESTER);
+        Structure refinery = makeStructure(player, MapCoordinate.create(3, 3), EntitiesData.REFINERY);
+        harvester.returnToRefinery(refinery);
+        assertTrue(harvester.isCellPassableForMe(MapCoordinate.create(3, 3)));
+    }
+
+    public static void updateUnitTimesHundredMilis(Unit unit, int times) {
+        for (int i = 0; i < times; i++) {
+            unit.update(0.1f);
+        }
     }
 
 }

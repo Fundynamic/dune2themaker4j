@@ -3,7 +3,6 @@ package com.fundynamic.d2tm.game.entities.structures;
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.entitybuilders.SingleEntityBuilder;
@@ -22,6 +21,7 @@ import org.newdawn.slick.geom.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Structure extends Entity implements Selectable, Destructible, Focusable, EntityBuilder {
 
@@ -35,11 +35,9 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     private float thinkTimer = 0.0f;
 
     // Implementation
-    private float animationTimer;
-    private static final int ANIMATION_FRAME_COUNT = 2;
-    private static final int ANIMATION_FRAMES_PER_SECOND = 5;
-
-    private boolean hasSpawnedExplosions;
+    private float animationTimer = 0.0f;
+    private int animationFrame = 0;
+    private static final int FLAG_ANIMATION_FRAME_COUNT = 2;
 
     public Structure(Coordinate coordinate, SpriteSheet spritesheet, Player player, EntityData entityData, EntityRepository entityRepository) {
         super(coordinate,
@@ -72,10 +70,18 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
         }
 
         this.entityBuilder = new SingleEntityBuilder(entityDatas, this, player);
+
+        if (entityData.hasOnPlacementSpawnUnitId()) {
+            spawnEntityAroundStructure(entityRepository.getEntityData(EntityType.UNIT, entityData.onPlacementSpawnUnitId));
+        }
     }
 
     public Image getSprite() {
-        int animationFrame = (int)animationTimer;
+        int verticalCount = spritesheet.getVerticalCount();
+        if (animationFrame > verticalCount) {
+            log("I intent to animate frame " + animationFrame + " but the max frames is " + verticalCount + " - so I fall back to sprite 0.");
+            return spritesheet.getSprite(0, 1);
+        }
         return spritesheet.getSprite(0, animationFrame);
     }
 
@@ -84,78 +90,101 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
             System.out.println("I (" + this.toString() + ") am dead, so I won't update anymore.");
             return;
         }
+        float animationSpeed = 0.5f;
 
-        // Hack something in so we earn money (for now) - remove this once we have harvesters in place.
-        if (entityData.isTypeStructure() && EntitiesData.REFINERY.equalsIgnoreCase(entityData.name)) {
-            thinkTimer += deltaInSeconds;
-            while (thinkTimer > 0.5F) {
-                thinkTimer -= 0.5F;
-                player.addCredits(5);
-            }
+        animationTimer += deltaInSeconds;
+        if (animationTimer > animationSpeed) {
+            animationFrame++;
+            animationTimer -= animationSpeed;
         }
 
-        // REVIEW: maybe base the animation on a global timer, so all animations are in-sync?
-        float offset = deltaInSeconds * ANIMATION_FRAMES_PER_SECOND;
-        animationTimer = (animationTimer + offset) % ANIMATION_FRAME_COUNT;
+        // TODO: Introduce structure states, like units!?
+        // If refinery expects delivery then animate the delivery animation
+        if (entityData.isRefinery &&
+            EnterStructureIntent.instance.containsIntentToEnterAt(this)) {
+            refineryDune2UnitWillEnterRefineryAnimation(deltaInSeconds);
+        } else {
+            flagAnimation();
+        }
 
         this.fadingSelection.update(deltaInSeconds);
-
-        if (hitPointBasedDestructibility.hasDied()) {
-            hasSpawnedExplosions = true;
-            for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
-                entityRepository.explodeAt(centeredPos, entityData, player);
-            }
-        }
 
         this.entityBuilder.update(deltaInSeconds);
 
         handleUnitConstructedAndNeedsToBeSpawnedLogic();
     }
 
+    public void flagAnimation() {
+        if (animationFrame >= FLAG_ANIMATION_FRAME_COUNT) {
+            animationFrame = 0;
+        }
+    }
+
+    public void refineryDune2UnitWillEnterRefineryAnimation(float deltaInSeconds) {
+        // TODO: Make animation configurable
+        if (containsEntity != null) {
+            if (animationFrame < 5) animationFrame = 5;
+            if (animationFrame > 6) animationFrame -= 2;
+        } else {
+            if (animationFrame < 1) animationFrame = 1;
+            if (animationFrame > 4) animationFrame -= 4;
+        }
+
+        thinkTimer += deltaInSeconds;
+        while (thinkTimer > 0.5F) {
+            thinkTimer -= 0.5F;
+        }
+    }
+
     public void handleUnitConstructedAndNeedsToBeSpawnedLogic() {
         if (isAwaitingSpawning()) {
-            List<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
-            Unit firstEntityThatBlocksExit = null;
-            for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
-                AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
-                EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
-                if (passableResult.isPassable()) {
-                    Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+            AbstractBuildableEntity buildingEntity = entityBuilder.getBuildingEntity();
+            spawnEntityAroundStructure(buildingEntity.getEntityData());
+        }
+    }
 
-                    Entity entity = this.entityRepository.placeOnMap(
-                                absoluteCoordinate,
-                                buildingEntity.getEntityData(),
-                                this.player
-                        );
-                    this.entityIsDelivered(entity);
-                    break;
-                } else {
-                    if (firstEntityThatBlocksExit == null) {
-                        System.out.println("Found entities set that blocks units:");
-                        System.out.println(passableResult.getEntitiesSet());
-                        System.out.println("END");
-                        firstEntityThatBlocksExit = (Unit) passableResult.getEntitiesSet().getFirst(Predicate.ofType(EntityType.UNIT));
-                    }
+    public void spawnEntityAroundStructure(EntityData entityData) {
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = getAllSurroundingCellsAsMapCoordinates();
+        Unit firstEntityThatBlocksExit = null;
+        for (MapCoordinate potentiallySpawnableCoordinate : allSurroundingCellsAsCoordinates) {
+            EntityRepository.PassableResult passableResult = this.entityRepository.isPassableWithinMapBoundaries(this, potentiallySpawnableCoordinate);
+
+            if (passableResult.isPassable()) {
+                Coordinate absoluteCoordinate = potentiallySpawnableCoordinate.toCoordinate();
+
+                Entity entity = this.entityRepository.placeOnMap(
+                            absoluteCoordinate,
+                            entityData,
+                            this.player
+                    );
+                this.entityIsDelivered(entity);
+                break;
+            } else {
+                if (firstEntityThatBlocksExit == null) {
+                    System.out.println("Found entities set that blocks units:");
+                    System.out.println(passableResult.getEntities());
+                    System.out.println("END");
+                    firstEntityThatBlocksExit = (Unit) passableResult.getEntities().getFirst(Predicate.ofType(EntityType.UNIT));
                 }
             }
+        }
 
-            // we did not succeed in spawning an entity
-            if (isAwaitingSpawning()) {
-                // TODO: fly it in, nudge other units to move away, etc.
-                // For now we just kill the blocking unit or we forget about it
+        // we did not succeed in spawning an entity
+        if (isAwaitingSpawning()) {
+            // TODO: fly it in, nudge other units to move away, etc.
+            // For now we just kill the blocking unit or we forget about it
 
-                // THIS IS JUST FOR FUN
-                if (firstEntityThatBlocksExit != null) {
-                    // kill it, so we can try again next frame
-                    System.out.println("------------------" + System.currentTimeMillis());
-                    System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
-                    System.out.println("------------------");
-                    firstEntityThatBlocksExit.die();
-                } else {
-                    // For now, forget it :/
-                    System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
-                    this.entityIsDelivered(this);
-                }
+            // THIS IS JUST FOR FUN
+            if (firstEntityThatBlocksExit != null) {
+                // kill it, so we can try again next frame
+                System.out.println("------------------" + System.currentTimeMillis());
+                System.out.println("ERROR: Unable to spawn unit next to structure - but found a unit that was blocking it and we killed it to make room!");
+                System.out.println("------------------");
+                firstEntityThatBlocksExit.die();
+            } else {
+                // For now, forget it :/
+                System.out.println("ERROR: Unable to spawn unit next to structure [" + this + "]");
+                this.entityIsDelivered(this);
             }
         }
     }
@@ -213,21 +242,45 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
-        hitPointBasedDestructibility.takeDamage(hitPoints);
+        hitPointBasedDestructibility.reduce(hitPoints);
+        if (hitPointBasedDestructibility.isZero()) {
+            die();
+        }
     }
 
     @Override
     public boolean isDestroyed() {
-        return hasSpawnedExplosions && hitPointBasedDestructibility.hasDied();
+        return hitPointBasedDestructibility.isZero();
+    }
+
+    @Override
+    public void die() {
+        if (containsEntity != null) {
+            containsEntity.die();
+        }
+
+        for (Coordinate centeredPos : entityData.getAllCellsAsCenteredCoordinates(coordinate)) {
+            entityRepository.explodeAt(centeredPos, entityData, player);
+        }
+
+        hitPointBasedDestructibility.toZero();
+        containsEntity = null;
     }
 
     @Override
     public int getHitPoints() {
-        return hitPointBasedDestructibility.getHitPoints();
+        return hitPointBasedDestructibility.getCurrent();
     }
 
     @Override
     public void enrichRenderQueue(RenderQueue renderQueue) {
+
+        if (Game.DEBUG_INFO && EnterStructureIntent.instance.containsIntentToEnterAt(this)) {
+            Entity unitThatWantsToEnterThisStructure = EnterStructureIntent.instance.getEnterIntentFrom(this);
+            LineBetweenEntities lineBetweenEntities = new LineBetweenEntities(unitThatWantsToEnterThisStructure, renderQueue);
+            renderQueue.putEntityGui(lineBetweenEntities, this.getCenteredCoordinate());
+        }
+
         if (isSelected()) {
             renderQueue.putEntityGui(this.hitPointBasedDestructibility, this.getCoordinate());
             renderQueue.putEntityGui(this.fadingSelection, this.getCoordinate());

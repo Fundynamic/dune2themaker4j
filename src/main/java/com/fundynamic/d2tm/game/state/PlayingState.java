@@ -20,6 +20,7 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
+import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -58,6 +59,7 @@ public class PlayingState extends BasicGameState {
 
     private MapEditor mapEditor;
     private Map map;
+    private Mouse mouse;
 
     public PlayingState(GameContainer gameContainer, TerrainFactory terrainFactory, ImageRepository imageRepository, Shroud shroud) throws SlickException {
         this.terrainFactory = terrainFactory;
@@ -74,11 +76,11 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        Player human = new Player("Human", Recolorer.FactionColor.BLUE);
+        Player human = new Player("Human", Recolorer.FactionColor.GREEN);
         Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
 
         if (Game.RECORDING_VIDEO) {
-            human.setCredits(9999);
+            human.setCredits(2200);
         } else {
             human.setCredits(3000);
         }
@@ -91,7 +93,7 @@ public class PlayingState extends BasicGameState {
 
         guiComposite = new GuiComposite();
 
-        Mouse mouse = Mouse.create(
+        mouse = Mouse.create(
                 human,
                 gameContainer,
                 imageRepository,
@@ -190,18 +192,26 @@ public class PlayingState extends BasicGameState {
         this.human = human;
         this.cpu = cpu;
 
+        MapCoordinate playerConstyard = MapCoordinate.create(5, 5);
+        MapCoordinate cpuConstyard = MapCoordinate.create(57, 57);
+
+        // create spice field nearby
+        mapEditor.createCircularField(map, MapCoordinate.create(15, 15), DuneTerrain.TERRAIN_SPICE, 5);
+        mapEditor.createCircularField(map, playerConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+        mapEditor.createCircularField(map, cpuConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+        mapEditor.smooth(map);
+
         // TODO: read from SCENARIO.INI file
         // human entities
-//        entityRepository.placeUnitOnMap(MapCoordinate.create(2, 2), HARVESTER, human);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(8, 2), "QUAD", human);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(5, 5), EntitiesData.CONSTRUCTION_YARD, human);
+        entityRepository.placeStructureOnMap(playerConstyard, EntitiesData.CONSTRUCTION_YARD, human);
 
         // cpu entities
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(40, 40), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(50, 50), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(30, 32), "QUAD", cpu);
 //        entityRepository.placeUnitOnMap(MapCoordinate.create(34, 43), "QUAD", cpu);
-        entityRepository.placeStructureOnMap(MapCoordinate.create(57, 57), EntitiesData.CONSTRUCTION_YARD, cpu);
+        entityRepository.placeStructureOnMap(cpuConstyard, EntitiesData.CONSTRUCTION_YARD, cpu);
     }
 
     @Override
@@ -229,6 +239,8 @@ public class PlayingState extends BasicGameState {
         for (Entity entity : entityRepository.filter(updatableEntities)) {
             entity.update(deltaInSeconds);
         }
+
+        mouse.update(deltaInSeconds);
 
         human.update(deltaInSeconds);
         cpu.update(deltaInSeconds);

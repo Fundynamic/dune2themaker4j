@@ -105,14 +105,20 @@ public class EntityRepository {
         return entity.setOrigin(origin);
     }
 
+    /**
+     * Return a passableResult object for a given entity and a mapCoordinate it intents to do move to.
+     * This is not taking special unit logic into consideration.
+     * @param entity
+     * @param intendedMapCoordinatesToMoveTo
+     * @return
+     */
     public PassableResult isPassable(Entity entity, MapCoordinate intendedMapCoordinatesToMoveTo) {
         Coordinate absoluteMapCoordinates = intendedMapCoordinatesToMoveTo.toCoordinate();
         EntitiesSet entities = findAliveEntitiesOfTypeAtVector(absoluteMapCoordinates, EntityType.UNIT, EntityType.STRUCTURE);
+        entities = entities.exclude(entity); // do not count self as blocking
+
         Cell cellByMapCoordinates = map.getCellByMapCoordinates(intendedMapCoordinatesToMoveTo);
-        return new PassableResult(
-                entities.isEmpty() && cellByMapCoordinates.isPassable(entity),
-                entities
-        );
+        return new PassableResult(cellByMapCoordinates, entity, entities);
     }
 
     public Entity placeOnMap(Coordinate startCoordinate, EntityData entityData, Player player) {
@@ -196,6 +202,13 @@ public class EntityRepository {
         return entitiesSet.filter(predicateBuilder);
     }
 
+    public EntitiesSet findEntitiesAt(Coordinate coordinate) {
+        return filter(
+                Predicate.builder().
+                        vectorWithin(coordinate)
+        );
+    }
+
     public EntitiesSet filter(Predicate<Entity> predicate) {
         return entitiesSet.filter(predicate);
     }
@@ -203,6 +216,7 @@ public class EntityRepository {
     public Set<Entity> findMovableWithinRectangleForPlayer(Player player, Rectangle rectangle) {
         return filter(
                 Predicate.builder().
+                        isNotWithinAnotherEntity().
                         selectableMovableForPlayer(player).
                         withinArea(rectangle)
         );
@@ -266,6 +280,15 @@ public class EntityRepository {
         );
     }
 
+    public EntitiesSet findRefineriesWithinDistance(Coordinate coordinate, float range, Player player) {
+        return filter(
+                Predicate.builder().
+                        forPlayer(player).
+                        isRefinery().
+                        withinRange(coordinate, range)
+        );
+    }
+
     public EntitiesSet findDestructibleEntitiesWithinDistance(Coordinate coordinate, float range) {
         return filter(
                 Predicate.builder().
@@ -316,10 +339,10 @@ public class EntityRepository {
      * @return
      */
     public PassableResult isPassableWithinMapBoundaries(Entity entity, MapCoordinate mapCoordinate) {
-        if (map.isWithinMapBoundaries(mapCoordinate)) {
+        if (map.isWithinPlayableMapBoundaries(mapCoordinate)) {
             return isPassable(entity, mapCoordinate);
         }
-        return new PassableResult(false);
+        return new PassableResult(entity, map.getCell(mapCoordinate));
     }
 
     /**
@@ -338,25 +361,39 @@ public class EntityRepository {
         return placeOnMap(superPower);
     }
 
-    public class PassableResult {
-        private boolean isPassable;
-        private EntitiesSet entitiesSet;
+    public EntitiesSet findDestructibleSelectedEntitiesForPlayer(Player player) {
+        return filter(new PredicateBuilder().selectedForPlayer(player).isDestructible());
+    }
 
-        public PassableResult(boolean isPassable, EntitiesSet entitiesSet) {
-            this.isPassable = isPassable;
-            this.entitiesSet = entitiesSet;
+    public class PassableResult {
+        private Cell cell; // the passable result is about this cell
+        private Entity entity; // this result is requested by...
+        private EntitiesSet entities; // and the cell has these entities
+
+        public PassableResult(Entity entity, Cell cell) {
+            this(cell, entity, EntitiesSet.empty());
         }
 
-        public PassableResult(boolean isPassable) {
-            this(isPassable, EntitiesSet.empty());
+        public PassableResult(Cell cell, Entity entity, EntitiesSet entitiesOnCell) {
+            this.entities = entitiesOnCell;
+            this.cell = cell;
+            this.entity = entity;
         }
 
         public boolean isPassable() {
-            return isPassable;
+            return entities.isEmpty() && cell.isPassable(entity);
         }
 
-        public EntitiesSet getEntitiesSet() {
-            return entitiesSet;
+        public EntitiesSet getEntities() {
+            return entities;
+        }
+
+        public boolean hasOne() {
+            return entities.hasOne();
+        }
+
+        public Entity getFirstBlockingEntity() {
+            return entities.getFirst();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.entities;
 
+import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.entitybuilders.EntityBuilderType;
 import com.fundynamic.d2tm.game.entities.superpowers.SuperPower;
@@ -16,10 +17,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,7 +28,7 @@ import java.util.stream.Collectors;
  * </p>
  * <h2>State</h2>
  * <p>
- *     An entity has state, usually a lifespan or somesort, therefor it is {@link Updateable}. The {@link #update(float)} method
+ *     An entity has state, usually a lifespan or some sort, therefor it is {@link Updateable}. The {@link #update(float)} method
  *     is called by the {@link com.fundynamic.d2tm.game.state.PlayingState#update(GameContainer, StateBasedGame, int)} method.
  * </p>
  * <h2>Rendering:</h2>
@@ -44,13 +42,16 @@ import java.util.stream.Collectors;
  */
 public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable {
 
-    // Final properties of unit
+    // Final properties of entity
     protected final EntityData entityData;
     protected final SpriteSheet spritesheet;
     protected final Player player;
     protected final EntityRepository entityRepository;
 
-    protected Entity origin; // which entity created this entity? (if applicable)
+    protected Entity origin; // who, which entity, created this entity? (if applicable)
+
+    protected Entity containsEntity;
+    protected Entity hasEntered;
 
     /**
      * top left *cell* coordinate, not the top-left of unit image!
@@ -105,8 +106,17 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
      * @param otherCoordinate
      * @return
      */
-    public float distanceTo(Coordinate otherCoordinate) {
+    public float distanceToFromCentered(Coordinate otherCoordinate) {
         return getCenteredCoordinate().distance(otherCoordinate);
+    }
+
+    /**
+     * Returns distance from this entity to other Coordinate. Does not influence given otherCoordinate param
+     * @param otherCoordinate
+     * @return
+     */
+    public float distanceTo(Coordinate otherCoordinate) {
+        return coordinate.distance(otherCoordinate);
     }
 
     /**
@@ -175,6 +185,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return entityData.isHarvester;
     }
 
+    /**
+     * Capable of dealing with harvesters to return spice
+     * @return
+     */
+    public boolean isRefinery() {
+        return entityData.isRefinery;
+    }
+
     public abstract EntityType getEntityType();
 
     public boolean isEntityTypeStructure() {
@@ -230,45 +248,79 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate()).collect(Collectors.toList());
     }
 
-    public List<MapCoordinate> getAllSurroundingCellsAsCoordinates() {
-        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate()); // coordinate == top left
+    public List<Coordinate> getAllCellsAsCenteredCoordinates() {
+        List<MapCoordinate> allCellsAsCoordinates = entityData.getAllCellsAsCoordinates(coordinate);
+        return allCellsAsCoordinates.stream().map(mc -> mc.toCoordinate().addHalfTile()).collect(Collectors.toList());
     }
 
-    // this basically goes 'around' the entity, starting from top-left
-    private List<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(MapCoordinate topLeftMapCoordinate) {
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinates() {
+        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(1); // coordinate == top left
+    }
+
+    public Set<Coordinate> getAllSurroundingCellsAsCoordinates() {
+        // coordinate == top left
+        Set<MapCoordinate> mapCoordinates = getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(1);
+        return mapCoordinates
+                .stream()
+                .map(mapCoordinate -> mapCoordinate.toCoordinate())
+                .collect(
+                        Collectors.toSet()
+                );
+    }
+
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(int distance) {
+        return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(coordinate.toMapCoordinate(), distance, new HashSet<>());
+    }
+
+    /**
+     * Goes around entity. Basically as a 'rectangle' around entity. Starting from the highest distance, then recursively
+     * repeating logic until distance == 1
+     * @param topLeftMapCoordinate
+     * @param distance
+     * @return
+     */
+    public Set<MapCoordinate> getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(MapCoordinate topLeftMapCoordinate, int distance, Set<MapCoordinate> alreadyFound) {
         int currentX = topLeftMapCoordinate.getXAsInt();
         int currentY = topLeftMapCoordinate.getYAsInt();
 
-        ArrayList<MapCoordinate> result = new ArrayList<>();
-
         // first row
-        int topRowY = currentY - 1;
-        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
-            int calculatedX = (currentX - 1) + x;
-            result.add(MapCoordinate.create(calculatedX, topRowY));
+        int topLeftYMinusDistance = currentY - distance;
+        int topLeftXMinusDistance = currentX - distance;
+
+        int totalWidth = (distance + entityData.getWidthInCells() + distance) - 1;
+        int totalHeight = (distance + entityData.getHeightInCells() + distance) - 1;
+
+        Set<MapCoordinate> result = new HashSet<>(alreadyFound);
+
+        // -1, because it is 0 based
+        for (int x = 0; x <= totalWidth; x++) {
+            result.add(MapCoordinate.create(topLeftXMinusDistance + x, topLeftYMinusDistance));
         }
 
-        int leftX = (currentX - 1);
-
         // then all 'sides' of the structure (left and right)
-        for (int y = 0; y < entityData.getHeightInCells(); y++) {
-            int calculatedY = currentY + y;
+        // also start one row 'lower' since we do not want to calculate the top left/right twice (as we did it
+        // in the above loop already)
+        // totalHeight - 2 for same reason, -1 == zero based, -2 to reduce one row
+        for (int y = 1; y <= (totalHeight - 1); y++) {
+            int calculatedY = topLeftYMinusDistance + y;
 
             // left side
-            result.add(MapCoordinate.create(leftX, calculatedY));
+            result.add(MapCoordinate.create(topLeftXMinusDistance, calculatedY));
 
             // right side
-            int rightX = (currentX + entityData.getWidthInCells());
+            int rightX = topLeftXMinusDistance + totalWidth;
             result.add(MapCoordinate.create(rightX, calculatedY));
         }
 
         // bottom row
-        int bottomRowY = currentY + entityData.getHeightInCells();
-        for (int x = 0; x < (entityData.getWidthInCells() + 2); x++) {
-            int calculatedX = leftX + x;
-            result.add(MapCoordinate.create(calculatedX, bottomRowY));
+        int bottomRowY = topLeftYMinusDistance + totalHeight;
+        for (int x = 0; x <= totalWidth; x++) {
+            result.add(MapCoordinate.create(topLeftXMinusDistance + x, bottomRowY));
         }
 
+        if (distance > 1) {
+            return getAllSurroundingCellsAsMapCoordinatesStartingFromTopLeft(topLeftMapCoordinate, (distance-1), result);
+        }
         return result;
     }
 
@@ -348,8 +400,14 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         return null;
     }
 
+    /**
+     * Called when entity is destroyed by {@link EntityRepository#removeEntity(Entity)}. Do not
+     * call this directly from anywhere else. Instead use {@link #die()}
+     */
     public void destroy() {
         emitEvent(EventType.ENTITY_DESTROYED); // tell all who are interested that we are destroyed
+        UnitMoveIntents.instance.removeAllIntentsBy(this);
+        EnterStructureIntent.instance.removeAllIntentsBy(this);
         eventTypeListMap.clear(); // now clear all our subscriptions explicitly
     }
 
@@ -360,6 +418,73 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
                 eventSubscription.invoke();
             }
         }
+    }
+
+    /**
+     * Look within this entity, if this entity takes up more than 1 coordinate, return the coordinate that
+     * is closest.
+     * @param centeredCoordinate
+     */
+    public Coordinate getClosestCoordinateTo(Coordinate centeredCoordinate) {
+        List<Coordinate> allCellsAsCoordinates = getAllCellsAsCenteredCoordinates();
+        if (allCellsAsCoordinates.size() == 0) allCellsAsCoordinates.get(0);
+        Coordinate closest = allCellsAsCoordinates.stream().min((c1, c2) -> Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))).get();
+        return closest.minHalfTile();
+    }
+
+    /**
+     * Look around the entity (surrounding cells) and finds the closets to given parameter
+     * @param centeredCoordinate
+     */
+    public Coordinate getClosestCoordinateAround(Coordinate centeredCoordinate) {
+        Set<Coordinate> allCellsAsCoordinates = getAllSurroundingCellsAsCoordinates();
+        Coordinate closest = allCellsAsCoordinates
+                .stream()
+                .min((c1, c2) ->
+                        Float.compare(c1.distance(centeredCoordinate), c2.distance(centeredCoordinate))
+                )
+                .get();
+        return closest;
+    }
+
+    /**
+     * This entity is entering another entity (given parameter).
+     *
+     * @param whichEntityWillBeEntered
+     */
+    public void enterOtherEntity(Entity whichEntityWillBeEntered) {
+        whichEntityWillBeEntered.containsEntity = this;
+        hasEntered = whichEntityWillBeEntered;
+    }
+
+    public void leaveOtherEntity() {
+        if (hasEntered != null) {
+            hasEntered.containsEntity = null;
+            hasEntered = null;
+        }
+    }
+
+    public boolean isWithinOtherEntity() {
+        return hasEntered != null;
+    }
+
+    public String toStringShort() {
+        return "[" + this.entityData.name + " (" + this.hashCode() + " at " + coordinate + "]";
+    }
+
+    public void log(String message) {
+        if (Game.DEBUG_INFO) {
+            System.out.println(toStringShort() + " - " + message);
+        }
+    }
+
+    /**
+     * Initiate dying of entity.
+     */
+    public abstract void die();
+
+    public boolean hasMoveAnimation() {
+        return entityData.hasMoveAnimation;
     }
 
     class EventSubscription<T extends Entity> {

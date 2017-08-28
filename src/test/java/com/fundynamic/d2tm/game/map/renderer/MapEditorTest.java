@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Before;
 import org.junit.Test;
 import org.newdawn.slick.Image;
@@ -52,7 +53,7 @@ public class MapEditorTest {
     public void mountainInCenterOf3By3MapHasFullRockCellsAroundIt() {
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_ROCK);
 
-        mapEditor.putTerrainOnCell(map, 2, 2, DuneTerrain.TERRAIN_MOUNTAIN);
+        mapEditor.putTerrainOnCell(map, MapCoordinate.create(2, 2), DuneTerrain.TERRAIN_MOUNTAIN);
 
         assertThat(map.getTerrainMap(), is(
                 "RRR\n" +
@@ -85,7 +86,7 @@ public class MapEditorTest {
     public void spiceHillInCenterOf3By3MapHasFullSpiceCellsAroundIt() {
         Map map = mapEditor.create(shroud, 3, 3, DuneTerrain.TERRAIN_SPICE);
 
-        mapEditor.putTerrainOnCell(map, 2, 2, DuneTerrain.TERRAIN_SPICE_HILL);
+        mapEditor.putTerrainOnCell(map, MapCoordinate.create(2, 2), DuneTerrain.TERRAIN_SPICE_HILL);
 
         assertThat(map.getTerrainMap(), is(
                 "###\n" +

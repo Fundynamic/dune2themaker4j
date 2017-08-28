@@ -52,7 +52,7 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsBuildingStructureFromIniFile() {
+    public void readsConstYardFromIniFile() {
         readFromTestRulesIni();
 
         EntityData constyard = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.CONSTRUCTION_YARD);
@@ -66,11 +66,31 @@ public class EntitiesDataReaderTest {
         assertThat(constyard.buildIcon, is(not(nullValue())));
         assertThat(constyard.entityBuilderType, is(EntityBuilderType.STRUCTURES));
         assertThat(constyard.buildCost, is(1000));
+        assertThat(constyard.isRefinery, is(false));
 
         // 1 extra tile range is added by the EntitiesData class (while it is '2' in the test-rules.ini!)
         // therefor we do times 3!
         float value = ((TILE_SIZE) * 3) + HALF_TILE; // we can do half-tile because it is a 64x64 structure
         assertThat(constyard.buildRange, is(value)); // calculated by entitiesData class
+    }
+
+    @Test
+    public void readsRefineryFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData refinery = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.REFINERY);
+        assertThat(refinery, is(not(nullValue())));
+        assertThat(refinery.hitPoints, is(1500));
+        assertThat(refinery.image, is(not(nullValue())));
+        assertThat(refinery.getWidth(), is(96));
+        assertThat(refinery.getHeight(), is(64));
+        assertThat(refinery.sight, is(5));
+        assertThat(refinery.explosionId, is("BOOM"));
+        assertThat(refinery.buildIcon, is(not(nullValue())));
+        assertThat(refinery.entityBuilderType, is(EntityBuilderType.NONE));
+        assertThat(refinery.buildCost, is(1000));
+        assertThat(refinery.isRefinery, is(true));
+        assertThat(refinery.onPlacementSpawnUnitId, is("QUAD"));
     }
 
     @Test
@@ -82,7 +102,7 @@ public class EntitiesDataReaderTest {
     }
 
     @Test
-    public void readsSimpleStructureFromIniFile() {
+    public void readsWindtrapFromIniFile() {
         readFromTestRulesIni();
 
         EntityData windtrap = entitiesData.getEntityData(EntityType.STRUCTURE, EntitiesData.WINDTRAP);
@@ -127,8 +147,8 @@ public class EntitiesDataReaderTest {
         assertThat(quad.image, is(not(nullValue())));
         assertThat(quad.type, is(EntityType.UNIT));
         assertThat(quad.hitPoints, is(434));
-        assertThat(quad.moveSpeed, is(1.5F));
-        assertThat(quad.turnSpeed, is(0.75F));
+        assertThat(quad.moveSpeed, is(32.0F));
+        assertThat(quad.turnSpeed, is(10.0F));
         assertThat(quad.attackRate, is(2.3F));
         assertThat(quad.attackRange, is(96F));
         assertThat(quad.getWidth(), is(32));
@@ -138,6 +158,33 @@ public class EntitiesDataReaderTest {
         assertThat(quad.weaponId, is("RIFLE"));
         assertThat(quad.buildTimeInSeconds, is(7.0f));
         assertThat(quad.buildCost, is(200));
+        assertThat(quad.isHarvester, is(false));
+        assertThat(quad.harvestCapacity, is(0));
+        assertThat(quad.depositSpeed, is(0F));
+    }
+
+    @Test
+    public void readsHarvesterFromIniFile() {
+        readFromTestRulesIni();
+
+        EntityData harvester = entitiesData.getEntityData(EntityType.UNIT, EntitiesData.HARVESTER);
+        assertThat(harvester, is(not(nullValue())));
+        assertThat(harvester.image, is(not(nullValue())));
+        assertThat(harvester.type, is(EntityType.UNIT));
+        assertThat(harvester.hitPoints, is(75));
+        assertThat(harvester.moveSpeed, is(32.0F));
+        assertThat(harvester.turnSpeed, is(10.0F));
+        assertThat(harvester.getWidth(), is(80));
+        assertThat(harvester.getHeight(), is(52));
+        assertThat(harvester.sight, is(4));
+        assertThat(harvester.explosionId, is("BOOM"));
+        assertThat(harvester.buildCost, is(50));
+        assertThat(harvester.isHarvester, is(true));
+        assertThat(harvester.harvestCapacity, is(800));
+        assertThat(harvester.depositSpeed, is(15F)); // deposit total capacity in 15 seconds
+        assertThat(harvester.getDepositSpeed(), is(53.333333333F)); // 800 / 15
+        assertThat(harvester.harvestSpeed, is(30F)); // harvester should harvest to full in 30 seconds (given it would be done on one cell)
+        assertThat(harvester.getHarvestSpeed(), is(26.666666667F)); // 800 / 30
     }
 
     @Test

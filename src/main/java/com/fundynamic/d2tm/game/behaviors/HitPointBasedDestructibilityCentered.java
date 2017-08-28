@@ -12,8 +12,8 @@ public class HitPointBasedDestructibilityCentered extends HitPointBasedDestructi
 
     private Vector2D drawCorrectionVec;
 
-    public HitPointBasedDestructibilityCentered(int maxHitpoints, int widthInPixels, int heightInPixels) {
-        super(maxHitpoints, widthInPixels);
+    public HitPointBasedDestructibilityCentered(int max, int widthInPixels, int heightInPixels) {
+        super(max, widthInPixels);
         this.drawCorrectionVec = Vector2D.create(
                 (TILE_SIZE - widthInPixels) / 2,
                 (TILE_SIZE - heightInPixels) / 2

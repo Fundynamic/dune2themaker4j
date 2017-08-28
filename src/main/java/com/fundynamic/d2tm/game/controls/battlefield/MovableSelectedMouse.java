@@ -2,9 +2,9 @@ package com.fundynamic.d2tm.game.controls.battlefield;
 
 
 import com.fundynamic.d2tm.game.behaviors.Destroyer;
+import com.fundynamic.d2tm.game.behaviors.Harvester;
 import com.fundynamic.d2tm.game.behaviors.Moveable;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
-import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntitiesSet;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.NullEntity;
@@ -39,7 +39,7 @@ public class MovableSelectedMouse extends NormalMouse {
 
     public MovableSelectedMouse(BattleField battleField) {
         super(battleField);
-        mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+        mouse.setMouseImageMove();
     }
 
     public EntitiesSet getAllSelectedMovableEntitiesForPlayer() {
@@ -55,14 +55,25 @@ public class MovableSelectedMouse extends NormalMouse {
 
         // hovering over an entity and visible for player
         Cell cell = getHoverCell();
+        if (cell == null) return;
 
         if (!NullEntity.is(hoveringOverEntity) && cell.isVisibleFor(player)) {
             // select entity when entity belongs to player
             if (hoveringOverEntity.belongsToPlayer(player)) {
+
+                if (hoveringOverEntity.isRefinery()) {
+                    EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
+                    if (harvestersSelected.hasAny()) {
+                        harvestersSelected.forEach(entity -> ((Harvester)entity).returnToRefinery(hoveringOverEntity));
+                        return;
+                    }
+                }
+
                 selectEntity(hoveringOverEntity);
             } else {
                 attackDestructibleIfApplicable(hoveringOverEntity);
             }
+
         } else {
             MapCoordinate mapCoordinate = cell.getMapCoordinate();
             Coordinate target = mapCoordinate.toCoordinate();
@@ -71,7 +82,7 @@ public class MovableSelectedMouse extends NormalMouse {
             if (harvestersSelected.hasAny() && entitiesSetOfAllMovable.sameSizeAs(harvestersSelected)) {
                 if (cell.isHarvestable()) {
                     for (Entity entity : entitiesSetOfAllMovable) {
-                        ((Unit) entity).harvest(target);
+                        ((Unit) entity).harvestAt(target);
                     }
                 } else {
                     for (Entity entity : entitiesSetOfAllMovable) {
@@ -110,6 +121,11 @@ public class MovableSelectedMouse extends NormalMouse {
         // update cell that mouse hovers over
         setHoverCell(cell);
 
+        if(!cell.isVisibleFor(player)) {
+            mouse.setMouseImageMove();
+            return;
+        }
+
         // get again the entity the mouse is hovering over
         Entity entity = hoveringOverSelectableEntity();
 
@@ -121,18 +137,19 @@ public class MovableSelectedMouse extends NormalMouse {
             if (previousHoveringEntity.isSelectable()) {
                 ((Selectable) previousHoveringEntity).lostFocus();
             }
-
         }
 
         // no entity on the cell we're hovering over, so we can move
         if (NullEntity.is(entity)) {
-            mouse.setMouseImage(Mouse.MouseImages.MOVE, 16, 16);
+            mouse.setMouseImageMove();
+
             EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
             if (harvestersSelected.hasAny() && harvestersSelected.sameSizeAs(entitiesSetOfAllMovable)) {
                 if (cell.isHarvestable()) {
-                    mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+                    mouse.setMouseImageAttack();
                 }
             }
+
             return;
         }
 
@@ -143,11 +160,20 @@ public class MovableSelectedMouse extends NormalMouse {
 
         // if entity belongs to the player who controls the mouse...
         if (entity.belongsToPlayer(mouse.getControllingPlayer())) {
+
+            if (entity.isRefinery()) {
+                EntitiesSet harvestersSelected = entitiesSetOfAllMovable.filter(Predicate.isHarvester());
+                if (harvestersSelected.hasAny()) {
+                    mouse.setMouseImageEnter();
+                    return;
+                }
+            }
+
             // show the 'selectable icon' for mouse icon
-            mouse.setMouseImage(Mouse.MouseImages.HOVER_OVER_SELECTABLE_ENTITY, 16, 16);
-        } else if(cell.isVisibleFor(player)) {
+            mouse.setMouseImageSelectable();
+        } else {
             // or show an attack icon
-            mouse.setMouseImage(Mouse.MouseImages.ATTACK, 16, 16);
+            mouse.setMouseImageAttack();
         }
 
     }

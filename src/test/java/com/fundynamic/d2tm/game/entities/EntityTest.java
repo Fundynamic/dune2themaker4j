@@ -11,12 +11,13 @@ import org.junit.Test;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 
@@ -67,15 +68,12 @@ public class EntityTest extends AbstractD2TMTest {
         // EEEE  4
         //
         // 4 + 2 + 2 + 4 => 12 surrounding cells
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = entity1.getAllSurroundingCellsAsCoordinates();
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = entity1.getAllSurroundingCellsAsMapCoordinates();
 
         Assert.assertEquals(12, allSurroundingCellsAsCoordinates.size());
 
         // we expect the first tile to be at 1 tile above and 1 tile left to the entity1:
-        MapCoordinate upLeftOfTopLeft = allSurroundingCellsAsCoordinates.get(0);
-
-        Assert.assertEquals(3, upLeftOfTopLeft.getXAsInt());
-        Assert.assertEquals(3, upLeftOfTopLeft.getYAsInt());
+        assertTrue(allSurroundingCellsAsCoordinates.contains(MapCoordinate.create(3, 3)));
     }
 
     @Test
@@ -88,21 +86,17 @@ public class EntityTest extends AbstractD2TMTest {
         TestableEntity smallEntity = new TestableEntity(topLeftCoordinate, mock(SpriteSheet.class), entityData, player, entityRepository).
                 setName("SmallEntity");
 
-        List<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsCoordinates();
+        Set<MapCoordinate> allSurroundingCellsAsCoordinates = smallEntity.getAllSurroundingCellsAsMapCoordinates();
 
         Assert.assertEquals(8, allSurroundingCellsAsCoordinates.size());
 
         // we expect the first tile to be at 1 tile above and 1 tile left to the entity1:
-        MapCoordinate upLeftOfTopLeft = allSurroundingCellsAsCoordinates.get(0);
+        MapCoordinate mapCoordinate = topLeftCoordinate.toMapCoordinate();
+        Vector2D expectedTopLeftOfTopLeft = mapCoordinate.min(MapCoordinate.create(1, 1));
+        assertTrue(allSurroundingCellsAsCoordinates.contains(expectedTopLeftOfTopLeft));
 
-        MapCoordinate topLeftMapCoordinate = this.topLeftCoordinate.toMapCoordinate();
-        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() - 1, upLeftOfTopLeft.getXAsInt());
-        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() - 1, upLeftOfTopLeft.getYAsInt());
-
-        MapCoordinate downRight = allSurroundingCellsAsCoordinates.get(7); // last one
-
-        Assert.assertEquals(topLeftMapCoordinate.getXAsInt() + 1, downRight.getXAsInt());
-        Assert.assertEquals(topLeftMapCoordinate.getYAsInt() + 1, downRight.getYAsInt());
+        MapCoordinate expectedDownRight = mapCoordinate.add(MapCoordinate.create(1, 1));
+        assertTrue(allSurroundingCellsAsCoordinates.contains(expectedDownRight));
     }
 
     //////////////////////////////////////////////////

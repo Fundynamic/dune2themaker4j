@@ -39,6 +39,11 @@ public class SidebarTest extends AbstractD2TMTest {
     public static final int STRUCTURE_MAP_COORDINATE_X = 10;
     public static final int STRUCTURE_MAP_COORDINATE_Y = 10;
 
+    @Override
+    public EntitiesData getEntitiesData() {
+        return entitiesDataReader.fromRulesIni();
+    }
+
     @Test
     public void selectingConstructionYardActivatesSidebar() {
         // make a map full of rock to make sure this test passes
