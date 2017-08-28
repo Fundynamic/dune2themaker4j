@@ -200,12 +200,8 @@ public class EntitiesData {
 
         entityData.isRefinery = iniDataStructure.refinery;
         entityData.onPlacementSpawnUnitId = getAndEnsureUnitId(iniDataStructure.onPlacementSpawn, id);
-
-        if (entityData.name.equals("WINDTRAP")) {
-            entityData.powerProduction = 100;
-        } else {
-            entityData.powerConsumption = 25;
-        }
+        entityData.powerConsumption = iniDataStructure.powerConsumption;
+        entityData.powerProduction = iniDataStructure.powerProduction;
 
         // The buildRange is (for now) determined by the size of the structure.
         // Because the range is calculated from the center of the structure.

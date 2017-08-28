@@ -29,6 +29,8 @@ public class IniDataStructure {
 
     public boolean refinery;
     public String onPlacementSpawn;
+    public int powerConsumption;
+    public int powerProduction;
 
     public IniDataStructure() {
     }
@@ -40,7 +42,9 @@ public class IniDataStructure {
         this.width = struct.get(INI_KEYWORD_WIDTH, Integer.class);
         this.height = struct.get(INI_KEYWORD_HEIGHT, Integer.class);
         this.sight = struct.get(INI_KEYWORD_SIGHT, Integer.class);
-        this.hitpoints = struct.get(INI_KEYWORD_HIT_POINTS, Integer.class);
+        this.powerConsumption = struct.get(INI_KEYWORD_POWER_CONSUMPTION, Integer.class, 0);
+        this.powerProduction = struct.get(INI_KEYWORD_POWER_PRODUCTION, Integer.class, 0);
+        this.hitpoints = struct.get(INI_KEYWORD_HIT_POINTS, Integer.class, 0);
         this.explosion = struct.get(INI_KEYWORD_EXPLOSION, String.class, EntitiesData.UNKNOWN);
         this.buildIcon = struct.get(INI_KEYWORD_BUILD_ICON, String.class, null);
         this.entityBuilderType = struct.get(INI_KEYWORD_BUILDS, String.class, "");

@@ -16,6 +16,7 @@ import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Random;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -43,11 +43,15 @@ public class RenderableBuildableEntity extends GuiElement {
             graphics.fillRect(xAsInt, yAsInt, WIDTH, HEIGHT);
         }
 
+        int priceYPosition = 3;
+        int powerYPosition = priceYPosition + 16;
         if (!abstractBuildableEntity.isBuilding() && !abstractBuildableEntity.awaitsPlacement()) {
             if (hasFocus()) {
-                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
+                SlickUtils.drawShadowedText(graphics, Color.yellow, "P " + abstractBuildableEntity.getPowerResult(), xAsInt + 2, yAsInt + powerYPosition);
             } else {
-                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
+                SlickUtils.drawShadowedText(graphics, Color.white, "P " + abstractBuildableEntity.getPowerResult(), xAsInt + 2, yAsInt + powerYPosition);
             }
         }
 
@@ -58,7 +62,7 @@ public class RenderableBuildableEntity extends GuiElement {
         }
 
         if (buildableState == BuildableState.SELECTABLE_TOO_EXPENSIVE) {
-            SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
             graphics.setColor(Colors.RED_ALPHA_128); // ugly way of letting know it is too expensive
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
         }
@@ -66,19 +70,19 @@ public class RenderableBuildableEntity extends GuiElement {
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            SlickUtils.drawPercentage(graphics, Color.white, abstractBuildableEntity.getProgress(), xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawPercentage(graphics, Color.white, abstractBuildableEntity.getProgress(), xAsInt + 2, yAsInt + priceYPosition);
         }
 
         if (buildableState == BuildableState.BUILDING_FINISHED_AWAITS_PLACEMENT) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            SlickUtils.drawShadowedText(graphics, Color.white, "PLACE", xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawShadowedText(graphics, Color.white, "PLACE", xAsInt + 2, yAsInt + priceYPosition);
         }
 
         if (buildableState == BuildableState.BUILDING_FINISHED_SPAWNABLE) {
             graphics.setColor(Colors.RED); // ugly way of letting know we are building this
             graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
-            SlickUtils.drawShadowedText(graphics, Color.white, "SPAWN", xAsInt + 2, yAsInt + 16);
+            SlickUtils.drawShadowedText(graphics, Color.white, "SPAWN", xAsInt + 2, yAsInt + priceYPosition);
         }
 
         if (hasFocus) {

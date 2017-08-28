@@ -91,6 +91,8 @@ public class EntitiesDataReaderTest {
         assertThat(refinery.buildCost, is(1000));
         assertThat(refinery.isRefinery, is(true));
         assertThat(refinery.onPlacementSpawnUnitId, is("QUAD"));
+        assertThat(refinery.powerProduction, is(0));
+        assertThat(refinery.powerConsumption, is(10));
     }
 
     @Test
@@ -118,6 +120,8 @@ public class EntitiesDataReaderTest {
         assertThat(windtrap.entityBuilderType, is(EntityBuilderType.NONE));
         assertThat(windtrap.buildTimeInSeconds, is(5.0f));
         assertThat(windtrap.buildCost, is(250));
+        assertThat(windtrap.powerProduction, is(200));
+        assertThat(windtrap.powerConsumption, is(0));
     }
 
     @Test
