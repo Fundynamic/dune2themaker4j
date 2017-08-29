@@ -129,7 +129,8 @@ public class MiniMap extends GuiElement {
                 }
 
                 // use one pixel offset, because map coordinates are one-based
-                int x = mapCoordinate.getXAsInt() - 1, y = mapCoordinate.getYAsInt() - 1;
+                int x = mapCoordinate.getXAsInt() - 1;
+                int y = mapCoordinate.getYAsInt() - 1;
                 Color factionColor = entity.getPlayer().getFactionColor();
                 buffer.setRGBA(x, y, factionColor.getRed(), factionColor.getGreen(), factionColor.getBlue(), 255);
             }
@@ -162,12 +163,12 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void rightClicked() {
-
+        // No action on right-click
     }
 
     @Override
     public void leftButtonReleased() {
-
+        // No action when left-click is released
     }
 
     @Override

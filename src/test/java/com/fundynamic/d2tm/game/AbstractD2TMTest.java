@@ -56,11 +56,6 @@ import static org.mockito.Mockito.when;
  */
 public abstract class AbstractD2TMTest {
 
-    @Test
-    public void checkDebugFlagIsNotTrue() {
-        Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
-    }
-
     // don't warn user about misusage, old behaviour
     @Rule
     public MockitoRule mrule = MockitoJUnit.rule().silent();
@@ -156,6 +151,11 @@ public abstract class AbstractD2TMTest {
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
+    }
+
+    @Test
+    public void checkDebugFlagIsNotTrue() {
+        Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
     }
 
     public EntitiesData getEntitiesData() {
