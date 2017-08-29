@@ -2,7 +2,6 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
-import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
