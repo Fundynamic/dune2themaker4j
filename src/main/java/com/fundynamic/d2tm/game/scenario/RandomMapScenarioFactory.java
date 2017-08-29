@@ -65,14 +65,6 @@ public class RandomMapScenarioFactory extends ScenarioFactory {
         }
     }
 
-    public EntityRepository getEntityRepository(Map map) throws SlickException {
-        return new EntityRepository(
-                        map,
-                        new Recolorer(),
-                        entitiesData
-                );
-    }
-
     public Map getMap(MapEditor mapEditor) {
         return mapEditor.generateRandom(shroud, 128, 128);
     }

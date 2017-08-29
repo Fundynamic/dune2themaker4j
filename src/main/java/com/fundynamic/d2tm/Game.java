@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.Scenario;
 import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
@@ -72,11 +74,23 @@ public class Game extends StateBasedGame {
                 TILE_SIZE
         );
 
-        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(
-                shroud,
-                terrainFactory,
-                new EntitiesDataReader().fromRulesIni()
-        );
+        EntitiesData entitiesData = new EntitiesDataReader().fromRulesIni();
+
+        ScenarioFactory scenarioFactory;
+        if (StringUtils.isEmpty(this.mapFileName)) {
+            scenarioFactory = new RandomMapScenarioFactory(
+                    shroud,
+                    terrainFactory,
+                    entitiesData
+            );
+        } else {
+            scenarioFactory = new IniScenarioFactory(
+                    shroud,
+                    terrainFactory,
+                    entitiesData,
+                    mapFileName
+            );
+        }
 
         PlayingState playingState = new PlayingState(
                 container,
