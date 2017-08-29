@@ -83,7 +83,8 @@ public class MiniMap extends GuiElement {
         // render entities
         for(Entity entity : entityRepository.findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
-                int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
+                // use one pixel offset, because map coordinates are one-based
+                int x = mapCoordinate.getXAsInt() - 1, y = mapCoordinate.getYAsInt() - 1;
                 Color factionColor = entity.getPlayer().getFactionColor();
                 buffer.setRGBA(x, y, factionColor.getRed(), factionColor.getGreen(), factionColor.getBlue(), 255);
             }
