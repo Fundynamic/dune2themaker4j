@@ -5,7 +5,14 @@ import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class RectangleTest {
+
+    public static final int MIN_X = 10;
+    public static final int MAX_X = 20;
+    public static final int MIN_Y = 10;
+    public static final int MAX_Y = 20;
 
     @Test
     public void createsRectangleFromTopLeftToBottomRight() {
@@ -89,5 +96,40 @@ public class RectangleTest {
         Rectangle rec = new Rectangle(50, 50, 150, 150);
         Rectangle result = rec.scaleContainCenter(new Vector2D(100, 50));
         Assert.assertEquals(new Rectangle(50, 75, 150, 125), result);
+    }
+
+    @Test
+    public void correctsWhenGoingOverLeftEdge() {
+        Rectangle rect = new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y);
+        Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MIN_X - 0.1F, MIN_Y));
+        assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
+    }
+
+    @Test
+    public void correctsWhenGoingOverRightEdge() {
+        Rectangle rect = new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y);
+        Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MAX_X + 0.1F, MIN_Y));
+        assertEquals(Vector2D.create(MAX_X, MIN_Y), correctedVector);
+    }
+
+    @Test
+    public void correctsWhenGoingUpperLeftEdge() {
+        Rectangle rect = new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y);
+        Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MIN_Y - 0.1F));
+        assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
+    }
+
+    @Test
+    public void correctsWhenGoingBottomLeftEdge() {
+        Rectangle rect = new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y);
+        Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MAX_Y + 0.1F));
+        assertEquals(Vector2D.create(MIN_X, MAX_Y), correctedVector);
+    }
+
+    @Test
+    public void doesNothingWhenVectorIsWithinPerimiter() {
+        Rectangle rect = new Rectangle(MIN_X, MIN_Y, MAX_X, MAX_Y);
+        Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MIN_Y));
+        assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
     }
 }

@@ -138,18 +138,18 @@ public class PlayingState extends BasicGameState {
 
         try {
             float moveSpeed = 30 * TILE_SIZE;
-            Vector2D viewingVector = Vector2D.create(32, 32);
+            Vector2D viewingVector = MapCoordinate.create(1, 1).toCoordinate();
 
             Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR);
-            Vector2D viewportResolution = getResolution().min(guiAreas);
+            Vector2D viewportDimensions = getResolution().min(guiAreas);
 
             // start drawing below the top gui bar
             Vector2D viewportDrawingPosition = Vector2D.create(0, HEIGHT_OF_TOP_BAR);
 
-            Image image = imageRepository.createImage(screenResolution);
+            Image image = imageRepository.createImage(viewportDimensions);
 
             battlefield = new BattleField(
-                    viewportResolution,
+                    viewportDimensions,
                     viewportDrawingPosition,
                     viewingVector,
                     getMap(),

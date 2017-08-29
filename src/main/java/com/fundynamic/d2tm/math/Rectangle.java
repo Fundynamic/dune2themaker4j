@@ -72,6 +72,12 @@ public class Rectangle {
         return Vector2D.create(getWidth(), getHeight());
     }
 
+    public Vector2D makeSureVectorStaysWithin(Vector2D vec) {
+        float x = Math.min(Math.max(vec.getX(), getTopLeftX()), getBottomRightX());
+        float y = Math.min(Math.max(vec.getY(), getTopLeftY()), getBottomRightY());
+        return Vector2D.create(x, y);
+    }
+
     @Override
     public String toString() {
         return "Rectangle [@ " + topLeft.getXAsInt() + ", " + topLeft.getYAsInt() + " -> WXH " + getWidth() + " X " + getHeight() + "]";
