@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
@@ -81,11 +80,6 @@ public class MiniMap extends GuiElement {
 
         // render viewport outline
         drawViewportOutline(graphics);
-
-        if (Game.DEBUG_INFO) {
-            graphics.drawString("X: " + renderPosition.getTopLeftX() + ", Y:" + renderPosition.getTopLeftY(), getTopLeftX(), getTopLeftY());
-            graphics.drawString("W: " + renderPosition.getWidth() + ", H:" + renderPosition.getHeight(), getTopLeftX(), getTopLeftY() + 15);
-        }
     }
 
     private Image getMaybeRedrawnOrStaleMiniMapImage() {
