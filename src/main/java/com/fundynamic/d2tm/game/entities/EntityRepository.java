@@ -266,11 +266,12 @@ public class EntityRepository {
         return findDestructibleEntities(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
     }
 
-    public EntitiesSet findAliveEntitiesOfType(EntityType... types) {
+    public EntitiesSet findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType... types) {
         return filter(
                 Predicate.builder().
                         ofTypes(types).
-                        isAlive()
+                        isAlive().
+                        isWithinPlayableMapBoundaries(map)
 
         );
     }

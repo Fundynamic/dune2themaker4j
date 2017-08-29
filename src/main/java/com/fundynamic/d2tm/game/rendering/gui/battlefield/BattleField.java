@@ -363,9 +363,13 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
-    // least not the use them in the non-test code.
+    // least not to use them in the non-test code.
     public Vector2D getViewingVector() {
         return viewingVector;
+    }
+
+    public Rectangle getViewportCellBoundaries() {
+        return this.cellViewportRenderer.getViewport(this.viewingVector);
     }
 
     public Map getMap() {

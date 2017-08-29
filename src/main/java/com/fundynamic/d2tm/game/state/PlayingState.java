@@ -120,8 +120,7 @@ public class PlayingState extends BasicGameState {
                         SCREEN_HEIGHT - HEIGHT_OF_MINIMAP,
                         WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_MINIMAP,
-                        map,
-                        entityRepository
+                        battlefield, entityRepository, map
                 )
         );
 

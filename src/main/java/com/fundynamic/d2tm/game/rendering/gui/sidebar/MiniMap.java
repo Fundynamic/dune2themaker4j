@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
+import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -19,27 +20,41 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class MiniMap extends GuiElement {
 
-    private final Map map;
+    private final BattleField battleField;
     private final EntityRepository entityRepository;
-    private Rectangle renderPosition;
+    private final Map map;
+    private final Rectangle renderPosition;
+    private final float renderScale;
+
     private Image unscaledTerrainImage;
     private Image unscaledEntityImage;
-
     private float elapsedTime = 0f;
 
-    public MiniMap(int x, int y, int width, int height, Map map, EntityRepository entityRepository) {
+    public MiniMap(int x, int y, int width, int height, BattleField battleField, EntityRepository entityRepository, Map map) {
         super(x, y, width, height);
 
-        this.map = map;
+        this.battleField = battleField;
         this.entityRepository = entityRepository;
-        this.renderPosition = getRenderPosition(map);
+        this.map = map;
+
+        this.renderPosition = getRenderPosition();
+        this.renderScale = getRenderScale(Vector2D.create(map.getWidth(), map.getHeight()));
+
         this.unscaledTerrainImage = renderTerrainMiniMap();
         this.unscaledEntityImage = renderEntityMiniMap();
     }
 
-    private Rectangle getRenderPosition(Map map) {
+    private Rectangle getRenderPosition() {
         Vector2D mapDimensions = new Vector2D(map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE);
         return this.scaleContainCenter(mapDimensions);
+    }
+
+    private float getRenderScale(Vector2D mapDimensions) {
+        if (mapDimensions.getX() > mapDimensions.getY()) {
+            return getWidth() / mapDimensions.getX();
+        } else {
+            return getHeight() / mapDimensions.getY();
+        }
     }
 
     @Override
@@ -75,7 +90,7 @@ public class MiniMap extends GuiElement {
         final int height = map.getHeight();
 
         ImageBuffer buffer = new ImageBuffer(width, height);
-        for(Entity entity : entityRepository.findAliveEntitiesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
+        for(Entity entity : entityRepository.findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
                 int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
                 Color factionColor = entity.getPlayer().getFactionColor();
@@ -99,13 +114,27 @@ public class MiniMap extends GuiElement {
             renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
             renderPosition.getWidth(), renderPosition.getHeight());
         unscaledEntityImage.draw(
-                renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
-                renderPosition.getWidth(), renderPosition.getHeight());
+            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
+            renderPosition.getWidth(), renderPosition.getHeight());
+
+        drawViewportOutline(graphics);
 
         if (Game.DEBUG_INFO) {
             graphics.drawString("X: " + renderPosition.getTopLeftX() + ", Y:" + renderPosition.getTopLeftY(), getTopLeftX(), getTopLeftY());
             graphics.drawString("W: " + renderPosition.getWidth() + ", H:" + renderPosition.getHeight(), getTopLeftX(), getTopLeftY() + 15);
         }
+    }
+
+    private void drawViewportOutline(Graphics graphics) {
+        graphics.setColor(Color.white);
+        graphics.setLineWidth(1f);
+
+        Rectangle boundaries = battleField.getViewportCellBoundaries();
+
+        // x and y are offset by 1 because the boundaries are 1-based
+        float x = renderPosition.getTopLeftX() + (boundaries.getTopLeftX() - 1) * renderScale;
+        float y = renderPosition.getTopLeftY() + (boundaries.getTopLeftY() - 1) * renderScale;
+        graphics.drawRect(x, y, (boundaries.getWidth() * renderScale) -1f, (boundaries.getHeight() * renderScale) -1f);
     }
 
     @Override

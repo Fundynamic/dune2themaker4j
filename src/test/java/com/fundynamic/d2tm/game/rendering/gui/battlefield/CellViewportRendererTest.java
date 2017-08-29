@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class CellViewportRendererTest {
 
     @Test
-    public void getVisibleCell1() throws Exception {
+    public void getViewport1() throws Exception {
         testVisibleCellRange(
             new Vector2D(TILE_SIZE, TILE_SIZE),
             new Vector2D(0, 0),
@@ -20,7 +20,7 @@ public class CellViewportRendererTest {
     // viewport exactly 1 cell large, exactly one cell, horizontal movement
 
     @Test
-    public void getVisibleCell2() throws Exception {
+    public void getViewport2() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(1, 0),
@@ -28,7 +28,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell3() throws Exception {
+    public void getViewport3() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(TILE_SIZE - 1, 0),
@@ -36,7 +36,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell4() throws Exception {
+    public void getViewport4() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(TILE_SIZE, 0),
@@ -46,7 +46,7 @@ public class CellViewportRendererTest {
     // viewport exactly 1 cell large, vertical movement
 
     @Test
-    public void getVisibleCell5() throws Exception {
+    public void getViewport5() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(0, 1),
@@ -54,7 +54,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell6() throws Exception {
+    public void getViewport6() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(0, TILE_SIZE - 1),
@@ -62,7 +62,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell7() throws Exception {
+    public void getViewport7() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE),
                 new Vector2D(0, TILE_SIZE),
@@ -71,7 +71,7 @@ public class CellViewportRendererTest {
 
     // viewport 1 cell + 1px large, horizontal movement
     @Test
-    public void getVisibleCell8() throws Exception {
+    public void getViewport8() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 1, TILE_SIZE),
                 new Vector2D(0, 0),
@@ -79,7 +79,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell9() throws Exception {
+    public void getViewport9() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 1, TILE_SIZE),
                 new Vector2D(1, 0),
@@ -87,7 +87,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell10() throws Exception {
+    public void getViewport10() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 1, TILE_SIZE),
                 new Vector2D(TILE_SIZE -1, 0),
@@ -95,7 +95,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell11() throws Exception {
+    public void getViewport11() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 1, TILE_SIZE),
                 new Vector2D(TILE_SIZE, 0),
@@ -104,7 +104,7 @@ public class CellViewportRendererTest {
 
     // viewport 1 cell + 1px large, horizontal movement
     @Test
-    public void getVisibleCell12() throws Exception {
+    public void getViewport12() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE),
                 new Vector2D(0, 0),
@@ -112,7 +112,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell13() throws Exception {
+    public void getViewport13() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE),
                 new Vector2D(1, 0),
@@ -120,7 +120,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell14() throws Exception {
+    public void getViewport14() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE),
                 new Vector2D(TILE_SIZE - 2, 0),
@@ -128,7 +128,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell15() throws Exception {
+    public void getViewport15() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE),
                 new Vector2D(TILE_SIZE - 1, 0),
@@ -136,7 +136,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell16() throws Exception {
+    public void getViewport16() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE),
                 new Vector2D(TILE_SIZE, 0),
@@ -145,7 +145,7 @@ public class CellViewportRendererTest {
 
     // viewport 1.5 cell large, vertical movement
     @Test
-    public void getVisibleCell17() throws Exception {
+    public void getViewport17() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE + 2),
                 new Vector2D(0, 0),
@@ -153,7 +153,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell18() throws Exception {
+    public void getViewport18() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE + 2),
                 new Vector2D(0, 1),
@@ -161,7 +161,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell19() throws Exception {
+    public void getViewport19() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE + 2),
                 new Vector2D(0, TILE_SIZE - 2),
@@ -169,7 +169,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell20() throws Exception {
+    public void getViewport20() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE + 2),
                 new Vector2D(0, TILE_SIZE - 1),
@@ -177,7 +177,7 @@ public class CellViewportRendererTest {
     }
 
     @Test
-    public void getVisibleCell21() throws Exception {
+    public void getViewport21() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE, TILE_SIZE + 2),
                 new Vector2D(0, TILE_SIZE),
@@ -187,7 +187,7 @@ public class CellViewportRendererTest {
     // viewport 1.5 cell large, horizontal and vertical movement
 
     @Test
-    public void getVisibleCell22() throws Exception {
+    public void getViewport22() throws Exception {
         testVisibleCellRange(
                 new Vector2D(TILE_SIZE + 2, TILE_SIZE + 2),
                 new Vector2D(TILE_SIZE - 1, TILE_SIZE - 1),
@@ -196,7 +196,7 @@ public class CellViewportRendererTest {
 
     private void testVisibleCellRange(Vector2D windowDimensions, Vector2D viewingVector, Rectangle expectedVisibleCellRange) {
         CellViewportRenderer cellViewportRenderer = new CellViewportRenderer(null, windowDimensions);
-        Rectangle visibleCellRange = cellViewportRenderer.getVisibleCellRange(viewingVector);
+        Rectangle visibleCellRange = cellViewportRenderer.getViewport(viewingVector);
         assertEquals(expectedVisibleCellRange, visibleCellRange);
     }
 }

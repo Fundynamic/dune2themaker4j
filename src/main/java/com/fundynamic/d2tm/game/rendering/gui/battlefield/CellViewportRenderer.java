@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.UnitMoveIntents;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -28,7 +27,7 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
         this.windowDimensions = windowDimensions;
     }
 
-    public Rectangle getVisibleCellRange(Vector2D viewingVector) {
+    public Rectangle getViewport(Vector2D viewingVector) {
         Vector2D bottomRight = viewingVector.add(windowDimensions);
         MapCoordinate cellAlignedTopLeft = MapCoordinate.create(
             viewingVector.getXAsInt() / TILE_SIZE,
@@ -45,7 +44,7 @@ public class CellViewportRenderer implements ViewportRenderer<Cell> {
     public void render(Graphics graphics, Vector2D viewingVector, Renderer<Cell> renderer) throws SlickException {
         if (graphics == null) throw new IllegalArgumentException("Graphics cannot be null");
 
-        Rectangle visibleCellRange = getVisibleCellRange(viewingVector);
+        Rectangle visibleCellRange = getViewport(viewingVector);
         for (int x = visibleCellRange.getTopLeftX(); x < visibleCellRange.getBottomRightX(); x++) {
             for (int y = visibleCellRange.getTopLeftY(); y < visibleCellRange.getBottomRightY(); y++) {
                 // calculate the draw offset
