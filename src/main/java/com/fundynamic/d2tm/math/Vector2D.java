@@ -114,6 +114,10 @@ public class Vector2D {
         return Vector2D.create(scaled.getX(), scaled.getY());
     }
 
+    public MapCoordinate asMapCoordinate() {
+        return new MapCoordinate(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

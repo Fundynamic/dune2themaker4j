@@ -28,7 +28,7 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
     public void render(Graphics graphics) {
         Vector2D topLeft = getTopLeft();
         graphics.setColor(Color.darkGray);
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
+        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
         graphics.setColor(Color.white);
 
         if (guiElement != null) {
@@ -102,8 +102,8 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
                 new SidebarSelectBuildableEntityGuiElement (
                         parentX + 10,
                         parentY + 10,
-                        getWidthAsInt() - 20,
-                        getHeightAsInt() - 20,
+                        getWidth() - 20,
+                        getHeight() - 20,
                         entityBuilder,
                         guiComposite
                 );

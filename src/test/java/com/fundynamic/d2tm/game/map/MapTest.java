@@ -61,10 +61,8 @@ public class MapTest extends AbstractD2TMTest {
 
     @Test
     public void returnsDimensionsInPixels() throws SlickException {
-        int tileWidth = 16;
-        int tileHeight = 24;
-        assertEquals(MAP_WIDTH * tileWidth, map.getWidthInPixels(tileWidth));
-        assertEquals(MAP_HEIGHT * tileHeight, map.getHeightInPixels(tileHeight));
+        assertEquals(MAP_WIDTH * TILE_SIZE, map.getWidthInPixels());
+        assertEquals(MAP_HEIGHT * TILE_SIZE, map.getHeightInPixels());
     }
 
     @Test

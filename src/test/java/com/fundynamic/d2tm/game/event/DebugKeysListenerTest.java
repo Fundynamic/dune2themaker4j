@@ -1,10 +1,10 @@
 package com.fundynamic.d2tm.game.event;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ public class DebugKeysListenerTest extends AbstractD2TMTest {
     // masks the real battlefield in the AbstractD2TM test.
     @Mock private BattleField battleField;
 
-    private final Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
+    private final Player player = new Player("Stefan", Faction.BLUE);
     private DebugKeysListener debugKeysListener;
 
     @Before

@@ -7,7 +7,6 @@ import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
-import com.fundynamic.d2tm.game.map.Perimeter;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Coordinate;
@@ -49,7 +48,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     private final CellViewportRenderer cellViewportRenderer;
 
     // MOVEMENT RELATED
-    private final Perimeter viewingVectorPerimeter;
+    private final Rectangle viewingVectorPerimeter;
     private Vector2D velocity;
     private float moveSpeed;
 
@@ -57,7 +56,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     private AbstractBattleFieldMouseBehavior mouseBehavior;
     private Graphics bufferGraphics;
 
-    public BattleField(Vector2D size,
+    public BattleField(Vector2D viewportDimensions,
                        Vector2D drawingPosition,
                        Vector2D viewingVector,
                        Map map,
@@ -66,7 +65,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                        Player player,
                        Image buffer,
                        EntityRepository entityRepository) throws SlickException {
-        super(drawingPosition.getXAsInt(), drawingPosition.getYAsInt(), size.getXAsInt(), size.getYAsInt());
+        super(drawingPosition.getXAsInt(), drawingPosition.getYAsInt(), viewportDimensions.getXAsInt(), viewportDimensions.getYAsInt());
 
         this.map = map;
         this.mouse = mouse;
@@ -74,13 +73,13 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         this.mouseBehavior = new NormalMouse(this);
 
-        this.viewingVectorPerimeter = map.createViewablePerimeter(size);
+        this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions);
         this.velocity = Vector2D.zero();
 
         this.moveSpeed = moveSpeed;
 
         this.viewingVector = viewingVector;
-        this.cellViewportRenderer = new CellViewportRenderer(map, size);
+        this.cellViewportRenderer = new CellViewportRenderer(map, viewportDimensions);
         this.cellTerrainRenderer = new CellTerrainRenderer();
         this.cellShroudRenderer = new CellShroudRenderer(player, map.getShroud());
 
@@ -113,7 +112,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                 // at the 'topleft' coordinate
                 float lineWidth = bufferGraphics.getLineWidth();
                 bufferGraphics.setLineWidth(2.0f);
-                bufferGraphics.drawRect(1, 1, getWidthAsInt()-2, getHeightAsInt()-2);
+                bufferGraphics.drawRect(1, 1, getWidth()-2, getHeight()-2);
                 bufferGraphics.setLineWidth(lineWidth);
             }
 
@@ -137,7 +136,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
                         viewingVector.min(
                                 Vector2D.create(DOUBLE_TILE_SIZE, DOUBLE_TILE_SIZE)
                         ),
-                        Vector2D.create(getWidthAsInt() + DOUBLE_TILE_SIZE, getHeightAsInt() + DOUBLE_TILE_SIZE)
+                        Vector2D.create(getWidth() + DOUBLE_TILE_SIZE, getHeight() + DOUBLE_TILE_SIZE)
                 );
         List<Entity> entitiesWithinViewport = entityRepository.findEntitiesWithinRectangle(rectangle).toList();
 
@@ -177,8 +176,8 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         Coordinate viewportCoordinate = translateScreenToViewportCoordinate(mouseCoordinates);
 
         // now substract half of the structure to place, so we make the structure to place center beneath the mouse
-        Vector2D halfSize = entityDataToPlace.getHalfSize();
-        Coordinate topLeftOfEntity = viewportCoordinate.min(halfSize);
+        Vector2D halfDimensions = entityDataToPlace.halfDimensions();
+        Coordinate topLeftOfEntity = viewportCoordinate.min(halfDimensions);
 
         Cell topLeftCellOfEntity = getCellByAbsoluteViewportCoordinate(topLeftOfEntity);
         return topLeftCellOfEntity.getCoordinate();
@@ -257,7 +256,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
         if (viewportCoordinates == null) {
             Vector2D drawingVector = getTopLeft();
-            Vector2D viewportDimensions = getSize();
+            Vector2D viewportDimensions = getDimensions();
 
             int snappedX = Math.min(
                     Math.max(newX, drawingVector.getXAsInt()),
@@ -337,7 +336,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     public void setViewingVector(Vector2D viewingVector) {
-        this.viewingVector = viewingVector;
+        this.viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector);
     }
 
     @Override
@@ -364,9 +363,21 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     // These methods are here mainly for (easier) testing. Best would be to remove them if possible - and at the very
-    // least not the use them in the non-test code.
+    // least not to use them in the non-test code.
     public Vector2D getViewingVector() {
         return viewingVector;
+    }
+
+    public void centerViewportOn(MapCoordinate centerCoordinate) {
+        Vector2D viewportDimensions = this.getViewportCellBoundaries().getDimensions();
+        Vector2D viewingVector = centerCoordinate
+            .add(viewportDimensions.scale(-.5f)) // convert it to the center of the viewport
+            .toCoordinate();
+        setViewingVector(viewingVector);
+    }
+
+    public Rectangle getViewportCellBoundaries() {
+        return this.cellViewportRenderer.getViewport(this.viewingVector);
     }
 
     public Map getMap() {
@@ -380,5 +391,4 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     public void entityPlacedOnMap(Entity entity) {
         guiComposite.entityPlacedOnMap(entity);
     }
-
 }

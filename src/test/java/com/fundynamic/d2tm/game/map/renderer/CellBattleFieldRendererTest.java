@@ -26,8 +26,8 @@ public class CellBattleFieldRendererTest extends AbstractD2TMTest {
         Renderer renderer = mock(Renderer.class);
         cellViewportRenderer.render(graphics, viewingVector, renderer);
 
-        int cellsToDrawHorizontally = (screenWidth / TILE_SIZE) + 2; // 2 extra for 'rounding' purposes at right
-        int cellsToDrawVertically = (screenHeight / TILE_SIZE) + 2; // 2 extra for 'rounding' purposes at bottom
+        int cellsToDrawHorizontally = (screenWidth / TILE_SIZE);    // no extra because exactly 25 cells fit
+        int cellsToDrawVertically = (screenHeight / TILE_SIZE) + 1; // 1 extra, because you see just more than 18 cells in height
         int numberOfCellsToDraw = cellsToDrawHorizontally * cellsToDrawVertically;
 
         // only interested in the amount of times we draw something, not where etc.

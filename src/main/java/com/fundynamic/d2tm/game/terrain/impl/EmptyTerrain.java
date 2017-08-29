@@ -64,6 +64,11 @@ public class EmptyTerrain implements Terrain {
         return true;
     }
 
+    @Override
+    public Color getTerrainColor() {
+        return Color.magenta;
+    }
+
     public static Terrain instance() {
         return new EmptyTerrain(TILE_SIZE);
     }

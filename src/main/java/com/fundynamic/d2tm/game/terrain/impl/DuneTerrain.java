@@ -21,7 +21,6 @@ public abstract class DuneTerrain implements Terrain {
     public static final int TERRAIN_SPICE_HILL = 5;
     public static final int CONCRETE = 6;
 
-
     public DuneTerrain(Theme theme) {
         this.theme = theme;
         this.terrainFacing = MapEditor.TerrainFacing.FULL;
@@ -58,5 +57,4 @@ public abstract class DuneTerrain implements Terrain {
     public boolean isPassable(Entity entity) {
         return true;
     }
-
 }

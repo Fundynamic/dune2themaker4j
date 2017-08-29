@@ -32,12 +32,12 @@ public class Topbar extends GuiElement {
         } else {
             graphics.setColor(Color.gray);
         }
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
+        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
 
-        SlickUtils.drawText(graphics, Color.white, "Resources", topLeft.getXAsInt(), topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
+        SlickUtils.drawText(graphics, Color.white, "Resources", topLeft.getXAsInt(), topLeft.getYAsInt() + (getHeight() / 2) - 8);
 
         String creditsString = String.format("$ %d", player.getAnimatedCredits());
-        SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidthAsInt()) - 100, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
+        SlickUtils.drawShadowedText(graphics, Color.white, creditsString, (topLeft.getXAsInt() + getWidth()) - 100, topLeft.getYAsInt() + (getHeight() / 2) - 8);
 
         int producing = player.getTotalPowerProduced();
         int consumption = player.getTotalPowerConsumption();
@@ -46,9 +46,9 @@ public class Topbar extends GuiElement {
         if (consumption > (producing - 25)) statusColor = Color.yellow;
         if (consumption > producing) statusColor = Colors.RED_BRIGHT;
 
-        int startX = (topLeft.getXAsInt() + getWidthAsInt()) - 250;
-        lightningImage.draw(startX - 40, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 14);
-        SlickUtils.drawShadowedText(graphics, statusColor, powerString, startX, topLeft.getYAsInt() + (getHeightAsInt() / 2) - 8);
+        int startX = (topLeft.getXAsInt() + getWidth()) - 250;
+        lightningImage.draw(startX - 40, topLeft.getYAsInt() + (getHeight() / 2) - 14);
+        SlickUtils.drawShadowedText(graphics, statusColor, powerString, startX, topLeft.getYAsInt() + (getHeight() / 2) - 8);
     }
 
     @Override

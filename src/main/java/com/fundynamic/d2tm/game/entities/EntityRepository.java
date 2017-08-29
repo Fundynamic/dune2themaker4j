@@ -83,7 +83,7 @@ public class EntityRepository {
 
     public void placeExplosionWithCenterAt(Coordinate centerCoordinate, Player player, String explosionId) {
         EntityData particle = entitiesData.getParticle(explosionId);
-        Coordinate topLeft = centerCoordinate.min(particle.getHalfSize());
+        Coordinate topLeft = centerCoordinate.min(particle.halfDimensions());
         placeExplosion(topLeft, particle, player);
     }
 
@@ -126,7 +126,7 @@ public class EntityRepository {
         Image originalImage = entityData.image;
 
         if (entityData.isTypeStructure()) {
-            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             createdEntity = new Structure(
                     startCoordinate,
                     makeSpriteSheet(entityData, recoloredImage),
@@ -136,7 +136,7 @@ public class EntityRepository {
             );
             return placeOnMap(createdEntity);
         } else if (entityData.isTypeUnit()) {
-            Image recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+            Image recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             createdEntity = new Unit(
                     map,
                     startCoordinate,
@@ -156,7 +156,7 @@ public class EntityRepository {
         } else if (entityData.isTypeParticle()) {
             Image recoloredImage = originalImage;
             if (entityData.recolor) {
-                recoloredImage = recolorer.createCopyRecoloredToFactionColor(originalImage, player.getFactionColor());
+                recoloredImage = recolorer.createCopyRecoloredToFaction(originalImage, player.getFaction());
             }
             SpriteSheet spriteSheet = makeSpriteSheet(entityData, recoloredImage);
             createdEntity = new Particle(startCoordinate, spriteSheet, entityData, this);
@@ -264,6 +264,16 @@ public class EntityRepository {
 
     public EntitiesSet findDestructibleEntities(Set<Coordinate> absoluteMapCoordinates) {
         return findDestructibleEntities(absoluteMapCoordinates.toArray(new Coordinate[absoluteMapCoordinates.size()]));
+    }
+
+    public EntitiesSet findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType... types) {
+        return filter(
+                Predicate.builder().
+                        ofTypes(types).
+                        isAlive().
+                        isWithinPlayableMapBoundaries(map)
+
+        );
     }
 
     public EntitiesSet findAliveEntitiesOfTypeAtVector(Coordinate absoluteMapCoordinates, EntityType... types) {

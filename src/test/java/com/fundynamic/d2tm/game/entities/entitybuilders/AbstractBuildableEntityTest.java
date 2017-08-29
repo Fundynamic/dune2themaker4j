@@ -1,9 +1,9 @@
 package com.fundynamic.d2tm.game.entities.entitybuilders;
 
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.NullEntity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.sidebar.BuildableState;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.types.EntityData;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ public class AbstractBuildableEntityTest {
         entityData.buildTimeInSeconds = 1;
         entityData.buildCost = BUILD_COST;
 
-        player = new Player("Human player", Recolorer.FactionColor.BLUE);
+        player = new Player("Human player", Faction.BLUE);
 
         buildableEntity = new BuildableEntity(entityData, player);
     }

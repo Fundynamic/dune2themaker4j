@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 
@@ -174,6 +175,11 @@ public class PredicateBuilder {
 
     public PredicateBuilder withinRange(Coordinate coordinate, float range) {
         predicates.add(new DistanceFromCoordinateToEntity(coordinate, range));
+        return this;
+    }
+
+    public PredicateBuilder isWithinPlayableMapBoundaries(Map map) {
+        predicates.add(new IsWithinPlayableMapBoundaries(map));
         return this;
     }
 }

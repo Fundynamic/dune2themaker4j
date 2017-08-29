@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.SlickException;
 
@@ -131,21 +132,17 @@ public class Map {
         return getCell(x, y);
     }
 
-    public int getWidthInPixels(int tileWidth) {
-        return this.width * tileWidth;
+    public int getWidthInPixels() {
+        return this.width * TILE_SIZE;
     }
 
-    public int getHeightInPixels(int tileHeight) {
-        return this.height * tileHeight;
+    public int getHeightInPixels() {
+        return this.height * TILE_SIZE;
     }
 
-    public Perimeter createViewablePerimeter(Vector2D screenResolution) {
-        return new Perimeter(
-                TILE_SIZE,
-                (getWidthInPixels(TILE_SIZE) - TILE_SIZE) - screenResolution.getX(),
-                TILE_SIZE,
-                (getHeightInPixels(TILE_SIZE) - TILE_SIZE) - screenResolution.getY()
-        );
+    public Rectangle createViewablePerimeter(Vector2D viewportDimensions) {
+        Vector2D dimensions = Vector2D.create(getWidthInPixels(), getHeightInPixels()).min(viewportDimensions);
+        return new Rectangle(TILE_SIZE, TILE_SIZE, dimensions);
     }
 
     public Shroud getShroud() {

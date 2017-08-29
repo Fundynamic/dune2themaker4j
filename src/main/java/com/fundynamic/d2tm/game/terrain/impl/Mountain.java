@@ -2,8 +2,11 @@ package com.fundynamic.d2tm.game.terrain.impl;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.graphics.Theme;
+import org.newdawn.slick.Color;
 
 public class Mountain extends DuneTerrain {
+
+    private static final Color terrainColor = new Color(76, 46, 4);
 
     public Mountain(Theme theme) {
         super(theme);
@@ -22,6 +25,11 @@ public class Mountain extends DuneTerrain {
             default:
                 return true;
         }
+    }
+
+    @Override
+    public Color getTerrainColor() {
+        return terrainColor;
     }
 
 }

@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.game.terrain;
 
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.map.MapEditor;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
 public interface Terrain {
@@ -18,4 +19,5 @@ public interface Terrain {
 
     boolean isPassable(Entity entity);
 
+    Color getTerrainColor();
 }

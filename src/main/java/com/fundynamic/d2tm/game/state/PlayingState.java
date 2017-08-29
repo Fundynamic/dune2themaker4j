@@ -2,10 +2,7 @@ package com.fundynamic.d2tm.game.state;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Player;
-import com.fundynamic.d2tm.game.entities.Predicate;
+import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.event.DebugKeysListener;
@@ -13,10 +10,10 @@ import com.fundynamic.d2tm.game.event.MouseListener;
 import com.fundynamic.d2tm.game.event.QuitGameKeyListener;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.gui.DummyGuiElement;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.rendering.gui.sidebar.MiniMap;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -53,8 +50,7 @@ public class PlayingState extends BasicGameState {
     private Predicate destroyedEntitiesPredicate;// pixels
 
     public static final int HEIGHT_OF_TOP_BAR = 42;// pixels
-    public static final int HEIGHT_OF_BOTTOM_BAR = 32;
-    public static final int HEIGHT_OF_MINIMAP = 128;
+    public static final int HEIGHT_OF_MINIMAP = 160;
     public static final int WIDTH_OF_SIDEBAR = 160;
 
     private MapEditor mapEditor;
@@ -76,8 +72,8 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        Player human = new Player("Human", Recolorer.FactionColor.GREEN);
-        Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
+        Player human = new Player("Human", Faction.GREEN);
+        Player cpu = new Player("CPU", Faction.RED);
 
         if (Game.RECORDING_VIDEO) {
             human.setCredits(2200);
@@ -113,22 +109,20 @@ public class PlayingState extends BasicGameState {
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_TOP_BAR,
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
+                        SCREEN_HEIGHT - (HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
                 )
         );
 
         // minimap
         guiComposite.addGuiElement(
-                new DummyGuiElement(
+                new MiniMap(
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_BOTTOM_BAR + HEIGHT_OF_MINIMAP),
+                        SCREEN_HEIGHT - HEIGHT_OF_MINIMAP,
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR
+                        HEIGHT_OF_MINIMAP,
+                        battlefield, entityRepository, map, human
                 )
         );
-
-        // bottombar
-        guiComposite.addGuiElement(new DummyGuiElement(0, SCREEN_HEIGHT - HEIGHT_OF_BOTTOM_BAR, SCREEN_WIDTH - WIDTH_OF_SIDEBAR, HEIGHT_OF_BOTTOM_BAR));
 
         input.addMouseListener(new MouseListener(mouse));
         input.addKeyListener(new DebugKeysListener(battlefield, human, entityRepository));
@@ -143,18 +137,18 @@ public class PlayingState extends BasicGameState {
 
         try {
             float moveSpeed = 30 * TILE_SIZE;
-            Vector2D viewingVector = Vector2D.create(32, 32);
+            Vector2D viewingVector = MapCoordinate.create(1, 1).toCoordinate();
 
-            Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, (HEIGHT_OF_TOP_BAR + HEIGHT_OF_BOTTOM_BAR));
-            Vector2D viewportResolution = getResolution().min(guiAreas);
+            Vector2D guiAreas = Vector2D.create(WIDTH_OF_SIDEBAR, HEIGHT_OF_TOP_BAR);
+            Vector2D viewportDimensions = getResolution().min(guiAreas);
 
             // start drawing below the top gui bar
             Vector2D viewportDrawingPosition = Vector2D.create(0, HEIGHT_OF_TOP_BAR);
 
-            Image image = imageRepository.createImage(screenResolution);
+            Image image = imageRepository.createImage(viewportDimensions);
 
             battlefield = new BattleField(
-                    viewportResolution,
+                    viewportDimensions,
                     viewportDrawingPosition,
                     viewingVector,
                     getMap(),
