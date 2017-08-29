@@ -12,10 +12,7 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.ImageBuffer;
+import org.newdawn.slick.*;
 
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
@@ -70,7 +67,46 @@ public class MiniMap extends GuiElement {
         }
     }
 
-    private Image renderMiniMap() {
+    @Override
+    public void render(Graphics graphics) {
+        // clear background
+        graphics.setColor(Color.black);
+        graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
+
+        // render minimap
+        Image unscaledMiniMapImage = getMaybeRedrawnOrStaleMiniMapImage();
+        unscaledMiniMapImage.draw(
+            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
+            renderPosition.getWidth(), renderPosition.getHeight());
+
+        // render viewport outline
+        drawViewportOutline(graphics);
+
+        if (Game.DEBUG_INFO) {
+            graphics.drawString("X: " + renderPosition.getTopLeftX() + ", Y:" + renderPosition.getTopLeftY(), getTopLeftX(), getTopLeftY());
+            graphics.drawString("W: " + renderPosition.getWidth() + ", H:" + renderPosition.getHeight(), getTopLeftX(), getTopLeftY() + 15);
+        }
+    }
+
+    private Image getMaybeRedrawnOrStaleMiniMapImage() {
+        if (redrawMiniMap) {
+            // free memory of previously generated mini-map image
+            if (unscaledMiniMapImage != null) {
+                try {
+                    unscaledMiniMapImage.destroy();
+                } catch (SlickException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            // regenerate the minimap
+            unscaledMiniMapImage = createMiniMapImage();
+            redrawMiniMap = false;
+        }
+        return unscaledMiniMapImage;
+    }
+
+    private Image createMiniMapImage() {
         final int width = map.getWidth();
         final int height = map.getHeight();
 
@@ -105,33 +141,7 @@ public class MiniMap extends GuiElement {
             }
         }
 
-        Image image = buffer.getImage();
-        image.setFilter(Image.FILTER_NEAREST);
-        return image;
-    }
-
-    @Override
-    public void render(Graphics graphics) {
-        // clear background
-        graphics.setColor(Color.black);
-        graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
-
-        // render minimap
-        if (redrawMiniMap) {
-            unscaledMiniMapImage = renderMiniMap();
-            redrawMiniMap = false;
-        }
-        unscaledMiniMapImage.draw(
-            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
-            renderPosition.getWidth(), renderPosition.getHeight());
-
-        // render viewport outline
-        drawViewportOutline(graphics);
-
-        if (Game.DEBUG_INFO) {
-            graphics.drawString("X: " + renderPosition.getTopLeftX() + ", Y:" + renderPosition.getTopLeftY(), getTopLeftX(), getTopLeftY());
-            graphics.drawString("W: " + renderPosition.getWidth() + ", H:" + renderPosition.getHeight(), getTopLeftX(), getTopLeftY() + 15);
-        }
+        return buffer.getImage(Image.FILTER_NEAREST);
     }
 
     private void drawViewportOutline(Graphics graphics) {
