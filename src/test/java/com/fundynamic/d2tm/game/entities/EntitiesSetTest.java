@@ -136,6 +136,13 @@ public class EntitiesSetTest extends AbstractD2TMTest {
     }
 
     @Test
+    public void returnsTenUnitsWithinPlayableMapBoundaries() throws Exception {
+        Set<Entity> result = entitiesSet.filter(
+                Predicate.builder().isWithinPlayableMapBoundaries(map));
+        assertEquals(10, result.size());
+    }
+
+    @Test
     public void exclude() {
         assertTrue(entitiesSet.contains(quad));
 

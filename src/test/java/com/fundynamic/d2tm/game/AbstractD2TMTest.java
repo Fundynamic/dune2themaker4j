@@ -137,7 +137,6 @@ public abstract class AbstractD2TMTest {
                 bufferWithGraphics,
                 entityRepository
         );
-
         guiComposite.addGuiElement(battleField);
 
         sidebar = new Sidebar(
@@ -146,7 +145,6 @@ public abstract class AbstractD2TMTest {
                 PlayingState.WIDTH_OF_SIDEBAR,
                 screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
         );
-
         guiComposite.addGuiElement(sidebar);
 
         Input input = mock(Input.class);
