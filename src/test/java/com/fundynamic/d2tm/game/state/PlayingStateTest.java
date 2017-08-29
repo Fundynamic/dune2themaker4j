@@ -9,6 +9,9 @@ import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.Scenario;
+import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -39,28 +42,20 @@ public class PlayingStateTest extends AbstractD2TMTest {
         Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE);
 
         final Map originalMap = map;
+        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(shroud, terrainFactory, entitiesData) {
 
-        playingState = new PlayingState(gameContainer, terrainFactory, imageRepository, shroud) {
             @Override
-            public EntityRepository createEntityRepository() throws SlickException {
+            public Map getMap(MapEditor mapEditor) {
+                return originalMap;
+            }
+
+            @Override
+            public EntityRepository getEntityRepository(Map map) throws SlickException {
                 return entityRepository;
             }
+        };
 
-            @Override
-            public Map getMap() {
-                return map;
-            }
-
-            @Override
-            public MapEditor getMapEditor() {
-                return new MapEditor(terrainFactory) {
-                    @Override
-                    public Map generateRandom(Map map) {
-                        return originalMap;
-                    }
-                };
-            }
-
+        playingState = new PlayingState(gameContainer, imageRepository, scenarioFactory) {
             @Override
             public BattleField makeBattleField(Player human, Mouse mouse) {
                 return battleField;
@@ -70,15 +65,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
         StateBasedGame stateBasedGame = mock(StateBasedGame.class);
 
         playingState.init(gameContainer, stateBasedGame);
-    }
-
-
-    @Test
-    public void testInitInitialGame() throws SlickException {
-        Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
-        Player human = new Player("human", Recolorer.FactionColor.BLUE);
-
-        playingState.initializeMap(entityRepository, human, cpu);
     }
 
     @Test

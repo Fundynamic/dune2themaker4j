@@ -1,11 +1,16 @@
 package com.fundynamic.d2tm;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.Scenario;
+import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.openal.SoundStore;
@@ -37,8 +42,16 @@ public class Game extends StateBasedGame {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
-    public Game(String title) {
+    public String mapFileName = "";
+
+    public Game(String title, String mapFileName) {
         super(title);
+        this.mapFileName = mapFileName;
+        if (StringUtils.isEmpty(mapFileName)) {
+            System.out.println("Starting game with random generated map.");
+        } else {
+            System.out.println("Starting game with loading map: " + mapFileName);
+        }
     }
 
     @Override
@@ -54,14 +67,21 @@ public class Game extends StateBasedGame {
         container.setShowFPS(SHOW_FPS);
         container.setVSync(VSYNC);
 
+        Shroud shroud = new Shroud(
+                imageRepository.loadAndCache("shroud_edges.png"),
+                TILE_SIZE
+        );
+
+        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(
+                shroud,
+                terrainFactory,
+                new EntitiesDataReader().fromRulesIni()
+        );
+
         PlayingState playingState = new PlayingState(
                 container,
-                terrainFactory,
                 imageRepository,
-                new Shroud(
-                    imageRepository.loadAndCache("shroud_edges.png"),
-                        TILE_SIZE
-                )
+                scenarioFactory
         );
 
         SoundStore.get().setSoundVolume(0.2f);
@@ -80,8 +100,15 @@ public class Game extends StateBasedGame {
         DEBUG_INFO = argsList.contains("debug");
         FULLSCREEN = argsList.contains("fullscreen");
 
+        String mapFileName = "";
+        for (String arg : argsList) {
+            if (arg.startsWith("map:")) {
+                mapFileName = arg.substring(4);
+            }
+        }
+
         Bootstrap.runAsApplication(
-                new Game(GAME_TITLE),
+                new Game(GAME_TITLE, mapFileName),
                 SCREEN_WIDTH,
                 SCREEN_HEIGHT,
                 FULLSCREEN
