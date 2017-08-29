@@ -82,17 +82,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
     }
 
     @Test
-    public void rendersViewports() throws SlickException {
-        StateBasedGame game = mock(StateBasedGame.class);
-        Graphics graphics = mock(Graphics.class);
-        Font font = mock(Font.class);
-
-        when(graphics.getFont()).thenReturn(font);
-
-        playingState.render(gameContainer, game, graphics);
-    }
-
-    @Test
     public void updateRemovesDestroyedEntities() throws SlickException {
         StateBasedGame game = mock(StateBasedGame.class);
         Unit unit = makeUnit(player);
