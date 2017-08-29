@@ -31,6 +31,8 @@ public class MiniMap extends GuiElement {
     private boolean redrawMiniMap;
     private Image unscaledMiniMapImage;
 
+    private Vector2D mouseCoordinates;
+
     public MiniMap(int x, int y, int width, int height, BattleField battleField, EntityRepository entityRepository, Map map) {
         super(x, y, width, height);
 
@@ -75,6 +77,7 @@ public class MiniMap extends GuiElement {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Cell cell = map.getCell(x + 1, y + 1);
+
                 final Color terrainColor = cell.getTerrainColor();
                 buffer.setRGBA(x, y, terrainColor.getRed(), terrainColor.getGreen(), terrainColor.getBlue(), 255);
             }
@@ -133,7 +136,14 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void leftClicked() {
-
+        Vector2D snappedViewportCoordinates = mouseCoordinates
+            .min(renderPosition.getTopLeft()) // convert to relative coordinates
+            .scale(1f / renderScale) // convert to map coordinates
+            .add(new Vector2D(1, 1)) // and offset by one, because of the invisible border
+            .add(battleField.getViewportCellBoundaries().getDimensions().scale(-.5f)) // convert it to the center of the viewport
+            .asMapCoordinate()
+            .toCoordinate();
+        battleField.setViewingVector(snappedViewportCoordinates);
     }
 
     @Override
@@ -148,11 +158,12 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void draggedToCoordinates(Vector2D coordinates) {
-
+        mouseCoordinates = coordinates;
+        leftClicked();
     }
 
     @Override
     public void movedTo(Vector2D coordinates) {
-
+        mouseCoordinates = coordinates;
     }
 }
