@@ -23,12 +23,13 @@ public class MiniMap extends GuiElement {
     private final BattleField battleField;
     private final EntityRepository entityRepository;
     private final Map map;
+
     private final Rectangle renderPosition;
     private final float renderScale;
 
-    private Image unscaledTerrainImage;
-    private Image unscaledEntityImage;
     private float elapsedTime = 0f;
+    private boolean redrawMiniMap;
+    private Image unscaledMiniMapImage;
 
     public MiniMap(int x, int y, int width, int height, BattleField battleField, EntityRepository entityRepository, Map map) {
         super(x, y, width, height);
@@ -37,11 +38,9 @@ public class MiniMap extends GuiElement {
         this.entityRepository = entityRepository;
         this.map = map;
 
+        this.redrawMiniMap = true;
         this.renderPosition = getRenderPosition();
         this.renderScale = getRenderScale(Vector2D.create(map.getWidth(), map.getHeight()));
-
-        this.unscaledTerrainImage = renderTerrainMiniMap();
-        this.unscaledEntityImage = renderEntityMiniMap();
     }
 
     private Rectangle getRenderPosition() {
@@ -61,17 +60,18 @@ public class MiniMap extends GuiElement {
     public void update(float deltaInSeconds) {
         elapsedTime += deltaInSeconds;
         if (elapsedTime >= 0.5f) {
-            unscaledTerrainImage = renderTerrainMiniMap();
-            unscaledEntityImage = renderEntityMiniMap();
+            redrawMiniMap = true;
             elapsedTime = 0;
         }
     }
 
-    private Image renderTerrainMiniMap() {
+    private Image renderMiniMap() {
         final int width = map.getWidth();
         final int height = map.getHeight();
 
         ImageBuffer buffer = new ImageBuffer(width, height);
+
+        // render terrain
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Cell cell = map.getCell(x + 1, y + 1);
@@ -80,16 +80,7 @@ public class MiniMap extends GuiElement {
             }
         }
 
-        Image image = buffer.getImage();
-        image.setFilter(Image.FILTER_NEAREST);
-        return image;
-    }
-
-    private Image renderEntityMiniMap() {
-        final int width = map.getWidth();
-        final int height = map.getHeight();
-
-        ImageBuffer buffer = new ImageBuffer(width, height);
+        // render entities
         for(Entity entity : entityRepository.findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
                 int x = mapCoordinate.getXAsInt(), y = mapCoordinate.getYAsInt();
@@ -109,14 +100,16 @@ public class MiniMap extends GuiElement {
         graphics.setColor(Color.black);
         graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
 
-        // render terrain
-        unscaledTerrainImage.draw(
-            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
-            renderPosition.getWidth(), renderPosition.getHeight());
-        unscaledEntityImage.draw(
+        // render minimap
+        if (redrawMiniMap) {
+            unscaledMiniMapImage = renderMiniMap();
+            redrawMiniMap = false;
+        }
+        unscaledMiniMapImage.draw(
             renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
             renderPosition.getWidth(), renderPosition.getHeight());
 
+        // render viewport outline
         drawViewportOutline(graphics);
 
         if (Game.DEBUG_INFO) {
