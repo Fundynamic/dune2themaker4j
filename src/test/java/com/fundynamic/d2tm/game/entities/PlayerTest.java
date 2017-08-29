@@ -3,8 +3,11 @@ package com.fundynamic.d2tm.game.entities;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.entities.structures.Structure;
 import com.fundynamic.d2tm.game.entities.units.Unit;
+import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Test;
 
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.LIGHT_FACTORY;
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.WINDTRAP;
 import static org.junit.Assert.*;
 
 
@@ -132,4 +135,67 @@ public class PlayerTest extends AbstractD2TMTest {
         assertEquals(50, player.getCredits());
     }
 
+    @Test
+    public void powerProductionAndConsuming() {
+        Structure windtrap = makeStructure(player, MapCoordinate.create(12, 12), WINDTRAP);
+
+        assertEquals(1, player.aliveEntities());
+        assertEquals(200, player.getTotalPowerProduced());
+
+        // Take damage
+        windtrap.takeDamage(100, null);
+
+        assertEquals(150, player.getTotalPowerProduced());
+        assertEquals(150, player.getPowerBalance());
+        assertFalse(player.isLowPower());
+
+        // Add a few more structures that consumes power
+        int amountOfStructuresToMake = 4;
+        for (int i = 0; i < amountOfStructuresToMake; i++) {
+            makeStructure(player, MapCoordinate.create(15, 12 + (i * 2)), LIGHT_FACTORY); // consumes 30 power
+        }
+
+        // should still have 30 power left
+        assertEquals(30, player.getPowerBalance());
+
+        makeStructure(player, MapCoordinate.create(15, 20), LIGHT_FACTORY); // .. 150
+
+        // should still have 0 power left
+        assertEquals(0, player.getPowerBalance());
+        assertFalse(player.isLowPower());
+
+        makeStructure(player, MapCoordinate.create(15, 22), LIGHT_FACTORY);
+
+        assertEquals(-30, player.getPowerBalance());
+        assertTrue(player.isLowPower());
+    }
+
+    @Test
+    public void gotEnoughPowerAfterDestructionOfStructureThatConsumedTooMuchPower() {
+        Structure windtrap = makeStructure(player, MapCoordinate.create(12, 12), WINDTRAP);
+
+        assertEquals(1, player.aliveEntities());
+        assertEquals(200, player.getTotalPowerProduced());
+
+        // Take damage
+        windtrap.takeDamage(100, null);
+        assertEquals(150, player.getTotalPowerProduced());
+        assertEquals(150, player.getPowerBalance());
+        assertFalse(player.isLowPower());
+
+        int amountOfStructuresToMake = 5; // 5X30 = 150
+        for (int i = 0; i < amountOfStructuresToMake; i++) {
+            makeStructure(player, MapCoordinate.create(15, 12 + (i * 2)), LIGHT_FACTORY); // consumes 30 power
+        }
+
+        // should still have 0 power left
+        assertEquals(0, player.getPowerBalance());
+        assertFalse(player.isLowPower());
+
+        Structure toBeDestroyed = makeStructure(player, MapCoordinate.create(25, 23), LIGHT_FACTORY);
+        toBeDestroyed.takeDamage(toBeDestroyed.getHitPoints(), null);
+
+        assertEquals(0, player.getPowerBalance());
+        assertFalse(player.isLowPower());
+    }
 }

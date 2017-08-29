@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
 /**
  * <p>
  *     An entity is a 'thing' that 'lives' on the {@link com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField}.
@@ -66,10 +65,6 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
         this.entityData = entityData;
         this.player = player;
         this.entityRepository = entityRepository;
-        if (player != null) {
-            // temporarily, because 'particle' does not belong to a player
-            player.addEntity(this);
-        }
     }
 
     /**
@@ -479,12 +474,33 @@ public abstract class Entity implements EnrichableAbsoluteRenderable, Updateable
     }
 
     /**
+     * Returns true when:
+     * 1) the entity no longer lives
+     * 2) the entity no longer serves any purpose
+     *
+     * If true, then the entity will be removed from the EntityRepository list of entities. (state)
+     * This is done in the update() method in the PlayingState class. And will only be done after all entities have
+     * had their 'update' cycle.
+     *
+     * @return boolean
+     */
+    public abstract boolean isDestroyed();
+
+    /**
      * Initiate dying of entity.
      */
     public abstract void die();
 
     public boolean hasMoveAnimation() {
         return entityData.hasMoveAnimation;
+    }
+
+    public int getPowerProduction() {
+        return entityData.powerProduction;
+    }
+
+    public int getPowerConsumption() {
+        return entityData.powerConsumption;
     }
 
     class EventSubscription<T extends Entity> {

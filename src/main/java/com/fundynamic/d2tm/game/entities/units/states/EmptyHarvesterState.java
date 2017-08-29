@@ -24,7 +24,7 @@ public class EmptyHarvesterState extends UnitState {
     @Override
     public void update(float deltaInSeconds) {
         if (unit.hasSpiceToUnload()) {
-            unit.depositSpice(deltaInSeconds);
+            unit.depositResource(deltaInSeconds);
         } else {
             unit.log("Done depositing spice, moving back to " + unit.lastSeenSpiceAt());
             // remove harvest delivery intent after depositing because only then a new harvester can

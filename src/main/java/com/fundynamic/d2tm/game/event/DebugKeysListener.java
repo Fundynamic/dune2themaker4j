@@ -30,6 +30,10 @@ public class DebugKeysListener extends AbstractKeyListener {
             map.revealAllShroudFor(player);
         }
 
+        if (key == Input.KEY_M) {
+            player.addCredits(500);
+        }
+
         if (key == Input.KEY_D) {
             EntitiesSet entities = entityRepository.findDestructibleSelectedEntitiesForPlayer(player);
             entities.forEach( e -> ((Destructible)e).takeDamage(((Destructible) e).getHitPoints(), null));

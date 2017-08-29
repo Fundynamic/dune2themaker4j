@@ -15,6 +15,7 @@ import org.newdawn.slick.Image;
 
 import java.util.List;
 
+import static com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData.WINDTRAP;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -84,5 +85,25 @@ public class StructureTest extends AbstractD2TMTest {
 
         // spawned
         Assert.assertEquals(size + 1, entityRepository.getEntitiesCount());
+    }
+
+    @Test
+    public void powerProduction() {
+        Structure structure = makeStructure(player, MapCoordinate.create(11, 11), WINDTRAP);
+
+        // from test-rules.ini, verify assumptions before doing the real test
+        Assert.assertEquals(200, structure.getPowerProduction());
+        int hitpoints = 300;
+        Assert.assertEquals(hitpoints, structure.getHitPoints());
+
+        int damage = 75;
+        structure.takeDamage(damage, null);
+
+        Assert.assertEquals(163, structure.getPowerProduction());
+
+        structure.takeDamage((hitpoints - damage), null);
+
+        // should be at 25% of production
+        Assert.assertEquals(50, structure.getPowerProduction());
     }
 }

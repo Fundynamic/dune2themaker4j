@@ -109,7 +109,11 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
 
         this.fadingSelection.update(deltaInSeconds);
 
-        this.entityBuilder.update(deltaInSeconds);
+        float buildSpeed = deltaInSeconds;
+        if (player.isLowPower()) {
+            buildSpeed /= 2;
+        }
+        this.entityBuilder.update(buildSpeed);
 
         handleUnitConstructedAndNeedsToBeSpawnedLogic();
     }
@@ -243,6 +247,7 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public void takeDamage(int hitPoints, Entity origin) {
         hitPointBasedDestructibility.reduce(hitPoints);
+        player.entityTookDamage(this);
         if (hitPointBasedDestructibility.isZero()) {
             die();
         }
@@ -338,5 +343,10 @@ public class Structure extends Entity implements Selectable, Destructible, Focus
     @Override
     public boolean isBuildingAnEntity(AbstractBuildableEntity placementBuildableEntity) {
         return this.entityBuilder.isBuildingAnEntity(placementBuildableEntity);
+    }
+
+    @Override
+    public int getPowerProduction() {
+        return entityData.getPowerProductionBasedOnHitpoints(getHitPoints());
     }
 }

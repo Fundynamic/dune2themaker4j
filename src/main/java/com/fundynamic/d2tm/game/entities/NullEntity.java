@@ -21,6 +21,11 @@ public class NullEntity extends Entity {
     }
 
     @Override
+    public boolean isDestroyed() {
+        return false;
+    }
+
+    @Override
     public void die() {
         destroy();
     }

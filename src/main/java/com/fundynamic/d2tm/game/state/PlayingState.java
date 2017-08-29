@@ -105,7 +105,7 @@ public class PlayingState extends BasicGameState {
         guiComposite.addGuiElement(battlefield);
 
         // topbar / moneybar
-        guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human));
+        guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human, imageRepository.loadAndCache("lightning.png")));
 
         // sidebar
         guiComposite.addGuiElement(

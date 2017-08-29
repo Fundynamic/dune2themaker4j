@@ -200,7 +200,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
             cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
 
-            if (((Destructible) entityToAttack).isDestroyed()) {
+            if (entityToAttack.isDestroyed()) {
                 // target is destroyed, so stop attacking...
                 entityToAttack = null;
             } else {
@@ -233,7 +233,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
                 }
             }
         } else {
-            if (((Destructible) entityToAttack).isDestroyed()) {
+            if (entityToAttack.isDestroyed()) {
                 entityToAttack = null;
             } else {
                 moveTo(entityToAttack.getCoordinate());
@@ -430,7 +430,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return coordinate.add(Vector2D.create(correctX, correctY));
     }
 
-    @Override
     public boolean isDestroyed() {
         return state instanceof DeadState;
     }
@@ -698,8 +697,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return !harvested.isZero();
     }
 
-    public void depositSpice(float deltaInSeconds) {
-        float amountToDeposit = entityData.getRelativeDepositSpeed(deltaInSeconds);
+    public void depositResource(float deltaInSeconds) {
+        float depositSpeed = deltaInSeconds;
+        if (player.isLowPower()) {
+            depositSpeed /= 2;
+        }
+        float amountToDeposit = entityData.getRelativeDepositSpeed(depositSpeed);
         this.harvested.reduce(amountToDeposit);
         this.player.addCredits(amountToDeposit);
     }

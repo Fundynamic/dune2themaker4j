@@ -132,5 +132,5 @@ public class EntityDataTest extends AbstractD2TMTest {
 
         Assert.assertNotEquals(one, null);
     }
-    
+
 }

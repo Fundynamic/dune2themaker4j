@@ -17,8 +17,13 @@ public class Player implements Updateable {
     private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
 
+    private EntitiesSet powerProducingEntities; // an easy way to query all power producing entities
+    private EntitiesSet powerConsumingEntities; // an easy way to query all power consuming entities
+
     private float credits;
     private int animatedCredits;
+    private int totalPowerProduced = 0;
+    private int totalPowerConsumption = 0;
 
     public Player(String name, Recolorer.FactionColor factionColor) {
         this(name, factionColor, 2000);
@@ -29,6 +34,8 @@ public class Player implements Updateable {
         this.factionColor = factionColor;
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
+        this.powerProducingEntities = entitiesSet;
+        this.powerConsumingEntities = entitiesSet;
         this.credits = startingCredits;
         this.animatedCredits = startingCredits;
     }
@@ -53,9 +60,19 @@ public class Player implements Updateable {
 
     public void addEntity(Entity entity) {
         entitiesSet.add(entity);
+        if (entity.getEntityData().producesPower()) {
+            powerProducingEntities.add(entity);
+        }
+        if (entity.getEntityData().consumesPower()) {
+            powerConsumingEntities.add(entity);
+        }
+        calculatePowerProducedAndConsumed();
     }
 
     public boolean removeEntity(Entity entity) {
+        if (powerProducingEntities.contains(entity)) powerProducingEntities.remove(entity);
+        if (powerConsumingEntities.contains(entity)) powerConsumingEntities.remove(entity);
+        calculatePowerProducedAndConsumed();
         return entitiesSet.remove(entity);
     }
 
@@ -116,5 +133,32 @@ public class Player implements Updateable {
     @Override
     public void update(float deltaInSeconds) {
         animatedCredits = (int) credits;
+    }
+
+    public int getTotalPowerProduced() {
+        return totalPowerProduced;
+    }
+
+    public int getTotalPowerConsumption() {
+        return totalPowerConsumption;
+    }
+
+    public boolean isLowPower() {
+        return getPowerBalance() < 0;
+    }
+
+    private void calculatePowerProducedAndConsumed() {
+        totalPowerProduced = powerProducingEntities.stream().filter(e->!e.isDestroyed()).mapToInt(e -> e.getPowerProduction()).sum();
+        totalPowerConsumption = powerConsumingEntities.stream().filter(e->!e.isDestroyed()).mapToInt(e -> e.getPowerConsumption()).sum();
+    }
+
+    public void entityTookDamage(Entity entity) {
+        if (entity.getEntityData().producesPower() || entity.getEntityData().consumesPower()) {
+            calculatePowerProducedAndConsumed();
+        }
+    }
+
+    public int getPowerBalance() {
+        return totalPowerProduced - totalPowerConsumption;
     }
 }
