@@ -336,7 +336,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     public void setViewingVector(Vector2D viewingVector) {
-        this.viewingVector = viewingVector;
+        this.viewingVector = viewingVectorPerimeter.makeSureVectorStaysWithin(viewingVector);
     }
 
     @Override
@@ -368,6 +368,14 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         return viewingVector;
     }
 
+    public void centerViewportOn(MapCoordinate centerCoordinate) {
+        Vector2D viewportDimensions = this.getViewportCellBoundaries().getDimensions();
+        Vector2D viewingVector = centerCoordinate
+            .add(viewportDimensions.scale(-.5f)) // convert it to the center of the viewport
+            .toCoordinate();
+        setViewingVector(viewingVector);
+    }
+
     public Rectangle getViewportCellBoundaries() {
         return this.cellViewportRenderer.getViewport(this.viewingVector);
     }
@@ -383,5 +391,4 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     public void entityPlacedOnMap(Entity entity) {
         guiComposite.entityPlacedOnMap(entity);
     }
-
 }

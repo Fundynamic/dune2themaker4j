@@ -152,14 +152,12 @@ public class MiniMap extends GuiElement {
 
     @Override
     public void leftClicked() {
-        Vector2D snappedViewportCoordinates = mouseCoordinates
+        MapCoordinate clickedCoordinate = mouseCoordinates
             .min(renderPosition.getTopLeft()) // convert to relative coordinates
             .scale(1f / renderScale) // convert to map coordinates
             .add(new Vector2D(1, 1)) // and offset by one, because of the invisible border
-            .add(battleField.getViewportCellBoundaries().getDimensions().scale(-.5f)) // convert it to the center of the viewport
-            .asMapCoordinate()
-            .toCoordinate();
-        battleField.setViewingVector(snappedViewportCoordinates);
+            .asMapCoordinate();
+        battleField.centerViewportOn(clickedCoordinate);
     }
 
     @Override
