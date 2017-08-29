@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
@@ -23,6 +24,7 @@ public class MiniMap extends GuiElement {
     private final BattleField battleField;
     private final EntityRepository entityRepository;
     private final Map map;
+    private final Player player;
 
     private final Rectangle renderPosition;
     private final float renderScale;
@@ -33,12 +35,13 @@ public class MiniMap extends GuiElement {
 
     private Vector2D mouseCoordinates;
 
-    public MiniMap(int x, int y, int width, int height, BattleField battleField, EntityRepository entityRepository, Map map) {
+    public MiniMap(int x, int y, int width, int height, BattleField battleField, EntityRepository entityRepository, Map map, Player player) {
         super(x, y, width, height);
 
         this.battleField = battleField;
         this.entityRepository = entityRepository;
         this.map = map;
+        this.player = player;
 
         this.redrawMiniMap = true;
         this.renderPosition = getRenderPosition();
@@ -76,7 +79,11 @@ public class MiniMap extends GuiElement {
         // render terrain
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
+                // skip shrouded terrain
                 Cell cell = map.getCell(x + 1, y + 1);
+                if (player.isShrouded(cell.getMapCoordinate())) {
+                    continue;
+                }
 
                 final Color terrainColor = cell.getTerrainColor();
                 buffer.setRGBA(x, y, terrainColor.getRed(), terrainColor.getGreen(), terrainColor.getBlue(), 255);
@@ -86,6 +93,11 @@ public class MiniMap extends GuiElement {
         // render entities
         for(Entity entity : entityRepository.findAliveEntitiesWithinPlayableMapBoundariesOfType(EntityType.STRUCTURE, EntityType.UNIT)) {
             for(MapCoordinate mapCoordinate : entity.getAllCellsAsMapCoordinates()) {
+                // skip shrouded entities
+                if (player.isShrouded(mapCoordinate)) {
+                    continue;
+                }
+
                 // use one pixel offset, because map coordinates are one-based
                 int x = mapCoordinate.getXAsInt() - 1, y = mapCoordinate.getYAsInt() - 1;
                 Color factionColor = entity.getPlayer().getFactionColor();
