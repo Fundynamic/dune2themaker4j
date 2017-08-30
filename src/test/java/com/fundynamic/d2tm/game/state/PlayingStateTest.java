@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
@@ -10,7 +11,6 @@ import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.Scenario;
 import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
@@ -65,17 +65,6 @@ public class PlayingStateTest extends AbstractD2TMTest {
         StateBasedGame stateBasedGame = mock(StateBasedGame.class);
 
         playingState.init(gameContainer, stateBasedGame);
-    }
-
-    @Test
-    public void rendersViewports() throws SlickException {
-        StateBasedGame game = mock(StateBasedGame.class);
-        Graphics graphics = mock(Graphics.class);
-        Font font = mock(Font.class);
-
-        when(graphics.getFont()).thenReturn(font);
-
-        playingState.render(gameContainer, game, graphics);
     }
 
     @Test

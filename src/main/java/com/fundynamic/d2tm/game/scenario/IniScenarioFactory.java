@@ -1,14 +1,13 @@
 package com.fundynamic.d2tm.game.scenario;
 
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
-import com.fundynamic.d2tm.game.terrain.impl.Sand;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.utils.StringUtils;
@@ -95,7 +94,7 @@ public class IniScenarioFactory extends ScenarioFactory {
     }
 
     public Player getCpuPlayer(Ini ini) {
-        Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
+        Player cpu = new Player("CPU", Faction.RED);
         Profile.Section iniHuman = ini.get("CPU");
         int startingCredits = iniHuman.get("Credits", Integer.class, 2000);
         cpu.setCredits(startingCredits);
@@ -103,7 +102,7 @@ public class IniScenarioFactory extends ScenarioFactory {
     }
 
     public Player readHumanPlayer(Ini ini) {
-        Player human = new Player("Human", Recolorer.FactionColor.GREEN);
+        Player human = new Player("Human", Faction.GREEN);
         Profile.Section iniHuman = ini.get("HUMAN");
         int startingCredits = iniHuman.get("Credits", Integer.class, 2000);
         human.setCredits(startingCredits);

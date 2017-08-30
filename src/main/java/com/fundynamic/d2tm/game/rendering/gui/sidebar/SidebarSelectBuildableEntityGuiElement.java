@@ -38,13 +38,13 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         this.renderableBuildableEntities = new ArrayList<>(buildList.size());
 
         // make renderable versions for the GUI
-        int drawY = getTopLeftYAsInt() + 4; // arbitrary amount down to start
+        int drawY = getTopLeftY() + 4; // arbitrary amount down to start
         for (AbstractBuildableEntity placementBuildableEntity : buildList) {
 
             renderableBuildableEntities.add(
                     new RenderableBuildableEntity(
                             placementBuildableEntity,
-                            getTopLeftXAsInt() + 10, // arbitrary amount to the right
+                            getTopLeftX() + 10, // arbitrary amount to the right
                             drawY)
             );
             drawY += 51; // height of icon + 3 extra pixels
@@ -57,7 +57,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         Vector2D topLeft = getTopLeft();
 
         graphics.setColor(Color.gray);
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidthAsInt(), getHeightAsInt());
+        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
         graphics.setColor(Color.white);
 
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {

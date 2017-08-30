@@ -2,11 +2,11 @@ package com.fundynamic.d2tm.game.scenario;
 
 import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -26,8 +26,8 @@ public class RandomMapScenarioFactory extends ScenarioFactory {
 
             MapEditor mapEditor = new MapEditor(terrainFactory);
 
-            Player human = new Player("Human", Recolorer.FactionColor.GREEN);
-            Player cpu = new Player("CPU", Recolorer.FactionColor.RED);
+            Player human = new Player("Human", Faction.GREEN);
+            Player cpu = new Player("CPU", Faction.RED);
 
             builder.withHuman(human);
             builder.withCpuPlayer(cpu);

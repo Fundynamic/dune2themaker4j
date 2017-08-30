@@ -11,7 +11,6 @@ import com.fundynamic.d2tm.game.entities.units.states.GoalResolverState;
 import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
 import com.fundynamic.d2tm.game.entities.units.states.TurnBodyTowardsState;
 import com.fundynamic.d2tm.game.map.MapEditor;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.RenderQueue;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
@@ -204,7 +203,7 @@ public class UnitTest extends AbstractD2TMTest {
 
     @Test
     public void firesProjectileWhenAttackingUnitInRange() {
-        Player cpu = new Player("cpu", Recolorer.FactionColor.BLUE);
+        Player cpu = new Player("cpu", Faction.BLUE);
         Unit playerQuad = makeUnit(player, MapCoordinate.create(1, 1), "QUAD");
         playerQuad.setFacing(UnitFacings.RIGHT_DOWN.getValue()); // looking at the unit below...
 

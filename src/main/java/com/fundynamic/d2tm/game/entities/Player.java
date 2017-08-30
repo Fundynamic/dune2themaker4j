@@ -2,9 +2,9 @@ package com.fundynamic.d2tm.game.entities;
 
 
 import com.fundynamic.d2tm.game.behaviors.Updateable;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.newdawn.slick.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class Player implements Updateable {
 
     private final String name;
-    private final Recolorer.FactionColor factionColor;
+    private final Faction faction;
 
     private Map<MapCoordinate, Boolean> shrouded;
     private EntitiesSet entitiesSet; // short-hand to player owned entities
@@ -25,13 +25,13 @@ public class Player implements Updateable {
     private int totalPowerProduced = 0;
     private int totalPowerConsumption = 0;
 
-    public Player(String name, Recolorer.FactionColor factionColor) {
-        this(name, factionColor, 2000);
+    public Player(String name, Faction faction) {
+        this(name, faction, 2000);
     }
 
-    public Player(String name, Recolorer.FactionColor factionColor, int startingCredits) {
+    public Player(String name, Faction faction, int startingCredits) {
         this.name = name;
-        this.factionColor = factionColor;
+        this.faction = faction;
         this.shrouded = new HashMap<>();
         this.entitiesSet = new EntitiesSet();
         this.powerProducingEntities = entitiesSet;
@@ -40,8 +40,21 @@ public class Player implements Updateable {
         this.animatedCredits = startingCredits;
     }
 
-    public Recolorer.FactionColor getFactionColor() {
-        return factionColor;
+    public Faction getFaction() {
+        return faction;
+    }
+
+    public Color getFactionColor() {
+        switch (faction) {
+            case RED:
+                return Color.red;
+            case BLUE:
+                return Color.blue;
+            case GREEN:
+                return Color.green;
+            default:
+                throw new IllegalStateException("Unknown faction: " + faction);
+        }
     }
 
     public boolean isShrouded(Vector2D position) {
@@ -84,7 +97,7 @@ public class Player implements Updateable {
     public String toString() {
         return "Player{" +
                 "name='" + name + '\'' +
-                ", factionColor=" + factionColor +
+                ", faction=" + faction +
                 '}';
     }
 

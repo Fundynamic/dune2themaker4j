@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.terrain.Terrain;
 import com.fundynamic.d2tm.game.terrain.impl.EmptyTerrain;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -51,6 +52,10 @@ public class Cell {
             return this.tileImage;
         }
         return terrain.getTileImage();
+    }
+
+    public Color getTerrainColor() {
+        return terrain.getTerrainColor();
     }
 
     public Terrain getTerrain() {

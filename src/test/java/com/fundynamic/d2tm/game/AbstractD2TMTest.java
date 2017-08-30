@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.controls.TestableMouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.EntityType;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
@@ -55,11 +56,6 @@ import static org.mockito.Mockito.when;
  */
 public abstract class AbstractD2TMTest {
 
-    @Test
-    public void CheckDebugFlagIsNotTrue() {
-        Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
-    }
-
     // don't warn user about misusage, old behaviour
     @Rule
     public MockitoRule mrule = MockitoJUnit.rule().silent();
@@ -90,8 +86,8 @@ public abstract class AbstractD2TMTest {
 
     protected GuiComposite guiComposite;
 
-    protected Player player = new Player("Stefan", Recolorer.FactionColor.BLUE);
-    protected Player cpu = new Player("CPU", Recolorer.FactionColor.BLUE);
+    protected Player player = new Player("Stefan", Faction.BLUE);
+    protected Player cpu = new Player("CPU", Faction.BLUE);
 
     protected Map map;
     protected BattleField battleField;
@@ -127,7 +123,7 @@ public abstract class AbstractD2TMTest {
         Graphics bufferGraphics = mock(Graphics.class);
         when(bufferWithGraphics.getGraphics()).thenReturn(bufferGraphics);
 
-        Vector2D guiAreas = Vector2D.create(PlayingState.WIDTH_OF_SIDEBAR, (PlayingState.HEIGHT_OF_TOP_BAR + PlayingState.HEIGHT_OF_BOTTOM_BAR));
+        Vector2D guiAreas = Vector2D.create(PlayingState.WIDTH_OF_SIDEBAR, PlayingState.HEIGHT_OF_TOP_BAR);
         battlefieldSize = getResolution().min(guiAreas);
 
         battleField = new BattleField(
@@ -141,20 +137,23 @@ public abstract class AbstractD2TMTest {
                 bufferWithGraphics,
                 entityRepository
         );
-
         guiComposite.addGuiElement(battleField);
 
         sidebar = new Sidebar(
                 screenResolution.getXAsInt() - PlayingState.WIDTH_OF_SIDEBAR,
                 PlayingState.HEIGHT_OF_TOP_BAR,
                 PlayingState.WIDTH_OF_SIDEBAR,
-                screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_BOTTOM_BAR + PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
+                screenResolution.getYAsInt() - (PlayingState.HEIGHT_OF_MINIMAP + PlayingState.HEIGHT_OF_TOP_BAR)
         );
-
         guiComposite.addGuiElement(sidebar);
 
         Input input = mock(Input.class);
         when(gameContainer.getInput()).thenReturn(input);
+    }
+
+    @Test
+    public void checkDebugFlagIsNotTrue() {
+        Assert.assertFalse("Debug info is enabled, this influences the tests!", Game.DEBUG_INFO);
     }
 
     public EntitiesData getEntitiesData() {
@@ -375,7 +374,7 @@ public abstract class AbstractD2TMTest {
     public EntityRepository makeTestableEntityRepository(final Map map, EntitiesData entitiesData) throws SlickException {
         Image image = mock(Image.class);
         Recolorer recolorer = mock(Recolorer.class);
-        when(recolorer.createCopyRecoloredToFactionColor(any(Image.class), any(Recolorer.FactionColor.class))).thenReturn(image);
+        when(recolorer.createCopyRecoloredToFaction(any(Image.class), any(Faction.class))).thenReturn(image);
         return new EntityRepository(map, recolorer, entitiesData) {
             // used by Projectile and Particle
             @Override

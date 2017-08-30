@@ -6,6 +6,7 @@ import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
 import com.fundynamic.d2tm.math.Rectangle;
+import com.fundynamic.d2tm.math.Vector2D;
 
 /**
  * A gui element has a drawing position (topleft) and size (width/height) - which basically is a rectangle.
@@ -22,7 +23,7 @@ public abstract class GuiElement extends Rectangle implements MouseBehavior, Upd
     protected boolean hasFocus;
 
     public GuiElement(int x, int y, int width, int height) {
-        super(x, y, width, height);
+        super(x, y, new Vector2D(width, height));
         this.hasFocus = false;
     }
 

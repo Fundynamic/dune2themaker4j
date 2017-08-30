@@ -22,7 +22,7 @@ public class RenderableBuildableEntity extends GuiElement {
         super(x, y, WIDTH, HEIGHT);
         this.abstractBuildableEntity = abstractBuildableEntity;
 
-        this.fadingSelection = new FadingSelection(getWidthAsInt(), getHeightAsInt(), 3) {
+        this.fadingSelection = new FadingSelection(getWidth(), getHeight(), 3) {
 
             // Just some toying around here.
             // TODO: Make house specific coloring? (here it is R value for Harkonnen fading)
@@ -35,8 +35,8 @@ public class RenderableBuildableEntity extends GuiElement {
 
     @Override
     public void render(Graphics graphics) {
-        int xAsInt = getTopLeftXAsInt();
-        int yAsInt = getTopLeftYAsInt();
+        int xAsInt = getTopLeftX();
+        int yAsInt = getTopLeftY();
         if (abstractBuildableEntity.hasBuildIcon()) {
             graphics.drawImage(abstractBuildableEntity.getBuildIcon(), xAsInt, yAsInt);
         } else {
@@ -58,30 +58,30 @@ public class RenderableBuildableEntity extends GuiElement {
         BuildableState buildableState = abstractBuildableEntity.getBuildableState();
         if (buildableState == BuildableState.DISABLED) {
             graphics.setColor(Colors.BLACK_ALPHA_128);
-            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.fillRect(xAsInt, yAsInt, getWidth(), getHeight());
         }
 
         if (buildableState == BuildableState.SELECTABLE_TOO_EXPENSIVE) {
             SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
             graphics.setColor(Colors.RED_ALPHA_128); // ugly way of letting know it is too expensive
-            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.fillRect(xAsInt, yAsInt, getWidth(), getHeight());
         }
 
         if (buildableState == BuildableState.BUILDING) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
-            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.fillRect(xAsInt, yAsInt, getWidth(), getHeight());
             SlickUtils.drawPercentage(graphics, Color.white, abstractBuildableEntity.getProgress(), xAsInt + 2, yAsInt + priceYPosition);
         }
 
         if (buildableState == BuildableState.BUILDING_FINISHED_AWAITS_PLACEMENT) {
             graphics.setColor(Colors.WHITE_ALPHA_128); // ugly way of letting know we are building this
-            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.fillRect(xAsInt, yAsInt, getWidth(), getHeight());
             SlickUtils.drawShadowedText(graphics, Color.white, "PLACE", xAsInt + 2, yAsInt + priceYPosition);
         }
 
         if (buildableState == BuildableState.BUILDING_FINISHED_SPAWNABLE) {
             graphics.setColor(Colors.RED); // ugly way of letting know we are building this
-            graphics.fillRect(xAsInt, yAsInt, getWidthAsInt(), getHeightAsInt());
+            graphics.fillRect(xAsInt, yAsInt, getWidth(), getHeight());
             SlickUtils.drawShadowedText(graphics, Color.white, "SPAWN", xAsInt + 2, yAsInt + priceYPosition);
         }
 

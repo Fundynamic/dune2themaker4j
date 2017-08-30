@@ -1,12 +1,12 @@
 package com.fundynamic.d2tm.game.controls.battlefield;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.entities.units.states.MoveToCellState;
 import com.fundynamic.d2tm.game.map.Cell;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import org.junit.Before;
@@ -61,7 +61,7 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
         Unit unit = makeUnit(player, MapCoordinate.create(1, 1), EntitiesData.QUAD);
         unit.select();
 
-        Player enemy = new Player("Enemy", Recolorer.FactionColor.RED);
+        Player enemy = new Player("Enemy", Faction.RED);
         Unit enemyUnit = makeUnit(enemy, MapCoordinate.create(2, 2), EntitiesData.QUAD);
         map.revealShroudFor(enemyUnit);
 
