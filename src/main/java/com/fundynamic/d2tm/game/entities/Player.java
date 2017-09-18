@@ -96,7 +96,7 @@ public class Player implements Updateable {
     }
 
     public boolean hasRadarEntity() {
-        return entitiesSet.stream().anyMatch(e -> e.getEntityData().name.equals("RADAR"));
+        return entitiesSet.stream().anyMatch(e -> "RADAR".equals(e.getEntityData().name));
     }
 
     public int aliveEntities() {
