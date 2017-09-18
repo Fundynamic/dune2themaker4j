@@ -72,11 +72,13 @@ public class MiniMap extends GuiElement {
         graphics.setColor(Color.black);
         graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
 
-        // render minimap
-        Image unscaledMiniMapImage = getMaybeRedrawnOrStaleMiniMapImage();
-        unscaledMiniMapImage.draw(
-            renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
-            renderPosition.getWidth(), renderPosition.getHeight());
+        if (!player.isLowPower()) {
+            // render minimap
+            Image unscaledMiniMapImage = getMaybeRedrawnOrStaleMiniMapImage();
+            unscaledMiniMapImage.draw(
+                    renderPosition.getTopLeftX(), renderPosition.getTopLeftY(),
+                    renderPosition.getWidth(), renderPosition.getHeight());
+        }
 
         // render viewport outline
         drawViewportOutline(graphics);
