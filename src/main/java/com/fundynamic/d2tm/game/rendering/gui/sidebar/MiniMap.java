@@ -42,6 +42,9 @@ public class MiniMap extends GuiElement {
         this.redrawMiniMap = true;
         this.renderPosition = getRenderPosition();
         this.renderScale = getRenderScale(Vector2D.create(map.getWidth(), map.getHeight()));
+        if (player.hasFocusMapCoordinate()) {
+            centerViewportOn(player.getFocusMapCoordinate());
+        }
     }
 
     private Rectangle getRenderPosition() {
@@ -162,6 +165,10 @@ public class MiniMap extends GuiElement {
             .scale(1f / renderScale) // convert to map coordinates
             .add(new Vector2D(1, 1)) // and offset by one, because of the invisible border
             .asMapCoordinate();
+        centerViewportOn(clickedCoordinate);
+    }
+
+    public void centerViewportOn(MapCoordinate clickedCoordinate) {
         battleField.centerViewportOn(clickedCoordinate);
     }
 

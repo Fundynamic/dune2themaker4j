@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class Player implements Updateable {
 
+    private MapCoordinate focusMapCoordinate;
+
     private final String name;
     private final Faction faction;
 
@@ -187,5 +189,17 @@ public class Player implements Updateable {
 
     public boolean isHasRadar() {
         return hasRadar;
+    }
+
+    public MapCoordinate getFocusMapCoordinate() {
+        return focusMapCoordinate;
+    }
+
+    public void setFocusMapCoordinate(MapCoordinate focusMapCoordinate) {
+        this.focusMapCoordinate = focusMapCoordinate;
+    }
+
+    public boolean hasFocusMapCoordinate() {
+        return focusMapCoordinate != null;
     }
 }

@@ -36,21 +36,20 @@ public class IniScenarioFactory extends ScenarioFactory {
 
             Scenario.ScenarioBuilder builder = Scenario.builder();
 
+            Map map = readMap(ini);
+            builder.withMap(map);
+
             Player human = readHumanPlayer(ini);
             builder.withHuman(human);
 
             Player cpu = getCpuPlayer(ini);
             builder.withCpuPlayer(cpu);
 
-            Map map = readMap(ini);
-            builder.withMap(map);
-
             EntityRepository entityRepository = getEntityRepository(map);
             builder.withEntityRepository(entityRepository);
 
             readStructures(ini, human, cpu, entityRepository);
             readUnits(ini, human, cpu, entityRepository);
-
 
             return builder.build();
         } catch (Exception e) {
@@ -103,9 +102,13 @@ public class IniScenarioFactory extends ScenarioFactory {
     }
 
     public MapCoordinate getMapCoordinate(Profile.Section struct) {
-        String mapCoordinate = struct.get("MapCoordinate", String.class, "");
+        return getMapCoordinate(struct, "MapCoordinate");
+    }
+
+    public MapCoordinate getMapCoordinate(Profile.Section struct, String propertyNameForMapCoordinate) {
+        String mapCoordinate = struct.get(propertyNameForMapCoordinate, String.class, "");
         if (StringUtils.isEmpty(mapCoordinate)) {
-            throw new IllegalArgumentException("Unable to put entity " + struct + " on map, because it lacks a MapCoordinate");
+            throw new IllegalArgumentException("Unable to put read ["+ propertyNameForMapCoordinate + "] for [" + struct + "]");
         }
         return MapCoordinate.fromString(mapCoordinate);
     }
@@ -146,7 +149,10 @@ public class IniScenarioFactory extends ScenarioFactory {
         Player human = new Player("Human", Faction.GREEN);
         Profile.Section iniHuman = ini.get("HUMAN");
         int startingCredits = iniHuman.get("Credits", Integer.class, 2000);
+        MapCoordinate mapCoordinate = getMapCoordinate(iniHuman, "Focus");
+        human.setFocusMapCoordinate(mapCoordinate);
         human.setCredits(startingCredits);
+
         return human;
     }
 
