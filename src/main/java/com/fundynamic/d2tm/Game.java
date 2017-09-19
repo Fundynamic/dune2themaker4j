@@ -20,7 +20,7 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 public class Game extends StateBasedGame {
 
-    public static final String GAME_TITLE = "Dune II - The Maker";
+    public static final String GAME_TITLE = "Untitled Real-Time-Strategy Game";
 
     public static final int SCREEN_WIDTH = 800;
     public static final int SCREEN_HEIGHT = 600;
