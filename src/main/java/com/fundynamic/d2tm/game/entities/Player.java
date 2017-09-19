@@ -20,6 +20,8 @@ public class Player implements Updateable {
     private EntitiesSet powerProducingEntities; // an easy way to query all power producing entities
     private EntitiesSet powerConsumingEntities; // an easy way to query all power consuming entities
 
+    private boolean hasRadar;
+
     private float credits;
     private int animatedCredits;
     private int totalPowerProduced = 0;
@@ -79,6 +81,7 @@ public class Player implements Updateable {
         if (entity.getEntityData().consumesPower()) {
             powerConsumingEntities.add(entity);
         }
+        hasRadar = hasRadarEntity();
         calculatePowerProducedAndConsumed();
     }
 
@@ -86,7 +89,14 @@ public class Player implements Updateable {
         if (powerProducingEntities.contains(entity)) powerProducingEntities.remove(entity);
         if (powerConsumingEntities.contains(entity)) powerConsumingEntities.remove(entity);
         calculatePowerProducedAndConsumed();
-        return entitiesSet.remove(entity);
+
+        boolean result = entitiesSet.remove(entity);
+        hasRadar = hasRadarEntity();
+        return result;
+    }
+
+    public boolean hasRadarEntity() {
+        return entitiesSet.stream().anyMatch(e -> "RADAR".equals(e.getEntityData().name));
     }
 
     public int aliveEntities() {
@@ -173,5 +183,9 @@ public class Player implements Updateable {
 
     public int getPowerBalance() {
         return totalPowerProduced - totalPowerConsumption;
+    }
+
+    public boolean isHasRadar() {
+        return hasRadar;
     }
 }
