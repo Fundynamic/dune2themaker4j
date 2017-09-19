@@ -36,8 +36,9 @@ public class IniScenarioFactory extends ScenarioFactory {
 
             Scenario.ScenarioBuilder builder = Scenario.builder();
 
-            Map map = readMap(ini);
+            Map map = readMapAndTerrain(ini);
             builder.withMap(map);
+
 
             Player human = readHumanPlayer(ini);
             builder.withHuman(human);
@@ -122,7 +123,8 @@ public class IniScenarioFactory extends ScenarioFactory {
         return playerToUse;
     }
 
-    public Map readMap(Ini ini) throws SlickException {
+    public Map readMapAndTerrain(Ini ini) throws SlickException {
+        // Start with basic map data (dimensions, etc)
         Profile.Section iniMap = ini.get("MAP");
         int mapWidth = iniMap.get("Width", Integer.class, -1);
         int mapHeight = iniMap.get("Height", Integer.class, -1);
@@ -134,7 +136,63 @@ public class IniScenarioFactory extends ScenarioFactory {
         MapEditor mapEditor = new MapEditor(terrainFactory);
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
 
+        // Now start with terrain
+        Profile.Section iniTerrain = ini.get("TERRAIN");
+
+        for (int row = 1; row < (mapHeight+1); row++) {
+            String rowKey = (row < 10 ? "0" : "") + row;
+            String rowData = iniTerrain.getOrDefault(rowKey, "").replaceAll("\"", "");
+
+            if (rowData == null) {
+                System.out.println("Unexpected end of rows for map, expected to have " + mapHeight + " rows, but got nothing at row " + row);
+                break;
+            }
+
+            int rowDataLength = rowData.length() < mapWidth ? rowData.length() : mapWidth;
+            if (rowDataLength <= 0) {
+                System.out.println("Row " + row + " contains no data?");
+            }
+            if (row == 42) {
+                System.out.println(rowData);
+            }
+            for (int column = 0; column < rowDataLength; column++) {
+                int terrainType = getTerrainType(rowData, column);
+                System.out.println("Putting " + terrainType + " on [" + (column + 1) + "x" + row + "]");
+                mapEditor.putTerrainOnCell(map, MapCoordinate.create(column + 1, row), terrainType);
+            }
+        }
+
+        mapEditor.smooth(map);
         return map;
+    }
+
+    public int getTerrainType(String rowData, int column) {
+        char terrainCharacter = rowData.charAt(column);
+        int terrainType = DuneTerrain.TERRAIN_SAND;
+
+        switch (terrainCharacter) {
+            case 'R': {
+                terrainType = DuneTerrain.TERRAIN_ROCK;
+                break;
+            }
+            case 'S': {
+                terrainType = DuneTerrain.TERRAIN_SPICE;
+                break;
+            }
+            case 'H': {
+                terrainType = DuneTerrain.TERRAIN_SAND_HILL;
+                break;
+            }
+            case 'M': {
+                terrainType = DuneTerrain.TERRAIN_MOUNTAIN;
+                break;
+            }
+            case 'I': {
+                terrainType = DuneTerrain.TERRAIN_SPICE_HILL;
+                break;
+            }
+        }
+        return terrainType;
     }
 
     public Player getCpuPlayer(Ini ini) {
