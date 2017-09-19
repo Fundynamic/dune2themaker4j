@@ -118,63 +118,63 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
             cannonFacing.update(deltaInSeconds);
         }
 
-        if (!shouldMove() && !shouldAttack()) {
-            guardTimer += deltaInSeconds;
-            if (guardTimer > GUARD_TIMER_INTERVAL) {
-                guardTimer = 0F;
-
-                // scan environment within range for enemies
-                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * TILE_SIZE, EntityType.UNIT, EntityType.STRUCTURE);
-
-                EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
-
-                if (enemyEntities.isEmpty()) {
-                    if (this.getPlayer().isCPU()) {
-                        //TODO: enemy units scan entire map... (shouldnt do that ;-))
-                        float distance = map.getHeight() * map.getWidth() * TILE_SIZE;
-                        Entity enemyToAttack = null;
-                        for (Entity entity : entities) {
-                            if (!(entity instanceof Unit)) continue;
-                            Unit unit = (Unit) entity;
-                            if (!unit.hasEnemyToAttack()) continue;
-
-                            float distanceToEnemyOfFriend = unit.getEntityToAttack().distance(this);
-                            if (distanceToEnemyOfFriend < distance) {
-                                distance = distanceToEnemyOfFriend;
-                                enemyToAttack = unit.getEntityToAttack();
-                            }
-                        }
-
-                        if (enemyToAttack != null) {
-                            attack(enemyToAttack);
-                        } else {
-                            EntitiesSet allUnits = entityRepository.allUnits();
-                            enemyEntities = allUnits.filter(new NotPredicate(BelongsToPlayer.instance((player))));
-
-                            distance = 131072; // 64X64X32
-                            enemyToAttack = null;
-                            for (Entity entity : enemyEntities) {
-                                if (!(entity instanceof Unit)) continue;
-                                Unit unit = (Unit) entity;
-
-                                float distanceToEnemyUnit = unit.distance(this);
-                                if (distanceToEnemyUnit < distance) {
-                                    distance = distanceToEnemyUnit;
-                                    enemyToAttack = unit;
-                                }
-                            }
-
-                            if (enemyToAttack != null) {
-                                attack(enemyToAttack);
-                            }
-                        }
-                    } // HACK HACK: CPU thing here
-
-                } else {
-                    attack(enemyEntities.getFirst());
-                }
-            }
-        }
+//        if (!shouldMove() && !shouldAttack()) {
+//            guardTimer += deltaInSeconds;
+//            if (guardTimer > GUARD_TIMER_INTERVAL) {
+//                guardTimer = 0F;
+//
+//                // scan environment within range for enemies
+//                EntitiesSet entities = entityRepository.findEntitiesOfTypeAtVectorWithinDistance(getCenteredCoordinate(), entityData.sight * TILE_SIZE, EntityType.UNIT, EntityType.STRUCTURE);
+//
+//                EntitiesSet enemyEntities = entities.filter(new NotPredicate(BelongsToPlayer.instance(player)));
+//
+//                if (enemyEntities.isEmpty()) {
+//                    if (this.getPlayer().isCPU() {
+//                        //TODO: enemy units scan entire map... (shouldnt do that ;-))
+//                        float distance = map.getHeight() * map.getWidth() * TILE_SIZE;
+//                        Entity enemyToAttack = null;
+//                        for (Entity entity : entities) {
+//                            if (!(entity instanceof Unit)) continue;
+//                            Unit unit = (Unit) entity;
+//                            if (!unit.hasEnemyToAttack()) continue;
+//
+//                            float distanceToEnemyOfFriend = unit.getEntityToAttack().distance(this);
+//                            if (distanceToEnemyOfFriend < distance) {
+//                                distance = distanceToEnemyOfFriend;
+//                                enemyToAttack = unit.getEntityToAttack();
+//                            }
+//                        }
+//
+//                        if (enemyToAttack != null) {
+//                            attack(enemyToAttack);
+//                        } else {
+//                            EntitiesSet allUnits = entityRepository.allUnits();
+//                            enemyEntities = allUnits.filter(new NotPredicate(BelongsToPlayer.instance((player))));
+//
+//                            distance = 131072; // 64X64X32
+//                            enemyToAttack = null;
+//                            for (Entity entity : enemyEntities) {
+//                                if (!(entity instanceof Unit)) continue;
+//                                Unit unit = (Unit) entity;
+//
+//                                float distanceToEnemyUnit = unit.distance(this);
+//                                if (distanceToEnemyUnit < distance) {
+//                                    distance = distanceToEnemyUnit;
+//                                    enemyToAttack = unit;
+//                                }
+//                            }
+//
+//                            if (enemyToAttack != null) {
+//                                attack(enemyToAttack);
+//                            }
+//                        }
+//                    } // HACK HACK: CPU thing here
+//
+//                } else {
+//                    attack(enemyEntities.getFirst());
+//                }
+//            }
+//        }
 
         fadingSelection.update(deltaInSeconds);
     }
