@@ -48,41 +48,75 @@ public class IniScenarioFactory extends ScenarioFactory {
             EntityRepository entityRepository = getEntityRepository(map);
             builder.withEntityRepository(entityRepository);
 
-            Profile.Section sounds = ini.get("UNITS");
-            String[] strings = sounds.childrenNames();
-            for (String id : strings) {
-                Profile.Section struct = sounds.getChild(id);
-                /**
-                 * MapCoordinate=1,1
-                 Player=HUMAN
-                 Type=QUAD
-                 State=GUARD
-                 */
-                String playerId = struct.get("Player", String.class, "HUMAN");
-                Player playerToUse = human;
-                if ("CPU".equalsIgnoreCase(playerId)) {
-                    playerToUse = cpu;
-                }
+            readStructures(ini, human, cpu, entityRepository);
+            readUnits(ini, human, cpu, entityRepository);
 
-                String mapCoordinate = struct.get("MapCoordinate", String.class, "");
-                if (StringUtils.isEmpty(mapCoordinate)) {
-                    System.out.println("Unable to put unit " + struct + " on map, because it lacks a MapCoordinate");
-                    continue;
-                }
-
-                String type = struct.get("Type", String.class, "");
-                if (StringUtils.isEmpty(type)) {
-                    System.out.println("Unable to put unit " + struct + " on map, because it lacks a Type");
-                    continue;
-                }
-
-                entityRepository.placeUnitOnMap(MapCoordinate.fromString(mapCoordinate), type, playerToUse);
-            }
 
             return builder.build();
         } catch (Exception e) {
             throw new IllegalStateException("Unable to create Scenario from file: " + filename, e);
         }
+    }
+
+    public void readUnits(Ini ini, Player human, Player cpu, EntityRepository entityRepository) {
+        Profile.Section sounds = ini.get("UNITS");
+        String[] strings = sounds.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = sounds.getChild(id);
+            /**
+             * MapCoordinate=1,1
+             Player=HUMAN
+             Type=QUAD
+             State=GUARD
+             */
+            Player playerToUse = getPlayer(human, cpu, struct);
+
+            MapCoordinate coordinate = getMapCoordinate(struct);
+
+            String type = getType(struct);
+
+            entityRepository.placeUnitOnMap(coordinate, type, playerToUse);
+        }
+    }
+
+    public void readStructures(Ini ini, Player human, Player cpu, EntityRepository entityRepository) {
+        Profile.Section sounds = ini.get("STRUCTURES");
+        String[] strings = sounds.childrenNames();
+        for (String id : strings) {
+            Profile.Section struct = sounds.getChild(id);
+
+            Player playerToUse = getPlayer(human, cpu, struct);
+
+            MapCoordinate mapCoordinate = getMapCoordinate(struct);
+            String type = getType(struct);
+
+            entityRepository.placeStructureOnMap(mapCoordinate, type, playerToUse);
+        }
+    }
+
+    public String getType(Profile.Section struct) {
+        String type = struct.get("Type", String.class, "");
+        if (StringUtils.isEmpty(type)) {
+            throw new IllegalArgumentException("Unable to put entity " + struct + " on map, because it lacks a Type");
+        }
+        return type;
+    }
+
+    public MapCoordinate getMapCoordinate(Profile.Section struct) {
+        String mapCoordinate = struct.get("MapCoordinate", String.class, "");
+        if (StringUtils.isEmpty(mapCoordinate)) {
+            throw new IllegalArgumentException("Unable to put entity " + struct + " on map, because it lacks a MapCoordinate");
+        }
+        return MapCoordinate.fromString(mapCoordinate);
+    }
+
+    public Player getPlayer(Player human, Player cpu, Profile.Section struct) {
+        String playerId = struct.get("Player", String.class, "HUMAN");
+        Player playerToUse = human;
+        if ("CPU".equalsIgnoreCase(playerId)) {
+            playerToUse = cpu;
+        }
+        return playerToUse;
     }
 
     public Map readMap(Ini ini) throws SlickException {
