@@ -42,7 +42,7 @@ public class IniScenarioFactory extends ScenarioFactory {
             Player cpu = getCpuPlayer(ini);
             builder.withCpuPlayer(cpu);
 
-            Map map = readMap();
+            Map map = readMap(ini);
             builder.withMap(map);
 
             EntityRepository entityRepository = getEntityRepository(map);
@@ -85,11 +85,18 @@ public class IniScenarioFactory extends ScenarioFactory {
         }
     }
 
-    public Map readMap() throws SlickException {
-        Map map = new Map(shroud, 128, 128);
+    public Map readMap(Ini ini) throws SlickException {
+        Profile.Section iniMap = ini.get("MAP");
+        int mapWidth = iniMap.get("Width", Integer.class, -1);
+        int mapHeight = iniMap.get("Height", Integer.class, -1);
+        if (mapWidth < 1 || mapHeight < 1) {
+            throw new IllegalArgumentException("Invalid map dimensions given [" + mapWidth+"x"+mapHeight + "], must be greater than 1x1.");
+        }
 
+        Map map = new Map(shroud, mapWidth, mapHeight);
         MapEditor mapEditor = new MapEditor(terrainFactory);
         mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
+
         return map;
     }
 

@@ -4,7 +4,6 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.Scenario;
 import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
