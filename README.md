@@ -4,7 +4,7 @@
 ## Patreon
 This project is a result of my initiative to build my own RTS. If you like what I am doing and want to support me you can do so by supporting me at Patreon:
 
-[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/stefanhendriks)
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/indienamic)
 
 ## Goal
 This project aims to deliver a complex `Real Time Simulation Strategy Game`. If you want to get a feel of where this project will be going, check out the wiki pages.
