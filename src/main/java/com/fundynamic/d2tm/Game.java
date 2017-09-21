@@ -2,10 +2,10 @@ package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
-import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
@@ -42,11 +42,11 @@ public class Game extends StateBasedGame {
 
     public static RandomMapScenarioProperties randomMapScenarioProperties;
 
+    public String mapFileName = "";
+
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
-
-    public String mapFileName = "";
 
     public Game(String title, String mapFileName) {
         super(title);

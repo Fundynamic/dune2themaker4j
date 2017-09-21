@@ -11,9 +11,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <h1>General</h1>
  * <p>

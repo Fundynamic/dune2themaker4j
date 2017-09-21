@@ -196,6 +196,9 @@ public class IniScenarioFactory extends AbstractScenarioFactory {
                 terrainType = DuneTerrain.TERRAIN_SPICE_HILL;
                 break;
             }
+            default:
+                terrainType = DuneTerrain.TERRAIN_SAND;
+                break;
         }
         return terrainType;
     }

@@ -82,7 +82,7 @@ public class MapCoordinateTest {
         Assert.assertNull(MapCoordinate.fromString("a,1"));
         Assert.assertNull(MapCoordinate.fromString(",1"));
         Assert.assertNull(MapCoordinate.fromString("1,"));
-        Assert.assertEquals(MapCoordinate.create(0,0), MapCoordinate.fromString("0,0"));
+        Assert.assertEquals(create(0,0), MapCoordinate.fromString("0,0"));
     }
 
 }
