@@ -74,4 +74,15 @@ public class MapCoordinateTest {
         Assert.assertEquals(mapCoordinate.getY(), mapCoordinateY, 0.00000000000001F);
     }
 
+    @Test
+    public void fromString() {
+        Assert.assertNull(MapCoordinate.fromString(null));
+        Assert.assertNull(MapCoordinate.fromString(""));
+        Assert.assertNull(MapCoordinate.fromString("1,a"));
+        Assert.assertNull(MapCoordinate.fromString("a,1"));
+        Assert.assertNull(MapCoordinate.fromString(",1"));
+        Assert.assertNull(MapCoordinate.fromString("1,"));
+        Assert.assertEquals(create(0,0), MapCoordinate.fromString("0,0"));
+    }
+
 }

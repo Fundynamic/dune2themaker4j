@@ -219,7 +219,7 @@ public abstract class AbstractD2TMTest {
 
     // MAP
     ////////////////////////////////////////////////////////////////////////////////
-    public Map makeMap(int width, int height) throws SlickException {
+    public final Map makeMap(int width, int height) throws SlickException {
         final Image mockedImage = mock(Image.class);
         final Graphics mockedImageGraphics = mock(Graphics.class);
         when(mockedImage.getGraphics()).thenReturn(mockedImageGraphics);

@@ -1,6 +1,8 @@
 package com.fundynamic.d2tm.math;
 
 
+import com.fundynamic.d2tm.utils.StringUtils;
+
 import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 
 /**
@@ -89,5 +91,20 @@ public class MapCoordinate extends Vector2D {
     @Override
     public String toString() {
         return "MapCoordinate{" + this.getXAsInt() + "," + getYAsInt() + "}";
+    }
+
+    public static MapCoordinate fromString(String inputString) {
+        if (StringUtils.isEmpty(inputString)) return null;
+        String[] parts = inputString.split(",");
+        if (parts.length != 2) return null;
+
+        try {
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+
+            return MapCoordinate.create(x, y);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

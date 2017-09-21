@@ -1,11 +1,18 @@
 package com.fundynamic.d2tm;
 
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
+import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.StringUtils;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.openal.SoundStore;
@@ -33,17 +40,46 @@ public class Game extends StateBasedGame {
     // if 'fullscreen' is passed as argument then the game will be rendered in fullscreen
     public static boolean FULLSCREEN = false;
 
+    public static RandomMapScenarioProperties randomMapScenarioProperties;
+
+    public String mapFileName = "";
+
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
-    public Game(String title) {
+    public Game(String title, String mapFileName) {
         super(title);
+        this.mapFileName = mapFileName;
+        if (StringUtils.isEmpty(mapFileName)) {
+            System.out.println("Starting game with random generated map.");
+        } else {
+            System.out.println("Starting game with loading map: " + mapFileName);
+        }
     }
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
+        container.setShowFPS(SHOW_FPS);
+        container.setVSync(VSYNC);
+
         ImageRepository imageRepository = new ImageRepository();
+
+        EntitiesData entitiesData = new EntitiesDataReader().fromRulesIni();
+
+        PlayingState playingState = new PlayingState(
+                container,
+                imageRepository,
+                createScenarioFactory(imageRepository, entitiesData)
+        );
+
+        SoundStore.get().setSoundVolume(0.2f);
+        SoundStore.get().setMusicVolume(0.5f);
+
+        addState(playingState);
+    }
+
+    public AbstractScenarioFactory createScenarioFactory(ImageRepository imageRepository, EntitiesData entitiesData) {
         DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
                 new Theme(
                         imageRepository.loadAndCache("sheet_terrain.png"),
@@ -51,23 +87,28 @@ public class Game extends StateBasedGame {
                 )
         );
 
-        container.setShowFPS(SHOW_FPS);
-        container.setVSync(VSYNC);
-
-        PlayingState playingState = new PlayingState(
-                container,
-                terrainFactory,
-                imageRepository,
-                new Shroud(
-                    imageRepository.loadAndCache("shroud_edges.png"),
-                        TILE_SIZE
-                )
+        Shroud shroud = new Shroud(
+                imageRepository.loadAndCache("shroud_edges.png"),
+                TILE_SIZE
         );
 
-        SoundStore.get().setSoundVolume(0.2f);
-        SoundStore.get().setMusicVolume(0.5f);
-
-        addState(playingState);
+        AbstractScenarioFactory abstractScenarioFactory;
+        if (StringUtils.isEmpty(this.mapFileName)) {
+            abstractScenarioFactory = new RandomMapScenarioFactory(
+                shroud,
+                terrainFactory,
+                entitiesData,
+                randomMapScenarioProperties
+            );
+        } else {
+            abstractScenarioFactory = new IniScenarioFactory(
+                shroud,
+                terrainFactory,
+                entitiesData,
+                mapFileName
+            );
+        }
+        return abstractScenarioFactory;
     }
 
     /**
@@ -80,8 +121,20 @@ public class Game extends StateBasedGame {
         DEBUG_INFO = argsList.contains("debug");
         FULLSCREEN = argsList.contains("fullscreen");
 
+        String mapFileName = "";
+        for (String arg : argsList) {
+            if (arg.startsWith("map:")) {
+                if (randomMapScenarioProperties !=null) {
+                    throw new IllegalArgumentException("Cannot generate random map and load a scenario at the same time. Use map: OR rmg:");
+                }
+                mapFileName = arg.substring(4);
+            } else if (arg.startsWith("rmg:")) {
+                randomMapScenarioProperties = RandomMapScenarioProperties.fromString(arg.substring(4));
+            }
+        }
+
         Bootstrap.runAsApplication(
-                new Game(GAME_TITLE),
+                new Game(GAME_TITLE, mapFileName),
                 SCREEN_WIDTH,
                 SCREEN_HEIGHT,
                 FULLSCREEN
