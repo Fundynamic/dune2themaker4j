@@ -10,7 +10,7 @@ import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
-import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.Shroud;
@@ -38,7 +38,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
         Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE);
 
         final Map originalMap = map;
-        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(shroud, terrainFactory, entitiesData, new RandomMapScenarioProperties()) {
+        AbstractScenarioFactory abstractScenarioFactory = new RandomMapScenarioFactory(shroud, terrainFactory, entitiesData, new RandomMapScenarioProperties()) {
 
             @Override
             public Map getMap(MapEditor mapEditor, int mapWidth, int mapHeight) {
@@ -51,7 +51,7 @@ public class PlayingStateTest extends AbstractD2TMTest {
             }
         };
 
-        playingState = new PlayingState(gameContainer, imageRepository, scenarioFactory) {
+        playingState = new PlayingState(gameContainer, imageRepository, abstractScenarioFactory) {
             @Override
             public BattleField makeBattleField(Player human, Mouse mouse) {
                 return battleField;

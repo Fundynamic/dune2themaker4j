@@ -17,7 +17,10 @@ import org.newdawn.slick.SlickException;
 
 import java.io.InputStream;
 
-public class IniScenarioFactory extends ScenarioFactory {
+/**
+ * Loads an ini file that represents a scenario and constructs a {@link Scenario} object.
+ */
+public class IniScenarioFactory extends AbstractScenarioFactory {
 
     private String filename;
 

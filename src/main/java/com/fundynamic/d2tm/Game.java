@@ -5,7 +5,7 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
-import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
@@ -60,7 +60,26 @@ public class Game extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer container) throws SlickException {
+        container.setShowFPS(SHOW_FPS);
+        container.setVSync(VSYNC);
+
         ImageRepository imageRepository = new ImageRepository();
+
+        EntitiesData entitiesData = new EntitiesDataReader().fromRulesIni();
+
+        PlayingState playingState = new PlayingState(
+                container,
+                imageRepository,
+                createScenarioFactory(imageRepository, entitiesData)
+        );
+
+        SoundStore.get().setSoundVolume(0.2f);
+        SoundStore.get().setMusicVolume(0.5f);
+
+        addState(playingState);
+    }
+
+    public AbstractScenarioFactory createScenarioFactory(ImageRepository imageRepository, EntitiesData entitiesData) {
         DuneTerrainFactory terrainFactory = new DuneTerrainFactory(
                 new Theme(
                         imageRepository.loadAndCache("sheet_terrain.png"),
@@ -68,43 +87,28 @@ public class Game extends StateBasedGame {
                 )
         );
 
-        container.setShowFPS(SHOW_FPS);
-        container.setVSync(VSYNC);
-
         Shroud shroud = new Shroud(
                 imageRepository.loadAndCache("shroud_edges.png"),
                 TILE_SIZE
         );
 
-        EntitiesData entitiesData = new EntitiesDataReader().fromRulesIni();
-
-        ScenarioFactory scenarioFactory;
+        AbstractScenarioFactory abstractScenarioFactory;
         if (StringUtils.isEmpty(this.mapFileName)) {
-            scenarioFactory = new RandomMapScenarioFactory(
+            abstractScenarioFactory = new RandomMapScenarioFactory(
                 shroud,
                 terrainFactory,
                 entitiesData,
                 randomMapScenarioProperties
             );
         } else {
-            scenarioFactory = new IniScenarioFactory(
+            abstractScenarioFactory = new IniScenarioFactory(
                 shroud,
                 terrainFactory,
                 entitiesData,
                 mapFileName
             );
         }
-
-        PlayingState playingState = new PlayingState(
-                container,
-                imageRepository,
-                scenarioFactory
-        );
-
-        SoundStore.get().setSoundVolume(0.2f);
-        SoundStore.get().setMusicVolume(0.5f);
-
-        addState(playingState);
+        return abstractScenarioFactory;
     }
 
     /**
@@ -127,7 +131,6 @@ public class Game extends StateBasedGame {
             } else if (arg.startsWith("rmg:")) {
                 randomMapScenarioProperties = RandomMapScenarioProperties.fromString(arg.substring(4));
             }
-
         }
 
         Bootstrap.runAsApplication(

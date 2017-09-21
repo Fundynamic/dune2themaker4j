@@ -9,15 +9,16 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import org.newdawn.slick.SlickException;
 
 /**
- * Generates a Scenario to play
+ * Abstract factory for creating {@link Scenario} objects. Depending on the implementation it can be randomly generated,
+ * see {@link RandomMapScenarioFactory} or loaded via a file, see {@link IniScenarioFactory}
  */
-public abstract class ScenarioFactory {
+public abstract class AbstractScenarioFactory {
 
     protected final Shroud shroud;
     protected final TerrainFactory terrainFactory;
     protected final EntitiesData entitiesData;
 
-    protected ScenarioFactory(Shroud shroud, TerrainFactory terrainFactory, EntitiesData entitiesData) {
+    protected AbstractScenarioFactory(Shroud shroud, TerrainFactory terrainFactory, EntitiesData entitiesData) {
         this.shroud = shroud;
         this.terrainFactory = terrainFactory;
         this.entitiesData = entitiesData;
@@ -32,4 +33,6 @@ public abstract class ScenarioFactory {
                 entitiesData
         );
     }
+
+
 }

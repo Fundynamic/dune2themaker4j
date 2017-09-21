@@ -1,6 +1,5 @@
 package com.fundynamic.d2tm.game.scenario;
 
-import com.fundynamic.d2tm.Game;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
@@ -13,9 +12,10 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import org.newdawn.slick.SlickException;
 
-public class RandomMapScenarioFactory extends ScenarioFactory {
+public class RandomMapScenarioFactory extends AbstractScenarioFactory {
 
     private RandomMapScenarioProperties randomMapScenarioProperties;
+
     public RandomMapScenarioFactory(Shroud shroud, TerrainFactory terrainFactory, EntitiesData entitiesData, RandomMapScenarioProperties randomMapScenarioProperties) {
         super(shroud, terrainFactory, entitiesData);
         this.randomMapScenarioProperties = randomMapScenarioProperties;

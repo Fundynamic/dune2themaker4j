@@ -11,7 +11,7 @@ import com.fundynamic.d2tm.game.rendering.gui.sidebar.MiniMap;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
 import com.fundynamic.d2tm.game.scenario.Scenario;
-import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -28,7 +28,7 @@ public class PlayingState extends BasicGameState {
 
     private final Input input;
     private final Vector2D screenResolution;
-    private final ScenarioFactory scenarioFactory;
+    private final AbstractScenarioFactory abstractScenarioFactory;
     private Scenario scenario;
 
     private GuiComposite guiComposite;
@@ -41,11 +41,11 @@ public class PlayingState extends BasicGameState {
 
     private Mouse mouse;
 
-    public PlayingState(GameContainer gameContainer, ImageRepository imageRepository, ScenarioFactory scenarioFactory) throws SlickException {
+    public PlayingState(GameContainer gameContainer, ImageRepository imageRepository, AbstractScenarioFactory abstractScenarioFactory) throws SlickException {
         this.input = gameContainer.getInput();
         this.screenResolution = getResolution();
         this.imageRepository = imageRepository;
-        this.scenarioFactory = scenarioFactory;
+        this.abstractScenarioFactory = abstractScenarioFactory;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PlayingState extends BasicGameState {
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame game) throws SlickException {
-        scenario = scenarioFactory.create();
+        scenario = abstractScenarioFactory.create();
         Player human = scenario.getHuman();
 
         guiComposite = new GuiComposite();
