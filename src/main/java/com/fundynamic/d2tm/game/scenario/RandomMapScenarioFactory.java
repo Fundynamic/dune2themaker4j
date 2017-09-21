@@ -15,8 +15,10 @@ import org.newdawn.slick.SlickException;
 
 public class RandomMapScenarioFactory extends ScenarioFactory {
 
-    public RandomMapScenarioFactory(Shroud shroud, TerrainFactory terrainFactory, EntitiesData entitiesData) {
+    private RandomMapScenarioProperties randomMapScenarioProperties;
+    public RandomMapScenarioFactory(Shroud shroud, TerrainFactory terrainFactory, EntitiesData entitiesData, RandomMapScenarioProperties randomMapScenarioProperties) {
         super(shroud, terrainFactory, entitiesData);
+        this.randomMapScenarioProperties = randomMapScenarioProperties;
     }
 
     @Override
@@ -24,31 +26,30 @@ public class RandomMapScenarioFactory extends ScenarioFactory {
         try {
             Scenario.ScenarioBuilder builder = Scenario.builder();
 
-            MapEditor mapEditor = new MapEditor(terrainFactory);
-
             Player human = new Player("Human", Faction.GREEN);
             Player cpu = new Player("CPU", Faction.RED);
 
             builder.withHuman(human);
             builder.withCpuPlayer(cpu);
 
-            if (Game.RECORDING_VIDEO) {
-                human.setCredits(2200);
-            } else {
-                human.setCredits(3000);
-            }
+            human.setCredits(randomMapScenarioProperties.getHumanCredits());
+            cpu.setCredits(randomMapScenarioProperties.getCpuCredits());
 
-            cpu.setCredits(2000);
-
-            Map map = getMap(mapEditor);
+            MapEditor mapEditor = new MapEditor(terrainFactory);
+            int mapWidth = randomMapScenarioProperties.getMapWidth();
+            int mapHeight = randomMapScenarioProperties.getMapHeight();
+            Map map = getMap(mapEditor, mapWidth, mapHeight);
 
             MapCoordinate playerConstyard = MapCoordinate.create(5, 5);
-            MapCoordinate cpuConstyard = MapCoordinate.create(57, 57);
+            MapCoordinate cpuConstyard = MapCoordinate.create(mapWidth - 5, mapHeight - 5);
 
             // create spice field nearby
-            mapEditor.createCircularField(map, MapCoordinate.create(15, 15), DuneTerrain.TERRAIN_SPICE, 5);
+            mapEditor.createCircularField(map, playerConstyard.add(MapCoordinate.create(7,7)), DuneTerrain.TERRAIN_SPICE, 5);
             mapEditor.createCircularField(map, playerConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+
             mapEditor.createCircularField(map, cpuConstyard, DuneTerrain.TERRAIN_ROCK, 5);
+            mapEditor.createCircularField(map, cpuConstyard.min(MapCoordinate.create(7,7)), DuneTerrain.TERRAIN_SPICE, 5);
+
             mapEditor.smooth(map);
 
             builder.withMap(map);
@@ -65,7 +66,7 @@ public class RandomMapScenarioFactory extends ScenarioFactory {
         }
     }
 
-    public Map getMap(MapEditor mapEditor) {
-        return mapEditor.generateRandom(shroud, 128, 128);
+    public Map getMap(MapEditor mapEditor, int mapWidth, int mapHeight) {
+        return mapEditor.generateRandom(shroud, mapWidth, mapHeight);
     }
 }

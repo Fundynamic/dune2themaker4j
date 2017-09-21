@@ -3,14 +3,13 @@ package com.fundynamic.d2tm.game.state;
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.controls.Mouse;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
-import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
-import com.fundynamic.d2tm.game.rendering.gui.battlefield.Recolorer;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
 import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
@@ -18,8 +17,6 @@ import com.fundynamic.d2tm.graphics.Shroud;
 import com.fundynamic.d2tm.graphics.Theme;
 import org.junit.Before;
 import org.junit.Test;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -28,7 +25,6 @@ import static com.fundynamic.d2tm.game.map.Cell.TILE_SIZE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 public class PlayingStateTest extends AbstractD2TMTest {
@@ -42,10 +38,10 @@ public class PlayingStateTest extends AbstractD2TMTest {
         Shroud shroud = new Shroud(mock(Image.class), TILE_SIZE);
 
         final Map originalMap = map;
-        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(shroud, terrainFactory, entitiesData) {
+        ScenarioFactory scenarioFactory = new RandomMapScenarioFactory(shroud, terrainFactory, entitiesData, new RandomMapScenarioProperties()) {
 
             @Override
-            public Map getMap(MapEditor mapEditor) {
+            public Map getMap(MapEditor mapEditor, int mapWidth, int mapHeight) {
                 return originalMap;
             }
 

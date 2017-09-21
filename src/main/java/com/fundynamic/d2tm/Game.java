@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
 import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
 import com.fundynamic.d2tm.game.scenario.ScenarioFactory;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
@@ -38,6 +39,8 @@ public class Game extends StateBasedGame {
     public static boolean RECORDING_VIDEO = false;
     // if 'fullscreen' is passed as argument then the game will be rendered in fullscreen
     public static boolean FULLSCREEN = false;
+
+    public static RandomMapScenarioProperties randomMapScenarioProperties;
 
     public static Vector2D getResolution() {
         return Vector2D.create(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -78,16 +81,17 @@ public class Game extends StateBasedGame {
         ScenarioFactory scenarioFactory;
         if (StringUtils.isEmpty(this.mapFileName)) {
             scenarioFactory = new RandomMapScenarioFactory(
-                    shroud,
-                    terrainFactory,
-                    entitiesData
+                shroud,
+                terrainFactory,
+                entitiesData,
+                randomMapScenarioProperties
             );
         } else {
             scenarioFactory = new IniScenarioFactory(
-                    shroud,
-                    terrainFactory,
-                    entitiesData,
-                    mapFileName
+                shroud,
+                terrainFactory,
+                entitiesData,
+                mapFileName
             );
         }
 
@@ -116,8 +120,14 @@ public class Game extends StateBasedGame {
         String mapFileName = "";
         for (String arg : argsList) {
             if (arg.startsWith("map:")) {
+                if (randomMapScenarioProperties !=null) {
+                    throw new IllegalArgumentException("Cannot generate random map and load a scenario at the same time. Use map: OR rmg:");
+                }
                 mapFileName = arg.substring(4);
+            } else if (arg.startsWith("rmg:")) {
+                randomMapScenarioProperties = RandomMapScenarioProperties.fromString(arg.substring(4));
             }
+
         }
 
         Bootstrap.runAsApplication(

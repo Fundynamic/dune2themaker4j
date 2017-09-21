@@ -24,4 +24,12 @@ public class StringUtils {
         return result;
 
     }
+
+    public static int parseIntOrDefault(String input, int defaultToReturn) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return defaultToReturn;
+        }
+    }
 }
