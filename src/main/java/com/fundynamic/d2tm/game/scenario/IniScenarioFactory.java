@@ -132,37 +132,39 @@ public class IniScenarioFactory extends ScenarioFactory {
             throw new IllegalArgumentException("Invalid map dimensions given [" + mapWidth+"x"+mapHeight + "], must be greater than 1x1.");
         }
 
-        Map map = new Map(shroud, mapWidth, mapHeight);
         MapEditor mapEditor = new MapEditor(terrainFactory);
-        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
+        Map map = makeMap(mapEditor, mapWidth, mapHeight);
+
 
         // Now start with terrain
         Profile.Section iniTerrain = ini.get("TERRAIN");
 
-        for (int row = 1; row < (mapHeight+1); row++) {
-            String rowKey = (row < 10 ? "0" : "") + row;
-            String rowData = iniTerrain.getOrDefault(rowKey, "").replaceAll("\"", "");
+        if (iniTerrain != null) {
+            for (int row = 1; row < (mapHeight + 1); row++) {
+                String rowKey = (row < 10 ? "0" : "") + row;
+                String rowLine = iniTerrain.getOrDefault(rowKey, "");
+                String rowData = rowLine.replaceAll("\"", "");
 
-            if (rowData == null) {
-                System.out.println("Unexpected end of rows for map, expected to have " + mapHeight + " rows, but got nothing at row " + row);
-                break;
-            }
+                if (rowData == null) {
+                    System.out.println("Unexpected end of rows for map, expected to have " + mapHeight + " rows, but got nothing at row " + row);
+                    break;
+                }
 
-            int rowDataLength = rowData.length() < mapWidth ? rowData.length() : mapWidth;
-            if (rowDataLength <= 0) {
-                System.out.println("Row " + row + " contains no data?");
-            }
-            if (row == 42) {
-                System.out.println(rowData);
-            }
-            for (int column = 0; column < rowDataLength; column++) {
-                int terrainType = getTerrainType(rowData, column);
-                System.out.println("Putting " + terrainType + " on [" + (column + 1) + "x" + row + "]");
-                mapEditor.putTerrainOnCell(map, MapCoordinate.create(column + 1, row), terrainType);
+                int rowDataLength = rowData.length() < mapWidth ? rowData.length() : mapWidth;
+                for (int column = 0; column < rowDataLength; column++) {
+                    int terrainType = getTerrainType(rowData, column);
+                    mapEditor.putTerrainOnCell(map, MapCoordinate.create(column + 1, row), terrainType);
+                }
             }
         }
 
         mapEditor.smooth(map);
+        return map;
+    }
+
+    public Map makeMap(MapEditor mapEditor, int mapWidth, int mapHeight) throws SlickException {
+        Map map = new Map(shroud, mapWidth, mapHeight);
+        mapEditor.fillMapWithTerrain(map, DuneTerrain.TERRAIN_SAND);
         return map;
     }
 
