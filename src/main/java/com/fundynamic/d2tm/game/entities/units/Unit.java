@@ -439,6 +439,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         } else {
             target = nextTargetToMoveTo;
         }
+        setToGoalResolverState();
     }
 
     public Vector2D getOffset() {
