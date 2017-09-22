@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 public class IniScenarioFactoryTest extends AbstractD2TMTest {
 
     @Test
-    public void foo() {
+    public void smokeTest() {
         IniScenarioFactory iniScenarioFactory = new IniScenarioFactory(shroud, mock(TerrainFactory.class), entitiesData, "test-scenario.ini") {
             @Override
             public EntityRepository getEntityRepository(Map map) throws SlickException {
@@ -36,6 +36,10 @@ public class IniScenarioFactoryTest extends AbstractD2TMTest {
 
         // 3 units, 1 structure
         Assert.assertEquals(4, entitiesCount);
+
+        Map map = scenario.getMap();
+        Assert.assertEquals(64, map.getWidth());
+        Assert.assertEquals(64, map.getHeight());
 
     }
 }

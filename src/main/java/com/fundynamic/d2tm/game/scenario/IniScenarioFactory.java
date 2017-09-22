@@ -42,7 +42,6 @@ public class IniScenarioFactory extends AbstractScenarioFactory {
             Map map = readMapAndTerrain(ini);
             builder.withMap(map);
 
-
             Player human = readHumanPlayer(ini);
             builder.withHuman(human);
 
