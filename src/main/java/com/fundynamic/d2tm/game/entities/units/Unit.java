@@ -391,7 +391,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     public void moveTo(Coordinate absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
         // TODO: Is this correct?
-//        this.entityToAttack = null; // forget about attacking
+        this.entityToAttack = null; // forget about attacking
         EnterStructureIntent.instance.removeAllIntentsBy(this);
 
         cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
