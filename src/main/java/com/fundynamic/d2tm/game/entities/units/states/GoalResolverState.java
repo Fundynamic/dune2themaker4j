@@ -30,14 +30,17 @@ public class GoalResolverState extends UnitState {
             // forget about entity when it is destroyed
             if (entityToAttack.isDestroyed()) {
                 unit.forgetEntityToAttack();
-            } else {
-                if (unit.isEntityToAttackInRange()) {
-                    unit.fireAt(entityToAttack);
-                    return;
-                }
-                // get closer
-                unit.setMoveTarget(entityToAttack.getCenteredCoordinate());
+                return;
             }
+
+            if (unit.isEntityToAttackInRange()) {
+                unit.fireAt(entityToAttack);
+                return;
+            }
+
+            // update (if applicable) the coordinate to move to, and continue below to move to next cell
+            // in order to get closer to target
+            unit.setMoveTarget(entityToAttack.getCenteredCoordinate());
         }
 
         if (unit.hasNoNextCellToMoveTo()) {
