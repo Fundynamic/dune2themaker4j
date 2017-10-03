@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.units.states;
 
 
+import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
@@ -21,6 +22,25 @@ public class GoalResolverState extends UnitState {
             unit.log("No need to move anywhere (target == coordinate), going to idle mode.");
             unit.idle();
             return;
+        }
+
+        if (unit.hasEnemyToAttack()) {
+            Entity entityToAttack = unit.getEntityToAttack();
+
+            // forget about entity when it is destroyed
+            if (entityToAttack.isDestroyed()) {
+                unit.forgetEntityToAttack();
+                return;
+            }
+
+            if (unit.isEntityToAttackInRange()) {
+                unit.fireAt(entityToAttack);
+                return;
+            }
+
+            // update (if applicable) the coordinate to move to, and continue below to move to next cell
+            // in order to get closer to target
+            unit.setMoveTarget(entityToAttack.getCenteredCoordinate());
         }
 
         if (unit.hasNoNextCellToMoveTo()) {

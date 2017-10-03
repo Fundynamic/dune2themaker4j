@@ -20,6 +20,7 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.newdawn.slick.SlickException;
 
@@ -67,6 +68,7 @@ public class UnitTest extends AbstractD2TMTest {
     }
 
     @Test
+    @Ignore("This is for now no longer applicable")
     public void cpuUnitAttacksBackTheEntityItTookDamageFrom() {
         Unit humanUnit = makeUnit(player);
 
@@ -74,8 +76,8 @@ public class UnitTest extends AbstractD2TMTest {
         assertFalse(unit.shouldAttack());
 
         unit.takeDamage(1, humanUnit); // takes damage from the humanUnit
+        updateUnitTimesHundredMilis(unit, 2);
 
-        assertTrue(unit.shouldAttack());
         assertEquals(humanUnit, unit.getEntityToAttack());
     }
 
@@ -214,7 +216,7 @@ public class UnitTest extends AbstractD2TMTest {
 
         // update, 1 second passed. rules.ini file should have at least attack rate for QUAD < 1 second
         // so it fires a projectile...
-        playerQuad.update(1);
+        updateUnitTimesHundredMilis(playerQuad, 10);
 
         Entity lastCreatedEntity = entityRepository.getLastCreatedEntity();
         assertThat(lastCreatedEntity.getEntityType(), is(EntityType.PROJECTILE));

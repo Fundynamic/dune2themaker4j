@@ -2,8 +2,6 @@ package com.fundynamic.d2tm.game.entities.units;
 
 import com.fundynamic.d2tm.game.behaviors.*;
 import com.fundynamic.d2tm.game.entities.*;
-import com.fundynamic.d2tm.game.entities.predicates.BelongsToPlayer;
-import com.fundynamic.d2tm.game.entities.predicates.NotPredicate;
 import com.fundynamic.d2tm.game.entities.predicates.PredicateBuilder;
 import com.fundynamic.d2tm.game.entities.projectiles.Projectile;
 import com.fundynamic.d2tm.game.entities.units.states.*;
@@ -53,7 +51,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     private Vector2D offset;
 
     private Entity entityToAttack;
-    private float attackTimer; // needed for attackRate
 
     // give units a bit more intelligence
     private float guardTimer = 0;
@@ -108,14 +105,6 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
         if (this.isDestroyed() || isDying()) {
             return;
-        }
-
-        if (shouldAttack()) {
-            chaseOrAttack(deltaInSeconds);
-        }
-
-        if (!cannonFacing.isFacingDesiredFacing()) {
-            cannonFacing.update(deltaInSeconds);
         }
 
 //        if (!shouldMove() && !shouldAttack()) {
@@ -192,53 +181,48 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         return entityToAttack != null;
     }
 
-    public void chaseOrAttack(float deltaInSeconds) {
+    public boolean isEntityInAttackRange(Entity other) {
         float attackRange = entityData.attackRange;
-        // ok, we don't need to move, so lets see if we are in range
-        if (distance(entityToAttack) <= attackRange) {
-            // in range!!
-            bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
-            cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entityToAttack.getCoordinate()));
+        return distance(other) <= attackRange;
+    }
 
-            if (entityToAttack.isDestroyed()) {
-                // target is destroyed, so stop attacking...
-                entityToAttack = null;
-            } else {
-                // target is not yet destroyed
-                boolean readyToFire = false;
+    public boolean isEntityToAttackInRange() {
+        return isEntityInAttackRange(entityToAttack);
+    }
 
-                if (cannonFacing.isRequiredToFaceEnemyBeforeShooting()) {
-                    readyToFire = cannonFacing.isFacingDesiredFacing();
-                } else if (bodyFacing.isRequiredToFaceEnemyBeforeShooting()) {
-                    readyToFire = bodyFacing.isFacingDesiredFacing();
-                }
+    /**
+     * Returns true when:
+     * - entity has a weapon to fire
+     * - required facing faces enemy
+     * - required body faces enemy
+     * - or just true, when neither is required
+     * @return
+     */
+    public boolean isReadyToFire() {
+        if (!entityData.hasWeaponId()) return false;
 
-                if (readyToFire) { // unit is facing target, commence attacking
-
-                    // weird check here, but we should have a weapon before we can fire...
-                    if (entityData.hasWeaponId()) {
-                        attackTimer += entityData.getRelativeAttackRate(deltaInSeconds);
-
-                        // fire projectiles! - we use this while loop so that in case if insane high number of attack
-                        // rates we can keep up with slow FPS
-                        while (attackTimer > 1.0F) {
-                            Projectile projectile = entityRepository.placeProjectile(coordinate.add(getHalfSize()), entityData.weaponId, this);
-                            projectile.moveTo(entityToAttack.getRandomPositionWithin());
-                            attackTimer -= 1.0F;
-                        }
-                    }
-                } else {
-                    // not facing yet, turn towards it
-                    bodyFacing.update(deltaInSeconds);
-                }
-            }
-        } else {
-            if (entityToAttack.isDestroyed()) {
-                entityToAttack = null;
-            } else {
-                moveTo(entityToAttack.getCoordinate());
-            }
+        if (isRequiredToFaceEnemyBeforeShootingWithCannon()) {
+            return cannonFacing.isFacingDesiredFacing();
         }
+
+        if (isRequiredToFaceEnemyBeforeShootingWithBody()) {
+            return bodyFacing.isFacingDesiredFacing();
+        }
+
+        return true;
+    }
+
+    public boolean isRequiredToFaceEnemyBeforeShootingWithBody() {
+        return bodyFacing.isRequiredToFaceEnemyBeforeShooting();
+    }
+
+    public boolean isRequiredToFaceEnemyBeforeShootingWithCannon() {
+        return cannonFacing.isRequiredToFaceEnemyBeforeShooting();
+    }
+
+    public void updateDesiredFacingsToEntity(Entity entity) {
+        bodyFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entity.getCoordinate()));
+        cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(coordinate, entity.getCoordinate()));
     }
 
     /**
@@ -389,9 +373,12 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
 
     @Override
     public void moveTo(Coordinate absoluteMapCoordinates) {
+        this.entityToAttack = null; // forget about attacking
+        setMoveTarget(absoluteMapCoordinates);
+    }
+
+    public void setMoveTarget(Coordinate absoluteMapCoordinates) {
         this.target = absoluteMapCoordinates;
-        // TODO: Is this correct?
-//        this.entityToAttack = null; // forget about attacking
         EnterStructureIntent.instance.removeAllIntentsBy(this);
 
         cannonFacing.desireToFaceTo(UnitFacings.getFacingInt(this.coordinate, absoluteMapCoordinates));
@@ -452,6 +439,7 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         } else {
             target = nextTargetToMoveTo;
         }
+        setToGoalResolverState();
     }
 
     public Vector2D getOffset() {
@@ -619,6 +607,9 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
     }
 
     public Coordinate getTarget() {
+        if (hasEnemyToAttack()) {
+            target = entityToAttack.getCoordinate();
+        }
         return target;
     }
 
@@ -732,7 +723,30 @@ public class Unit extends Entity implements Selectable, Moveable, Destructible, 
         bodyFacing.update(deltaInSeconds);
     }
 
+    public void updateCannonFacing(float deltaInSeconds) {
+        if (cannonFacing == null) return;
+        cannonFacing.update(deltaInSeconds);
+    }
+
     public UnitState getState() {
         return this.state;
+    }
+
+    public void forgetEntityToAttack() {
+        entityToAttack = null;
+    }
+
+    public void fireAt(Entity entityToAttack) {
+        setState(new FireAtEntityState(this, entityRepository, map, entityToAttack));
+    }
+
+    public void updateBodyAndCannonFacing(float deltaInSeconds) {
+        updateBodyFacing(deltaInSeconds);
+        updateCannonFacing(deltaInSeconds);
+    }
+
+    public void fireWeaponTowards(Coordinate target) {
+        Projectile projectile = entityRepository.placeProjectile(getCenteredCoordinate(), entityData.weaponId, this);
+        projectile.moveTo(target);
     }
 }

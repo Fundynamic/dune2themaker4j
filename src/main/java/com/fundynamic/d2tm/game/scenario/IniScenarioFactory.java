@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Faction;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
@@ -77,7 +78,12 @@ public class IniScenarioFactory extends AbstractScenarioFactory {
 
             String type = getType(struct);
 
-            entityRepository.placeUnitOnMap(coordinate, type, playerToUse);
+            Unit unit = entityRepository.placeUnitOnMap(coordinate, type, playerToUse);
+
+            MapCoordinate moveTo = getMapCoordinateOrNull(struct, "MoveTo");
+            if (moveTo != null) {
+                unit.moveTo(moveTo.toCoordinate());
+            }
         }
     }
 
@@ -114,6 +120,14 @@ public class IniScenarioFactory extends AbstractScenarioFactory {
             throw new IllegalArgumentException("Unable to put read ["+ propertyNameForMapCoordinate + "] for [" + struct + "]");
         }
         return MapCoordinate.fromString(mapCoordinate);
+    }
+
+    public MapCoordinate getMapCoordinateOrNull(Profile.Section struct, String propertyNameForMapCoordinate) {
+        try {
+            return getMapCoordinate(struct, propertyNameForMapCoordinate);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public Player getPlayer(Player human, Player cpu, Profile.Section struct) {
