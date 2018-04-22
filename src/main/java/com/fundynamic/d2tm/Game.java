@@ -133,6 +133,17 @@ public class Game extends StateBasedGame {
             }
         }
 
+        // fall back to default if not given
+        if (StringUtils.isEmpty(mapFileName)) {
+            System.out.println("Will run with random generated map.");
+            if (randomMapScenarioProperties == null) {
+                randomMapScenarioProperties = new RandomMapScenarioProperties();
+            }
+            System.out.println("Using random map generation properties: " + randomMapScenarioProperties);
+        } else {
+            System.out.println("Will run with map from file: " + mapFileName);
+        }
+
         Bootstrap.runAsApplication(
                 new Game(GAME_TITLE, mapFileName),
                 SCREEN_WIDTH,

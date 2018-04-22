@@ -59,4 +59,14 @@ public class RandomMapScenarioProperties {
         }
         return randomMapScenarioProperties;
     }
+
+    @Override
+    public String toString() {
+        return "RandomMapScenarioProperties{" +
+                "mapWidth=" + mapWidth +
+                ", mapHeight=" + mapHeight +
+                ", humanCredits=" + humanCredits +
+                ", cpuCredits=" + cpuCredits +
+                '}';
+    }
 }
