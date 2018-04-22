@@ -84,9 +84,10 @@ public class MiniMap extends GuiElement {
                         renderPosition.getWidth(), renderPosition.getHeight());
             }
 
-            // render viewport outline
-            drawViewportOutline(graphics);
         }
+
+        // render viewport outline
+        drawViewportOutline(graphics);
     }
 
     private Image getMaybeRedrawnOrStaleMiniMapImage() {
