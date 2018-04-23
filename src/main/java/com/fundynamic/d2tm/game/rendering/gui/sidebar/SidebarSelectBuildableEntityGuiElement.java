@@ -6,6 +6,8 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
+import com.fundynamic.d2tm.game.rendering.gui.TextBox;
+import com.fundynamic.d2tm.game.types.EntityData;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -17,6 +19,8 @@ import java.util.List;
  * A fancy name for a 'build icon', part of the Sidebar
  */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
+
+    private Vector2D mouseCoordinates;
 
     // The entity that is building other entities, ie a Structure
     private EntityBuilder entityBuilder;
@@ -63,6 +67,23 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.render(graphics);
         }
+
+        if (focussedRenderableBuildableEntity != null) {
+            graphics.setColor(Color.red);
+            Vector2D dimensions = focussedRenderableBuildableEntity.getDimensions();
+            EntityData entityData = focussedRenderableBuildableEntity.getAbstractBuildableEntity().getEntityData();
+
+            TextBox textBox = new TextBox(graphics, mouseCoordinates.min(Vector2D.create(32, 0)));
+            String text = "" + entityData.name + "\n" +
+                          "\nCost: $" + entityData.buildCost +
+                          "\nTime: S" + entityData.buildTimeInSeconds +
+                          "\nPower -/+: " + entityData.powerConsumption + "/" + entityData.powerProduction;
+
+            textBox.setText(text);
+            textBox.setBackGroundColor(Color.darkGray);
+            textBox.flipPositionHorizontally();
+            textBox.render(graphics);
+        }
     }
 
     @Override
@@ -104,6 +125,8 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void movedTo(Vector2D coordinates) {
+        mouseCoordinates = coordinates;
+
         // clear focus
         focussedRenderableBuildableEntity = null;
 

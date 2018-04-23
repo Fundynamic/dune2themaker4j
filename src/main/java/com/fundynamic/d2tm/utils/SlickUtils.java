@@ -28,6 +28,16 @@ public class SlickUtils {
         drawText(graphics, color, msg, x, y); // text
     }
 
+    /**
+     * Draws a text with shadow
+     */
+    public static void drawShadowedText(Graphics graphics, Color color, String msg, Vector2D pos) {
+        int x = pos.getXAsInt();
+        int y = pos.getYAsInt();
+        drawText(graphics, Colors.BLACK_ALPHA_128, msg, x + 2, y + 2); // shadow
+        drawText(graphics, color, msg, x, y); // text
+    }
+
     public static void drawLine(Graphics graphics, Coordinate from, Coordinate to) {
         graphics.drawLine(from.getXAsInt(), from.getYAsInt(), to.getXAsInt(), to.getYAsInt());
     }
@@ -40,7 +50,6 @@ public class SlickUtils {
         graphics.drawString(msg, x, y);
     }
 
-
     /**
      * Draws image on given vector.
      * @param graphics
@@ -51,4 +60,11 @@ public class SlickUtils {
         graphics.drawImage(image, vec.getXAsInt(), vec.getYAsInt());
     }
 
+    public static void fillRect(Graphics graphics, Vector2D vecTopLeft, Vector2D dimensions) {
+        graphics.fillRect(vecTopLeft.getX(), vecTopLeft.getY(), dimensions.getX(), dimensions.getY());
+    }
+
+    public static void drawRect(Graphics graphics, Vector2D vecTopLeft, Vector2D dimensions) {
+        graphics.drawRect(vecTopLeft.getX(), vecTopLeft.getY(), dimensions.getX(), dimensions.getY());
+    }
 }
