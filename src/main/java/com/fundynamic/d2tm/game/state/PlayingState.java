@@ -71,6 +71,17 @@ public class PlayingState extends BasicGameState {
 
         guiComposite.addGuiElement(battlefield);
 
+        // minimap
+        guiComposite.addGuiElement(
+                new MiniMap(
+                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
+                        SCREEN_HEIGHT - HEIGHT_OF_MINIMAP,
+                        WIDTH_OF_SIDEBAR,
+                        HEIGHT_OF_MINIMAP,
+                        battlefield, scenario.getEntityRepository(), scenario.getMap(), human
+                )
+        );
+
         // topbar / moneybar
         guiComposite.addGuiElement(new Topbar(0, 0, SCREEN_WIDTH, HEIGHT_OF_TOP_BAR, human, imageRepository.loadAndCache("lightning.png")));
 
@@ -81,17 +92,6 @@ public class PlayingState extends BasicGameState {
                         HEIGHT_OF_TOP_BAR,
                         WIDTH_OF_SIDEBAR,
                         SCREEN_HEIGHT - (HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
-                )
-        );
-
-        // minimap
-        guiComposite.addGuiElement(
-                new MiniMap(
-                        SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - HEIGHT_OF_MINIMAP,
-                        WIDTH_OF_SIDEBAR,
-                        HEIGHT_OF_MINIMAP,
-                        battlefield, scenario.getEntityRepository(), scenario.getMap(), human
                 )
         );
 
