@@ -1,5 +1,6 @@
 package com.fundynamic.d2tm.game.scenario;
 
+import com.fundynamic.d2tm.game.scenario.factory.RandomMapScenarioProperties;
 import org.junit.Assert;
 import org.junit.Test;
 

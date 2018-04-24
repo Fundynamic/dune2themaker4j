@@ -1,9 +1,9 @@
 package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
-import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.AbstractScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.IniScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.RandomMapScenarioFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import org.junit.Assert;
 import org.junit.Test;

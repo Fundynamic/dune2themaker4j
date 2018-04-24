@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.scenario;
+package com.fundynamic.d2tm.game.scenario.factory;
 
 import com.fundynamic.d2tm.utils.StringUtils;
 

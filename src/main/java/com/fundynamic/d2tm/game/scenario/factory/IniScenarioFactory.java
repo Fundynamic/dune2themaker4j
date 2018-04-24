@@ -1,4 +1,4 @@
-package com.fundynamic.d2tm.game.scenario;
+package com.fundynamic.d2tm.game.scenario.factory;
 
 import com.fundynamic.d2tm.game.entities.EntityRepository;
 import com.fundynamic.d2tm.game.entities.Faction;
@@ -7,6 +7,7 @@ import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.units.Unit;
 import com.fundynamic.d2tm.game.map.Map;
 import com.fundynamic.d2tm.game.map.MapEditor;
+import com.fundynamic.d2tm.game.scenario.Scenario;
 import com.fundynamic.d2tm.game.terrain.TerrainFactory;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrain;
 import com.fundynamic.d2tm.graphics.Shroud;

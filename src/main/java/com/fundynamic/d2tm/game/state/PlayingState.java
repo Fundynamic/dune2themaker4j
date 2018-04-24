@@ -10,7 +10,7 @@ import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.MiniMap;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.game.rendering.gui.topbar.Topbar;
-import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.AbstractScenarioFactory;
 import com.fundynamic.d2tm.game.scenario.Scenario;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.math.MapCoordinate;

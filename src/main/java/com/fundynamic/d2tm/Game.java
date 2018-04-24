@@ -2,10 +2,10 @@ package com.fundynamic.d2tm;
 
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesDataReader;
-import com.fundynamic.d2tm.game.scenario.AbstractScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.IniScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.RandomMapScenarioFactory;
-import com.fundynamic.d2tm.game.scenario.RandomMapScenarioProperties;
+import com.fundynamic.d2tm.game.scenario.factory.AbstractScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.IniScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.RandomMapScenarioFactory;
+import com.fundynamic.d2tm.game.scenario.factory.RandomMapScenarioProperties;
 import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.game.terrain.impl.DuneTerrainFactory;
 import com.fundynamic.d2tm.graphics.ImageRepository;
