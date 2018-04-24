@@ -20,6 +20,6 @@ public class TextBoxTest {
 
 	    textBox.setText("Hello");
 
-	    assertEquals(Vector2D.create(0, 32), textBox.getDimensions());
+	    assertEquals(Vector2D.create(82, 50), textBox.getDimensions());
 	}
 }
