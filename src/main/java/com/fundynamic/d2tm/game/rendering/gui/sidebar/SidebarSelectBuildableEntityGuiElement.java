@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fancy name for a 'build icon', part of the Sidebar
+ * A fancy name for 'build list of selected entity'.
  */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
@@ -35,11 +35,20 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     private List<RenderableBuildableEntity> renderableBuildableEntities;
 
+    private int maxHeightOfListInPixels;
+
+    private int startRenderingIndex = 0;
+    private int amountOfIconsAbleToRender = 5;
+
     public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, Player player, EntityBuilder entityBuilder, GuiComposite guiComposite) {
         super(x, y, width, height);
         this.player = player;
         this.entityBuilder = entityBuilder;
         this.guiComposite = guiComposite;
+
+        int heightOfIcon = RenderableBuildableEntity.HEIGHT + 3;
+        this.amountOfIconsAbleToRender = (int) Math.floor(height / heightOfIcon);
+        this.maxHeightOfListInPixels = amountOfIconsAbleToRender * heightOfIcon;
 
         List<AbstractBuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
         this.renderableBuildableEntities = new ArrayList<>(buildList.size());
@@ -55,7 +64,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
                             getTopLeftX() + 64, // get the icons close to the right
                             drawY)
             );
-            drawY += 51; // height of icon + 3 extra pixels
+            drawY += heightOfIcon; // height of icon + 3 extra pixels
         }
 
     }
@@ -68,9 +77,13 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
         graphics.setColor(Color.white);
 
+        graphics.setClip(getTopLeftX(), getTopLeftY(), getWidth(), maxHeightOfListInPixels);
+
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.render(graphics);
         }
+
+        graphics.clearClip();
 
         if (focussedRenderableBuildableEntity != null) {
             graphics.setColor(Color.red);
@@ -132,7 +145,14 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         mouseCoordinates = coordinates;
 
         // clear focus
+        if (focussedRenderableBuildableEntity != null) {
+            focussedRenderableBuildableEntity.lostFocus();
+        }
         focussedRenderableBuildableEntity = null;
+
+        if (coordinates.getYAsInt() > getTopLeftY() + maxHeightOfListInPixels) {
+            return;
+        }
 
         // tell all entities that mouse has moved, let entity decide etc
         // and based on focus state remember that the mouse is moving over a specific icon, which is needed for
