@@ -56,16 +56,6 @@ public class RenderableBuildableEntity extends GuiElement {
         }
 
         int priceYPosition = 3;
-//        int powerYPosition = priceYPosition + 16;
-//        if (!abstractBuildableEntity.isBuilding() && !abstractBuildableEntity.awaitsPlacement()) {
-//            if (hasFocus()) {
-//                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
-//                SlickUtils.drawShadowedText(graphics, Color.yellow, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
-//            } else {
-//                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
-//                SlickUtils.drawShadowedText(graphics, Color.white, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
-//            }
-//        }
 
         BuildableState buildableState = abstractBuildableEntity.getBuildableState();
         if (buildableState == BuildableState.DISABLED) {

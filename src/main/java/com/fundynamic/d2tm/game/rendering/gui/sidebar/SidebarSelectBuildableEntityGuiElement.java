@@ -52,7 +52,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
                     new RenderableBuildableEntity(
                             placementBuildableEntity,
                             this.player,
-                            getTopLeftX() + 10, // arbitrary amount to the right
+                            getTopLeftX() + 64, // get the icons close to the right
                             drawY)
             );
             drawY += 51; // height of icon + 3 extra pixels
