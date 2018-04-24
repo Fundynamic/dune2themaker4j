@@ -5,6 +5,7 @@ import com.fundynamic.d2tm.game.behaviors.Focusable;
 import com.fundynamic.d2tm.game.behaviors.Renderable;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.controls.MouseBehavior;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 
@@ -39,5 +40,9 @@ public abstract class GuiElement extends Rectangle implements MouseBehavior, Upd
     @Override
     public void lostFocus() {
         hasFocus = false;
+    }
+
+    public Player getPlayer() {
+        return guiComposite.getPlayer();
     }
 }

@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
 
+    private final Player player;
     private Vector2D mouseCoordinates;
 
     // The entity that is building other entities, ie a Structure
@@ -33,8 +35,9 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     private List<RenderableBuildableEntity> renderableBuildableEntities;
 
-    public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, EntityBuilder entityBuilder, GuiComposite guiComposite) {
+    public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, Player player, EntityBuilder entityBuilder, GuiComposite guiComposite) {
         super(x, y, width, height);
+        this.player = player;
         this.entityBuilder = entityBuilder;
         this.guiComposite = guiComposite;
 
@@ -48,6 +51,7 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
             renderableBuildableEntities.add(
                     new RenderableBuildableEntity(
                             placementBuildableEntity,
+                            this.player,
                             getTopLeftX() + 10, // arbitrary amount to the right
                             drawY)
             );
@@ -148,6 +152,15 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     @Override
     public void update(float deltaInSeconds) {
+        // in case the mouse moves too fast from an icon to another gui element, it remains 'selected/hovered'
+        // so in those cases explicitly make sure we clear out the focused entity when lost focus.
+        if (!hasFocus) {
+            if (focussedRenderableBuildableEntity != null) {
+                focussedRenderableBuildableEntity.lostFocus();
+            }
+            focussedRenderableBuildableEntity = null;
+        }
+
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.update(deltaInSeconds);
         }

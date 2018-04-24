@@ -3,6 +3,7 @@ package com.fundynamic.d2tm.game.controls;
 import com.fundynamic.d2tm.game.behaviors.Updateable;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
+import com.fundynamic.d2tm.game.state.PlayingState;
 import com.fundynamic.d2tm.graphics.ImageRepository;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.GameContainer;
@@ -81,7 +82,8 @@ public class Mouse implements MouseBehavior, Updateable {
     }
 
     public void init() {
-        this.guiComposite = new GuiComposite();
+
+        this.guiComposite = new GuiComposite(Player.humanWith9999Credits());
     }
 
     public Player getControllingPlayer() {

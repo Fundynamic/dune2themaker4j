@@ -72,6 +72,11 @@ public class FadingSelection extends SimpleSelectLogic implements EnrichableAbso
         }
     }
 
+    /**
+     * Given an intensity between 0.0f and 1.0f, create a color for fading
+     * @param selectedIntensity
+     * @return
+     */
     public Color getFadingColor(float selectedIntensity) {
         return Colors.create(selectedIntensity, this.selectedIntensity, this.selectedIntensity);
     }

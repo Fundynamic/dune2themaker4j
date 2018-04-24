@@ -113,7 +113,7 @@ public abstract class AbstractD2TMTest {
         entityRepository = makeTestableEntityRepository(map, entitiesData);
 
         // Nice little circular dependency here...
-        guiComposite = new GuiComposite();
+        guiComposite = new GuiComposite(player);
 
         mouse = makeTestableMouse(player, guiComposite);
 

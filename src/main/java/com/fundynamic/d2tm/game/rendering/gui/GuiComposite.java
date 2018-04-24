@@ -9,6 +9,7 @@ import com.fundynamic.d2tm.game.controls.battlefield.LaunchSuperPowerMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.controls.battlefield.PlacingStructureMouse;
 import com.fundynamic.d2tm.game.entities.Entity;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
@@ -61,6 +62,11 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
 
     private BattleField battleField;
     private Sidebar sidebar;
+    private final Player player;
+
+    public GuiComposite(Player player) {
+        this.player = player;
+    }
 
     @Override
     public void render(Graphics graphics) {
@@ -205,5 +211,9 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
         if (abstractBuildableEntity instanceof PlacementBuildableEntity) {
             wantsToPlaceBuildableEntityOnBattlefield((PlacementBuildableEntity) abstractBuildableEntity);
         }
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

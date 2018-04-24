@@ -58,7 +58,7 @@ public class PlayingState extends BasicGameState {
         scenario = abstractScenarioFactory.create();
         Player human = scenario.getHuman();
 
-        guiComposite = new GuiComposite();
+        guiComposite = new GuiComposite(human);
 
         mouse = Mouse.create(
                 human,
@@ -91,8 +91,7 @@ public class PlayingState extends BasicGameState {
                         SCREEN_WIDTH - WIDTH_OF_SIDEBAR,
                         HEIGHT_OF_TOP_BAR,
                         WIDTH_OF_SIDEBAR,
-                        SCREEN_HEIGHT - (HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR)
-                )
+                        SCREEN_HEIGHT - (HEIGHT_OF_MINIMAP + HEIGHT_OF_TOP_BAR))
         );
 
         input.addMouseListener(new MouseListener(mouse));

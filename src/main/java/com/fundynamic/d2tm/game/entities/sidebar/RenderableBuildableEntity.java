@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.entities.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.FadingSelection;
+import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiElement;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -11,24 +12,35 @@ import org.newdawn.slick.Graphics;
 
 public class RenderableBuildableEntity extends GuiElement {
 
-    private FadingSelection fadingSelection;
-
     public static final int WIDTH = 64;
     public static final int HEIGHT = 48;
 
+    private FadingSelection fadingSelection;
+
     private final AbstractBuildableEntity abstractBuildableEntity;
 
-    public RenderableBuildableEntity(AbstractBuildableEntity abstractBuildableEntity, int x, int y) {
+    private final Player player;
+
+    public RenderableBuildableEntity(AbstractBuildableEntity abstractBuildableEntity, Player player, int x, int y) {
         super(x, y, WIDTH, HEIGHT);
+        this.player = player;
         this.abstractBuildableEntity = abstractBuildableEntity;
 
-        this.fadingSelection = new FadingSelection(getWidth(), getHeight(), 3) {
+        Color factionColor = this.player.getFactionColor();
+        this.fadingSelection = new FadingSelection(getWidth() - 1, getHeight(), 3) {
 
-            // Just some toying around here.
-            // TODO: Make house specific coloring? (here it is R value for Harkonnen fading)
+            /**
+             * Make it fade based on house color
+             * @param selectedIntensity
+             * @return
+             */
             @Override
             public Color getFadingColor(float selectedIntensity) {
-                return new Color(selectedIntensity, 0, 0);
+                return new Color(
+                        (factionColor.getRed() * selectedIntensity) / factionColor.getRed(),
+                        factionColor.getGreen() * selectedIntensity / factionColor.getGreen(),
+                        factionColor.getBlue() * selectedIntensity / factionColor.getBlue()
+                );
             }
         };
     }
@@ -44,16 +56,16 @@ public class RenderableBuildableEntity extends GuiElement {
         }
 
         int priceYPosition = 3;
-        int powerYPosition = priceYPosition + 16;
-        if (!abstractBuildableEntity.isBuilding() && !abstractBuildableEntity.awaitsPlacement()) {
-            if (hasFocus()) {
-                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
-                SlickUtils.drawShadowedText(graphics, Color.yellow, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
-            } else {
-                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
-                SlickUtils.drawShadowedText(graphics, Color.white, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
-            }
-        }
+//        int powerYPosition = priceYPosition + 16;
+//        if (!abstractBuildableEntity.isBuilding() && !abstractBuildableEntity.awaitsPlacement()) {
+//            if (hasFocus()) {
+//                SlickUtils.drawShadowedText(graphics, Color.yellow, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
+//                SlickUtils.drawShadowedText(graphics, Color.yellow, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
+//            } else {
+//                SlickUtils.drawShadowedText(graphics, Color.white, "$ " + abstractBuildableEntity.getBuildCost(), xAsInt + 2, yAsInt + priceYPosition);
+//                SlickUtils.drawShadowedText(graphics, Color.white, "P " + abstractBuildableEntity.getPowerBalance(), xAsInt + 2, yAsInt + powerYPosition);
+//            }
+//        }
 
         BuildableState buildableState = abstractBuildableEntity.getBuildableState();
         if (buildableState == BuildableState.DISABLED) {

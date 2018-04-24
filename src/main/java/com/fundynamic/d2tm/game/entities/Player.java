@@ -29,6 +29,10 @@ public class Player implements Updateable {
     private int totalPowerProduced = 0;
     private int totalPowerConsumption = 0;
 
+    public static Player humanWith9999Credits() {
+        return new Player("human", Faction.RED, 9999);
+    }
+
     public Player(String name, Faction faction) {
         this(name, faction, 2000);
     }
@@ -108,8 +112,18 @@ public class Player implements Updateable {
     @Override
     public String toString() {
         return "Player{" +
-                "name='" + name + '\'' +
+                "focusMapCoordinate=" + focusMapCoordinate +
+                ", name='" + name + '\'' +
                 ", faction=" + faction +
+                ", shrouded=" + shrouded +
+                ", entitiesSet (size)=" + entitiesSet.size() +
+                ", powerProducingEntities (size)=" + powerProducingEntities.size() +
+                ", powerConsumingEntities (size)=" + powerConsumingEntities.size() +
+                ", hasRadar=" + hasRadar +
+                ", credits=" + credits +
+                ", animatedCredits=" + animatedCredits +
+                ", totalPowerProduced=" + totalPowerProduced +
+                ", totalPowerConsumption=" + totalPowerConsumption +
                 '}';
     }
 
