@@ -88,7 +88,7 @@ public class SidebarTest extends AbstractD2TMTest {
         mouse.movedTo(Vector2D.create(withinSidebarX, withinSidebarY));
 
         // move to 'buildable icon'
-        withinSidebarX = (Game.SCREEN_WIDTH - PlayingState.WIDTH_OF_SIDEBAR) + 20;
+        withinSidebarX = (Game.SCREEN_WIDTH - PlayingState.WIDTH_OF_SIDEBAR) + 80;
         withinSidebarY = PlayingState.HEIGHT_OF_TOP_BAR + 20;
 
         // move into sidebar logic, but now also on buildable icon
