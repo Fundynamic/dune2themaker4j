@@ -2,6 +2,7 @@ package com.fundynamic.d2tm.utils;
 
 
 import com.fundynamic.d2tm.math.Coordinate;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -66,5 +67,9 @@ public class SlickUtils {
 
     public static void drawRect(Graphics graphics, Vector2D vecTopLeft, Vector2D dimensions) {
         graphics.drawRect(vecTopLeft.getX(), vecTopLeft.getY(), dimensions.getX(), dimensions.getY());
+    }
+
+    public static void setClip(Graphics graphics, Rectangle rectangle) {
+        graphics.setClip(rectangle.getTopLeftX(), rectangle.getTopLeftY(), rectangle.getWidth(), rectangle.getHeight());
     }
 }

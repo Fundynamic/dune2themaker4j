@@ -34,7 +34,13 @@ public class Colors {
     public static final Color LIGHT_BLUE = new Color(104, 102, 255, 255);
 
     // GUI related
+    public static final Color SIDEBAR_BRIGHT_LEFT_UP_SIDE = new Color(248, 252, 200);
+    public static final Color SIDEBAR_DARK_RIGHT_DOWN_SIDE = new Color(100, 100, 76);
+    public static final Color SIDEBAR_BACKGROUND = new Color(184, 188, 148);
 
+    public static final Color SIDEBAR_YELLOW = new Color(200, 140, 16);
+    public static final Color SIDEBAR_YELLOW_BAR_DARK = new Color(152, 104, 0);
+    public static final Color SIDEBAR_YELLOW_BAR_LIGHT = new Color(248, 208, 120);
 
     public static Map<String,Color> colorMap = new HashMap<>();
 

@@ -1,6 +1,7 @@
 package com.fundynamic.d2tm.game.rendering.gui;
 
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
 import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -35,9 +36,11 @@ public class TextBox {
 	}
 
 	public void render(Graphics graphics) {
-		graphics.setColor(backGroundColor);
+		graphics.setColor(Colors.BLACK_ALPHA_128);
+		SlickUtils.fillRect(graphics, position.add(Vector2D.create(7,7)), dimensions);
+		graphics.setColor(Colors.SIDEBAR_BACKGROUND);
 		SlickUtils.fillRect(graphics, position, dimensions);
-		graphics.setColor(Color.white);
+		graphics.setColor(Colors.SIDEBAR_BRIGHT_LEFT_UP_SIDE);
 		SlickUtils.drawRect(graphics, position, dimensions);
 		SlickUtils.drawShadowedText(graphics, Color.white, text, position);
 	}

@@ -3,8 +3,10 @@ package com.fundynamic.d2tm.game.rendering.gui.sidebar;
 
 import com.fundynamic.d2tm.game.behaviors.EntityBuilder;
 import com.fundynamic.d2tm.game.entities.Entity;
-import com.fundynamic.d2tm.game.entities.Player;
+import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -19,7 +21,8 @@ import org.newdawn.slick.Graphics;
  */
 public class Sidebar extends BattlefieldInteractableGuiElement {
 
-    private BattlefieldInteractableGuiElement guiElement;
+    private BattlefieldInteractableGuiElement buildList;
+    private Entity selectedEntity; // the entityBuilderSelected and to show for this sidebar (the structure)
 
     public Sidebar(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -27,27 +30,37 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
 
     @Override
     public void render(Graphics graphics) {
-        Vector2D topLeft = getTopLeft();
-        graphics.setColor(Color.darkGray);
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
-        graphics.setColor(Color.white);
+        graphics.setColor(Colors.SIDEBAR_BACKGROUND);
+        graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
 
-        if (guiElement != null) {
-            guiElement.render(graphics);
+        graphics.setColor(Colors.SIDEBAR_BRIGHT_LEFT_UP_SIDE);
+        graphics.drawLine(getTopLeftX(), getTopLeftY(), getTopLeftX(), getBottomRightY() - 1); // left side (up / down)
+        graphics.drawLine(getTopLeftX(), getTopLeftY(), getTopLeftX() + getWidth(), getTopLeftY()); // top side
+
+        graphics.setColor(Colors.SIDEBAR_DARK_RIGHT_DOWN_SIDE);
+        graphics.drawLine(getTopLeftX() + getWidth(), getTopLeftY() + 1, getTopLeftX() + getWidth(), getBottomRightY() - 1); // right side (up / down)
+        graphics.drawLine(getTopLeftX() + 1, getBottomRightY() - 1, getTopLeftX() + getWidth() - 1, getBottomRightY() - 1); // bottom side
+
+        if (selectedEntity != null) {
+            SlickUtils.drawShadowedText(graphics, Color.white, selectedEntity.getEntityData().name, getTopLeftX() + 4, getTopLeftY() + 4);
+        }
+
+        if (buildList != null) {
+            buildList.render(graphics);
         }
     }
 
     @Override
     public void leftClicked() {
-        if (guiElement != null) {
-            guiElement.leftClicked();
+        if (buildList != null) {
+            buildList.leftClicked();
         }
     }
 
     @Override
     public void rightClicked() {
-        if (guiElement != null) {
-            guiElement.rightClicked();
+        if (buildList != null) {
+            buildList.rightClicked();
         }
     }
 
@@ -58,35 +71,35 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
 
     @Override
     public void movedTo(Vector2D coordinates) {
-        if (guiElement != null) {
-            if (guiElement.isVectorWithin(coordinates)) {
-                guiElement.getsFocus();
+        if (buildList != null) {
+            if (buildList.isVectorWithin(coordinates)) {
+                buildList.getsFocus();
             } else {
-                guiElement.lostFocus();
+                buildList.lostFocus();
             }
-            guiElement.movedTo(coordinates);
+            buildList.movedTo(coordinates);
         }
     }
 
     @Override
     public void leftButtonReleased() {
-        if (guiElement != null) {
-            guiElement.leftButtonReleased();
+        if (buildList != null) {
+            buildList.leftButtonReleased();
         }
     }
 
     @Override
     public void update(float deltaInSeconds) {
-        if (guiElement != null) {
-            guiElement.update(deltaInSeconds);
+        if (buildList != null) {
+            buildList.update(deltaInSeconds);
         }
     }
 
     @Override
     public void lostFocus() {
         super.lostFocus();
-        if (guiElement != null) {
-            guiElement.lostFocus();
+        if (buildList != null) {
+            buildList.lostFocus();
         }
     }
 
@@ -98,20 +111,33 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
     /**
      * playing around still, I suppose this triggers a certain kind of 'gui element' to be drawn
      * which needs an Entity reference to show progress of and also base its offerings?
-     * @param entityBuilder
+     * @param entity
      */
-    public void showEntityBuilderGuiFor(EntityBuilder entityBuilder) {
-        int parentX = getTopLeft().getXAsInt();
-        int parentY = getTopLeft().getYAsInt();
+    public void showEntityBuilderGuiFor(Entity entity) {
+        this.selectedEntity = null;
+        if (!entity.isEntityBuilder()) return;
+        this.selectedEntity = entity;
 
-        this.guiElement =
-                new SidebarSelectBuildableEntityGuiElement (
-                        parentX + 10,
-                        parentY + 10,
-                        getWidth() - 20,
-                        getHeight() - 20,
+
+        // buildList is 4 icons high + 4 pixels between them, so:
+        int buildIconMargin = 4;
+        int amountOfIconsInColumn = 4;
+        int heightOfBuildList = (RenderableBuildableEntity.HEIGHT + buildIconMargin) * amountOfIconsInColumn;
+
+        int margin = 5;
+        int buildListTopX = getTopLeftX() + margin;
+        int buildListTopY = getBottomRightY() - margin - heightOfBuildList - 32;
+        int buildListWidth = getWidth() - (margin * 2); // compensate for marging to the left (with startX) + margin to the right, so times 2
+        int buildListHeight = heightOfBuildList + buildIconMargin;
+
+        this.buildList =
+                new BuildList(
+                        buildListTopX,
+                        buildListTopY,
+                        buildListWidth,
+                        buildListHeight,
                         getPlayer(),
-                        entityBuilder,
+                        (EntityBuilder) entity,
                         guiComposite
                 );
     }
@@ -122,12 +148,12 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
      * @param entity
      */
     public void entityPlacedOnMap(Entity entity) {
-        if (guiElement != null) {
-            guiElement.entityPlacedOnMap(entity);
+        if (buildList != null) {
+            buildList.entityPlacedOnMap(entity);
         }
     }
 
     public void hideEntityBuilderGui() {
-        guiElement = null;
+        buildList = null;
     }
 }

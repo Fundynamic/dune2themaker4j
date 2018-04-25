@@ -64,7 +64,6 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
     private BattleField battleField;
     private Sidebar sidebar;
     private final Player player;
-    private Vector2D mouseScreenPosition;
 
     public GuiComposite(Player player) {
         this.player = player;
@@ -85,7 +84,6 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
     }
 
     public void movedTo(Vector2D screenPosition) {
-        this.mouseScreenPosition = screenPosition;
         // determine wich guiElement is active by determining if the position is within the vector of a GUI element.
         activeGuiElement.lostFocus();
         activeGuiElement = findGuiElementWhereVectorLiesWithin(screenPosition);
@@ -179,7 +177,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
         }
 
         if (entity.isEntityTypeStructure()) {
-            sidebar.showEntityBuilderGuiFor((EntityBuilder) entity);
+            sidebar.showEntityBuilderGuiFor(entity);
         }
     }
 

@@ -9,17 +9,17 @@ import com.fundynamic.d2tm.game.entities.sidebar.RenderableBuildableEntity;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.game.rendering.gui.TextBox;
 import com.fundynamic.d2tm.game.types.EntityData;
+import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
+import com.fundynamic.d2tm.utils.Colors;
+import com.fundynamic.d2tm.utils.SlickUtils;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fancy name for 'build list of selected entity'.
- */
-public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteractableGuiElement {
+public class BuildList extends BattlefieldInteractableGuiElement {
 
     private final Player player;
     private Vector2D mouseCoordinates;
@@ -35,49 +35,73 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
     private List<RenderableBuildableEntity> renderableBuildableEntities;
 
-    private int maxHeightOfListInPixels;
+    private int amountOfIconsAbleToRenderHorizontally = 5;
+    private Rectangle drawingArea;
 
-    private int startRenderingIndex = 0;
-    private int amountOfIconsAbleToRender = 5;
-
-    public SidebarSelectBuildableEntityGuiElement(int x, int y, int width, int height, Player player, EntityBuilder entityBuilder, GuiComposite guiComposite) {
+    public BuildList(int x, int y, int width, int height, Player player, EntityBuilder entityBuilder, GuiComposite guiComposite) {
         super(x, y, width, height);
         this.player = player;
         this.entityBuilder = entityBuilder;
         this.guiComposite = guiComposite;
 
-        int heightOfIcon = RenderableBuildableEntity.HEIGHT + 3;
-        this.amountOfIconsAbleToRender = (int) Math.floor(height / heightOfIcon);
-        this.maxHeightOfListInPixels = amountOfIconsAbleToRender * heightOfIcon;
+        int heightOfIcon = RenderableBuildableEntity.HEIGHT + 4;
+        int widthOfIcon = RenderableBuildableEntity.WIDTH + 6;
+        this.amountOfIconsAbleToRenderHorizontally = (int) Math.floor(width / widthOfIcon);
 
         List<AbstractBuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
         this.renderableBuildableEntities = new ArrayList<>(buildList.size());
 
+        drawingArea = new Rectangle(x + 4, y + 4, Vector2D.create(width - 8, height - 8));
+
         // make renderable versions for the GUI
         int drawY = getTopLeftY() + 4; // arbitrary amount down to start
-        for (AbstractBuildableEntity placementBuildableEntity : buildList) {
 
+        int drawXLeftIcon = getTopLeftX() + 8;
+        int drawXRightIcon = drawXLeftIcon + widthOfIcon;
+
+        // start with left icon
+        int drawX = drawXLeftIcon;
+
+        int icon = 0;
+        for (AbstractBuildableEntity placementBuildableEntity : buildList) {
             renderableBuildableEntities.add(
                     new RenderableBuildableEntity(
                             placementBuildableEntity,
                             this.player,
-                            getTopLeftX() + 64, // get the icons close to the right
+                            drawX,
                             drawY)
             );
-            drawY += heightOfIcon; // height of icon + 3 extra pixels
+
+            icon++;
+
+            if (icon == amountOfIconsAbleToRenderHorizontally) {
+                drawY += heightOfIcon;  // new row
+                drawX = drawXLeftIcon; // reset X coordinate
+                icon = 0;
+            } else {
+                drawX += widthOfIcon;
+            }
         }
 
     }
 
     @Override
     public void render(Graphics graphics) {
-        Vector2D topLeft = getTopLeft();
+        graphics.setColor(Colors.SIDEBAR_YELLOW_BAR_DARK);
+        graphics.fillRect(getTopLeftX(), getTopLeftY(), getWidth(), getHeight());
 
-        graphics.setColor(Color.gray);
-        graphics.fillRect(topLeft.getXAsInt(), topLeft.getYAsInt(), getWidth(), getHeight());
+        graphics.setColor(Colors.SIDEBAR_DARK_RIGHT_DOWN_SIDE);
+        graphics.drawLine(getTopLeftX(), getTopLeftY(), getTopLeftX(), getBottomRightY() - 1); // left side (up / down)
+        graphics.drawLine(getTopLeftX(), getTopLeftY(), getTopLeftX() + getWidth(), getTopLeftY()); // top side
+
+        graphics.setColor(Colors.SIDEBAR_BRIGHT_LEFT_UP_SIDE);
+        graphics.drawLine(getTopLeftX() + getWidth(), getTopLeftY() + 1, getTopLeftX() + getWidth(), getBottomRightY() - 1); // right side (up / down)
+        graphics.drawLine(getTopLeftX() + 1, getBottomRightY() - 1, getTopLeftX() + getWidth() - 1, getBottomRightY() - 1); // bottom side
+
+
         graphics.setColor(Color.white);
 
-        graphics.setClip(getTopLeftX(), getTopLeftY(), getWidth(), maxHeightOfListInPixels);
+        SlickUtils.setClip(graphics, drawingArea);
 
         for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
             renderableBuildableEntity.render(graphics);
@@ -87,7 +111,6 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
         if (focussedRenderableBuildableEntity != null) {
             graphics.setColor(Color.red);
-            Vector2D dimensions = focussedRenderableBuildableEntity.getDimensions();
             EntityData entityData = focussedRenderableBuildableEntity.getAbstractBuildableEntity().getEntityData();
 
             TextBox textBox = new TextBox(graphics, mouseCoordinates.min(Vector2D.create(32, 0)));
@@ -97,7 +120,6 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
                           "\nPower -/+: " + entityData.powerConsumption + "/" + entityData.powerProduction;
 
             textBox.setText(text);
-            textBox.setBackGroundColor(Color.darkGray);
             textBox.flipPositionHorizontally();
             textBox.render(graphics);
         }
@@ -150,9 +172,9 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
         }
         focussedRenderableBuildableEntity = null;
 
-        if (coordinates.getYAsInt() > getTopLeftY() + maxHeightOfListInPixels) {
-            return;
-        }
+//        if (coordinates.getYAsInt() > getTopLeftY() + maxWidthOfListInPixels) {
+//            return;
+//        }
 
         // tell all entities that mouse has moved, let entity decide etc
         // and based on focus state remember that the mouse is moving over a specific icon, which is needed for
