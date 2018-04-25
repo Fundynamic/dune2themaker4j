@@ -182,4 +182,5 @@ public class PredicateBuilder {
         predicates.add(new IsWithinPlayableMapBoundaries(map));
         return this;
     }
+
 }

@@ -151,13 +151,22 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
      * which needs an Entity reference to show progress of and also base its offerings?
      * @param entity
      */
-    public void showEntityBuilderGuiFor(Entity entity) {
-        this.selectedEntity = null;
-        if (!entity.isEntityBuilder()) return;
+    public void showEntityInfoFor(Entity entity) {
         this.selectedEntity = entity;
 
-        int buttonHeight = 32;
+        // nothing to build, so get rid of any references to buildlist related gui elements
+        if (!entity.isEntityBuilder()) {
+            this.buttonUp = null;
+            this.buttonDown = null;
+            this.buildList = null;
+            return;
+        }
 
+        setupGuiElementsForBuildList((EntityBuilder) entity);
+    }
+
+    public void setupGuiElementsForBuildList(EntityBuilder entity) {
+        int buttonHeight = 32;
 
         // buildList is 4 icons high + 4 pixels between them, so:
         int buildIconMargin = 4;
@@ -178,7 +187,7 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
                         buildListWidth,
                         buildListHeight,
                         getPlayer(),
-                        (EntityBuilder) entity,
+                        entity,
                         guiComposite
                 );
 

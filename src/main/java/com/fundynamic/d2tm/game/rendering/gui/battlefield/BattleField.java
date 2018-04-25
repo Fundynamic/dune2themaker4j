@@ -11,7 +11,6 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
-import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -356,12 +355,11 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         EntitiesSet entityBuildersForControllingPlayer = entities.filter(
                 Predicate.builder()
                         .belongsToPlayer(mouse.getControllingPlayer())
-                        .isEntityBuilder()
         );
 
         if (entityBuildersForControllingPlayer.hasOne()) {
             Entity first = entities.getFirst();
-            guiComposite.entityBuilderSelected(first);
+            guiComposite.entitySelected(first);
         } else {
             guiComposite.allEntityBuildersDeSelected();
         }

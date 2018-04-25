@@ -87,9 +87,10 @@ public class SidebarTest extends AbstractD2TMTest {
         // move into sidebar logic
         mouse.movedTo(Vector2D.create(withinSidebarX, withinSidebarY));
 
-        // move to 'buildable icon'
-        withinSidebarX = (Game.SCREEN_WIDTH - PlayingState.WIDTH_OF_SIDEBAR) + 80;
-        withinSidebarY = PlayingState.HEIGHT_OF_TOP_BAR + 20;
+        // move to 'refinery icon', get these coordinates when playing the game and turning on some
+        // debug/sysout statement in the MouseListener.java
+        withinSidebarX = 757;
+        withinSidebarY = 219;
 
         // move into sidebar logic, but now also on buildable icon
         mouse.movedTo(Vector2D.create(withinSidebarX, withinSidebarY));
@@ -102,8 +103,8 @@ public class SidebarTest extends AbstractD2TMTest {
         mouse.leftClicked();
 
         // now update the state a few times
-        guiComposite.update(9.0f); // 9 seconds passed
-        structure.update(9.0f); // 9 seconds passed
+        guiComposite.update(90.0f); // 90 seconds passed
+        structure.update(90.0f); // 90 seconds passed
 
         guiComposite.update(1.0f); // 1 second passed
         structure.update(1.0f); // 1 second passed
@@ -119,7 +120,7 @@ public class SidebarTest extends AbstractD2TMTest {
 
         // now we move back into the battlefield, just a bit right of the CONSTYARD, where we assume
         // there is enough space to place this thing (a refinery is 3 wide and 2 high)
-        MapCoordinate mapCoordinateToTheRight = MapCoordinate.create(mapCoordinate.getXAsInt() + 2, mapCoordinate.getYAsInt());
+        MapCoordinate mapCoordinateToTheRight = MapCoordinate.create(mapCoordinate.getXAsInt() + 4, mapCoordinate.getYAsInt());
 
         Coordinate coordinateRightOfConstyard = mapCoordinateToTheRight.toCoordinate().add(new Vector2D(1, 1)); // one pixel
         int structurePlacementX = coordinateRightOfConstyard.getXAsInt();
@@ -142,7 +143,7 @@ public class SidebarTest extends AbstractD2TMTest {
         // now place the structure!
         mouse.leftClicked();
 
-        // it should now have increased by one!
-        Assert.assertEquals(entitiesCount + 1, entityRepository.getEntitiesCount());
+        // it should now have increased by two (refinery + spawning harvester)!
+        Assert.assertEquals(entitiesCount + 2, entityRepository.getEntitiesCount());
     }
 }

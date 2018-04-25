@@ -70,6 +70,8 @@ public class MouseListener extends AbstractMouseListener {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
+        // use this for fixing the SidebarTest
+//        System.out.println("" + newx + "," + newy);
         mouse.movedTo(mouseScreenPosition.update(newx,  newy));
     }
 
