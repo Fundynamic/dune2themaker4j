@@ -34,8 +34,8 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
     private Entity entityWhoConstructsIt;
     private EntityRepository entityRepository;
 
-    public LaunchSuperPowerMouse(BattleField battleField, PlacementBuildableEntity placementBuildableEntity) {
-        super(battleField);
+    public LaunchSuperPowerMouse(BattleField battleField, Cell hoverCell, PlacementBuildableEntity placementBuildableEntity) {
+        super(battleField, hoverCell);
         this.entityRepository = battleField.getEntityRepository();
 
         this.superPowerEntityData = placementBuildableEntity.getEntityData();
@@ -63,7 +63,7 @@ public class LaunchSuperPowerMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void rightClicked() {
-        setMouseBehavior(new NormalMouse(battleField));
+        setMouseBehavior(new NormalMouse(battleField, getHoverCell()));
     }
 
     @Override

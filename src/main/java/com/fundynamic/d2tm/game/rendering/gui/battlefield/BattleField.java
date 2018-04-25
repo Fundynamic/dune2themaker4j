@@ -1,9 +1,7 @@
 package com.fundynamic.d2tm.game.rendering.gui.battlefield;
 
 import com.fundynamic.d2tm.game.controls.Mouse;
-import com.fundynamic.d2tm.game.controls.battlefield.AbstractBattleFieldMouseBehavior;
-import com.fundynamic.d2tm.game.controls.battlefield.CellBasedMouseBehavior;
-import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.*;
 import com.fundynamic.d2tm.game.entities.*;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.map.Map;
@@ -13,6 +11,7 @@ import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.MapCoordinate;
 import com.fundynamic.d2tm.math.Rectangle;
 import com.fundynamic.d2tm.math.Vector2D;
+import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -71,7 +70,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
         this.mouse = mouse;
         this.entityRepository = entityRepository;
 
-        this.mouseBehavior = new NormalMouse(this);
+        this.mouseBehavior = new NormalMouse(this, getHoverCell());
 
         this.viewingVectorPerimeter = map.createViewablePerimeter(viewportDimensions);
         this.velocity = Vector2D.zero();
@@ -277,8 +276,11 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
 
     @Override
     public void movedTo(Vector2D coordinates) {
+//        System.out.println("BattleField: movedTo " + coordinates + " MouseBehavior: " + mouseBehavior);
         this.mouseBehavior.movedTo(coordinates);
-        mouseMovedToCell(getCellByScreenCoordinate(coordinates));
+        Cell cellByScreenCoordinate = getCellByScreenCoordinate(coordinates);
+//        System.out.println("BattleField: movedTo, cellByScreenCoordinate : " + cellByScreenCoordinate);
+        mouseMovedToCell(cellByScreenCoordinate);
     }
 
     /**
@@ -324,6 +326,13 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     public void setMouseBehavior(AbstractBattleFieldMouseBehavior mouseBehavior) {
+        // want to change to dragging selection box thingy
+        if (mouseBehavior.getClass().equals(DraggingSelectionBoxMouse.class)) {
+            if (!this.mouseBehavior.getClass().equals(NormalMouse.class)) {
+                // not a normal mouse, so we cannot transform to it
+                return;
+            }
+        }
         this.mouseBehavior = mouseBehavior;
     }
 
@@ -332,6 +341,7 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
     }
 
     public Cell getHoverCell() {
+        if (mouseBehavior == null) return null;
         return mouseBehavior.getHoverCell();
     }
 
@@ -390,5 +400,10 @@ public class BattleField extends GuiElement implements CellBasedMouseBehavior, E
      */
     public void entityPlacedOnMap(Entity entity) {
         guiComposite.entityPlacedOnMap(entity);
+    }
+
+    @Override
+    public String toString() {
+        return "BattleField @";
     }
 }

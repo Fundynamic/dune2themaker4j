@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public class NormalMouse extends AbstractBattleFieldMouseBehavior {
 
-    public NormalMouse(BattleField battleField) {
-        super(battleField);
+    public NormalMouse(BattleField battleField, Cell hoverCell) {
+        super(battleField, hoverCell);
         mouse.setMouseImageNormal();
     }
 
@@ -29,7 +29,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
         selectEntity(entity);
 
         if (entity.belongsToPlayer(player) && entity.isMovable()) {
-            setMouseBehavior(new MovableSelectedMouse(battleField));
+            setMouseBehavior(new MovableSelectedMouse(battleField, getHoverCell()));
         }
     }
 
@@ -44,7 +44,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
     @Override
     public void rightClicked() {
         deselectCurrentlySelectedEntities();
-        setMouseBehavior(new NormalMouse(battleField));
+        setMouseBehavior(new NormalMouse(battleField, getHoverCell()));
     }
 
     protected void deselectCurrentlySelectedEntities() {
@@ -52,7 +52,8 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
                 Predicate.builder().
                         forPlayer(player).
                         isSelected().
-                        build());
+                        build()
+        );
 
         for (Entity entity : entities) {
             ((Selectable) entity).deselect();
@@ -89,7 +90,7 @@ public class NormalMouse extends AbstractBattleFieldMouseBehavior {
     @Override
     public void draggedToCoordinates(Vector2D viewportCoordinates) {
         if (viewportCoordinates != null) {
-            setMouseBehavior(new DraggingSelectionBoxMouse(battleField, entityRepository, viewportCoordinates));
+            setMouseBehavior(new DraggingSelectionBoxMouse(battleField, entityRepository, getHoverCell(), viewportCoordinates));
         }
     }
 

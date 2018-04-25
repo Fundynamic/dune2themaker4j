@@ -176,4 +176,9 @@ public class Cell {
     public int getY() {
         return mapCoordinate.getYAsInt();
     }
+
+    @Override
+    public String toString() {
+        return "Cell @ [" + getX() + "," + getY() + "]";
+    }
 }

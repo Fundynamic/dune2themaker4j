@@ -139,4 +139,9 @@ public class RenderableBuildableEntity extends GuiElement {
     public AbstractBuildableEntity getAbstractBuildableEntity() {
         return abstractBuildableEntity;
     }
+
+    @Override
+    public String toString() {
+        return "Build Icon " + this.abstractBuildableEntity.getEntityData().name;
+    }
 }

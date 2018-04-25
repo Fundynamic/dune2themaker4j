@@ -24,8 +24,8 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
     private Vector2D dragCoordinates;
     private final EntityRepository entityRepository;
 
-    public DraggingSelectionBoxMouse(BattleField battleField, EntityRepository entityRepository, Vector2D startingCoordinates) {
-        super(battleField);
+    public DraggingSelectionBoxMouse(BattleField battleField, EntityRepository entityRepository, Cell hoverCell, Vector2D startingCoordinates) {
+        super(battleField, hoverCell);
         this.startingCoordinates = startingCoordinates;
         this.dragCoordinates = startingCoordinates;
         this.entityRepository = entityRepository;
@@ -33,19 +33,21 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
 
     @Override
     public void leftClicked() {
-        NormalMouse normalMouse = new NormalMouse(battleField);
+        NormalMouse normalMouse = new NormalMouse(battleField, getHoverCell());
         setMouseBehavior(normalMouse);
         normalMouse.leftClicked();
     }
 
     @Override
     public void rightClicked() {
-        // DO NOTHING
+        NormalMouse normalMouse = new NormalMouse(battleField, getHoverCell());
+        setMouseBehavior(normalMouse);
+        normalMouse.rightClicked();
     }
 
     @Override
     public void mouseMovedToCell(Cell cell) {
-        // DO NOTHING
+        setHoverCell(cell);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
 
         // empty list, set mouse behavior back to normal
         if (entities.isEmpty()) {
-            battleField.setMouseBehavior(new NormalMouse(battleField));
+            battleField.setMouseBehavior(new NormalMouse(battleField, getHoverCell()));
             return;
         }
 
@@ -73,7 +75,7 @@ public class DraggingSelectionBoxMouse extends AbstractBattleFieldMouseBehavior 
         }
 
         // ... and set mouse behavior
-        battleField.setMouseBehavior(new MovableSelectedMouse(battleField));
+        battleField.setMouseBehavior(new MovableSelectedMouse(battleField, getHoverCell()));
 
         // and tell the battleField which units got selected
         battleField.entitiesSelected(EntitiesSet.fromSet(entities));

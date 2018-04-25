@@ -16,6 +16,11 @@ public class DummyGuiElement extends GuiElement {
     }
 
     @Override
+    public String toString() {
+        return "DummyGuiElement";
+    }
+
+    @Override
     public void render(Graphics graphics) {
         Vector2D topLeft = getTopLeft();
         if (hasFocus) {

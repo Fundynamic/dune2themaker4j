@@ -4,6 +4,7 @@ import com.fundynamic.d2tm.game.AbstractD2TMTest;
 import com.fundynamic.d2tm.game.behaviors.Selectable;
 import com.fundynamic.d2tm.game.entities.EntityType;
 import com.fundynamic.d2tm.game.entities.entitiesdata.EntitiesData;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.math.Coordinate;
 import com.fundynamic.d2tm.math.Vector2D;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class DraggingSelectionBoxMouseTest extends AbstractD2TMTest {
 
         // start dragging from 0,0
         Vector2D startingCoordinates = Vector2D.zero();
-        draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(battleField, entityRepository, startingCoordinates);
+        draggingSelectionBoxMouse = new DraggingSelectionBoxMouse(battleField, entityRepository, map.getCell(startingCoordinates), startingCoordinates);
         battleField.setMouseBehavior(draggingSelectionBoxMouse);
     }
 

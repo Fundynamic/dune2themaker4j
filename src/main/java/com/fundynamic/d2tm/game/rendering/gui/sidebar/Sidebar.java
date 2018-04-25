@@ -90,6 +90,11 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Sidebar";
+    }
+
     /**
      * playing around still, I suppose this triggers a certain kind of 'gui element' to be drawn
      * which needs an Entity reference to show progress of and also base its offerings?

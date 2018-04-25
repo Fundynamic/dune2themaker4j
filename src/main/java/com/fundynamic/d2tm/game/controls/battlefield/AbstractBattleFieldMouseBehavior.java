@@ -26,12 +26,13 @@ public abstract class AbstractBattleFieldMouseBehavior extends AbstractMouseBeha
 
     private Cell hoverCell;
 
-    public AbstractBattleFieldMouseBehavior(BattleField battleField) {
+    public AbstractBattleFieldMouseBehavior(BattleField battleField, Cell hoverCell) {
         // dependencies from battlefield
         super(battleField.getMouse());
         this.battleField = battleField;
         this.entityRepository = battleField.getEntityRepository();
         this.map = battleField.getMap();
+        this.hoverCell = hoverCell;
 
         // dependencies from dependencies from battlefield :/
         this.player = mouse.getControllingPlayer();

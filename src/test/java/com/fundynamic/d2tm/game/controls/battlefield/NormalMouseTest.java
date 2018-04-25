@@ -24,7 +24,7 @@ public class NormalMouseTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        normalMouse = new NormalMouse(battleField);
+        normalMouse = new NormalMouse(battleField, map.getCell(0,0));
         battleField.setMouseBehavior(normalMouse);
     }
 

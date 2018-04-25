@@ -80,4 +80,9 @@ public class Topbar extends GuiElement {
     public void update(float deltaInSeconds) {
         // do nothing because Dummy element
     }
+
+    @Override
+    public String toString() {
+        return "Topbar";
+    }
 }

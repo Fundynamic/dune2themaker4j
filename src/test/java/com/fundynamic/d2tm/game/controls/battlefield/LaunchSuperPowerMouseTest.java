@@ -24,7 +24,7 @@ public class LaunchSuperPowerMouseTest extends AbstractD2TMTest {
         PlacementBuildableEntity placementBuildableEntity =
                 new PlacementBuildableEntity(deathhand, player,null);
 
-        launchSuperPowerMouse = new LaunchSuperPowerMouse(battleField, placementBuildableEntity);
+        launchSuperPowerMouse = new LaunchSuperPowerMouse(battleField, map.getCell(0,0), placementBuildableEntity);
         battleField.setMouseBehavior(launchSuperPowerMouse);
     }
 

@@ -34,8 +34,8 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
     private List<PlaceableMapCoordinateCandidate> mapCoordinatesForEntityToPlace;
     private EntityRepository entityRepository;
 
-    public PlacingStructureMouse(BattleField battleField, PlacementBuildableEntity placementBuildableEntity) {
-        super(battleField);
+    public PlacingStructureMouse(BattleField battleField, Cell hoverCell, PlacementBuildableEntity placementBuildableEntity) {
+        super(battleField, hoverCell);
         this.entityRepository = battleField.getEntityRepository();
 
         this.entityDataToPlace = placementBuildableEntity.getEntityData();
@@ -59,7 +59,7 @@ public class PlacingStructureMouse extends AbstractBattleFieldMouseBehavior {
 
     @Override
     public void rightClicked() {
-        setMouseBehavior(new NormalMouse(battleField));
+        setMouseBehavior(new NormalMouse(battleField, getHoverCell()));
     }
 
     @Override

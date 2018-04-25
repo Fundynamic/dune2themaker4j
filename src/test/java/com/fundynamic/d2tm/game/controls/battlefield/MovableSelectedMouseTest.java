@@ -24,7 +24,7 @@ public class MovableSelectedMouseTest extends AbstractD2TMTest {
     @Before
     public void setUp() throws SlickException {
         super.setUp();
-        movableSelectedMouse = new MovableSelectedMouse(battleField);
+        movableSelectedMouse = new MovableSelectedMouse(battleField, map.getCell(0,0));
     }
 
     @Test

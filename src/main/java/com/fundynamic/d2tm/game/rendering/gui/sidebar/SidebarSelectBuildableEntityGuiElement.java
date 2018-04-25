@@ -200,4 +200,9 @@ public class SidebarSelectBuildableEntityGuiElement extends BattlefieldInteracta
 
         entityBuilder.entityIsDelivered(entity);
     }
+
+    @Override
+    public String toString() {
+        return "BuildList";
+    }
 }

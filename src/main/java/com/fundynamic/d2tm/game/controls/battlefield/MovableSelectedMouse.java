@@ -37,8 +37,8 @@ public class MovableSelectedMouse extends NormalMouse {
 
     private EntitiesSet entitiesSetOfAllMovable;
 
-    public MovableSelectedMouse(BattleField battleField) {
-        super(battleField);
+    public MovableSelectedMouse(BattleField battleField, Cell hoverCell) {
+        super(battleField, hoverCell);
         mouse.setMouseImageMove();
     }
 

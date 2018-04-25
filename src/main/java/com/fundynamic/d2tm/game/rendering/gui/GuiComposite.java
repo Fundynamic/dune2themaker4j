@@ -12,6 +12,7 @@ import com.fundynamic.d2tm.game.entities.Entity;
 import com.fundynamic.d2tm.game.entities.Player;
 import com.fundynamic.d2tm.game.entities.entitybuilders.AbstractBuildableEntity;
 import com.fundynamic.d2tm.game.entities.entitybuilders.PlacementBuildableEntity;
+import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.battlefield.BattleField;
 import com.fundynamic.d2tm.game.rendering.gui.sidebar.Sidebar;
 import com.fundynamic.d2tm.math.Vector2D;
@@ -63,6 +64,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
     private BattleField battleField;
     private Sidebar sidebar;
     private final Player player;
+    private Vector2D mouseScreenPosition;
 
     public GuiComposite(Player player) {
         this.player = player;
@@ -83,6 +85,7 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
     }
 
     public void movedTo(Vector2D screenPosition) {
+        this.mouseScreenPosition = screenPosition;
         // determine wich guiElement is active by determining if the position is within the vector of a GUI element.
         activeGuiElement.lostFocus();
         activeGuiElement = findGuiElementWhereVectorLiesWithin(screenPosition);
@@ -185,10 +188,11 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
      * @param abstractBuildableEntity
      */
     public void wantsToPlaceBuildableEntityOnBattlefield(PlacementBuildableEntity abstractBuildableEntity) {
+        Cell hoverCell = battleField.getMouseBehavior().getHoverCell();
         if (abstractBuildableEntity.getEntityData().isTypeSuperPower()) {
-            battleField.setMouseBehavior(new LaunchSuperPowerMouse(battleField, abstractBuildableEntity));
+            battleField.setMouseBehavior(new LaunchSuperPowerMouse(battleField, hoverCell, abstractBuildableEntity));
         } else if (abstractBuildableEntity.getEntityData().isTypeStructure()) {
-            battleField.setMouseBehavior(new PlacingStructureMouse(battleField, abstractBuildableEntity));
+            battleField.setMouseBehavior(new PlacingStructureMouse(battleField, hoverCell, abstractBuildableEntity));
         } else {
             throw new IllegalStateException("Dafuq you're doing?");
         }
@@ -200,7 +204,8 @@ public class GuiComposite implements Renderable, Updateable, MouseBehavior, Batt
      */
     public void entityPlacedOnMap(Entity entity) {
         sidebar.entityPlacedOnMap(entity);
-        battleField.setMouseBehavior(new NormalMouse(battleField));
+        Cell hoverCell = battleField.getMouseBehavior().getHoverCell();
+        battleField.setMouseBehavior(new NormalMouse(battleField, hoverCell));
     }
 
     public void allEntityBuildersDeSelected() {

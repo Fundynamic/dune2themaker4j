@@ -1,6 +1,9 @@
 package com.fundynamic.d2tm.game.rendering;
 
 import com.fundynamic.d2tm.game.AbstractD2TMTest;
+import com.fundynamic.d2tm.game.controls.battlefield.DraggingSelectionBoxMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.MovableSelectedMouse;
+import com.fundynamic.d2tm.game.controls.battlefield.NormalMouse;
 import com.fundynamic.d2tm.game.map.Cell;
 import com.fundynamic.d2tm.game.rendering.gui.GuiComposite;
 import com.fundynamic.d2tm.math.MapCoordinate;
@@ -23,6 +26,28 @@ public class BattleFieldTest extends AbstractD2TMTest {
         map.revealAllShroudFor(player);
 
         battleField.render(graphics);
+    }
+
+    @Test
+    public void doesNotAllowDraggingBehaviorWhenNotNormalMouse() {
+        battleField.setMouseBehavior(new MovableSelectedMouse(battleField, map.getCell(0,0)));
+
+        // act
+        battleField.setMouseBehavior(new DraggingSelectionBoxMouse(battleField, entityRepository, map.getCell(0,0), Vector2D.create(0,0)));
+
+        // assert not changed
+        Assert.assertEquals(MovableSelectedMouse.class, battleField.getMouseBehavior().getClass());
+    }
+
+    @Test
+    public void allowsDraggingStateFromNormalMouseState() {
+        battleField.setMouseBehavior(new NormalMouse(battleField, map.getCell(0,0)));
+
+        // act
+        battleField.setMouseBehavior(new DraggingSelectionBoxMouse(battleField, entityRepository, map.getCell(0,0), Vector2D.create(0,0)));
+
+        // assert changed
+        Assert.assertEquals(DraggingSelectionBoxMouse.class, battleField.getMouseBehavior().getClass());
     }
 
     @Test

@@ -295,4 +295,13 @@ public class Map {
     public float getDistanceThatCoversWholeMap() {
         return getSurfaceAreaInTiles() * TILE_SIZE;
     }
+
+    /**
+     * getCell from absolute coordinates
+     * @param startingCoordinates
+     * @return
+     */
+    public Cell getCell(Vector2D startingCoordinates) {
+        return getCell(Coordinate.create(startingCoordinates).toMapCoordinate());
+    }
 }

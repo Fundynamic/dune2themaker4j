@@ -45,4 +45,7 @@ public abstract class GuiElement extends Rectangle implements MouseBehavior, Upd
     public Player getPlayer() {
         return guiComposite.getPlayer();
     }
+
+    @Override
+    public abstract String toString();
 }

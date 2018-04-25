@@ -193,4 +193,9 @@ public class MiniMap extends GuiElement {
     public void movedTo(Vector2D coordinates) {
         mouseCoordinates = coordinates;
     }
+
+    @Override
+    public String toString() {
+        return "Minimap";
+    }
 }

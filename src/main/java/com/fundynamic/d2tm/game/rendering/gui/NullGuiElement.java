@@ -55,4 +55,9 @@ public class NullGuiElement extends GuiElement {
     public void render(Graphics graphics) {
         // do nothing because null element
     }
+
+    @Override
+    public String toString() {
+        return "NullGuiElement";
+    }
 }
