@@ -21,7 +21,10 @@ import org.newdawn.slick.Graphics;
  */
 public class Sidebar extends BattlefieldInteractableGuiElement {
 
-    private BattlefieldInteractableGuiElement buildList;
+    private BuildList buildList;
+    private BuildListButton buttonUp;
+    private BuildListButton buttonDown;
+
     private Entity selectedEntity; // the entityBuilderSelected and to show for this sidebar (the structure)
 
     public Sidebar(int x, int y, int width, int height) {
@@ -45,15 +48,34 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
             SlickUtils.drawShadowedText(graphics, Color.white, selectedEntity.getEntityData().name, getTopLeftX() + 4, getTopLeftY() + 4);
         }
 
+        // interacts with BuildList
+        if (buttonUp != null) {
+            buttonUp.render(graphics);
+        }
+
+        if (buttonDown != null) {
+            buttonDown.render(graphics);
+        }
+
+        // Related to constructing entities
         if (buildList != null) {
             buildList.render(graphics);
         }
+
     }
 
     @Override
     public void leftClicked() {
         if (buildList != null) {
             buildList.leftClicked();
+        }
+
+        if (buttonDown != null) {
+            buttonDown.leftClicked();
+        }
+
+        if (buttonUp != null) {
+            buttonUp.leftClicked();
         }
     }
 
@@ -78,6 +100,22 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
                 buildList.lostFocus();
             }
             buildList.movedTo(coordinates);
+        }
+
+        if (buttonUp != null) {
+            if (buttonUp.isVectorWithin(coordinates)) {
+                buttonUp.getsFocus();
+            } else {
+                buttonUp.lostFocus();
+            }
+        }
+
+        if (buttonDown != null) {
+            if (buttonDown.isVectorWithin(coordinates)) {
+                buttonDown.getsFocus();
+            } else {
+                buttonDown.lostFocus();
+            }
         }
     }
 
@@ -118,6 +156,8 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
         if (!entity.isEntityBuilder()) return;
         this.selectedEntity = entity;
 
+        int buttonHeight = 32;
+
 
         // buildList is 4 icons high + 4 pixels between them, so:
         int buildIconMargin = 4;
@@ -126,9 +166,10 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
 
         int margin = 5;
         int buildListTopX = getTopLeftX() + margin;
-        int buildListTopY = getBottomRightY() - margin - heightOfBuildList - 32;
+        int buildListTopY = getBottomRightY() - margin - heightOfBuildList - buttonHeight;
         int buildListWidth = getWidth() - (margin * 2); // compensate for marging to the left (with startX) + margin to the right, so times 2
         int buildListHeight = heightOfBuildList + buildIconMargin;
+
 
         this.buildList =
                 new BuildList(
@@ -140,6 +181,33 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
                         (EntityBuilder) entity,
                         guiComposite
                 );
+
+        this.buttonUp = new BuildListButton(
+                getTopLeftX() + margin,
+                getBottomRightY() - buttonHeight,
+                RenderableBuildableEntity.WIDTH + 8,
+                buttonHeight - margin,
+                buildList,
+                "  -  "
+        ) {
+            @Override
+            void moveList() {
+                buildList.moveListUp();
+            }
+        };
+
+        this.buttonDown = new BuildListButton(
+                getTopLeftX() + margin + RenderableBuildableEntity.WIDTH + margin + 8,
+                getBottomRightY() - buttonHeight,
+                RenderableBuildableEntity.WIDTH + 8,
+                buttonHeight - margin,
+                buildList,
+                "  +  ") {
+            @Override
+            void moveList() {
+                buildList.moveListDown();
+            }
+        };
     }
 
     /**
@@ -155,5 +223,7 @@ public class Sidebar extends BattlefieldInteractableGuiElement {
 
     public void hideEntityBuilderGui() {
         buildList = null;
+        buttonDown = null;
+        buttonUp = null;
     }
 }

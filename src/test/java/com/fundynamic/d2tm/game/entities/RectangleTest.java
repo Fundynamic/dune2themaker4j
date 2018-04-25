@@ -133,4 +133,16 @@ public class RectangleTest {
         Vector2D correctedVector = rect.makeSureVectorStaysWithin(Vector2D.create(MIN_X, MIN_Y));
         assertEquals(Vector2D.create(MIN_X, MIN_Y), correctedVector);
     }
+
+    @Test
+    public void updateY() {
+        Rectangle rectangle = new Rectangle(10, 10, Vector2D.create(20, 20));
+        rectangle.updateY(5); // set new Y value to 5
+
+        // expect the new coordinate to be there
+        assertEquals(5, rectangle.getTopLeftY());
+
+        // expect the dimensions to still hold
+        assertEquals(rectangle.getDimensions(), Vector2D.create(20, 20));
+    }
 }

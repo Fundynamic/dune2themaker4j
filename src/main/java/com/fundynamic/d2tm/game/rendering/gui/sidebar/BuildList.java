@@ -21,6 +21,7 @@ import java.util.List;
 
 public class BuildList extends BattlefieldInteractableGuiElement {
 
+    public static final int HEIGHT_OF_ICON_WITH_MARGIN = RenderableBuildableEntity.HEIGHT + 4;
     private final Player player;
     private Vector2D mouseCoordinates;
 
@@ -33,10 +34,12 @@ public class BuildList extends BattlefieldInteractableGuiElement {
 
     private RenderableBuildableEntity focussedRenderableBuildableEntity;
 
-    private List<RenderableBuildableEntity> renderableBuildableEntities;
+    private List<RenderableBuildableEntity> buildListIcons;
 
     private int amountOfIconsAbleToRenderHorizontally = 5;
     private Rectangle drawingArea;
+    private final int topOfRenderableBuildList;
+    private final int bottomOfRenderableBuildList;
 
     public BuildList(int x, int y, int width, int height, Player player, EntityBuilder entityBuilder, GuiComposite guiComposite) {
         super(x, y, width, height);
@@ -44,27 +47,31 @@ public class BuildList extends BattlefieldInteractableGuiElement {
         this.entityBuilder = entityBuilder;
         this.guiComposite = guiComposite;
 
-        int heightOfIcon = RenderableBuildableEntity.HEIGHT + 4;
+        int heightOfIcon = HEIGHT_OF_ICON_WITH_MARGIN;
         int widthOfIcon = RenderableBuildableEntity.WIDTH + 6;
         this.amountOfIconsAbleToRenderHorizontally = (int) Math.floor(width / widthOfIcon);
 
         List<AbstractBuildableEntity> buildList = entityBuilder.getBuildList(); // determine build list
-        this.renderableBuildableEntities = new ArrayList<>(buildList.size());
+        this.buildListIcons = new ArrayList<>(buildList.size());
 
-        drawingArea = new Rectangle(x + 4, y + 4, Vector2D.create(width - 8, height - 8));
+        int margin = 4;
+
+        drawingArea = new Rectangle(x + margin, y + margin, Vector2D.create(width - 8, height - 8));
 
         // make renderable versions for the GUI
-        int drawY = getTopLeftY() + 4; // arbitrary amount down to start
+        topOfRenderableBuildList = getTopLeftY() + margin;
+        bottomOfRenderableBuildList = getBottomRightY() - margin;
 
-        int drawXLeftIcon = getTopLeftX() + 8;
-        int drawXRightIcon = drawXLeftIcon + widthOfIcon;
+        int drawY = topOfRenderableBuildList;
+
+        int drawXLeftIcon = getTopLeftX() + (margin * 2);
 
         // start with left icon
         int drawX = drawXLeftIcon;
 
         int icon = 0;
         for (AbstractBuildableEntity placementBuildableEntity : buildList) {
-            renderableBuildableEntities.add(
+            buildListIcons.add(
                     new RenderableBuildableEntity(
                             placementBuildableEntity,
                             this.player,
@@ -103,7 +110,7 @@ public class BuildList extends BattlefieldInteractableGuiElement {
 
         SlickUtils.setClip(graphics, drawingArea);
 
-        for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
+        for (RenderableBuildableEntity renderableBuildableEntity : buildListIcons) {
             renderableBuildableEntity.render(graphics);
         }
 
@@ -152,7 +159,7 @@ public class BuildList extends BattlefieldInteractableGuiElement {
 
     @Override
     public void rightClicked() {
-        for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
+        for (RenderableBuildableEntity renderableBuildableEntity : buildListIcons) {
             renderableBuildableEntity.rightClicked();
         }
     }
@@ -179,7 +186,7 @@ public class BuildList extends BattlefieldInteractableGuiElement {
         // tell all entities that mouse has moved, let entity decide etc
         // and based on focus state remember that the mouse is moving over a specific icon, which is needed for
         // constructing later (see {@link #leftClicked()})
-        for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
+        for (RenderableBuildableEntity renderableBuildableEntity : buildListIcons) {
             renderableBuildableEntity.movedTo(coordinates);
             if (renderableBuildableEntity.hasFocus()) {
                 focussedRenderableBuildableEntity = renderableBuildableEntity;
@@ -203,7 +210,7 @@ public class BuildList extends BattlefieldInteractableGuiElement {
             focussedRenderableBuildableEntity = null;
         }
 
-        for (RenderableBuildableEntity renderableBuildableEntity : renderableBuildableEntities) {
+        for (RenderableBuildableEntity renderableBuildableEntity : buildListIcons) {
             renderableBuildableEntity.update(deltaInSeconds);
         }
     }
@@ -226,5 +233,19 @@ public class BuildList extends BattlefieldInteractableGuiElement {
     @Override
     public String toString() {
         return "BuildList";
+    }
+
+    public void moveListUp() {
+        RenderableBuildableEntity firstIcon = this.buildListIcons.get(0);
+        if (firstIcon.getTopLeftY() >= topOfRenderableBuildList) return;
+
+        this.buildListIcons.forEach(bi -> bi.updateY(bi.getTopLeftY() + HEIGHT_OF_ICON_WITH_MARGIN));
+    }
+
+    public void moveListDown() {
+        RenderableBuildableEntity lastIcon = this.buildListIcons.get(this.buildListIcons.size()-1);
+        if (lastIcon.getTopLeftY() <= bottomOfRenderableBuildList) return;
+
+        this.buildListIcons.forEach(bi -> bi.updateY(bi.getTopLeftY() - HEIGHT_OF_ICON_WITH_MARGIN));
     }
 }

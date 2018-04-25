@@ -20,8 +20,6 @@ public class Rectangle {
     }
 
     public Rectangle(int x, int y, Vector2D dimensions) {
-        // cast one to float so the compiler knows we call the constructor below
-        // and prevent a circular constructor calling
         this(x, y, x + dimensions.getXAsInt(), y + dimensions.getYAsInt());
     }
 
@@ -123,5 +121,14 @@ public class Rectangle {
                 (int)(getTopLeftX() + offset), getTopLeftY(),
                 (int)(getTopLeftX() + offset + newWidth), getBottomRightY());
         }
+    }
+
+    public void updateY(int value) {
+        int width = getWidth();
+        int height = getHeight();
+
+        topLeft.update(topLeft.getX(), value);
+
+        bottomRight.update(getTopLeftX() + width, getTopLeftY() + height);
     }
 }
